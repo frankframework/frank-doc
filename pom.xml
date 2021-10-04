@@ -27,7 +27,7 @@
 	<developers>
 		<developer>
 			<name>Martijn Dirkse</name>
-			<email>martijn@wearefrank.nl</email>
+			<email>martijn@ibissource.org</email>
 			<organization>WeAreFrank!</organization>
 			<organizationUrl>https://wearefrank.nl</organizationUrl>
 		</developer>
@@ -204,4 +204,82 @@
 			</plugin>
 		</plugins>
 	</reporting>
+
+	<scm>
+		<url>https://github.com/ibissource/frank-doc</url>
+		<connection>scm:git:https://github.com/ibissource/frank-doc.git</connection>
+		<developerConnection>scm:git:https://github.com/ibissource/frank-doc.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+	<profiles>
+		<profile>
+			<id>ibissource</id>
+			<distributionManagement>
+				<repository>
+					<id>ibissource</id>
+					<url>https://nexus.ibissource.org/content/repositories/thirdparty</url>
+				</repository>
+				<snapshotRepository>
+					<id>ibissource</id>
+					<url>https://nexus.ibissource.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+				<site>
+					<id>www.ibissource.org</id>
+					<url>file:target/site-deploy</url>
+				</site>
+			</distributionManagement>
+			<repositories>
+				<repository>
+					<id>ibissource</id>
+					<url>https://nexus.ibissource.org/content/groups/public</url>
+				</repository>
+			</repositories>
+		</profile>
+		<profile>
+			<id>ossrh</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.8</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<distributionManagement>
+				<repository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+				<snapshotRepository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+				<site>
+					<id>www.ibissource.org</id>
+					<url>file:target/site-deploy</url>
+				</site>
+			</distributionManagement>
+		</profile>
+	</profiles>
 </project>
