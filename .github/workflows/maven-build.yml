@@ -7,7 +7,7 @@ env:
   PROFILES:
 on:
   push:
-    branches: [master]
+    branches: [master,artifacts]
   pull_request:
     branches: [master]
   workflow_dispatch:
