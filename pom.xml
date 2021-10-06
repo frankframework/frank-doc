@@ -96,7 +96,8 @@
 				<version>2.4</version>
 				<executions>
 					<execution>
-						<?m2e ignore?> <!-- Eclipse doesn't seem to like this plugin, it doesn't need to be executed by Eclipse so ignore it -->
+						<?m2e ignore?> <!-- Eclipse doesn't seem to like this plugin, it doesn't need to be executed 
+							by Eclipse so ignore it -->
 						<id>Check-CopyRight-Notice</id>
 						<goals>
 							<goal>copyright</goal><!-- Checks for Copyright notices -->
@@ -107,9 +108,6 @@
 				</executions>
 				<configuration>
 					<excludeFile>${project.basedir}/copyrightExcludeFile.txt</excludeFile>
-					<exclude>
-						DataSourceXAResourceRecoveryHelper.java,NarayanaRecoveryManager.java,FilenameUtils.java,PasswordHash.java
-					</exclude>
 					<ignoreYear>true</ignoreYear>
 					<useDash>true</useDash>
 					<templateFile>${project.basedir}/copyrightTemplateFile.txt</templateFile>
@@ -124,9 +122,6 @@
 					<includes>
 						<include>**/*.java</include>
 					</includes>
-					<excludes>
-						<exclude>it.**</exclude>
-					</excludes>
 					<argLine>@{argLine} -Dfile.encoding=UTF-8</argLine>
 				</configuration>
 			</plugin>
@@ -148,27 +143,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.9.1</version>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.6</version>
-				<executions>
-					<execution>
-						<id>prepare-jacoco</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>generate-jacoco-report</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<!-- http://maven.apache.org/plugins/maven-javadoc-plugin/usage.html Generate 
 				Javadocs As Part Of Project Reports -->
@@ -280,6 +254,34 @@
 					<url>file:target/site-deploy</url>
 				</site>
 			</distributionManagement>
+		</profile>
+		<profile>
+			<id>codecoverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>0.8.6</version>
+						<executions>
+							<execution>
+								<id>prepare-jacoco</id>
+								<phase>initialize</phase>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>generate-jacoco-report</id>
+								<phase>test</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 </project>
