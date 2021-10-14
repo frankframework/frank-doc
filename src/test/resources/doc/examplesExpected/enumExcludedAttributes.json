@@ -3,23 +3,23 @@
         {
             "name":"Other",
             "types":[
-                "nl.nn.adapterframework.frankdoc.testtarget.attribute.enumExclude.IChild",
-                "nl.nn.adapterframework.frankdoc.testtarget.attribute.enumExclude.Master",
+                "org.frankframework.frankdoc.testtarget.attribute.enumExclude.IChild",
+                "org.frankframework.frankdoc.testtarget.attribute.enumExclude.Master",
                 "Module"
             ]
         }
     ],
     "types":[
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.attribute.enumExclude.IChild",
+            "name":"org.frankframework.frankdoc.testtarget.attribute.enumExclude.IChild",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.attribute.enumExclude.AttributeOwner"
+                "org.frankframework.frankdoc.testtarget.attribute.enumExclude.AttributeOwner"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.attribute.enumExclude.Master",
+            "name":"org.frankframework.frankdoc.testtarget.attribute.enumExclude.Master",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.attribute.enumExclude.Master"
+                "org.frankframework.frankdoc.testtarget.attribute.enumExclude.Master"
             ]
         },
         {
@@ -32,15 +32,15 @@
     "elements":[
         {
             "name":"AttributeOwner",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.attribute.enumExclude.AttributeOwner",
+            "fullName":"org.frankframework.frankdoc.testtarget.attribute.enumExclude.AttributeOwner",
             "elementNames":[
                 "AttributeOwnerA"
             ],
             "attributes":[
                 {
                     "name":"enumAttribute",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.attribute.enumExclude.AttributeOwner",
-                    "enum":"nl.nn.adapterframework.frankdoc.testtarget.attribute.enumExclude.MyEnum"
+                    "describer":"org.frankframework.frankdoc.testtarget.attribute.enumExclude.AttributeOwner",
+                    "enum":"org.frankframework.frankdoc.testtarget.attribute.enumExclude.MyEnum"
                 },
                 {
                     "name":"active",
@@ -50,7 +50,7 @@
         },
         {
             "name":"Master",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.attribute.enumExclude.Master",
+            "fullName":"org.frankframework.frankdoc.testtarget.attribute.enumExclude.Master",
             "elementNames":[
                 "Master"
             ],
@@ -70,7 +70,7 @@
                 {
                     "multiple":true,
                     "roleName":"a",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.attribute.enumExclude.IChild"
+                    "type":"org.frankframework.frankdoc.testtarget.attribute.enumExclude.IChild"
                 }
             ]
         },
@@ -97,7 +97,7 @@
     ],
     "enums":[
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.attribute.enumExclude.MyEnum",
+            "name":"org.frankframework.frankdoc.testtarget.attribute.enumExclude.MyEnum",
             "values":[
                 {
                     "label":"FIRST"

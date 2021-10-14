@@ -2,32 +2,32 @@
   "groups": [
     {
       "name": "Child",
-      "types": ["nl.nn.adapterframework.frankdoc.testtarget.examples.simple.IChild"]
+      "types": ["org.frankframework.frankdoc.testtarget.examples.simple.IChild"]
     },
     {
       "name": "Other",
       "types": [
-        "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.TChild",
-        "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.Start",
+        "org.frankframework.frankdoc.testtarget.examples.simple.TChild",
+        "org.frankframework.frankdoc.testtarget.examples.simple.Start",
         "Module"
       ]
     }
   ],
   "types": [
     {
-      "name": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.IChild",
+      "name": "org.frankframework.frankdoc.testtarget.examples.simple.IChild",
       "members": [
-        "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
-        "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild"
+        "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
+        "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild"
       ]
     },
     {
-      "name": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.TChild",
-      "members": ["nl.nn.adapterframework.frankdoc.testtarget.examples.simple.TChild"]
+      "name": "org.frankframework.frankdoc.testtarget.examples.simple.TChild",
+      "members": ["org.frankframework.frankdoc.testtarget.examples.simple.TChild"]
     },
     {
-      "name": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.Start",
-      "members": ["nl.nn.adapterframework.frankdoc.testtarget.examples.simple.Start"]
+      "name": "org.frankframework.frankdoc.testtarget.examples.simple.Start",
+      "members": ["org.frankframework.frankdoc.testtarget.examples.simple.Start"]
     },
     {
       "name":"Module",
@@ -39,13 +39,13 @@
   "elements": [
     {
       "name": "AbstractParentOfStart",
-      "fullName": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart",
+      "fullName": "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart",
       "abstract": true,
       "elementNames": [],
       "attributes": [
       	{
           "name": "abstractParentOfStartAttribute",
-          "describer": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart"
+          "describer": "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart"
         },
         {
           "name":"active",
@@ -55,19 +55,19 @@
     },
     {
       "name": "DescribedPossibleIChild",
-      "fullName": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
+      "fullName": "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
       "description": "This is the header of the JavaDoc of \\\"DescribedPossibleIChild\\\".\n \n And this is remaining documentation of \\\"DescribedPossibleIChild\\\".",
       "elementNames": ["DescribedPossibleIRoleNameIChild"],
       "attributes": [
         {
           "name": "firstAttribute",
-          "describer": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
+          "describer": "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
           "description": "First attribute of DescribedPossibleIChild.",
           "default": "this default value"
         },
         {
           "name": "secondAttribute",
-          "describer": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
+          "describer": "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
           "description": "Second attribute of DescribedPossibleIChild"
         },
         {
@@ -86,21 +86,21 @@
     },
     {
       "name": "NotDescribedPossibleIChild",
-      "fullName": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild",
+      "fullName": "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild",
       "elementNames": ["NotDescribedPossibleIRoleNameIChild"],
       "attributes": [
         {
           "name": "firstAttribute",
-          "describer": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild",
-          "enum": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.MyEnum"
+          "describer": "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild",
+          "enum": "org.frankframework.frankdoc.testtarget.examples.simple.MyEnum"
         },
         {
           "name": "secondAttribute",
-          "describer": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild"
+          "describer": "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild"
         },
         {
           "name": "thirdAttribute",
-          "describer": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild",
+          "describer": "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild",
           "type": "int"
         },
         {
@@ -120,12 +120,12 @@
     },
     {
       "name": "Start",
-      "fullName": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.Start",
-      "parent": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart",
+      "fullName": "org.frankframework.frankdoc.testtarget.examples.simple.Start",
+      "parent": "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart",
       "elementNames": ["Start"],
       "attributes": [{
         "name": "attribute",
-        "describer": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.Start"
+        "describer": "org.frankframework.frankdoc.testtarget.examples.simple.Start"
       }],
       "children": [
         {
@@ -137,18 +137,18 @@
         {
           "multiple": false,
           "roleName": "roleNameIChild",
-          "type": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.IChild"
+          "type": "org.frankframework.frankdoc.testtarget.examples.simple.IChild"
         },
         {
           "multiple": true,
           "roleName": "roleNameTChild",
-          "type": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.TChild"
+          "type": "org.frankframework.frankdoc.testtarget.examples.simple.TChild"
         }
       ]
     },
     {
       "name": "TChild",
-      "fullName": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.TChild",
+      "fullName": "org.frankframework.frankdoc.testtarget.examples.simple.TChild",
       "description": "This is the header of the JavaDoc of \\\"TChild\\\", with package name nl.nn.something.\n \n And this is remaining documentation of \\\"TChild\\\".",
       "elementNames": ["RoleNameTChild"],
       "attributes": [{
@@ -158,7 +158,7 @@
     }
   ],
   "enums": [{
-    "name": "nl.nn.adapterframework.frankdoc.testtarget.examples.simple.MyEnum",
+    "name": "org.frankframework.frankdoc.testtarget.examples.simple.MyEnum",
     "values": [
       {
         "label": "ONE"

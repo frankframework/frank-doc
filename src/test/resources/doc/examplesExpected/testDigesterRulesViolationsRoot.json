@@ -3,30 +3,30 @@
         {
             "name":"Other",
             "types":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.B",
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.D",
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.A",
+                "org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.B",
+                "org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.D",
+                "org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.A",
                 "Module"
             ]
         }
     ],
     "types":[
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.B",
+            "name":"org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.B",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.B"
+                "org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.B"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.D",
+            "name":"org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.D",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.D"
+                "org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.D"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.A",
+            "name":"org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.A",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.A"
+                "org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.A"
             ]
         },
         {
@@ -39,7 +39,7 @@
     "elements":[
         {
             "name":"A",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.A",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.A",
             "elementNames":[
                 "A"
             ],
@@ -59,18 +59,18 @@
                 {
                     "multiple":true,
                     "roleName":"b",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.B"
+                    "type":"org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.B"
                 },
                 {
                     "multiple":true,
                     "roleName":"d",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.D"
+                    "type":"org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.D"
                 }
             ]
         },
         {
             "name":"B",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.B",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.B",
             "elementNames":[
                 "B"
             ],
@@ -83,7 +83,7 @@
         },
         {
             "name":"D",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.pattern.violation.root.D",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.pattern.violation.root.D",
             "elementNames":[
                 "D"
             ],

@@ -3,42 +3,42 @@
         {
             "name":"Group 1",
             "types":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.IChild1"
+                "org.frankframework.frankdoc.testtarget.examples.ignore.attributes.IChild1"
             ]
         },
         {
             "name":"Group 2",
             "types":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.IChild2"
+                "org.frankframework.frankdoc.testtarget.examples.ignore.attributes.IChild2"
             ]
         },
         {
             "name":"Other",
             "types":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.Master",
+                "org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Master",
                 "Module"
             ]
         }
     ],
     "types":[
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.IChild1",
+            "name":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.IChild1",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.NotSuppressingChild",
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.Parent"
+                "org.frankframework.frankdoc.testtarget.examples.ignore.attributes.NotSuppressingChild",
+                "org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Parent"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.IChild2",
+            "name":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.IChild2",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.GrandChild",
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.SuppressingChild"
+                "org.frankframework.frankdoc.testtarget.examples.ignore.attributes.GrandChild",
+                "org.frankframework.frankdoc.testtarget.examples.ignore.attributes.SuppressingChild"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.Master",
+            "name":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Master",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.Master"
+                "org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Master"
             ]
         },
         {
@@ -51,8 +51,8 @@
     "elements":[
         {
             "name":"GrandChild",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.GrandChild",
-            "parent":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.SuppressingChild",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.GrandChild",
+            "parent":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.SuppressingChild",
             "elementNames":[
                 "GrandChildA",
                 "GrandChildB"
@@ -60,14 +60,14 @@
             "attributes":[
                 {
                     "name":"suppressedAttribute2",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.GrandChild",
+                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.GrandChild",
                     "description":"Documented, so re-introduced as attribute"
                 }
             ]
         },
         {
             "name":"Master",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.Master",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Master",
             "elementNames":[
                 "Master"
             ],
@@ -87,12 +87,12 @@
                 {
                     "multiple":true,
                     "roleName":"a",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.IChild1"
+                    "type":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.IChild1"
                 },
                 {
                     "multiple":true,
                     "roleName":"b",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.IChild2"
+                    "type":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.IChild2"
                 }
             ]
         },
@@ -106,15 +106,15 @@
         },
         {
             "name":"NotSuppressingChild",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.NotSuppressingChild",
-            "parent":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.Parent",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.NotSuppressingChild",
+            "parent":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Parent",
             "elementNames":[
                 "NotSuppressingChildA"
             ],
             "attributes":[
                 {
                     "name":"childAttribute",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.NotSuppressingChild",
+                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.NotSuppressingChild",
                     "description":"Documented child attribute"
                 }
             ]
@@ -133,22 +133,22 @@
         },
         {
             "name":"Parent",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.Parent",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Parent",
             "elementNames":[
                 "ParentA"
             ],
             "attributes":[
                 {
                     "name":"suppressedAttribute",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.Parent"
+                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Parent"
                 },
                 {
                     "name":"suppressedAttribute2",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.Parent"
+                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Parent"
                 },
                 {
                     "name":"notSuppressedAttribute",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.Parent"
+                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Parent"
                 },
                 {
                     "name":"active",
@@ -158,8 +158,8 @@
         },
         {
             "name":"SuppressingChild",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.SuppressingChild",
-            "parent":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.Parent",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.SuppressingChild",
+            "parent":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Parent",
             "elementNames":[
                 "SuppressingChildA",
                 "SuppressingChildB"
@@ -167,7 +167,7 @@
             "attributes":[
                 {
                     "name":"childAttribute",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.examples.ignore.attributes.SuppressingChild"
+                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.SuppressingChild"
                 }
             ],
             "nonInheritedAttributes":[

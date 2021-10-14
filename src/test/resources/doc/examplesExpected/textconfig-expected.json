@@ -3,30 +3,30 @@
         {
             "name":"Other",
             "types":[
-                "nl.nn.adapterframework.frankdoc.testtarget.textconfig.GrandChild",
-                "nl.nn.adapterframework.frankdoc.testtarget.textconfig.IChild",
-                "nl.nn.adapterframework.frankdoc.testtarget.textconfig.Start",
+                "org.frankframework.frankdoc.testtarget.textconfig.GrandChild",
+                "org.frankframework.frankdoc.testtarget.textconfig.IChild",
+                "org.frankframework.frankdoc.testtarget.textconfig.Start",
                 "Module"
             ]
         }
     ],
     "types":[
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.textconfig.GrandChild",
+            "name":"org.frankframework.frankdoc.testtarget.textconfig.GrandChild",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.textconfig.GrandChild"
+                "org.frankframework.frankdoc.testtarget.textconfig.GrandChild"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.textconfig.IChild",
+            "name":"org.frankframework.frankdoc.testtarget.textconfig.IChild",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.textconfig.ChildImpl"
+                "org.frankframework.frankdoc.testtarget.textconfig.ChildImpl"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.textconfig.Start",
+            "name":"org.frankframework.frankdoc.testtarget.textconfig.Start",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.textconfig.Start"
+                "org.frankframework.frankdoc.testtarget.textconfig.Start"
             ]
         },
         {
@@ -39,7 +39,7 @@
     "elements":[
         {
             "name":"ChildImpl",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.textconfig.ChildImpl",
+            "fullName":"org.frankframework.frankdoc.testtarget.textconfig.ChildImpl",
             "elementNames":[
                 "ChildImplA",
                 "ChildImplB"
@@ -58,13 +58,13 @@
                 {
                     "multiple":true,
                     "roleName":"c",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.textconfig.GrandChild"
+                    "type":"org.frankframework.frankdoc.testtarget.textconfig.GrandChild"
                 }
             ]
         },
         {
             "name":"GrandChild",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.textconfig.GrandChild",
+            "fullName":"org.frankframework.frankdoc.testtarget.textconfig.GrandChild",
             "elementNames":[
                 "C"
             ],
@@ -97,14 +97,14 @@
         },
         {
             "name":"Start",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.textconfig.Start",
+            "fullName":"org.frankframework.frankdoc.testtarget.textconfig.Start",
             "elementNames":[
                 "Start"
             ],
             "attributes":[
                 {
                     "name":"i",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.textconfig.Start"
+                    "describer":"org.frankframework.frankdoc.testtarget.textconfig.Start"
                 },
                 {
                     "name":"active",
@@ -125,12 +125,12 @@
                 {
                     "multiple":true,
                     "roleName":"a",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.textconfig.IChild"
+                    "type":"org.frankframework.frankdoc.testtarget.textconfig.IChild"
                 },
                 {
                     "multiple":true,
                     "roleName":"b",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.textconfig.IChild"
+                    "type":"org.frankframework.frankdoc.testtarget.textconfig.IChild"
                 }
             ]
         }

@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
   <xs:element name="Start">
     <xs:annotation>
-      <xs:documentation>nl.nn.adapterframework.frankdoc.testtarget.textconfig.Start</xs:documentation>
+      <xs:documentation>org.frankframework.frankdoc.testtarget.textconfig.Start</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -14,17 +14,17 @@
       </xs:sequence>
       <xs:attribute name="i" type="xs:string" />
       <xs:attribute ref="active" />
-      <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.frankdoc.testtarget.textconfig.Start" use="prohibited" />
+      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.Start" use="prohibited" />
     </xs:complexType>
   </xs:element>
   <xs:element name="C">
     <xs:annotation>
-      <xs:documentation>nl.nn.adapterframework.frankdoc.testtarget.textconfig.GrandChild</xs:documentation>
+      <xs:documentation>org.frankframework.frankdoc.testtarget.textconfig.GrandChild</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="c" />
-      <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.frankdoc.testtarget.textconfig.GrandChild" use="prohibited" />
+      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.GrandChild" use="prohibited" />
     </xs:complexType>
   </xs:element>
   <xs:group name="AElementGroup">
@@ -50,14 +50,14 @@
     <xs:choice>
       <xs:element name="ChildImplA">
         <xs:annotation>
-          <xs:documentation>ChildImplA - nl.nn.adapterframework.frankdoc.testtarget.textconfig.ChildImpl used as A</xs:documentation>
+          <xs:documentation>ChildImplA - org.frankframework.frankdoc.testtarget.textconfig.ChildImpl used as A</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="ChildImplType">
               <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="a" />
-              <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.frankdoc.testtarget.textconfig.ChildImpl" />
+              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.ChildImpl" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
@@ -100,14 +100,14 @@
     <xs:choice>
       <xs:element name="ChildImplB">
         <xs:annotation>
-          <xs:documentation>ChildImplB - nl.nn.adapterframework.frankdoc.testtarget.textconfig.ChildImpl used as B</xs:documentation>
+          <xs:documentation>ChildImplB - org.frankframework.frankdoc.testtarget.textconfig.ChildImpl used as B</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="ChildImplType">
               <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="b" />
-              <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.frankdoc.testtarget.textconfig.ChildImpl" />
+              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.ChildImpl" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>

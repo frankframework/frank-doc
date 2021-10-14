@@ -3,35 +3,35 @@
         {
             "name":"Other",
             "types":[
-                "nl.nn.adapterframework.frankdoc.testtarget.element.name.IFirst",
-                "nl.nn.adapterframework.frankdoc.testtarget.element.name.IThird",
-                "nl.nn.adapterframework.frankdoc.testtarget.element.name.Master",
+                "org.frankframework.frankdoc.testtarget.element.name.IFirst",
+                "org.frankframework.frankdoc.testtarget.element.name.IThird",
+                "org.frankframework.frankdoc.testtarget.element.name.Master",
                 "Module"
             ]
         }
     ],
     "types":[
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.element.name.IFirst",
+            "name":"org.frankframework.frankdoc.testtarget.element.name.IFirst",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.element.name.Child1First",
-                "nl.nn.adapterframework.frankdoc.testtarget.element.name.Child2Second",
-                "nl.nn.adapterframework.frankdoc.testtarget.element.name.Child3Third",
-                "nl.nn.adapterframework.frankdoc.testtarget.element.name.MyFirst"
+                "org.frankframework.frankdoc.testtarget.element.name.Child1First",
+                "org.frankframework.frankdoc.testtarget.element.name.Child2Second",
+                "org.frankframework.frankdoc.testtarget.element.name.Child3Third",
+                "org.frankframework.frankdoc.testtarget.element.name.MyFirst"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.element.name.IThird",
+            "name":"org.frankframework.frankdoc.testtarget.element.name.IThird",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.element.name.Child1First",
-                "nl.nn.adapterframework.frankdoc.testtarget.element.name.Child2Second",
-                "nl.nn.adapterframework.frankdoc.testtarget.element.name.Child3Third"
+                "org.frankframework.frankdoc.testtarget.element.name.Child1First",
+                "org.frankframework.frankdoc.testtarget.element.name.Child2Second",
+                "org.frankframework.frankdoc.testtarget.element.name.Child3Third"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.element.name.Master",
+            "name":"org.frankframework.frankdoc.testtarget.element.name.Master",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.element.name.Master"
+                "org.frankframework.frankdoc.testtarget.element.name.Master"
             ]
         },
         {
@@ -44,7 +44,7 @@
     "elements":[
         {
             "name":"Child1First",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.element.name.Child1First",
+            "fullName":"org.frankframework.frankdoc.testtarget.element.name.Child1First",
             "elementNames":[
                 "Child1A",
                 "Child1B"
@@ -58,7 +58,7 @@
         },
         {
             "name":"Child2Second",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.element.name.Child2Second",
+            "fullName":"org.frankframework.frankdoc.testtarget.element.name.Child2Second",
             "elementNames":[
                 "Child2SecondA",
                 "Child2SecondB"
@@ -72,7 +72,7 @@
         },
         {
             "name":"Child3Third",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.element.name.Child3Third",
+            "fullName":"org.frankframework.frankdoc.testtarget.element.name.Child3Third",
             "elementNames":[
                 "Child3B",
                 "Child3ThirdA"
@@ -86,7 +86,7 @@
         },
         {
             "name":"Master",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.element.name.Master",
+            "fullName":"org.frankframework.frankdoc.testtarget.element.name.Master",
             "elementNames":[
                 "Master"
             ],
@@ -106,12 +106,12 @@
                 {
                     "multiple":true,
                     "roleName":"a",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.element.name.IFirst"
+                    "type":"org.frankframework.frankdoc.testtarget.element.name.IFirst"
                 },
                 {
                     "multiple":true,
                     "roleName":"b",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.element.name.IThird"
+                    "type":"org.frankframework.frankdoc.testtarget.element.name.IThird"
                 }
             ]
         },
@@ -125,7 +125,7 @@
         },
         {
             "name":"MyFirst",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.element.name.MyFirst",
+            "fullName":"org.frankframework.frankdoc.testtarget.element.name.MyFirst",
             "elementNames":[
                 "MyA"
             ],

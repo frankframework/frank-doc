@@ -3,23 +3,23 @@
         {
             "name":"Other",
             "types":[
-                "nl.nn.adapterframework.frankdoc.testtarget.entity.reference.Adapter",
-                "nl.nn.adapterframework.frankdoc.testtarget.entity.reference.Configuration",
+                "org.frankframework.frankdoc.testtarget.entity.reference.Adapter",
+                "org.frankframework.frankdoc.testtarget.entity.reference.Configuration",
                 "Module"
             ]
         }
     ],
     "types":[
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.entity.reference.Adapter",
+            "name":"org.frankframework.frankdoc.testtarget.entity.reference.Adapter",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.entity.reference.Adapter"
+                "org.frankframework.frankdoc.testtarget.entity.reference.Adapter"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.entity.reference.Configuration",
+            "name":"org.frankframework.frankdoc.testtarget.entity.reference.Configuration",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.entity.reference.Configuration"
+                "org.frankframework.frankdoc.testtarget.entity.reference.Configuration"
             ]
         },
         {
@@ -32,7 +32,7 @@
     "elements":[
         {
             "name":"Adapter",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.entity.reference.Adapter",
+            "fullName":"org.frankframework.frankdoc.testtarget.entity.reference.Adapter",
             "description":"The Adapter is the central manager in the IBIS Adapterframework, that has knowledge\n and uses Receiver and a PipeLine.",
             "elementNames":[
                 "Adapter"
@@ -46,7 +46,7 @@
         },
         {
             "name":"Configuration",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.entity.reference.Configuration",
+            "fullName":"org.frankframework.frankdoc.testtarget.entity.reference.Configuration",
             "description":"The Configuration is placeholder of all configuration objects. Besides that, it provides\n functions for starting and stopping adapters as a facade.",
             "elementNames":[
                 "Configuration"
@@ -54,7 +54,7 @@
             "attributes":[
                 {
                     "name":"myAttribute",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.entity.reference.Configuration",
+                    "describer":"org.frankframework.frankdoc.testtarget.entity.reference.Configuration",
                     "description":"This attribute should be allowed in &lt;Configuration&gt;, but not &lt;Module&gt;"
                 },
                 {
@@ -73,7 +73,7 @@
                     "multiple":true,
                     "roleName":"adapter",
                     "description":"Register an adapter with the configuration.",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.entity.reference.Adapter"
+                    "type":"org.frankframework.frankdoc.testtarget.entity.reference.Adapter"
                 }
             ]
         },

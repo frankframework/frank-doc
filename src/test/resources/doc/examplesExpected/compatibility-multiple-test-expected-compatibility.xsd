@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
   <xs:element name="Start">
     <xs:annotation>
-      <xs:documentation>nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.Start</xs:documentation>
+      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Start</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -14,27 +14,27 @@
       <xs:attribute name="myFirstAttribute" type="xs:string" />
       <xs:attribute name="mySecondAttribute" type="xs:string" />
       <xs:attribute ref="active" />
-      <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.Start" use="prohibited" />
+      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Start" use="prohibited" />
     </xs:complexType>
   </xs:element>
   <xs:element name="D">
     <xs:annotation>
-      <xs:documentation>nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild3</xs:documentation>
+      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild3</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="d" />
-      <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild3" use="prohibited" />
+      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild3" use="prohibited" />
     </xs:complexType>
   </xs:element>
   <xs:element name="C">
     <xs:annotation>
-      <xs:documentation>nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.Child3</xs:documentation>
+      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Child3</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="c" />
-      <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.Child3" use="prohibited" />
+      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Child3" use="prohibited" />
     </xs:complexType>
   </xs:element>
   <xs:group name="AElementGroup">
@@ -75,14 +75,14 @@
     <xs:choice>
       <xs:element name="GrandChild1ImplB">
         <xs:annotation>
-          <xs:documentation>GrandChild1ImplB - nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild1Impl used as B</xs:documentation>
+          <xs:documentation>GrandChild1ImplB - org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild1Impl used as B</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="GrandChild1ImplType">
               <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="b" />
-              <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild1Impl" />
+              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild1Impl" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
@@ -94,14 +94,14 @@
     <xs:choice>
       <xs:element name="GrandChild2ImplB">
         <xs:annotation>
-          <xs:documentation>GrandChild2ImplB - nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild2Impl used as B</xs:documentation>
+          <xs:documentation>GrandChild2ImplB - org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild2Impl used as B</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="GrandChild2ImplType">
               <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="b" />
-              <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild2Impl" />
+              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild2Impl" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
@@ -113,28 +113,28 @@
     <xs:choice>
       <xs:element name="Child1DescendantA">
         <xs:annotation>
-          <xs:documentation>Child1DescendantA - nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.Child1Descendant used as A</xs:documentation>
+          <xs:documentation>Child1DescendantA - org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Child1Descendant used as A</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Child1DescendantType">
               <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="a" />
-              <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.Child1Descendant" />
+              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Child1Descendant" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
       </xs:element>
       <xs:element name="Child1ImplA">
         <xs:annotation>
-          <xs:documentation>Child1ImplA - nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.Child1Impl used as A</xs:documentation>
+          <xs:documentation>Child1ImplA - org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Child1Impl used as A</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Child1ImplType">
               <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="a" />
-              <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.Child1Impl" />
+              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Child1Impl" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
@@ -165,14 +165,14 @@
     <xs:choice>
       <xs:element name="Child2ImplA">
         <xs:annotation>
-          <xs:documentation>Child2ImplA - nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.Child2Impl used as A</xs:documentation>
+          <xs:documentation>Child2ImplA - org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Child2Impl used as A</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Child2ImplType">
               <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="a" />
-              <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.frankdoc.testtarget.examples.compatibility.multiple.Child2Impl" />
+              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Child2Impl" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>

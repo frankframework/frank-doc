@@ -331,8 +331,8 @@ public class DocWriterNew {
 		this.attributeTypeStrategy = attributeTypeStrategy;
 	}
 
-	public void init(XsdVersion versionTag) {
-		init(CONFIGURATION, versionTag);
+	public void init(XsdVersion version) {
+		init(CONFIGURATION, version);
 	}
 
 	void init(String startClassName, XsdVersion version) {

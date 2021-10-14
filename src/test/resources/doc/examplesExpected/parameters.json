@@ -3,30 +3,30 @@
         {
             "name":"Other",
             "types":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Child1",
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Child2",
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Master",
+                "org.frankframework.frankdoc.testtarget.examples.parameters.Child1",
+                "org.frankframework.frankdoc.testtarget.examples.parameters.Child2",
+                "org.frankframework.frankdoc.testtarget.examples.parameters.Master",
                 "Module"
             ]
         }
     ],
     "types":[
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Child1",
+            "name":"org.frankframework.frankdoc.testtarget.examples.parameters.Child1",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Child1"
+                "org.frankframework.frankdoc.testtarget.examples.parameters.Child1"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Child2",
+            "name":"org.frankframework.frankdoc.testtarget.examples.parameters.Child2",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Child2"
+                "org.frankframework.frankdoc.testtarget.examples.parameters.Child2"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Master",
+            "name":"org.frankframework.frankdoc.testtarget.examples.parameters.Master",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Master"
+                "org.frankframework.frankdoc.testtarget.examples.parameters.Master"
             ]
         },
         {
@@ -39,7 +39,7 @@
     "elements":[
         {
             "name":"Child1",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Child1",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.parameters.Child1",
             "elementNames":[
                 "A"
             ],
@@ -65,7 +65,7 @@
         },
         {
             "name":"Child2",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Child2",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.parameters.Child2",
             "elementNames":[
                 "B"
             ],
@@ -85,7 +85,7 @@
         },
         {
             "name":"Master",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Master",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.parameters.Master",
             "elementNames":[
                 "Master"
             ],
@@ -105,12 +105,12 @@
                 {
                     "multiple":true,
                     "roleName":"a",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Child1"
+                    "type":"org.frankframework.frankdoc.testtarget.examples.parameters.Child1"
                 },
                 {
                     "multiple":true,
                     "roleName":"b",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.examples.parameters.Child2"
+                    "type":"org.frankframework.frankdoc.testtarget.examples.parameters.Child2"
                 }
             ],
             "parametersDescription":"This is the meaning of the parameters of Master"

@@ -183,7 +183,7 @@ public final class Utils {
 		return xmlReader;
 	}
 
-	private static XMLReader getXMLReader(boolean namespaceAware) throws ParserConfigurationException, SAXException {
+	public static XMLReader getXMLReader(boolean namespaceAware) throws ParserConfigurationException, SAXException {
 		SAXParserFactory factory = getSAXParserFactory(namespaceAware);
 		factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 		XMLReader xmlReader = factory.newSAXParser().getXMLReader();

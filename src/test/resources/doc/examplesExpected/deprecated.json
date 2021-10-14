@@ -3,23 +3,23 @@
         {
             "name":"Other",
             "types":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.deprecated.TChild",
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.deprecated.Master",
+                "org.frankframework.frankdoc.testtarget.examples.deprecated.TChild",
+                "org.frankframework.frankdoc.testtarget.examples.deprecated.Master",
                 "Module"
             ]
         }
     ],
     "types":[
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.deprecated.TChild",
+            "name":"org.frankframework.frankdoc.testtarget.examples.deprecated.TChild",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.deprecated.TChild"
+                "org.frankframework.frankdoc.testtarget.examples.deprecated.TChild"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.deprecated.Master",
+            "name":"org.frankframework.frankdoc.testtarget.examples.deprecated.Master",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.deprecated.Master"
+                "org.frankframework.frankdoc.testtarget.examples.deprecated.Master"
             ]
         },
         {
@@ -32,7 +32,7 @@
     "elements":[
         {
             "name":"Master",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.deprecated.Master",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.deprecated.Master",
             "deprecated":true,
             "elementNames":[
                 "Master"
@@ -41,7 +41,7 @@
                 {
                     "name":"value",
                     "deprecated":true,
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.examples.deprecated.Master"
+                    "describer":"org.frankframework.frankdoc.testtarget.examples.deprecated.Master"
                 },
                 {
         			"name":"active",
@@ -59,7 +59,7 @@
                     "deprecated":true,
                     "multiple":true,
                     "roleName":"roleNameTChild",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.examples.deprecated.TChild"
+                    "type":"org.frankframework.frankdoc.testtarget.examples.deprecated.TChild"
                 }
             ]
         },
@@ -83,7 +83,7 @@
         },
         {
             "name":"TChild",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.deprecated.TChild",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.deprecated.TChild",
             "deprecated":true,
             "elementNames":[
                 "RoleNameTChild"

@@ -3,25 +3,25 @@
         {
             "name":"Other",
             "types":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.IInterface",
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.Master",
+                "org.frankframework.frankdoc.testtarget.examples.exclude.IInterface",
+                "org.frankframework.frankdoc.testtarget.examples.exclude.Master",
                 "Module"
             ]
         }
     ],
     "types":[
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.IInterface",
+            "name":"org.frankframework.frankdoc.testtarget.examples.exclude.IInterface",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.Child",
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.GrandChild",
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.Parent"
+                "org.frankframework.frankdoc.testtarget.examples.exclude.Child",
+                "org.frankframework.frankdoc.testtarget.examples.exclude.GrandChild",
+                "org.frankframework.frankdoc.testtarget.examples.exclude.Parent"
             ]
         },
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.Master",
+            "name":"org.frankframework.frankdoc.testtarget.examples.exclude.Master",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.Master"
+                "org.frankframework.frankdoc.testtarget.examples.exclude.Master"
             ]
         },
         {
@@ -34,8 +34,8 @@
     "elements":[
         {
             "name":"Child",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.Child",
-            "parent":"nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.Parent",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.exclude.Child",
+            "parent":"org.frankframework.frankdoc.testtarget.examples.exclude.Parent",
             "elementNames":[
                 "ChildA"
             ],
@@ -45,15 +45,15 @@
         },
         {
             "name":"GrandChild",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.GrandChild",
-            "parent":"nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.Child",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.exclude.GrandChild",
+            "parent":"org.frankframework.frankdoc.testtarget.examples.exclude.Child",
             "elementNames":[
                 "GrandChildA"
             ]
         },
         {
             "name":"Master",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.Master",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.exclude.Master",
             "elementNames":[
                 "Master"
             ],
@@ -73,7 +73,7 @@
                 {
                     "multiple":true,
                     "roleName":"a",
-                    "type":"nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.IInterface"
+                    "type":"org.frankframework.frankdoc.testtarget.examples.exclude.IInterface"
                 }
             ]
         },
@@ -99,18 +99,18 @@
         },
         {
             "name":"Parent",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.Parent",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.exclude.Parent",
             "elementNames":[
                 "ParentA"
             ],
             "attributes":[
                 {
                     "name":"keptParentAttribute",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.Parent"
+                    "describer":"org.frankframework.frankdoc.testtarget.examples.exclude.Parent"
                 },
                 {
                     "name":"childExcludedAttribute",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.examples.exclude.Parent"
+                    "describer":"org.frankframework.frankdoc.testtarget.examples.exclude.Parent"
                 },
                 {
                     "name":"active",

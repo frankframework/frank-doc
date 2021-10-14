@@ -3,16 +3,16 @@
         {
             "name":"Other",
             "types":[
-                "nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.Master",
+                "org.frankframework.frankdoc.testtarget.attribute.overload.Master",
                 "Module"
             ]
         }
     ],
     "types":[
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.Master",
+            "name":"org.frankframework.frankdoc.testtarget.attribute.overload.Master",
             "members":[
-                "nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.Master"
+                "org.frankframework.frankdoc.testtarget.attribute.overload.Master"
             ]
         },
         {
@@ -25,25 +25,25 @@
     "elements":[
         {
             "name":"Master",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.Master",
-            "parent":"nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.Parent",
+            "fullName":"org.frankframework.frankdoc.testtarget.attribute.overload.Master",
+            "parent":"org.frankframework.frankdoc.testtarget.attribute.overload.Parent",
             "elementNames":[
                 "Master"
             ],
             "attributes":[
                 {
                     "name":"overloadedEnum",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.Master",
-                    "enum":"nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.MyEnum"
+                    "describer":"org.frankframework.frankdoc.testtarget.attribute.overload.Master",
+                    "enum":"org.frankframework.frankdoc.testtarget.attribute.overload.MyEnum"
                 },
                 {
                     "name":"myAttribute",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.Master",
-                    "enum":"nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.MyEnum"
+                    "describer":"org.frankframework.frankdoc.testtarget.attribute.overload.Master",
+                    "enum":"org.frankframework.frankdoc.testtarget.attribute.overload.MyEnum"
                 },
                 {
                     "name":"myAttribute2",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.Master"
+                    "describer":"org.frankframework.frankdoc.testtarget.attribute.overload.Master"
                 }
             ],
             "children":[
@@ -77,13 +77,13 @@
         },
         {
             "name":"Parent",
-            "fullName":"nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.Parent",
+            "fullName":"org.frankframework.frankdoc.testtarget.attribute.overload.Parent",
             "elementNames":[
             ],
             "attributes":[
                 {
                     "name":"overloadedInherited",
-                    "describer":"nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.Parent",
+                    "describer":"org.frankframework.frankdoc.testtarget.attribute.overload.Parent",
                     "type":"int"
                 },
                 {
@@ -95,7 +95,7 @@
     ],
     "enums":[
         {
-            "name":"nl.nn.adapterframework.frankdoc.testtarget.attribute.overload.MyEnum",
+            "name":"org.frankframework.frankdoc.testtarget.attribute.overload.MyEnum",
             "values":[
                 {
                     "label":"FIRST"
