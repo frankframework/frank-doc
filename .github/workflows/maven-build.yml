@@ -42,6 +42,9 @@ jobs:
         distribution: 'zulu'
         java-package: jdk
 
+    - name: List Java distribution files
+      run: tree ${JAVA_HOME}
+
     - name: Build with Maven
       env:
         CI_SERVICE: GITHUB
