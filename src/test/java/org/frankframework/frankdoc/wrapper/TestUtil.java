@@ -10,7 +10,7 @@ import java.util.Properties;
 
 import com.sun.javadoc.ClassDoc;
 
-import nl.nn.adapterframework.frankdoc.doclet.classdocs.EasyDoclet;
+import org.frankframework.frankdoc.testdoclet.EasyDoclet;
 
 public final class TestUtil {
 	private static final Properties BUILD_PROPERTIES = new TestUtil().loadBuildProperties();

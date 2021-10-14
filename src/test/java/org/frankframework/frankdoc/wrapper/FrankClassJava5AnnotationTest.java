@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.wrapper;
 
-import static nl.nn.adapterframework.frankdoc.doclet.TestUtil.JAVADOC_GROUP_ANNOTATION;
+import static org.frankframework.frankdoc.wrapper.TestUtil.JAVADOC_GROUP_ANNOTATION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
