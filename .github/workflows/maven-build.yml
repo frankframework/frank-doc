@@ -49,7 +49,7 @@ jobs:
       env:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
-        JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
+        JAVA_OPTS: "-Xms1G -XX:+UseParallelGC -cp ${JAVA_HOME}/lib/tools.jar"
       run: mvn -B -V -T1 -Dmaven.javadoc.skip=true package
 
     - name: Upload coverage to Codecov
