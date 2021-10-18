@@ -232,9 +232,9 @@
 			<version>1.0.4</version>
 		</dependency>
 		<dependency>
-			<groupId>com.testautomationguru.pdfutil</groupId>
-			<artifactId>pdf-util</artifactId>
-			<version>0.0.3</version>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.10.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
