@@ -24,8 +24,6 @@ import lombok.Setter;
  * Java representation of a digester rule specified in the digester-rules.xml file.
  * 
  * Copied from package nl.nn.adapterframework.configuration.digester.
- * 
- * TODO: Copy to new frank-doc project.
  *
  */
 public class DigesterRule {
