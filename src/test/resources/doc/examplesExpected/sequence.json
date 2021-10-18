@@ -1,0 +1,129 @@
+{
+  "groups": [
+    {
+      "name": "Other",
+      "types":[
+        "org.frankframework.frankdoc.testtarget.examples.sequence.IMnemonic",
+        "org.frankframework.frankdoc.testtarget.examples.sequence.INemesis",
+        "org.frankframework.frankdoc.testtarget.examples.sequence.IProton",
+        "org.frankframework.frankdoc.testtarget.examples.sequence.Opaque",
+        "org.frankframework.frankdoc.testtarget.examples.sequence.Master",
+        "Module"
+      ]
+    }
+  ],
+  "types":[
+    {
+      "name":"org.frankframework.frankdoc.testtarget.examples.sequence.IMnemonic",
+      "members":[]
+    },
+    {
+      "name":"org.frankframework.frankdoc.testtarget.examples.sequence.INemesis",
+      "members":[]
+    },
+    {
+      "name":"org.frankframework.frankdoc.testtarget.examples.sequence.IProton",
+      "members":[]
+    },
+    {
+      "name":"org.frankframework.frankdoc.testtarget.examples.sequence.Opaque",
+      "members": ["org.frankframework.frankdoc.testtarget.examples.sequence.Opaque"]
+    },
+    {
+      "name":"org.frankframework.frankdoc.testtarget.examples.sequence.Master",
+      "members": ["org.frankframework.frankdoc.testtarget.examples.sequence.Master"]
+    },
+    {
+      "name":"Module",
+      "members":[
+        "Module"
+      ]
+    }
+  ],
+  "elements": [
+    {
+      "name": "Master",
+      "fullName": "org.frankframework.frankdoc.testtarget.examples.sequence.Master",
+      "description": "We test here that the sequence of groups, config children and attributes is right.\n It is important that the sequences in @IbisDoc annotations, in the alphabetic order\n and in the order of appearance are all different.",
+      "elementNames": ["Master"],
+      "attributes": [
+        {
+          "name": "clemens",
+          "describer": "org.frankframework.frankdoc.testtarget.examples.sequence.Master"
+        },
+        {
+          "name": "arnold",
+          "describer": "org.frankframework.frankdoc.testtarget.examples.sequence.Master"
+        },
+        {
+          "name": "dennis",
+          "describer": "org.frankframework.frankdoc.testtarget.examples.sequence.Master"
+        },
+        {
+          "name": "bernhard",
+          "describer": "org.frankframework.frankdoc.testtarget.examples.sequence.Master"
+        },
+        {
+          "name":"active",
+          "description":"If defined and empty or false, then this element and all its children are ignored"
+        }
+      ],
+      "children": [
+        {
+          "multiple":true,
+          "roleName":"module",
+          "description":"Root element for file you include as entity reference. Does not influence the behavior of your Frank config.",
+          "type":"Module"
+        },
+        {
+          "multiple": false,
+          "roleName": "roleAlpha",
+          "type": "org.frankframework.frankdoc.testtarget.examples.sequence.IProton"
+        },
+        {
+          "multiple": false,
+          "roleName": "roleBeta",
+          "type": "org.frankframework.frankdoc.testtarget.examples.sequence.IMnemonic" 
+        },
+        {
+          "multiple": false,
+          "roleName": "roleEpsilon",
+          "type": "org.frankframework.frankdoc.testtarget.examples.sequence.Opaque"
+        },
+        {
+          "multiple": false,
+          "roleName": "roleDelta",
+          "type": "org.frankframework.frankdoc.testtarget.examples.sequence.INemesis"
+        }
+      ]
+    },
+    {
+      "name":"Module",
+      "fullName":"Module",
+      "description":"Root element for file you include as entity reference. Does not influence the behavior of your Frank config.",
+      "elementNames":[
+        "Module"
+      ]
+    },
+    {
+      "name": "Object",
+      "fullName": "java.lang.Object",
+      "elementNames": [],
+      "attributes": [{
+        "name":"active",
+        "description":"If defined and empty or false, then this element and all its children are ignored"
+      }]
+    },
+    {
+      "name": "Opaque",
+      "fullName": "org.frankframework.frankdoc.testtarget.examples.sequence.Opaque",
+      "elementNames": ["RoleEpsilon"],
+      "attributes": [{
+        "name":"active",
+        "description":"If defined and empty or false, then this element and all its children are ignored"
+      }]
+    }
+  ],
+  "enums": [
+  ]
+}
