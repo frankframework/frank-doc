@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 WeAreFrank!
+   Copyright 2020, 2021 WeAreFrank!
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -30,8 +30,6 @@ import org.frankframework.frankdoc.util.LogUtil;
  * 
  * Copied from package nl.nn.adapterframework.configuration.digester.
  * 
- * TODO: Copy to new frank-doc project.
- *
  */
 public abstract class DigesterRulesHandler extends DefaultHandler {
 	protected final Logger log = LogUtil.getLogger(DigesterRulesHandler.class);
