@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
@@ -86,10 +87,10 @@ public final class TestUtil {
 	}
 
 	public static String getTestFile(String file) throws IOException {
-		return getTestFile(file, "UTF-8");
+		return getTestFile(file, Charset.forName("UTF-8"));
 	}
 
-	public static String getTestFile(String file, String charset) throws IOException {
+	public static String getTestFile(String file, Charset charset) throws IOException {
 		URL url = getTestFileURL(file);
 		if (url == null) {
 			System.out.println("file [" + file + "] not found");
@@ -102,11 +103,11 @@ public final class TestUtil {
 		return TestUtil.class.getResource(file);
 	}
 
-	public static String getTestFile(URL url, String charset) throws IOException {
+	public static String getTestFile(URL url, Charset charset) throws IOException {
 		if (url == null) {
 			return null;
 		}
-		InputStreamReader isr = new InputStreamReader(new BufferedInputStream(url.openStream()), "UTF-8");
+		InputStreamReader isr = new InputStreamReader(new BufferedInputStream(url.openStream()), charset);
 		return readLines(isr);
 	}
 
