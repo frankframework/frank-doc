@@ -179,7 +179,7 @@ public enum AttributeTypeStrategy {
 		}
 
 		private String getPattern() {
-			return "\\!?" + "(" + getPatternThatMightBeNegated() + ")";
+			return "!?" + "(" + getPatternThatMightBeNegated() + ")";
 		}
 
 		private String getPatternThatMightBeNegated() {
