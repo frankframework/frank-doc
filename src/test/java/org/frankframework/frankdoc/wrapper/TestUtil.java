@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
@@ -18,10 +17,6 @@ import java.util.Properties;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.sax.SAXSource;
 
-import org.apache.commons.codec.Charsets;
-import org.apache.commons.io.ByteOrderMark;
-import org.apache.commons.io.input.BOMInputStream;
-import org.apache.commons.lang3.StringUtils;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.testdoclet.EasyDoclet;
 import org.xml.sax.InputSource;
@@ -30,9 +25,6 @@ import org.xml.sax.SAXException;
 import com.sun.javadoc.ClassDoc;
 
 public final class TestUtil {
-	public static final Charset DEFAULT_CHARSET = Charsets.UTF_8;
-	public static final String DEFAULT_INPUT_STREAM_ENCODING=DEFAULT_CHARSET.displayName();
-
 	private static final Properties BUILD_PROPERTIES = new TestUtil().loadBuildProperties();
 	private static final File TEST_SOURCE_DIRECTORY = new File(BUILD_PROPERTIES.getProperty("testSourceDirectory"));
 
@@ -114,7 +106,8 @@ public final class TestUtil {
 		if (url == null) {
 			return null;
 		}
-		return readLines(getCharsetDetectingInputStreamReader(url.openStream(), charset));
+		InputStreamReader isr = new InputStreamReader(new BufferedInputStream(url.openStream()), "UTF-8");
+		return readLines(isr);
 	}
 
 	public static String readLines(Reader reader) throws IOException {
@@ -129,21 +122,6 @@ public final class TestUtil {
 			}
 		}
 		return string.toString();
-	}
-
-	/**
-	 * Return a Reader that reads the InputStream in the character set specified by the BOM. If no BOM is found, a default character set is used.
-	 */
-	public static Reader getCharsetDetectingInputStreamReader(InputStream inputStream, String defaultCharset) throws IOException {
-		BOMInputStream bOMInputStream = new BOMInputStream(inputStream,ByteOrderMark.UTF_8, ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE);
-		ByteOrderMark bom = bOMInputStream.getBOM();
-		String charsetName = bom == null ? defaultCharset : bom.getCharsetName();
-
-		if(StringUtils.isEmpty(charsetName)) {
-			charsetName = DEFAULT_INPUT_STREAM_ENCODING;
-		}
-
-		return new InputStreamReader(new BufferedInputStream(bOMInputStream), charsetName);
 	}
 
 	static public void assertEqualsIgnoreCRLF(String expected, String actual) {
