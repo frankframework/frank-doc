@@ -124,7 +124,6 @@ public abstract class ConfigChild extends ElementChild {
 	 * have a config child for the {@link ElementRole}.
 	 */
 	static List<ConfigChild> removeDuplicates(List<ConfigChild> orig) {
-		List<ConfigChildKey> keySequence = orig.stream().map(ConfigChild::getKey).collect(Collectors.toList());
 		Map<ConfigChildKey, List<ConfigChild>> byKey = orig.stream().collect(Collectors.groupingBy(ConfigChild::getKey));
 		List<ConfigChild> result = new ArrayList<>();
 		for(ConfigChildKey key: byKey.keySet()) {
