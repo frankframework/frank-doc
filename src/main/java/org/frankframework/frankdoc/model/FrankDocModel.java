@@ -459,6 +459,7 @@ public class FrankDocModel {
 			log.trace("For attribute [{}], have @IbisDoc without @IbisDocRef", attribute);
 			attribute.parseIbisDocAnnotation(ibisDoc);
 		}
+		attribute.handleDefaultExplicitNull(method.getParameterTypes()[0]);
 		log.trace("Done documenting attribute [{}]", () -> attribute.getName());
 	}
 

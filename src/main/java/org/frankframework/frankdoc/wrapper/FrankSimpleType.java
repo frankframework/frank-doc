@@ -47,4 +47,9 @@ abstract class FrankSimpleType implements FrankType {
 	public boolean isEnum() {
 		return false;
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

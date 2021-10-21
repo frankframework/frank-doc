@@ -16,13 +16,20 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankType;
+
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 public class FrankAttribute extends ElementChild {
+	private static Logger log = LogUtil.getLogger(FrankAttribute.class);
+
 	static final String JAVADOC_NO_FRANK_ATTRIBUTE = "@ff.noAttribute";
 
 	@EqualsAndHashCode(callSuper = false)
@@ -70,6 +77,26 @@ public class FrankAttribute extends ElementChild {
 	@Override
 	boolean overrideIsMeaningful(ElementChild overriddenFrom) {
 		return false;
+	}
+
+	/**
+	 * If an explicit default value of null is given for an object type attribute, then
+	 * it means that it is allowed not to set the attribute. This means we do not want a
+	 * default value in the XSDs. We implement this by omitting the default value.
+	 */
+	void handleDefaultExplicitNull(FrankType parameterType) {
+		if(getDefaultValue() == null) {
+			return;
+		}
+		boolean isExplicitNull = (StringUtils.isBlank(getDefaultValue()) || getDefaultValue().equals("null"));
+		if(isExplicitNull && parameterType.isPrimitive()) {
+			log.warn("Attribute [{}] is of primitive type [{}] but has default value null", toString(), parameterType.toString());
+			return;
+		}
+		if(isExplicitNull) {
+			log.trace("Attribute [{}] has explicit default value [{}], clearing the default value", () -> toString(), () -> getDefaultValue());
+			clearDefaultValue();
+		}
 	}
 
 	void typeCheckDefaultValue() throws FrankDocException {
