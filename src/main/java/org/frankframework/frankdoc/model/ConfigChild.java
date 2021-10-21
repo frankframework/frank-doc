@@ -127,7 +127,7 @@ public abstract class ConfigChild extends ElementChild {
 		List<ConfigChildKey> keySequence = orig.stream().map(ConfigChild::getKey).collect(Collectors.toList());
 		Map<ConfigChildKey, List<ConfigChild>> byKey = orig.stream().collect(Collectors.groupingBy(ConfigChild::getKey));
 		List<ConfigChild> result = new ArrayList<>();
-		for(ConfigChildKey key: keySequence) {
+		for(ConfigChildKey key: byKey.keySet()) {
 			List<ConfigChild> bucket = new ArrayList<>(byKey.get(key));
 			Collections.sort(bucket, REMOVE_DUPLICATES_COMPARATOR);
 			ConfigChild selected = bucket.get(0);
