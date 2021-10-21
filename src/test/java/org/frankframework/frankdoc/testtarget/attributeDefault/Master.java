@@ -34,4 +34,13 @@ public class Master {
 	 */
 	public void setMandatory(boolean b) {
 	}
+
+	// Should produce a warning
+	/**
+	 * @ff.default something
+	 * @ff.mandatory
+	 * @param s
+	 */
+	public void setMandatoryWithDefault(String s) {
+	}
 }

@@ -43,6 +43,11 @@
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="mandatory" type="frankBoolean" use="required" />
+    <xs:attribute name="mandatoryWithDefault" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Default: something</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:attributeGroup>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
