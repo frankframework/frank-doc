@@ -31,6 +31,7 @@ public class FrankAttribute extends ElementChild {
 	private static Logger log = LogUtil.getLogger(FrankAttribute.class);
 
 	static final String JAVADOC_NO_FRANK_ATTRIBUTE = "@ff.noAttribute";
+	static final String JAVADOC_ATTRIBUTE_MANDATORY = "@ff.mandatory";
 
 	@EqualsAndHashCode(callSuper = false)
 	static class Key extends AbstractKey {
@@ -62,6 +63,7 @@ public class FrankAttribute extends ElementChild {
 	 * not exist, then it also should not be inherited.
 	 */
 	private @Getter @Setter(AccessLevel.PACKAGE) boolean excluded = false;
+	private @Getter @Setter(AccessLevel.PACKAGE) boolean mandatory = false;
 
 	public FrankAttribute(String name, FrankElement attributeOwner) {
 		super(attributeOwner);

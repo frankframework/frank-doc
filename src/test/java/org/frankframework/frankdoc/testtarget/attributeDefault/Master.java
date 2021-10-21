@@ -28,4 +28,10 @@ public class Master {
 	@IbisDoc({"20", "Description setExplicitNullOnPrimitive()", "null"})
 	public void setExplicitNullOnPrimitive(short s) {
 	}
+
+	/**
+	 * @ff.mandatory
+	 */
+	public void setMandatory(boolean b) {
+	}
 }

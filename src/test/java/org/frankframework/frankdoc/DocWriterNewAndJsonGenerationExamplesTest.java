@@ -70,6 +70,8 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			// The resulting JSON file is not relevant. Please run this test separately and check that you have warnings about overloaded attributes.
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.attribute.overload.Master", null, "overloadedAttributes.json"},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.attribute.enumExclude.Master", "enumExcludedAttributes.xsd", "enumExcludedAttributes.json"},
+			// Should produce the following warning:
+			// Attribute [Master.explicitNullOnPrimitive] is of primitive type [short] but has default value null
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.attributeDefault.Master", "attributeDefault.xsd", null}
 		});
 	}

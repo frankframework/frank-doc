@@ -42,6 +42,7 @@
         <xs:documentation>Description setExplicitNullOnPrimitive() Default: null</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="mandatory" type="frankBoolean" use="required" />
   </xs:attributeGroup>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
