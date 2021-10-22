@@ -25,6 +25,7 @@ import com.sun.javadoc.RootDoc;
 
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.util.StopOnErrorAppender;
 
 public class DocletBuilder extends com.sun.javadoc.Doclet {
 	private static final Logger log = LogUtil.getLogger(DocletBuilder.class);
@@ -43,6 +44,10 @@ public class DocletBuilder extends com.sun.javadoc.Doclet {
     	}
     	catch(FrankDocException e) {
     		log.error("FrankDocException occurred while running Frank!Doc Doclet", e);
+    		result = false;
+    	}
+    	if(StopOnErrorAppender.HAVE_ERRORS) {
+    		log.error("There were log statements with level ERROR or FATAL. Failing");
     		result = false;
     	}
     	return result;
