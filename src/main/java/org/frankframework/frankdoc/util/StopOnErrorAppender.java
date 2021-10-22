@@ -46,15 +46,15 @@ public class StopOnErrorAppender extends AbstractAppender {
 	public static boolean HAVE_ERRORS = false;
 
 	@PluginBuilderFactory
-    public static Builder<?> newBuilder() {
-    	return new Builder();
-    }
+	public static Builder<?> newBuilder() {
+		return new Builder();
+	}
 
 	public static class Builder<B extends Builder<B>> extends AbstractFilterable.Builder<B>
-	implements org.apache.logging.log4j.core.util.Builder<StopOnErrorAppender> {
+			implements org.apache.logging.log4j.core.util.Builder<StopOnErrorAppender> {
 		@PluginBuilderAttribute
 		@Required(message = "No name provided for StopOnErrorAppender")
-		private String name;		
+		private String name;
 
 		@PluginConfiguration
 		private Configuration configuration;
@@ -90,11 +90,11 @@ public class StopOnErrorAppender extends AbstractAppender {
 	private boolean didLog = false;
 
 	public StopOnErrorAppender(final String name, final Filter filter, final Configuration configuration, final Layout<? extends Serializable> layout,
-            final boolean ignoreExceptions, final Property[] properties, AppenderRef[] delegateRefs) {
+			final boolean ignoreExceptions, final Property[] properties, AppenderRef[] delegateRefs) {
 		super(name, filter, layout, ignoreExceptions, properties);
 		this.delegateRefs = delegateRefs;
 		this.configuration = configuration;
-		if(delegateRefs == null) {
+		if (delegateRefs == null) {
 			LOGGER.error("No delegates supplied to StopOnErrorAppender");
 			return;
 		}
@@ -103,11 +103,9 @@ public class StopOnErrorAppender extends AbstractAppender {
 	@Override
 	public void start() {
 		final Map<String, Appender> map = configuration.getAppenders();
-		List<String> delegateNames = Arrays.asList(delegateRefs).stream()
-				.map(AppenderRef::getRef)
-				.collect(Collectors.toList());
-		for(String delegateName: delegateNames) {
-			if(map.containsKey(delegateName)) {
+		List<String> delegateNames = Arrays.asList(delegateRefs).stream().map(AppenderRef::getRef).collect(Collectors.toList());
+		for (String delegateName : delegateNames) {
+			if (map.containsKey(delegateName)) {
 				delegates.add(map.get(delegateName));
 			} else {
 				LOGGER.error("Unknown appender [{}]", delegateName);
@@ -118,12 +116,12 @@ public class StopOnErrorAppender extends AbstractAppender {
 
 	@Override
 	public void append(LogEvent event) {
-		if(! didLog) {
+		if (!didLog) {
 			didLog = true;
 		}
 		delegates.forEach(d -> d.append(event));
 		Level level = event.getLevel();
-		if((level == Level.FATAL) || (level == Level.ERROR)) {
+		if ((level == Level.FATAL) || (level == Level.ERROR)) {
 			HAVE_ERRORS = true;
 		}
 	}
