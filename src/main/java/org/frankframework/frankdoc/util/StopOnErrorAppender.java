@@ -87,7 +87,6 @@ public class StopOnErrorAppender extends AbstractAppender {
 	private AppenderRef[] delegateRefs;
 	private Configuration configuration;
 	private List<Appender> delegates = new ArrayList<>();
-	private boolean didLog = false;
 
 	public StopOnErrorAppender(final String name, final Filter filter, final Configuration configuration, final Layout<? extends Serializable> layout,
 			final boolean ignoreExceptions, final Property[] properties, AppenderRef[] delegateRefs) {
@@ -116,9 +115,6 @@ public class StopOnErrorAppender extends AbstractAppender {
 
 	@Override
 	public void append(LogEvent event) {
-		if (!didLog) {
-			didLog = true;
-		}
 		delegates.forEach(d -> d.append(event));
 		Level level = event.getLevel();
 		if ((level == Level.FATAL) || (level == Level.ERROR)) {
