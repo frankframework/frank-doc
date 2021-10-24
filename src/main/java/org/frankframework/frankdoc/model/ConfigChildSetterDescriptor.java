@@ -48,10 +48,12 @@ abstract class ConfigChildSetterDescriptor {
 	private @Getter boolean mandatory;
 	private @Getter boolean allowMultiple;
 	private @Getter DigesterRulesPattern pattern;
+	private @Getter String typeAttribute;
 
-	ConfigChildSetterDescriptor(String methodName, DigesterRulesPattern pattern) throws SAXException {
+	ConfigChildSetterDescriptor(String methodName, DigesterRulesPattern pattern, String typeAttribute) throws SAXException {
 		this.methodName = methodName;
 		this.pattern = pattern;
+		this.typeAttribute = typeAttribute;
 		mandatory = false;
 		if(methodName.startsWith("set")) {
 			allowMultiple = false;
@@ -80,8 +82,8 @@ abstract class ConfigChildSetterDescriptor {
 	abstract boolean isForObject();
 
 	static class ForObject extends ConfigChildSetterDescriptor {
-		ForObject(String methodName, DigesterRulesPattern pattern) throws SAXException {
-			super(methodName, pattern);
+		ForObject(String methodName, DigesterRulesPattern pattern, String typeAttribute) throws SAXException {
+			super(methodName, pattern, typeAttribute);
 		}
 
 		@Override
@@ -96,8 +98,8 @@ abstract class ConfigChildSetterDescriptor {
 	}
 
 	static class ForText extends ConfigChildSetterDescriptor {
-		ForText(String methodName, DigesterRulesPattern pattern) throws SAXException {
-			super(methodName, pattern);
+		ForText(String methodName, DigesterRulesPattern pattern, String typeAttribute) throws SAXException {
+			super(methodName, pattern, typeAttribute);
 		}
 
 		@Override

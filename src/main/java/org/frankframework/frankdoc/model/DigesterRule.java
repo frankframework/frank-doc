@@ -60,6 +60,11 @@ public class DigesterRule {
 	 */
 	private @Getter @Setter String registerTextMethod;
 
+	/**
+	 * You can do <pipe className="nl.nn. ...">, but <Job function="nl.nn. ...">
+	 */
+	private @Getter @Setter String typeAttribute = "className";
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

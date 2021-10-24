@@ -59,10 +59,13 @@ public class ElementRole implements Comparable<ElementRole> {
 	// Used to solve conflict caused by ElementType interface inheritance.
 	private @Setter(AccessLevel.PACKAGE) ElementRole highestCommonInterface;
 
-	private ElementRole(ElementType elementType, String roleName, int roleNameSeq) {
+	private @Getter String typeAttribute;
+
+	private ElementRole(ElementType elementType, String roleName, int roleNameSeq, String typeAttribute) {
 		this.elementType = elementType;
 		this.roleName = roleName;
 		this.roleNameSeq = roleNameSeq;
+		this.typeAttribute = typeAttribute;
 		defaultElementOptionConflict = null;
 	}
 
@@ -197,8 +200,8 @@ public class ElementRole implements Comparable<ElementRole> {
 	static class Factory {
 		private final Map<String, Integer> numUsagePerRoleName = new HashMap<>();
 
-		ElementRole create(ElementType elementType, String roleName) {
-			return new ElementRole(elementType, roleName, newRoleNameSeq(roleName));
+		ElementRole create(ElementType elementType, String roleName, String typeAttribute) {
+			return new ElementRole(elementType, roleName, newRoleNameSeq(roleName), typeAttribute);
 		}
 
 		private int newRoleNameSeq(String roleName) {

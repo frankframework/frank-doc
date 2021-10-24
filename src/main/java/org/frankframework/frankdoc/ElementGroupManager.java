@@ -94,15 +94,15 @@ class ElementGroupManager {
 
 	void addGenericOptionAttributeTask(List<ElementRole> roles, XmlBuilder builder) {
 		Set<ElementRole.Key> key = ConfigChildSet.getKey(roles);
-		genericOptionAttributeTasks.put(key, new GenericOptionAttributeTask(key, builder));
+		genericOptionAttributeTasks.put(key, new GenericOptionAttributeTask(key, roles, builder));
 	}
 
 	boolean hasGenericOptionAttributeTask(ConfigChildSet configChildSet) {
 		return genericOptionAttributeTasks.containsKey(keyOf(configChildSet));
 	}
 
-	XmlBuilder doGenericOptionAttributeTask(ConfigChildSet configChildSet) {
-		return genericOptionAttributeTasks.remove(keyOf(configChildSet)).getBuilder();
+	GenericOptionAttributeTask removeGenericOptionAttributeTask(ConfigChildSet configChildSet) {
+		return genericOptionAttributeTasks.remove(keyOf(configChildSet));
 	}
 
 	List<GenericOptionAttributeTask> doLeftoverGenericOptionAttributeTasks() {

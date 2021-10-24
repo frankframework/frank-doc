@@ -51,7 +51,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
-
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.ConfigChild;
 import org.frankframework.frankdoc.model.ConfigChildGroupKind;
@@ -63,6 +62,7 @@ import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.model.FrankElement;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
+import org.frankframework.frankdoc.model.RootFrankElement;
 import org.frankframework.frankdoc.model.TextConfigChild;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
@@ -310,7 +310,6 @@ public class DocWriterNew {
 
 	private static final String CONFIGURATION = "nl.nn.adapterframework.configuration.Configuration";
 	private static final String ELEMENT_ROLE = "elementRole";
-	private static final String CLASS_NAME = "className";
 	private static final String ELEMENT_GROUP_BASE = "ElementGroupBase";
 	static final String ATTRIBUTE_VALUES_TYPE = "AttributeValuesType";
 	static final String VARIABLE_REFERENCE = "variableRef";
@@ -399,7 +398,9 @@ public class DocWriterNew {
 		XmlBuilder complexContent = addComplexContent(complexType);
 		XmlBuilder extension = addExtension(complexContent, xsdElementType(startElement));
 		attributeTypeStrategy.addAttributeActive(extension);
-		addClassNameAttribute(extension, startElement);
+		RootFrankElement asRoot = (RootFrankElement) startElement;
+		log.trace("typeAttribute of [{}] is [{}]", startElement.toString(), asRoot.getTypeAttribute());
+		addAttribute(extension, asRoot.getTypeAttribute(), FIXED, asRoot.getFullName(), version.getClassNameAttributeUse(asRoot));
 	}
 
 	// Defines XML element <Module>
@@ -431,14 +432,11 @@ public class DocWriterNew {
 			String xsdElementName = frankElement.getSimpleName();
 			XmlBuilder attributeBuilder = recursivelyDefineXsdElementUnchecked(frankElement, xsdElementName);
 			attributeTypeStrategy.addAttributeActive(attributeBuilder);
-			log.trace("Adding attribute className for FrankElement [{}]", () -> frankElement.getFullName());
-			addClassNameAttribute(attributeBuilder, frankElement);
+			RootFrankElement asRoot = (RootFrankElement) frankElement;
+			log.trace("Adding attribute [{}] for FrankElement [{}]", () -> asRoot.getTypeAttribute(), () -> frankElement.getFullName());
+			addAttribute(attributeBuilder, asRoot.getTypeAttribute(), FIXED, frankElement.getFullName(), version.getClassNameAttributeUse(frankElement));
 		}
 		log.trace("Leave top FrankElement [{}]", () -> frankElement.getFullName());
-	}
-
-	private void addClassNameAttribute(XmlBuilder context, FrankElement frankElement) {
-		addAttribute(context, CLASS_NAME, FIXED, frankElement.getFullName(), version.getClassNameAttributeUse(frankElement));
 	}
 
 	private XmlBuilder recursivelyDefineXsdElementUnchecked(FrankElement frankElement, String xsdElementName) {
@@ -729,7 +727,6 @@ public class DocWriterNew {
 			log.trace("Not yet defined in XML Schema, going to define it");
 			String xsdElementName = frankElement.getXsdElementName(role);
 			XmlBuilder attributeBuilder = recursivelyDefineXsdElementUnchecked(frankElement, xsdElementName);
-			log.trace("Adding attributes className and element group for FrankElement [{}]", () -> frankElement.getFullName());
 			addExtraAttributesNotFromModel(attributeBuilder, frankElement, role);
 			log.trace("Done defining FrankElement [{}], XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
 		} else {
@@ -738,9 +735,11 @@ public class DocWriterNew {
 	}
 
 	private void addExtraAttributesNotFromModel(XmlBuilder context, FrankElement frankElement, ElementRole role) {
+		log.trace("Adding attributes active, {} and [{}] for FrankElement [{}]",
+				() -> ELEMENT_ROLE, () -> role.getTypeAttribute(), () -> frankElement.getFullName());
 		attributeTypeStrategy.addAttributeActive(context);
 		addAttribute(context, ELEMENT_ROLE, FIXED, role.getRoleName(), version.getRoleNameAttributeUse());
-		addClassNameAttribute(context, frankElement);
+		addAttribute(context, role.getTypeAttribute(), FIXED, frankElement.getFullName(), version.getClassNameAttributeUse(frankElement));
 	}
 
 	private XmlBuilder addConfigChildWithElementGroup(XmlBuilder context, ObjectConfigChild child) {
@@ -764,8 +763,8 @@ public class DocWriterNew {
 		log.trace("Checking whether generic element option has its attributes");
 		if(elementGroupManager.hasGenericOptionAttributeTask(configChildSet)) {
 			log.trace("Finishing generic element option with its attributes");
-			XmlBuilder builder = elementGroupManager.doGenericOptionAttributeTask(configChildSet);
-			addGenericElementOptionAttributes(builder, configChildSet);
+			GenericOptionAttributeTask task = elementGroupManager.removeGenericOptionAttributeTask(configChildSet);
+			addGenericElementOptionAttributes(task, configChildSet);
 		} else {
 			log.trace("Generic element option already has its attributes");
 		}
@@ -875,33 +874,36 @@ public class DocWriterNew {
 		log.trace("Done with the generic element option, role group [{}]", () -> ElementRole.describeCollection(roles));
 	}
 
-	private void addGenericElementOptionAttributes(XmlBuilder complexType, ConfigChildSet configChildSet) {
-		attributeTypeStrategy.addAttributeActive(complexType);
-		addAttribute(complexType, ELEMENT_ROLE, FIXED, configChildSet.getRoleName(), version.getRoleNameAttributeUse());
+	private void addGenericElementOptionAttributes(GenericOptionAttributeTask task, ConfigChildSet configChildSet) {
+		log.trace("GenericOptionAttributeTask has typeAttribute [{}]", () -> task.getTypeAttribute());
+		attributeTypeStrategy.addAttributeActive(task.getBuilder());
+		addAttribute(task.getBuilder(), ELEMENT_ROLE, FIXED, configChildSet.getRoleName(), version.getRoleNameAttributeUse());
 		Optional<String> defaultFrankElementName = configChildSet.getGenericElementOptionDefault(version.getElementFilter());
 		if(defaultFrankElementName.isPresent()) {
-			addAttribute(complexType, CLASS_NAME, DEFAULT, defaultFrankElementName.get(), OPTIONAL);
+			addAttribute(task.getBuilder(), task.getTypeAttribute(), DEFAULT, defaultFrankElementName.get(), OPTIONAL);
 		} else {
-			addAttribute(complexType, CLASS_NAME, DEFAULT, null, REQUIRED);
+			addAttribute(task.getBuilder(), task.getTypeAttribute(), DEFAULT, null, REQUIRED);
 		}
 		// The XSD is invalid if addAnyAttribute is added before attributes elementType and className.
-		addAnyAttribute(complexType);		
+		addAnyAttribute(task.getBuilder());		
 	}
 
 	private void finishLeftoverGenericOptionsAttributes() {
 		log.trace("Setting attributes of leftover nested generic elements");
 		for(GenericOptionAttributeTask task: elementGroupManager.doLeftoverGenericOptionAttributeTasks()) {
 			log.trace("Have to do element group [{}]", () -> task.getRolesKey().toString());
-			addGenericElementOptionAttributes(task.getBuilder(), task.getRolesKey().iterator().next().getRoleName());
+			addGenericElementOptionAttributes(task);
 		}
 		log.trace("Done setting attributes of leftover nested generic elements");
 	}
 
-	private void addGenericElementOptionAttributes(XmlBuilder complexType, String roleName) {
-		addAttribute(complexType, ELEMENT_ROLE, FIXED, roleName, version.getRoleNameAttributeUse());
-		addAttribute(complexType, CLASS_NAME, DEFAULT, null, REQUIRED);
+	private void addGenericElementOptionAttributes(GenericOptionAttributeTask task) {
+		log.trace("GenericOptionAttributeTask has typeAttribute [{}]", () -> task.getTypeAttribute());
+		String roleName = task.getRolesKey().iterator().next().getRoleName();
+		addAttribute(task.getBuilder(), ELEMENT_ROLE, FIXED, roleName, version.getRoleNameAttributeUse());
+		addAttribute(task.getBuilder(), task.getTypeAttribute(), DEFAULT, null, REQUIRED);
 		// The XSD is invalid if addAnyAttribute is added before attributes elementType and className.
-		addAnyAttribute(complexType);
+		addAnyAttribute(task.getBuilder());
 	}
 
 	private void fillGenericOption(XmlBuilder context, List<ElementRole> parents) {

@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,9 +84,9 @@ public class FrankDocModel {
 		FrankDocModel result = new FrankDocModel(classRepository, rootClassName);
 		try {
 			log.trace("Populating FrankDocModel");
-			Set<String> rootRoleNames = result.createConfigChildDescriptorsFrom(digesterRules);
+			Map<String, String> typeAttributesOfRootRoles = result.createConfigChildDescriptorsFrom(digesterRules);
 			result.findOrCreateRootFrankElement(rootClassName);
-			result.checkRootElementsMatchDigesterRules(rootRoleNames);
+			result.initRootElements(typeAttributesOfRootRoles);
 			result.buildDescendants();
 			result.allElements.values().forEach(f -> result.finishConfigChildrenFor(f));
 			result.calculateInterfaceBased();
@@ -105,14 +104,14 @@ public class FrankDocModel {
 		return result;
 	}
 
-	Set<String> createConfigChildDescriptorsFrom(final URL digesterRules) throws IOException, SAXException {
+	Map<String, String> createConfigChildDescriptorsFrom(final URL digesterRules) throws IOException, SAXException {
 		log.trace("Creating config child descriptors from file [{}]", () -> digesterRules.toString());
 		InputSource digesterRulesInputSource = Utils.asInputSource(digesterRules);
 		try {
 			Handler handler = new Handler();
 			Utils.parseXml(digesterRulesInputSource, handler);
 			log.trace("Successfully created config child descriptors");
-			return handler.rootRoleNames;
+			return handler.typeAttributesOfRootRoles;
 		}
 		catch(IOException e) {
 			throw new IOException(String.format("An IOException occurred while parsing XML from [%s]", digesterRulesInputSource.getSystemId()), e);
@@ -123,26 +122,26 @@ public class FrankDocModel {
 	}
 
 	private class Handler extends DigesterRulesHandler {
-		private final Set<String> rootRoleNames = new HashSet<>();
+		private final Map<String, String> typeAttributesOfRootRoles = new HashMap<>();
 
 		@Override
 		protected void handle(DigesterRule rule) throws SAXException {
 			DigesterRulesPattern pattern = new DigesterRulesPattern(rule.getPattern());
 			if(pattern.isRoot()) {
-				rootRoleNames.add(pattern.getRoleName());
+				typeAttributesOfRootRoles.put(pattern.getRoleName(), rule.getTypeAttribute());
 			}
 			String registerTextMethod = rule.getRegisterTextMethod();
 			if(StringUtils.isNotEmpty(rule.getRegisterMethod())) {
 				if(StringUtils.isNotEmpty(registerTextMethod)) {
 					log.warn("digester-rules.xml, role name {}: Have both registerMethod and registerTextMethod, ignoring the latter", pattern.getRoleName());
 				}
-				addTypeObject(rule.getRegisterMethod(), pattern);
+				addTypeObject(rule.getRegisterMethod(), pattern, rule.getTypeAttribute());
 			} else {
 				if(StringUtils.isNotEmpty(registerTextMethod)) {
 					if(registerTextMethod.startsWith("set")) {
 						log.warn("digester-rules.xml: Ignoring registerTextMethod {} because it starts with \"set\" to avoid confusion with attributes", registerTextMethod);
 					} else {
-						addTypeText(registerTextMethod, pattern);
+						addTypeText(registerTextMethod, pattern, rule.getTypeAttribute());
 					}
 				} else {
 					// roleName is not final, so a lambda wont work in the trace statement.
@@ -154,15 +153,17 @@ public class FrankDocModel {
 			}
 		}
 
-		private void addTypeObject(String registerMethod, DigesterRulesPattern pattern)	throws SAXException {
-			log.trace("Have ConfigChildSetterDescriptor for ObjectConfigChild: roleName = {}, registerMethod = {}", () -> pattern.getRoleName(), () -> registerMethod);
-			ConfigChildSetterDescriptor descriptor = new ConfigChildSetterDescriptor.ForObject(registerMethod, pattern);
+		private void addTypeObject(String registerMethod, DigesterRulesPattern pattern, String typeAttribute) throws SAXException {
+			log.trace("Have ConfigChildSetterDescriptor for ObjectConfigChild: roleName = {}, registerMethod = {}, typeAttribute = {}",
+					() -> pattern.getRoleName(), () -> registerMethod, () -> typeAttribute);
+			ConfigChildSetterDescriptor descriptor = new ConfigChildSetterDescriptor.ForObject(registerMethod, pattern, typeAttribute);
 			register(descriptor, pattern);
 		}
 
-		private void addTypeText(String registerMethod, DigesterRulesPattern pattern) throws SAXException {
-			log.trace("Have ConfigChildSetterDescriptor for TextConfigChild: roleName = {}, registerMethod = {}", () -> pattern.getRoleName(), () -> registerMethod);
-			ConfigChildSetterDescriptor descriptor = new ConfigChildSetterDescriptor.ForText(registerMethod, pattern);
+		private void addTypeText(String registerMethod, DigesterRulesPattern pattern, String typeAttribute) throws SAXException {
+			log.trace("Have ConfigChildSetterDescriptor for TextConfigChild: roleName = {}, registerMethod = {}, typeAttribute = {}",
+					() -> pattern.getRoleName(), () -> registerMethod, () -> typeAttribute);
+			ConfigChildSetterDescriptor descriptor = new ConfigChildSetterDescriptor.ForText(registerMethod, pattern, typeAttribute);
 			register(descriptor, pattern);
 		}
 
@@ -182,14 +183,18 @@ public class FrankDocModel {
 		return allTypes.containsKey(typeName);
 	}
 
-	void checkRootElementsMatchDigesterRules(Set<String> rootRoleNames) {
+	void initRootElements(Map<String, String> typeAttributesOfRootElements) {
 		List<RootFrankElement> roots = allElements.values().stream()
 				.filter(f -> f instanceof RootFrankElement)
 				.map(f -> (RootFrankElement) f)
 				.collect(Collectors.toList());
 		for(RootFrankElement root: roots) {
-			if(! rootRoleNames.contains(root.getRoleName())) {
-				log.warn("Root FrankElement [{}] does not have a matching pattern in digester-rules.xml", root.toString());
+			if(! typeAttributesOfRootElements.containsKey(root.getRoleName())) {
+				log.error("Root FrankElement [{}] does not have a matching pattern in digester-rules.xml", root.toString());
+			} else {
+				String typeAttribute = typeAttributesOfRootElements.get(root.getRoleName());
+				log.trace("Root FrankElement [{}] gets typeAttribute [{}]", root.toString(), typeAttribute);
+				root.setTypeAttribute(typeAttribute);
 			}
 		}
 	}
@@ -559,7 +564,8 @@ public class FrankDocModel {
 			if(configChildDescriptor.isForObject()) {
 				log.trace("For FrankElement [{}] method [{}], going to search element role", () -> parent.getFullName(), () -> frankMethod.getName());
 				FrankClass elementTypeClass = (FrankClass) frankMethod.getParameterTypes()[0];
-				((ObjectConfigChild) configChild).setElementRole(findOrCreateElementRole(elementTypeClass, configChildDescriptor.getRoleName()));
+				((ObjectConfigChild) configChild).setElementRole(findOrCreateElementRole(
+						elementTypeClass, configChildDescriptor.getRoleName(), configChildDescriptor.getTypeAttribute()));
 				((ObjectConfigChild) configChild).getElementRole().getElementType().getMembers().forEach(f -> f.addConfigParent(configChild));
 				log.trace("For FrankElement [{}] method [{}], have the element role", () -> parent.getFullName(), () -> frankMethod.getName());
 			}
@@ -588,16 +594,19 @@ public class FrankDocModel {
 		}
 	}
 
-	ElementRole findOrCreateElementRole(FrankClass elementTypeClass, String roleName) throws FrankDocException {
+	ElementRole findOrCreateElementRole(FrankClass elementTypeClass, String roleName, String typeAttribute) throws FrankDocException {
 		log.trace("ElementRole requested for elementTypeClass [{}] and roleName [{}]. Going to get the ElementType", () -> elementTypeClass.getName(), () -> roleName);
 		ElementType elementType = findOrCreateElementType(elementTypeClass);
 		ElementRole.Key key = new ElementRole.Key(elementTypeClass.getName(), roleName);
 		if(allElementRoles.containsKey(key)) {
 			log.trace("ElementRole already present");
 			ElementRole result = allElementRoles.get(key);
+			if(! result.getTypeAttribute().equals(typeAttribute)) {
+				log.error("ElementRole [{}] was requested with a different typeAttribute: [{}]", result.toString(), typeAttribute);
+			}
 			return result;
 		} else {
-			ElementRole result = elementRoleFactory.create(elementType, roleName);
+			ElementRole result = elementRoleFactory.create(elementType, roleName, typeAttribute);
 			allElementRoles.put(key, result);
 			log.trace("For ElementType [{}] and roleName [{}], created ElementRole [{}]", () -> elementType.getFullName(), () -> roleName, () -> result.createXsdElementName(""));
 			return result;

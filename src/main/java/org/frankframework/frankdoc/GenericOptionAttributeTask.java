@@ -15,18 +15,36 @@ limitations under the License.
 */
 package org.frankframework.frankdoc;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import lombok.Getter;
+import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.ElementRole;
+import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
+import lombok.Getter;
+
 class GenericOptionAttributeTask {
+	private static Logger log = LogUtil.getLogger(GenericOptionAttributeTask.class);
+
 	private final @Getter Set<ElementRole.Key> rolesKey;
+	private @Getter String typeAttribute = "";
 	private final @Getter XmlBuilder builder;
 
-	GenericOptionAttributeTask(Set<ElementRole.Key> rolesKey, XmlBuilder builder) {
+	GenericOptionAttributeTask(Set<ElementRole.Key> rolesKey, Collection<ElementRole> objectRoles, XmlBuilder builder) {
 		this.rolesKey = rolesKey;
 		this.builder = builder;
+		List<String> typeAttributeCandidates = objectRoles.stream().map(ElementRole::getTypeAttribute).collect(Collectors.toList());
+		if(typeAttributeCandidates.isEmpty()) {
+			log.error("No typeAttribute candidate available for element roles [{}]", rolesKey.toString());
+		} else if(typeAttributeCandidates.size() == 1) {
+			typeAttribute = typeAttributeCandidates.get(0);
+		} else {
+			log.error("Ambiguous typeAttribute for element roles [{}], candidates are [{}]", rolesKey.toString(),
+					typeAttributeCandidates.stream().collect(Collectors.toList()));
+		}
 	}
 }
