@@ -102,7 +102,10 @@ public class ElementType implements Comparable<ElementType> {
 		String result = null;
 		String value = clazz.getJavaDocTag(JAVADOC_DEFAULT_CLASSNAME);
 		if(StringUtils.isBlank(value)) {
-			log.warn("JavaDoc tag {} of interface [{}] should have a parameter", JAVADOC_DEFAULT_CLASSNAME, clazz.getName());
+			// null means the JavaDoc tag was not present - then nothing to do.
+			if(value != null) {
+				log.warn("JavaDoc tag {} of interface [{}] should have a parameter", JAVADOC_DEFAULT_CLASSNAME, clazz.getName());
+			}
 		} else {
 			try {
 				FrankClass defaultClass = repository.findClass(value);
