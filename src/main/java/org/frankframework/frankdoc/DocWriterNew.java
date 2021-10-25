@@ -430,6 +430,7 @@ public class DocWriterNew {
 			String xsdElementName = frankElement.getSimpleName();
 			XmlBuilder attributeBuilder = recursivelyDefineXsdElementUnchecked(frankElement, xsdElementName);
 			attributeTypeStrategy.addAttributeActive(attributeBuilder);
+			log.trace("Adding attribute className for FrankElement [{}]", () -> frankElement.getFullName());
 			addAttribute(attributeBuilder, CLASS_NAME, FIXED, frankElement.getFullName(), version.getClassNameAttributeUse(frankElement));
 		}
 		log.trace("Leave top FrankElement [{}]", () -> frankElement.getFullName());
