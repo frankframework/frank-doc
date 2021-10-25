@@ -25,6 +25,7 @@ import org.frankframework.frankdoc.model.ElementRole.Key;
 
 public class ElementRoleTest {
 	private static final String ELEMENT = "Element";
+	private static final String DUMMY_TYPE_ATTRIBUTE = "className";
 
 	private ElementRole.Factory factory;
 
@@ -35,18 +36,18 @@ public class ElementRoleTest {
 
 	@Test
 	public void whenTwoElementRolesWithSameRoleNameCreatedThenDifferentSeqs() {
-		ElementRole first = factory.create(null, "x");
+		ElementRole first = factory.create(null, "x", DUMMY_TYPE_ATTRIBUTE);
 		assertEquals("XElement", first.createXsdElementName(ELEMENT));
-		ElementRole second = factory.create(null, "x");
+		ElementRole second = factory.create(null, "x", DUMMY_TYPE_ATTRIBUTE);
 		assertEquals("XElement_2", second.createXsdElementName(ELEMENT));
 		assertEquals("XElement", first.createXsdElementName(ELEMENT));
 	}
 
 	@Test
 	public void whenTwoElementRolesWithDifferentRoleNameCreatedThenNoSeqsInNames() {
-		ElementRole first = factory.create(null, "x");
+		ElementRole first = factory.create(null, "x", DUMMY_TYPE_ATTRIBUTE);
 		assertEquals("XElement", first.createXsdElementName(ELEMENT));
-		ElementRole second = factory.create(null, "y");
+		ElementRole second = factory.create(null, "y", DUMMY_TYPE_ATTRIBUTE);
 		assertEquals("YElement", second.createXsdElementName(ELEMENT));
 		assertEquals("XElement", first.createXsdElementName(ELEMENT));
 	}

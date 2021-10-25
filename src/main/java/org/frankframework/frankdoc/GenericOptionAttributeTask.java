@@ -37,7 +37,7 @@ class GenericOptionAttributeTask {
 	GenericOptionAttributeTask(Set<ElementRole.Key> rolesKey, Collection<ElementRole> objectRoles, XmlBuilder builder) {
 		this.rolesKey = rolesKey;
 		this.builder = builder;
-		List<String> typeAttributeCandidates = objectRoles.stream().map(ElementRole::getTypeAttribute).collect(Collectors.toList());
+		List<String> typeAttributeCandidates = objectRoles.stream().map(ElementRole::getTypeAttribute).distinct().collect(Collectors.toList());
 		if(typeAttributeCandidates.isEmpty()) {
 			log.error("No typeAttribute candidate available for element roles [{}]", rolesKey.toString());
 		} else if(typeAttributeCandidates.size() == 1) {
