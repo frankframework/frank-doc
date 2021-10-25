@@ -18,17 +18,11 @@ package org.frankframework.frankdoc.model;
 
 import org.frankframework.frankdoc.wrapper.FrankClass;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * A FrankElement that can appear as the root element in a Frank configuration. Such elements are not
  * part of a config child, but they have a role name that matches rules in digester-rules.xml.
  */
-public class RootFrankElement extends FrankElement {
-	private @Getter @Setter(AccessLevel.PACKAGE) String typeAttribute;
-
+class RootFrankElement extends FrankElement {
 	RootFrankElement(FrankClass clazz) {
 		super(clazz);
 	}

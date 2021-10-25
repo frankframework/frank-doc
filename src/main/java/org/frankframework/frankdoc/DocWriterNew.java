@@ -62,7 +62,6 @@ import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.model.FrankElement;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
-import org.frankframework.frankdoc.model.RootFrankElement;
 import org.frankframework.frankdoc.model.TextConfigChild;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
@@ -310,6 +309,7 @@ public class DocWriterNew {
 
 	private static final String CONFIGURATION = "nl.nn.adapterframework.configuration.Configuration";
 	private static final String ELEMENT_ROLE = "elementRole";
+	private static final String CLASS_NAME = "className";
 	private static final String ELEMENT_GROUP_BASE = "ElementGroupBase";
 	static final String ATTRIBUTE_VALUES_TYPE = "AttributeValuesType";
 	static final String VARIABLE_REFERENCE = "variableRef";
@@ -398,9 +398,7 @@ public class DocWriterNew {
 		XmlBuilder complexContent = addComplexContent(complexType);
 		XmlBuilder extension = addExtension(complexContent, xsdElementType(startElement));
 		attributeTypeStrategy.addAttributeActive(extension);
-		RootFrankElement asRoot = (RootFrankElement) startElement;
-		log.trace("typeAttribute of [{}] is [{}]", startElement.toString(), asRoot.getTypeAttribute());
-		addAttribute(extension, asRoot.getTypeAttribute(), FIXED, asRoot.getFullName(), version.getClassNameAttributeUse(asRoot));
+		addAttribute(extension, CLASS_NAME, FIXED, startElement.getFullName(), version.getClassNameAttributeUse(startElement));
 	}
 
 	// Defines XML element <Module>
@@ -432,9 +430,7 @@ public class DocWriterNew {
 			String xsdElementName = frankElement.getSimpleName();
 			XmlBuilder attributeBuilder = recursivelyDefineXsdElementUnchecked(frankElement, xsdElementName);
 			attributeTypeStrategy.addAttributeActive(attributeBuilder);
-			RootFrankElement asRoot = (RootFrankElement) frankElement;
-			log.trace("Adding attribute [{}] for FrankElement [{}]", () -> asRoot.getTypeAttribute(), () -> frankElement.getFullName());
-			addAttribute(attributeBuilder, asRoot.getTypeAttribute(), FIXED, frankElement.getFullName(), version.getClassNameAttributeUse(frankElement));
+			addAttribute(attributeBuilder, CLASS_NAME, FIXED, frankElement.getFullName(), version.getClassNameAttributeUse(frankElement));
 		}
 		log.trace("Leave top FrankElement [{}]", () -> frankElement.getFullName());
 	}

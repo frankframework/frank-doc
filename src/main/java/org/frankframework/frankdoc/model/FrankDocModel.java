@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,19 +35,19 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import lombok.Getter;
-import lombok.Setter;
 import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.frankframework.frankdoc.util.LogUtil;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class FrankDocModel {
 	private static Logger log = LogUtil.getLogger(FrankDocModel.class);
@@ -84,9 +85,9 @@ public class FrankDocModel {
 		FrankDocModel result = new FrankDocModel(classRepository, rootClassName);
 		try {
 			log.trace("Populating FrankDocModel");
-			Map<String, String> typeAttributesOfRootRoles = result.createConfigChildDescriptorsFrom(digesterRules);
+			Set<String> rootRoleNames = result.createConfigChildDescriptorsFrom(digesterRules);
 			result.findOrCreateRootFrankElement(rootClassName);
-			result.initRootElements(typeAttributesOfRootRoles);
+			result.checkRootElementsMatchDigesterRules(rootRoleNames);
 			result.buildDescendants();
 			result.allElements.values().forEach(f -> result.finishConfigChildrenFor(f));
 			result.calculateInterfaceBased();
@@ -104,14 +105,14 @@ public class FrankDocModel {
 		return result;
 	}
 
-	Map<String, String> createConfigChildDescriptorsFrom(final URL digesterRules) throws IOException, SAXException {
+	Set<String> createConfigChildDescriptorsFrom(final URL digesterRules) throws IOException, SAXException {
 		log.trace("Creating config child descriptors from file [{}]", () -> digesterRules.toString());
 		InputSource digesterRulesInputSource = Utils.asInputSource(digesterRules);
 		try {
 			Handler handler = new Handler();
 			Utils.parseXml(digesterRulesInputSource, handler);
 			log.trace("Successfully created config child descriptors");
-			return handler.typeAttributesOfRootRoles;
+			return handler.rootRoleNames;
 		}
 		catch(IOException e) {
 			throw new IOException(String.format("An IOException occurred while parsing XML from [%s]", digesterRulesInputSource.getSystemId()), e);
@@ -122,13 +123,13 @@ public class FrankDocModel {
 	}
 
 	private class Handler extends DigesterRulesHandler {
-		private final Map<String, String> typeAttributesOfRootRoles = new HashMap<>();
+		private final Set<String> rootRoleNames = new HashSet<>();
 
 		@Override
 		protected void handle(DigesterRule rule) throws SAXException {
 			DigesterRulesPattern pattern = new DigesterRulesPattern(rule.getPattern());
 			if(pattern.isRoot()) {
-				typeAttributesOfRootRoles.put(pattern.getRoleName(), rule.getTypeAttribute());
+				rootRoleNames.add(pattern.getRoleName());
 			}
 			String registerTextMethod = rule.getRegisterTextMethod();
 			if(StringUtils.isNotEmpty(rule.getRegisterMethod())) {
@@ -183,18 +184,14 @@ public class FrankDocModel {
 		return allTypes.containsKey(typeName);
 	}
 
-	void initRootElements(Map<String, String> typeAttributesOfRootElements) {
+	void checkRootElementsMatchDigesterRules(Set<String> rootRoleNames) {
 		List<RootFrankElement> roots = allElements.values().stream()
 				.filter(f -> f instanceof RootFrankElement)
 				.map(f -> (RootFrankElement) f)
 				.collect(Collectors.toList());
 		for(RootFrankElement root: roots) {
-			if(! typeAttributesOfRootElements.containsKey(root.getRoleName())) {
-				log.error("Root FrankElement [{}] does not have a matching pattern in digester-rules.xml", root.toString());
-			} else {
-				String typeAttribute = typeAttributesOfRootElements.get(root.getRoleName());
-				log.trace("Root FrankElement [{}] gets typeAttribute [{}]", root.toString(), typeAttribute);
-				root.setTypeAttribute(typeAttribute);
+			if(! rootRoleNames.contains(root.getRoleName())) {
+				log.warn("Root FrankElement [{}] does not have a matching pattern in digester-rules.xml", root.toString());
 			}
 		}
 	}
