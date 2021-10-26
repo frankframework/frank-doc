@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-public class SpecificParameterTest {
+public class ParsedJavaDocTagTest {
 	@Test
 	public void whenParamTagHasNoSpaceThenOnlyName() {
 		ParsedJavaDocTag p = ParsedJavaDocTag.getInstance("myName");
