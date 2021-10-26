@@ -82,6 +82,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	static final String JAVADOC_IGNORE_TYPE_MEMBERSHIP = "@ff.ignoreTypeMembership";
 	static final String JAVADOC_PARAMETERS = "@ff.parameters";
 	public static final String JAVADOC_PARAMETER = "@ff.parameter";
+	public static final String JAVADOC_FORWARD = "@ff.forward";
 
 	private static Logger log = LogUtil.getLogger(FrankElement.class);
 
@@ -119,7 +120,8 @@ public class FrankElement implements Comparable<FrankElement> {
 	private @Getter @Setter String description;
 	private @Getter @Setter String descriptionHeader;
 	private @Getter String meaningOfParameters;
-	private @Getter List<SpecificParameter> specificParameters = new ArrayList<>();
+	private @Getter List<ParsedJavaDocTag> specificParameters = new ArrayList<>();
+	private @Getter List<ParsedJavaDocTag> forwards = new ArrayList<>();
 
 	private Set<String> syntax2ExcludedFromTypes = new HashSet<>();
 
@@ -131,6 +133,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		handleConfigChildSetterCandidates(clazz);
 		handlePossibleFrankDocIgnoreTypeMembershipAnnotation(clazz);
 		handlePossibleParameters(clazz);
+		handlePossibleForwards(clazz);
 	}
 
 	private void handleConfigChildSetterCandidates(FrankClass clazz) {
@@ -163,8 +166,17 @@ public class FrankElement implements Comparable<FrankElement> {
 			if(StringUtils.isBlank(specificParameterStr)) {
 				log.warn("FrankElement [{}] has specific parameters without a name or description", fullName);
 			}
-			this.specificParameters.add(SpecificParameter.getInstance(specificParameterStr));
+			this.specificParameters.add(ParsedJavaDocTag.getInstance(specificParameterStr));
 		}
+	}
+
+	private void handlePossibleForwards(FrankClass clazz) {
+		for(String forwardStr: clazz.getAllJavaDocTagsOf(JAVADOC_FORWARD)) {
+			if(StringUtils.isBlank(forwardStr)) {
+				log.warn("FrankElement [{}] has forwards without a name or description", fullName);
+			}
+			this.forwards.add(ParsedJavaDocTag.getInstance(forwardStr));
+		}		
 	}
 
 	/**
