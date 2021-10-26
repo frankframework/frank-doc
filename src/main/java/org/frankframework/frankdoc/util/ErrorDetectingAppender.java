@@ -54,7 +54,7 @@ public class ErrorDetectingAppender extends AbstractAppender {
 		}
 	}
 
-	public ErrorDetectingAppender(final String name) {
+	private ErrorDetectingAppender(final String name) {
 		super(name, null, null, false, Property.EMPTY_ARRAY);
 	}
 
