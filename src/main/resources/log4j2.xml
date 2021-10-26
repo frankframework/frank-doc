@@ -4,14 +4,13 @@
 		<Console name="stdout">
 			<PatternLayout pattern="%d{HH:mm:ss,SSS} %-5p %C{1}.%M():%L%x %m%n"/>
 		</Console>
-		<StopOnErrorAppender name="stdoutStopOnError">
-			<AppenderRef ref="stdout" />
-		</StopOnErrorAppender>
+		<ErrorDetectingAppender name="detectErrors" />
 	</Appenders>
 
 	<Loggers>
 		<Root level="INFO">
-			<AppenderRef ref="stdoutStopOnError"/>
+			<AppenderRef ref="stdout"/>
+			<AppenderRef ref="detectErrors" />
 		</Root>
 	</Loggers>
 </log4j2:Configuration>
