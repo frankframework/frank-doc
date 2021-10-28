@@ -18,24 +18,24 @@ package org.frankframework.frankdoc.model;
 
 import lombok.Getter;
 
-public class SpecificParameter {
+public class ParsedJavaDocTag {
 	private final @Getter String name;
 	private final @Getter String description;
 
-	static SpecificParameter getInstance(String javaDocTagParameter) {
+	static ParsedJavaDocTag getInstance(String javaDocTagParameter) {
 		int idx = javaDocTagParameter.indexOf(" ");
 		if(idx < 0) {
-			return new SpecificParameter(javaDocTagParameter, null);
+			return new ParsedJavaDocTag(javaDocTagParameter, null);
 		}
 		String name = javaDocTagParameter.substring(0, idx).trim();
 		String description = javaDocTagParameter.substring(idx).trim();
 		if(description.isEmpty()) {
-			return new SpecificParameter(name, null);
+			return new ParsedJavaDocTag(name, null);
 		}
-		return new SpecificParameter(name, description);
+		return new ParsedJavaDocTag(name, description);
 	}
 
-	private SpecificParameter(String name, String description) {
+	private ParsedJavaDocTag(String name, String description) {
 		this.name = name;
 		this.description = description;
 	}
