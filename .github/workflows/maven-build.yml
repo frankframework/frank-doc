@@ -45,7 +45,7 @@ jobs:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
         JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
-      run: mvn -B -V -T1 -Dmaven.javadoc.skip=true package
+      run: mvn -B -V -T1 -Pibissource,codecoverage -Dmaven.javadoc.skip=true package
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
