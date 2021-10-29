@@ -24,11 +24,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
 
 import lombok.Getter;
-import org.frankframework.frankdoc.util.LogUtil;
 
 /**
  * Holds the list of all cumulative config children sharing some role name, say R, but
@@ -175,7 +174,9 @@ public class ConfigChildSet {
 	private static Stream<String> getCandidatesForGenericElementOptionDefault(ElementRole e) {
 		List<String> result = new ArrayList<>();
 		String forJavaDoc = e.getDefaultElement();
-		CollectionUtils.addIgnoreNull(result, forJavaDoc);
+		if(forJavaDoc != null) {
+			result.add(forJavaDoc);
+		}
 		FrankElement forConflictElement = e.getDefaultElementOptionConflict();
 		Optional.ofNullable(forConflictElement).map(FrankElement::getFullName).ifPresent(result::add);
 		return result.stream();
