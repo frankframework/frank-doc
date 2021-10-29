@@ -197,6 +197,7 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
 						</configuration>
 					</execution>
 				</executions>
@@ -205,11 +206,6 @@
 	</build>
 
 	<dependencies>
-<!-- 		<dependency> -->
-<!-- 			<groupId>commons-beanutils</groupId> -->
-<!-- 			<artifactId>commons-beanutils</artifactId> -->
-<!-- 			<version>1.9.4</version> -->
-<!-- 		</dependency> -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
