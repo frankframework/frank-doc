@@ -23,35 +23,16 @@ import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.Property;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
-import org.apache.logging.log4j.core.config.plugins.PluginBuilderAttribute;
-import org.apache.logging.log4j.core.config.plugins.PluginBuilderFactory;
-import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
-import org.apache.logging.log4j.core.filter.AbstractFilterable;
+import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
+import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 
 @Plugin(name = "ErrorDetectingAppender", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE)
 public class ErrorDetectingAppender extends AbstractAppender {
 	public static boolean HAVE_ERRORS = false;
 
-	@PluginBuilderFactory
-	public static Builder<?> newBuilder() {
-		return new Builder();
-	}
-
-	public static class Builder<B extends Builder<B>> extends AbstractFilterable.Builder<B>
-			implements org.apache.logging.log4j.core.util.Builder<ErrorDetectingAppender> {
-		@PluginBuilderAttribute
-		@Required(message = "No name provided for ErrorDetectingAppender")
-		private String name;
-
-		@Override
-		public ErrorDetectingAppender build() {
-			return new ErrorDetectingAppender(name);
-		}
-
-		public Builder<B> setName(String name) {
-			this.name = name;
-			return this;
-		}
+	@PluginFactory
+	public static ErrorDetectingAppender createAppender(@PluginAttribute("name") String name) {
+		return new ErrorDetectingAppender(name);
 	}
 
 	private ErrorDetectingAppender(final String name) {
