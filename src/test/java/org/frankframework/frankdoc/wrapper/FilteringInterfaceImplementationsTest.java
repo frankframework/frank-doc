@@ -18,21 +18,7 @@ import org.junit.runners.Parameterized.Parameters;
 import com.sun.javadoc.ClassDoc;
 
 @RunWith(Parameterized.class)
-public class FilteringInterfaceImplementationsTest {
-	private static final String PREFIX = "org.frankframework.frankdoc.testtarget.doclet.filtering.";
-	private static final String FIRST = "first.";
-	private static final String SECOND = "second.";
-	private static final String FIRST_PACKAGE = PREFIX + FIRST;
-	private static final String SECOND_PACKAGE = PREFIX + SECOND;
-	private static final String[] BOTH_PACKAGES = new String[] {FIRST_PACKAGE, SECOND_PACKAGE};
-	private static final String FIRST_IMPL = "FirstImpl";
-	private static final String CHILD_OF_FIRST_IMPL_IN_SECOND_PACKAGE = "ChildOfFirstImplInOtherPackage";
-	private static final String SECOND_IMPL = "SecondImpl";
-	private static final String THIRD_IMPL = "ThirdImpl";
-	private static final String[] NO_EXCLUDES = new String[] {};
-	private static final String[] THIRD_IMPL_EXCLUDED = new String[] {SECOND_PACKAGE + THIRD_IMPL};
-	private static final String[] CHILD_OF_FIRST_IMPL_IN_SECOND_PACKAGE_EXCLUDED = new String[] {SECOND_PACKAGE + CHILD_OF_FIRST_IMPL_IN_SECOND_PACKAGE};
-
+public class FilteringInterfaceImplementationsTest extends FilteringTestBase {
 	@Parameters(name = "{0}, {1}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
