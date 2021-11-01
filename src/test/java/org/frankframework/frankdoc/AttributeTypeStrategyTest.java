@@ -121,9 +121,10 @@ public class AttributeTypeStrategyTest {
 		XmlBuilder schema = getXmlSchema();
 		XmlBuilder element = addElementWithType(schema, "myElement");
 		XmlBuilder complexType = addComplexType(element);
-		attributeTypeStrategy.addAttribute(complexType, "boolAttr", AttributeType.BOOL);
-		attributeTypeStrategy.addAttribute(complexType, "intAttr", AttributeType.INT);
-		attributeTypeStrategy.addAttribute(complexType, "stringAttr", AttributeType.STRING);
+		// We do not test mandatory attributes here. Therefore the fourth argument is "false".
+		attributeTypeStrategy.addAttribute(complexType, "boolAttr", AttributeType.BOOL, false);
+		attributeTypeStrategy.addAttribute(complexType, "intAttr", AttributeType.INT, false);
+		attributeTypeStrategy.addAttribute(complexType, "stringAttr", AttributeType.STRING, false);
 		attributeTypeStrategy.addAttributeActive(complexType);
 		attributeTypeStrategy.addRestrictedAttribute(complexType, enumTypedAttribute);
 		attributeTypeStrategy.createHelperTypes().forEach(h -> schema.addSubElement(h));

@@ -409,7 +409,10 @@ public class DocWriterNew {
 		xsdElements.add(startElementBuilder);
 		addDocumentation(startElementBuilder, Constants.MODULE_ELEMENT_DESCRIPTION);
 		XmlBuilder complexType = addComplexType(startElementBuilder);
-		DocWriterNewXmlUtils.addGroupRef(complexType, getConfigChildGroupOf(startElement));
+		String declaredChildGroup = getConfigChildGroupOf(startElement);
+		if(declaredChildGroup != null) {
+			DocWriterNewXmlUtils.addGroupRef(complexType, declaredChildGroup);
+		}
 		attributeTypeStrategy.addAttributeActive(complexType);		
 	}
 
@@ -418,6 +421,10 @@ public class DocWriterNew {
 		// ancestors with config children. Or even take a declared/cumulative group of an ancestor
 		// if <Configuration> itself has no config children. These do not apply in practice, so
 		// implementing this has not a high priority.
+		if(frankElement.getCumulativeConfigChildren(version.getChildSelector(), version.getChildRejector()).isEmpty()) {
+			// This will not happen in production, but we have integration tests in which config children are not relevant.
+			return null;
+		}
 		if(frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
 			return xsdPluralGroupNameForChildren(frankElement);
 		} else {
@@ -1122,7 +1129,8 @@ public class DocWriterNew {
 				// The default value in the model is a *description* of the default value.
 				// Therefore, it should be added to the description in the xs:attribute.
 				// The "default" attribute of the xs:attribute should not be set.
-				attribute = attributeTypeStrategy.addAttribute(context, frankAttribute.getName(), frankAttribute.getAttributeType());
+				attribute = attributeTypeStrategy.addAttribute(
+						context, frankAttribute.getName(), frankAttribute.getAttributeType(), frankAttribute.isMandatory());
 			} else {
 				attribute = addRestrictedAttribute(context, frankAttribute);
 			}

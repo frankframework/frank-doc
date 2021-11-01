@@ -66,8 +66,8 @@ public enum AttributeTypeStrategy {
 		this.delegate = delegate;
 	}
 
-	XmlBuilder addAttribute(XmlBuilder context, String name, AttributeType modelAttributeType) {
-		return delegate.addAttribute(context, name, modelAttributeType);
+	XmlBuilder addAttribute(XmlBuilder context, String name, AttributeType modelAttributeType, boolean isMandatory) {
+		return delegate.addAttribute(context, name, modelAttributeType, isMandatory);
 	}
 
 	XmlBuilder addRestrictedAttribute(XmlBuilder context, FrankAttribute attribute) {
@@ -91,11 +91,12 @@ public enum AttributeTypeStrategy {
 		// For example, an integer attribute can still be set like "${someIdentifier}".
 		// This method expects that methods DocWriterNewXmlUtils.createTypeFrankBoolean() and
 		// DocWriterNewXmlUtils.createTypeFrankInteger() are used to define the referenced XSD types.
-		XmlBuilder addAttribute(XmlBuilder context, String name, AttributeType modelAttributeType) {
-			return addAttribute(context, name, modelAttributeType, FRANK_BOOLEAN, FRANK_INT);
+		XmlBuilder addAttribute(XmlBuilder context, String name, AttributeType modelAttributeType, boolean isMandatory) {
+			return addAttribute(context, name, modelAttributeType, isMandatory, FRANK_BOOLEAN, FRANK_INT);
 		}
 
-		private final XmlBuilder addAttribute(XmlBuilder context, String name, AttributeType modelAttributeType, String boolType, String intType) {
+		private final XmlBuilder addAttribute(XmlBuilder context, String name, AttributeType modelAttributeType, boolean isMandatory,
+				String boolType, String intType) {
 			XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
 			attribute.addAttribute("name", name);
 			String typeName = null;
@@ -111,6 +112,9 @@ public enum AttributeTypeStrategy {
 				break;
 			}
 			attribute.addAttribute("type", typeName);
+			if(isMandatory) {
+				attribute.addAttribute("use", "required");
+			}
 			context.addSubElement(attribute);
 			return attribute;						
 		}
@@ -179,7 +183,7 @@ public enum AttributeTypeStrategy {
 		}
 
 		private String getPattern() {
-			return "\\!?" + "(" + getPatternThatMightBeNegated() + ")";
+			return "!?" + "(" + getPatternThatMightBeNegated() + ")";
 		}
 
 		private String getPatternThatMightBeNegated() {

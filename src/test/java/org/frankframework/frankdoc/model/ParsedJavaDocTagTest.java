@@ -5,24 +5,24 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-public class SpecificParameterTest {
+public class ParsedJavaDocTagTest {
 	@Test
 	public void whenParamTagHasNoSpaceThenOnlyName() {
-		SpecificParameter p = SpecificParameter.getInstance("myName");
+		ParsedJavaDocTag p = ParsedJavaDocTag.getInstance("myName");
 		assertNull(p.getDescription());
 		assertEquals("myName", p.getName());
 	}
 
 	@Test
 	public void whenParamTagHasSpacesAfterNameThenStillDescriptionNull() {
-		SpecificParameter p = SpecificParameter.getInstance("myName ");
+		ParsedJavaDocTag p = ParsedJavaDocTag.getInstance("myName ");
 		assertNull(p.getDescription());
 		assertEquals("myName", p.getName());		
 	}
 
 	@Test
 	public void whenParamTagHasMultipleWordsThenNameAndDescription() {
-		SpecificParameter p = SpecificParameter.getInstance("myName        Description ");
+		ParsedJavaDocTag p = ParsedJavaDocTag.getInstance("myName        Description ");
 		assertEquals("myName", p.getName());
 		assertEquals("Description", p.getDescription());
 	}
