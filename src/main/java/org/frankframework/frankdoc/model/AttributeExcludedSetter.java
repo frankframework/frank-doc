@@ -40,17 +40,17 @@ class AttributeExcludedSetter {
 		String ignoredInterface = clazz.getJavaDocTag(FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP);
 		if(ignoredInterface != null) {
 			if(StringUtils.isBlank(ignoredInterface)) {
-				log.warn("Javadoc tag {} requires an argument that refers a Java interface", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP);
+				log.error("Javadoc tag {} requires an argument that refers a Java interface", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP);
 			} else {
 				log.trace("FrankElement has Javadoc tag {} that refers to interface [{}]", () -> FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, () -> ignoredInterface);
 				FrankClass ignoredInterfaceClass = null;
 				try {
 					ignoredInterfaceClass = repository.findClass(ignoredInterface);					
 				} catch(FrankDocException e) {
-					log.warn("Exception when parsing Javadoc tag {} that references Java interface [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, ignoredInterface, e);
+					log.error("Exception when parsing Javadoc tag {} that references Java interface [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, ignoredInterface, e);
 				}
 				if(ignoredInterfaceClass == null) {
-					log.warn("Javadoc tag {} refers to a non-existing Java interface [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, ignoredInterface);
+					log.error("Javadoc tag {} refers to a non-existing Java interface [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, ignoredInterface);
 				} else {
 					AttributesFromInterfaceRejector rejector = new AttributesFromInterfaceRejector(ignoredInterfaceClass);
 					namesExcludedDueToIgnoredInterface = rejector.getRejects(clazz);					

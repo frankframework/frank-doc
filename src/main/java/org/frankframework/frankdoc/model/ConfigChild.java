@@ -63,7 +63,7 @@ public abstract class ConfigChild extends ElementChild {
 			try {
 				parseIbisDocAnnotation(ibisDoc);
 			} catch(FrankDocException e) {
-				log.warn("Could not parse IbisDoc annotation of method {}", method.toString(), e);
+				log.error("Could not parse IbisDoc annotation of method {}", method.toString(), e);
 			}
 		}
 	}
@@ -93,7 +93,7 @@ public abstract class ConfigChild extends ElementChild {
 		try {
 			result = method.getAnnotationInludingInherited(FrankDocletConstants.IBISDOC);
 		} catch(FrankDocException e) {
-			log.warn("Could not @IbisDoc annotation or could not obtain JavaDoc for method {}", method, e);
+			log.error("Error getting @IbisDoc annotation for method {}", method, e);
 		}
 		return result;
 	}
@@ -132,7 +132,7 @@ public abstract class ConfigChild extends ElementChild {
 			ConfigChild selected = bucket.get(0);
 			result.add(selected);
 			if(selected.isDeprecated()) {
-				log.warn("From duplicate config children, only a deprecated one is selected. In mode {}, {} will not have a config child for {}",
+				log.error("From duplicate config children, only a deprecated one is selected. In mode {}, {} will not have a config child for {}",
 						() -> XsdVersion.STRICT, () -> selected.getOwningElement().getFullName(), () -> selected.toString());
 			}
 			if(log.isTraceEnabled() && (bucket.size() >= 2)) {

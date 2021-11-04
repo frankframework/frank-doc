@@ -134,13 +134,13 @@ public class FrankDocModel {
 			String registerTextMethod = rule.getRegisterTextMethod();
 			if(StringUtils.isNotEmpty(rule.getRegisterMethod())) {
 				if(StringUtils.isNotEmpty(registerTextMethod)) {
-					log.warn("digester-rules.xml, role name {}: Have both registerMethod and registerTextMethod, ignoring the latter", pattern.getRoleName());
+					log.error("digester-rules.xml, role name {}: Have both registerMethod and registerTextMethod, ignoring the latter", pattern.getRoleName());
 				}
 				addTypeObject(rule.getRegisterMethod(), pattern);
 			} else {
 				if(StringUtils.isNotEmpty(registerTextMethod)) {
 					if(registerTextMethod.startsWith("set")) {
-						log.warn("digester-rules.xml: Ignoring registerTextMethod {} because it starts with \"set\" to avoid confusion with attributes", registerTextMethod);
+						log.error("digester-rules.xml: Ignoring registerTextMethod {} because it starts with \"set\" to avoid confusion with attributes", registerTextMethod);
 					} else {
 						addTypeText(registerTextMethod, pattern);
 					}
@@ -189,7 +189,7 @@ public class FrankDocModel {
 				.collect(Collectors.toList());
 		for(RootFrankElement root: roots) {
 			if(! rootRoleNames.contains(root.getRoleName())) {
-				log.warn("Root FrankElement [{}] does not have a matching pattern in digester-rules.xml", root.toString());
+				log.error("Root FrankElement [{}] does not have a matching pattern in digester-rules.xml", root.toString());
 			}
 		}
 	}
@@ -313,7 +313,7 @@ public class FrankDocModel {
 				// discovers type mismatches.
 				attribute.typeCheckDefaultValue();
 			} catch(FrankDocException e) {
-				log.warn("Attribute [{}] has an invalid default value, [{}, detail {}]", attribute.toString(), attribute.getDefaultValue(), e.getMessage());
+				log.error("Attribute [{}] has an invalid default value, [{}, detail {}]", attribute.toString(), attribute.getDefaultValue(), e.getMessage());
 			}
 			attributeExcludedSetter.updateAttribute(attribute, method);
 			result.add(attribute);
@@ -338,7 +338,7 @@ public class FrankDocModel {
 					.distinct()
 					.collect(Collectors.toList());
 			if(candidateTypes.size() >= 2) {
-				log.warn("Class [{}] has overloaded declared or inherited attribute setters. Type of attribute [{}] can be any of [{}]",
+				log.error("Class [{}] has overloaded declared or inherited attribute setters. Type of attribute [{}] can be any of [{}]",
 						clazz.getName(), attributeName, candidateTypes.stream().collect(Collectors.joining(", ")));
 			}
 		}
@@ -349,7 +349,7 @@ public class FrankDocModel {
 		Map<String, FrankMethod> isserAttributes = getAttributeToMethodMap(methods, "is");
 		for(String isserAttributeName : isserAttributes.keySet()) {
 			if(getterAttributes.containsKey(isserAttributeName)) {
-				log.warn("For FrankElement [{}], attribute [{}] has both a getX and an isX method", () -> attributeOwner.getSimpleName(), () -> isserAttributeName);
+				log.error("For FrankElement [{}], attribute [{}] has both a getX and an isX method", () -> attributeOwner.getSimpleName(), () -> isserAttributeName);
 			} else {
 				getterAttributes.put(isserAttributeName, isserAttributes.get(isserAttributeName));
 			}
@@ -422,7 +422,7 @@ public class FrankDocModel {
 		if(! getterType.equals(setterType)) {
 			// Cannot work with lambdas because setterType is not final.
 			if(log.isWarnEnabled()) {
-				log.warn("In Frank element [{}]: setter [{}] has type [{}] while the getter has type [{}]",
+				log.error("In Frank element [{}]: setter [{}] has type [{}] while the getter has type [{}]",
 						attributeOwner.getSimpleName(), setter.getName(), setterType, getterType);
 			}
 		}
@@ -454,7 +454,7 @@ public class FrankDocModel {
 					return;
 				}				
 			} else {
-				log.warn("@IbisDocRef of Frank elelement [{}] attribute [{}] points to non-existent method", () -> attributeOwner.getSimpleName(), () -> attribute.getName());
+				log.error("@IbisDocRef of Frank elelement [{}] attribute [{}] points to non-existent method", () -> attributeOwner.getSimpleName(), () -> attribute.getName());
 			}
 		}
 		FrankAnnotation ibisDoc = method.getAnnotationInludingInherited(FrankDocletConstants.IBISDOC);
@@ -479,7 +479,7 @@ public class FrankDocModel {
 		try {
 			values = (String[]) ibisDocRef.getValue();
 		} catch(FrankDocException e) {
-			log.warn("IbisDocRef annotation did not have a value", e);
+			log.error("IbisDocRef annotation did not have a value", e);
 			return result;
 		}
 		String methodString = null;
@@ -492,17 +492,17 @@ public class FrankDocModel {
 				result.setHasOrder(true);
 			} catch (Throwable t) {
 				final String[] finalValues = values;
-				log.warn("Could not parse order in @IbisDocRef annotation: [{}]", () -> finalValues[0]);
+				log.error("Could not parse order in @IbisDocRef annotation: [{}]", () -> finalValues[0]);
 			}
 		}
 		else {
-			log.warn("Too many or zero parameters in @IbisDocRef annotation on method: [{}].[{}]", () -> originalMethod.getDeclaringClass().getName(), () -> originalMethod.getName());
+			log.error("Too many or zero parameters in @IbisDocRef annotation on method: [{}].[{}]", () -> originalMethod.getDeclaringClass().getName(), () -> originalMethod.getName());
 			return null;
 		}
 		try {
 			result.setReferredMethod(getReferredMethod(methodString, originalMethod));
 		} catch(Exception e) {
-			log.warn("@IbisDocRef on [{}].[{}] annotation references invalid method [{}], ignoring @IbisDocRef annotation",
+			log.error("@IbisDocRef on [{}].[{}] annotation references invalid method [{}], ignoring @IbisDocRef annotation",
 					originalMethod.getDeclaringClass().getName(), originalMethod.getName(), methodString);
 			return null;
 		}
@@ -527,7 +527,7 @@ public class FrankDocModel {
 		try {
 			FrankClass parentClass = classRepository.findClass(className);
 			if(parentClass == null) {
-				log.warn("Class {} is unknown", className);
+				log.error("Class {} is unknown", className);
 				return null;
 			}
 			for (FrankMethod parentMethod : parentClass.getDeclaredAndInheritedMethods()) {
@@ -537,7 +537,7 @@ public class FrankDocModel {
 			}
 			return null;
 		} catch (FrankDocException e) {
-			log.warn("Super class [{}] was not found!", className, e);
+			log.error("Super class [{}] was not found!", className, e);
 			return null;
 		}
 	}
@@ -745,7 +745,7 @@ public class FrankDocModel {
 			log.trace("[{}] holds only TextConfigChild. No ElementRoleSet needed", () -> configChildSet.toString());
 			break;
 		case MIXED:
-			log.warn("[{}] combines ObjectConfigChild and TextConfigChild, which is not supported", configChildSet.toString());
+			log.error("[{}] combines ObjectConfigChild and TextConfigChild, which is not supported", configChildSet.toString());
 			break;
 		case OBJECT:
 			createElementRoleSet(configChildSet);
@@ -799,7 +799,7 @@ public class FrankDocModel {
 			log.trace("No ElementRoleSet needed for combination of TextConfigChild [{}]", () -> ConfigChild.toString(configChildren));
 			break;
 		case MIXED:
-			log.warn("Browsing member children produced a combination of ObjectConfigChild and TextConfigChild [{}], which is not supported", ConfigChild.toString(configChildren));
+			log.error("Browsing member children produced a combination of ObjectConfigChild and TextConfigChild [{}], which is not supported", ConfigChild.toString(configChildren));
 			break;
 		case OBJECT:
 			findOrCreateElementRoleSetForMemberChildren(configChildren, recursionDepth);

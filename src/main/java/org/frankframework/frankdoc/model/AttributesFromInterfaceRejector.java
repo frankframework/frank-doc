@@ -91,7 +91,7 @@ public class AttributesFromInterfaceRejector {
 	 */
 	public Set<String> getRejects(FrankClass clazz) {
 		if(! implementsRejectedInterface(clazz)) {
-			log.warn("JavaDoc tag {} has no effect because [{}] does not implement [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, clazz.getName(), rejectedInterface);
+			log.error("JavaDoc tag {} has no effect because [{}] does not implement [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, clazz.getName(), rejectedInterface);
 			return new HashSet<>();
 		} else {
 			return getRejectsUnchecked(clazz);

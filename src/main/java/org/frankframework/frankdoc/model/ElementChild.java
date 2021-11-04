@@ -128,7 +128,7 @@ public abstract class ElementChild {
 			ElementChild matchingChild = match.findElementChildMatch(this);
 			if(matchingChild != null) {
 				if(matchingChild.isDeprecated()) {
-					log.warn("Element child overrides deprecated ElementChild: descendant [{}], super [{}]", () -> toString(), () -> matchingChild.toString());
+					log.error("Element child overrides deprecated ElementChild: descendant [{}], super [{}]", () -> toString(), () -> matchingChild.toString());
 				}
 				overriddenFrom = match;
 				if(! overrideIsMeaningful(matchingChild)) {
@@ -156,7 +156,7 @@ public abstract class ElementChild {
 				defaultValue = value;
 			}
 		} catch(FrankDocException e) {
-			log.warn("A FrankDocException occurred when searching the (inherited) javadoc of {}", method.toString(), e);
+			log.error("A FrankDocException occurred when searching the (inherited) javadoc of {}", method.toString(), e);
 		}
 	}
 

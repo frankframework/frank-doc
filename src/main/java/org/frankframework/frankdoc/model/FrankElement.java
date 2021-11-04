@@ -150,7 +150,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		String excludedFromType = clazz.getJavaDocTag(FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP);
 		if(excludedFromType != null) {
 			if(StringUtils.isBlank(excludedFromType)) {
-				log.warn("JavaDoc tag {} should have an argument that is the full name of a Java interface", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP);
+				log.error("JavaDoc tag {} should have an argument that is the full name of a Java interface", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP);
 			} else {
 				log.trace("FrankElement [{}] has JavaDoc tag {}, excluding from type [{}]",
 						() -> fullName, () -> FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, () -> excludedFromType);
@@ -164,7 +164,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		this.meaningOfParameters = clazz.getJavaDocTag(JAVADOC_PARAMETERS);
 		for(String specificParameterStr: clazz.getAllJavaDocTagsOf(JAVADOC_PARAMETER)) {
 			if(StringUtils.isBlank(specificParameterStr)) {
-				log.warn("FrankElement [{}] has specific parameters without a name or description", fullName);
+				log.error("FrankElement [{}] has specific parameters without a name or description", fullName);
 			}
 			this.specificParameters.add(ParsedJavaDocTag.getInstance(specificParameterStr));
 		}
@@ -173,7 +173,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	private void handlePossibleForwards(FrankClass clazz) {
 		for(String forwardStr: clazz.getAllJavaDocTagsOf(JAVADOC_FORWARD)) {
 			if(StringUtils.isBlank(forwardStr)) {
-				log.warn("FrankElement [{}] has forwards without a name or description", fullName);
+				log.error("FrankElement [{}] has forwards without a name or description", fullName);
 			}
 			this.forwards.add(ParsedJavaDocTag.getInstance(forwardStr));
 		}		
@@ -225,7 +225,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		LinkedHashMap<AbstractKey, C> children = new LinkedHashMap<>();
 		for(C c: inputChildren) {
 			if(children.containsKey(c.getKey())) {
-				log.warn("Frank element [{}] has multiple attributes / config children with key [{}]",
+				log.error("Frank element [{}] has multiple attributes / config children with key [{}]",
 						() -> fullName, () -> c.getKey().toString());
 			} else {
 				children.put(c.getKey(), c);

@@ -71,7 +71,7 @@ public class FrankDocJsonFactory {
 			result.add("enums", getEnums());
 			return result.build();
 		} catch(JsonException e) {
-			log.warn("Error producing JSON", e);
+			log.error("Error producing JSON", e);
 			return null;
 		}
 	}

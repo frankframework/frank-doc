@@ -164,7 +164,7 @@ public class ConfigChildSet {
 			return Optional.of(candidates.get(0));
 		} else {
 			if(candidates.size() >= 2) {
-				log.warn("ConfigChildSet [{}] has multiple candidates for the default element: [{}]", toString(),
+				log.error("ConfigChildSet [{}] has multiple candidates for the default element: [{}]", toString(),
 						candidates.stream().collect(Collectors.joining(", ")));
 			}
 			return Optional.empty();

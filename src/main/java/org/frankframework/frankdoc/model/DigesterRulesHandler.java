@@ -49,7 +49,7 @@ public abstract class DigesterRulesHandler extends DefaultHandler {
 				try {
 					invokeSetter(rule, method, value);
 				} catch (IllegalAccessException | InvocationTargetException e) {
-					log.warn("unable to set method ["+method+"] with value ["+value+"]");
+					log.error("unable to set method ["+method+"] with value ["+value+"]");
 					e.printStackTrace();
 				}
 			}

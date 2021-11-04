@@ -933,7 +933,7 @@ public class DocWriterNew {
 			addTextConfigChild(context, roleName);
 			break;
 		case MIXED:
-			log.warn("Encountered group of config children that mixes TextConfigChild and ObjectConfigChild, not supported: [{}]",
+			log.error("Encountered group of config children that mixes TextConfigChild and ObjectConfigChild, not supported: [{}]",
 					ConfigChild.toString(configChildren));
 			// No break, consider only the ObjectConfigChild instances instead of throwing exception.
 		case OBJECT:

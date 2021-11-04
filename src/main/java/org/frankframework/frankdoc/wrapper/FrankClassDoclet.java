@@ -128,7 +128,7 @@ class FrankClassDoclet implements FrankClass {
 				}
 				result = repository.findClass(superclassQualifiedName);
 			} catch(FrankDocException e) {
-				log.warn("Could not get superclass of {}", getName(), e);
+				log.error("Could not get superclass of {}", getName(), e);
 			}
 		}
 		return result;
@@ -150,7 +150,7 @@ class FrankClassDoclet implements FrankClass {
 					resultList.add(interfaze);
 				}
 			} catch(FrankDocException e) {
-				log.warn("Error searching for {}", interfaceDoc.name(), e);
+				log.error("Error searching for {}", interfaceDoc.name(), e);
 			}
 		}
 		return resultList;
