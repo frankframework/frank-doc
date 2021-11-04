@@ -434,8 +434,23 @@ public class FrankDocModel {
 				(method.getAnnotation(FrankDocletConstants.IBISDOC) != null)
 				|| (method.getAnnotation(FrankDocletConstants.IBISDOCREF) != null)
 				|| (method.getJavaDoc() != null)
-				|| (method.getJavaDocTag(ElementChild.JAVADOC_DEFAULT_VALUE_TAG) != null));
+				|| (method.getJavaDocTag(ElementChild.JAVADOC_DEFAULT_VALUE_TAG) != null)
+				|| (method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REFER) != null));
 		log.trace("Attribute: deprecated = [{}], documented = [{}]", () -> attribute.isDeprecated(), () -> attribute.isDocumented());
+		String ffReferReference = method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REFER);
+		if(ffReferReference != null) {
+			if(StringUtils.isBlank(ffReferReference)) {
+				log.error("JavaDoc tag {} should have a full class name or full method name as argument", FrankAttribute.JAVADOC_ATTRIBUTE_REFER);
+			} else {
+				FrankMethod referred = getReferredMethod(ffReferReference, method);
+				if(referred == null) {
+					log.error("Referred method [{}] does not exist", ffReferReference);
+				} else {
+					attribute.setDescribingElement(findOrCreateFrankElement(referred.getDeclaringClass().getName()));
+					attribute.setJavaDocBasedDescriptionAndDefault(referred);
+				}
+			}
+		}
 		attribute.setJavaDocBasedDescriptionAndDefault(method);
 		FrankAnnotation ibisDocRef = method.getAnnotationInludingInherited(FrankDocletConstants.IBISDOCREF);
 		if(ibisDocRef != null) {

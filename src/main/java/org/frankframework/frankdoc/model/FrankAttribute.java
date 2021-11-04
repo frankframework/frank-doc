@@ -32,6 +32,7 @@ public class FrankAttribute extends ElementChild {
 
 	static final String JAVADOC_NO_FRANK_ATTRIBUTE = "@ff.noAttribute";
 	static final String JAVADOC_ATTRIBUTE_MANDATORY = "@ff.mandatory";
+	static final String JAVADOC_ATTRIBUTE_REFER = "@ff.refer";
 
 	@EqualsAndHashCode(callSuper = false)
 	static class Key extends AbstractKey {

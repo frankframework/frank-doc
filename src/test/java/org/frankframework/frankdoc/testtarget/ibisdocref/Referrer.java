@@ -30,4 +30,11 @@ public class Referrer {
 	@IbisDocRef("org.frankframework.frankdoc.testtarget.ibisdocref.ChildTarget")
 	public void setIbisDocRefRefersJavaDocDefault(String value) {
 	}
+
+	/**
+	 * @ff.refer org.frankframework.frankdoc.testtarget.ibisdocref.ChildTarget
+	 * 
+	 */
+	public void setFfReferInheritedDescription(String value) {
+	}
 }
