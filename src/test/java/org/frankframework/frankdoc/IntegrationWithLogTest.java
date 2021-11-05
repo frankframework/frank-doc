@@ -5,15 +5,9 @@ import java.net.URL;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.After;
 import org.junit.Test;
 
 public class IntegrationWithLogTest {
-	@After
-	public void tearDown() throws InterruptedException {
-		Thread.sleep(500);
-	}
-
 	@Test
 	public void whenPluralConfigChildHasMultipleCandidatesForDefaultElementThenWarning() throws Exception {
 		TestAppender appender = TestAppender.newBuilder().build();
