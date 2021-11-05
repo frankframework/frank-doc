@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class IntegrationWithLogTest {
 	@Test
-	public void whenPluralConfigChildHasMultipleCandidatesForDefaultElementThenWarning() throws Exception {
+	public void whenPluralConfigChildHasMultipleCandidatesForDefaultElementThenLogged() throws Exception {
 		TestAppender appender = TestAppender.newBuilder().build();
 		TestAppender.addToRootLogger(appender);
 		try {
