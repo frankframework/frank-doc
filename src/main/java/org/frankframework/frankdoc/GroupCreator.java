@@ -32,7 +32,9 @@ import org.frankframework.frankdoc.model.FrankElement;
  */
 class GroupCreator<T extends ElementChild> {
 	static interface Callback<T extends ElementChild> extends CumulativeChildHandler<T> {
+		void noChildren();
 		void addDeclaredGroup();
+		void addTopLevelDeclaredGroup();
 		void addCumulativeGroup();
 		void addDeclaredGroupRef(FrankElement referee);
 		void addCumulativeGroupRef(FrankElement referee);
@@ -55,7 +57,7 @@ class GroupCreator<T extends ElementChild> {
 		FrankElement ancestor = nextAncestor(frankElement);
 		if(hasNoRelevantChildren) {
 			if(ancestor == null) {
-				return;
+				callback.noChildren();
 			}
 			else {
 				FrankElement superAncestor = nextAncestor(ancestor);
@@ -68,11 +70,12 @@ class GroupCreator<T extends ElementChild> {
 			}
 		}
 		else {
-			callback.addDeclaredGroup();
 			if(ancestor == null) {
+				callback.addTopLevelDeclaredGroup();
 				callback.addDeclaredGroupRef(frankElement);
 			}
 			else {
+				callback.addDeclaredGroup();
 				callback.addCumulativeGroupRef(frankElement);
 				addCumulativeChildGroup();
 			}

@@ -49,7 +49,7 @@ public enum AttributeTypeStrategy {
 
 	private static Logger log = LogUtil.getLogger(AttributeTypeStrategy.class);
 
-	private static final String ATTRIBUTE_ACTIVE_NAME = "active";
+	static final String ATTRIBUTE_ACTIVE_NAME = "active";
 
 	// The $-sign is not escaped in the regex below. This way,
 	// the regexes in the XSDs are not flagged by XMLSpy.
@@ -72,10 +72,6 @@ public enum AttributeTypeStrategy {
 
 	XmlBuilder addRestrictedAttribute(XmlBuilder context, FrankAttribute attribute) {
 		return delegate.addRestrictedAttribute(context, attribute);
-	}
-
-	void addAttributeActive(XmlBuilder context) {
-		delegate.addAttributeActive(context);
 	}
 
 	List<XmlBuilder> createHelperTypes() {
@@ -124,10 +120,6 @@ public enum AttributeTypeStrategy {
 			XmlBuilder attributeBuilder = addAttributeWithType(context, attribute.getName());
 			XmlBuilder simpleType = addSimpleType(attributeBuilder);
 			return addUnion(simpleType, attributeEnum.getUniqueName(ATTRIBUTE_VALUES_TYPE), VARIABLE_REFERENCE);
-		}
-
-		final void addAttributeActive(XmlBuilder context) {
-			DocWriterNewXmlUtils.addAttributeRef(context, ATTRIBUTE_ACTIVE_NAME);
 		}
 
 		final XmlBuilder createAttributeEnumType(AttributeEnum attributeEnum) {
