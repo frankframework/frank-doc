@@ -336,6 +336,7 @@ public class FrankDocModel {
 			List<String> candidateTypes = attributeSetterCandidates.stream()
 					.map(m -> m.getParameterTypes()[0].getName())
 					.distinct()
+					.sorted()
 					.collect(Collectors.toList());
 			if(candidateTypes.size() >= 2) {
 				log.warn("Class [{}] has overloaded declared or inherited attribute setters. Type of attribute [{}] can be any of [{}]",
