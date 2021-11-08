@@ -21,8 +21,8 @@
     </xs:annotation>
     <xs:complexType>
       <xs:attribute ref="active" />
-      <xs:attribute name="elementRole" type="xs:string" fixed="a" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.fortype.FirstGrandChild" use="prohibited" />
+      <xs:attribute name="elementRole" type="xs:string" fixed="a" />
     </xs:complexType>
   </xs:element>
   <xs:element name="B">
@@ -31,8 +31,8 @@
     </xs:annotation>
     <xs:complexType>
       <xs:attribute ref="active" />
-      <xs:attribute name="elementRole" type="xs:string" fixed="b" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.fortype.SecondGrandChild" use="prohibited" />
+      <xs:attribute name="elementRole" type="xs:string" fixed="b" />
     </xs:complexType>
   </xs:element>
   <xs:group name="CElementGroup">
@@ -63,9 +63,7 @@
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Child1Type">
-              <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="c" />
-              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.fortype.Child1" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
@@ -78,6 +76,8 @@
         <xs:group ref="Child1DeclaredChildGroup" />
       </xs:choice>
     </xs:sequence>
+    <xs:attribute ref="active" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.fortype.Child1" />
   </xs:complexType>
   <xs:group name="Child1DeclaredChildGroup">
     <xs:sequence>
@@ -113,9 +113,7 @@
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Child1Type">
-              <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="d" />
-              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.fortype.Child1" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>

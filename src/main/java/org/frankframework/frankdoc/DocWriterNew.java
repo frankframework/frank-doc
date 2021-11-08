@@ -396,11 +396,7 @@ public class DocWriterNew {
 		addDocumentation(startElementBuilder, getElementDescription(startElement));
 		XmlBuilder complexType = addComplexType(startElementBuilder);
 		XmlBuilder complexContent = addComplexContent(complexType);
-		XmlBuilder extension = addExtension(complexContent, xsdElementType(startElement));
-		if(getConfigChildGroupOf(startElement) == null) {
-			log.trace("Adding attribute active explicitly to [{}] because there is no attribute group", () -> startElement.getSimpleName());
-			AttributeTypeStrategy.addAttributeActive(extension);
-		}
+		addExtension(complexContent, xsdElementType(startElement));
 	}
 
 	// Defines XML element <Module>

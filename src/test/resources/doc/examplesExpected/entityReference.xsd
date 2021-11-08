@@ -6,10 +6,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="ConfigurationType">
-          <xs:attribute ref="active" />
-          <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.entity.reference.Configuration" use="prohibited" />
-        </xs:extension>
+        <xs:extension base="ConfigurationType" />
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
@@ -29,13 +26,14 @@
     </xs:annotation>
     <xs:complexType>
       <xs:attribute ref="active" />
-      <xs:attribute name="elementRole" type="xs:string" fixed="adapter" use="prohibited" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.entity.reference.Adapter" use="prohibited" />
+      <xs:attribute name="elementRole" type="xs:string" fixed="adapter" use="prohibited" />
     </xs:complexType>
   </xs:element>
   <xs:complexType name="ConfigurationType">
     <xs:group ref="ConfigurationDeclaredChildGroup" />
     <xs:attributeGroup ref="ConfigurationDeclaredAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.entity.reference.Configuration" use="prohibited" />
   </xs:complexType>
   <xs:group name="ConfigurationDeclaredChildGroup">
     <xs:sequence>
@@ -49,6 +47,7 @@
         <xs:documentation>This attribute should be allowed in &amp;lt;Configuration&amp;gt;, but not &amp;lt;Module&amp;gt;</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute ref="active" />
   </xs:attributeGroup>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">

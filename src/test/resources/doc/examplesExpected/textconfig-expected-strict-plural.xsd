@@ -6,10 +6,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="StartType">
-          <xs:attribute ref="active" />
-          <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.plural.Start" use="prohibited" />
-        </xs:extension>
+        <xs:extension base="StartType" />
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
@@ -24,6 +21,8 @@
   </xs:element>
   <xs:complexType name="StartType">
     <xs:group ref="StartPluralConfigChildGroup" />
+    <xs:attribute ref="active" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.plural.Start" use="prohibited" />
   </xs:complexType>
   <xs:group name="StartPluralConfigChildGroup">
     <xs:sequence>
@@ -77,16 +76,17 @@
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="GrandChild1ImplType">
-              <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="b" use="prohibited" />
-              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.plural.GrandChild1Impl" use="prohibited" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
       </xs:element>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="GrandChild1ImplType" />
+  <xs:complexType name="GrandChild1ImplType">
+    <xs:attribute ref="active" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.plural.GrandChild1Impl" use="prohibited" />
+  </xs:complexType>
   <xs:group name="BElementGroupBase_2">
     <xs:choice>
       <xs:element name="GrandChild2ImplB">
@@ -96,16 +96,17 @@
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="GrandChild2ImplType">
-              <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="b" use="prohibited" />
-              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.plural.GrandChild2Impl" use="prohibited" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
       </xs:element>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="GrandChild2ImplType" />
+  <xs:complexType name="GrandChild2ImplType">
+    <xs:attribute ref="active" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.plural.GrandChild2Impl" use="prohibited" />
+  </xs:complexType>
   <xs:group name="AElementGroupBase">
     <xs:choice>
       <xs:element name="Child1ImplA">
@@ -115,9 +116,7 @@
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Child1ImplType">
-              <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="a" use="prohibited" />
-              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.plural.Child1Impl" use="prohibited" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
@@ -126,6 +125,8 @@
   </xs:group>
   <xs:complexType name="Child1ImplType">
     <xs:group ref="Child1ImplPluralConfigChildGroup" />
+    <xs:attribute ref="active" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.plural.Child1Impl" use="prohibited" />
   </xs:complexType>
   <xs:group name="Child1ImplPluralConfigChildGroup">
     <xs:sequence>
@@ -144,16 +145,17 @@
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Child2ImplType">
-              <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="a" use="prohibited" />
-              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.plural.Child2Impl" use="prohibited" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
       </xs:element>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="Child2ImplType" />
+  <xs:complexType name="Child2ImplType">
+    <xs:attribute ref="active" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.plural.Child2Impl" use="prohibited" />
+  </xs:complexType>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />

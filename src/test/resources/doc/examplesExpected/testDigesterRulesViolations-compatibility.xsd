@@ -26,8 +26,8 @@
         </xs:choice>
       </xs:sequence>
       <xs:attribute ref="active" />
-      <xs:attribute name="elementRole" type="xs:string" fixed="b" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.pattern.violation.B" use="prohibited" />
+      <xs:attribute name="elementRole" type="xs:string" fixed="b" />
     </xs:complexType>
   </xs:element>
   <xs:element name="C">
@@ -36,8 +36,8 @@
     </xs:annotation>
     <xs:complexType>
       <xs:attribute ref="active" />
-      <xs:attribute name="elementRole" type="xs:string" fixed="c" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.pattern.violation.C" use="prohibited" />
+      <xs:attribute name="elementRole" type="xs:string" fixed="c" />
     </xs:complexType>
   </xs:element>
   <xs:simpleType name="frankBoolean">
