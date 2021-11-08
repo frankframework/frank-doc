@@ -96,9 +96,17 @@ class AncestorChildNavigation<T extends ElementChild> {
 					.filter(c -> ! omit.contains(c.getKey()))
 					.map(c -> (T) c)
 					.collect(Collectors.toList());
-			handler.handleSelectedChildren(children, current);
+			handleSelectedChildren(children);
 		}
 		updateOverridden();
+	}
+
+	private void handleSelectedChildren(List<T> children) {
+		if(current.getNextAncestorThatHasChildren(noChildren) == null) {
+			handler.handleSelectedChildrenOfTopLevel(children, current);
+		} else {
+			handler.handleSelectedChildren(children, current);
+		}
 	}
 
 	private void updateOverridden() {

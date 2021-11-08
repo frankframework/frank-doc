@@ -125,7 +125,7 @@ public class AttributeTypeStrategyTest {
 		attributeTypeStrategy.addAttribute(complexType, "boolAttr", AttributeType.BOOL, false);
 		attributeTypeStrategy.addAttribute(complexType, "intAttr", AttributeType.INT, false);
 		attributeTypeStrategy.addAttribute(complexType, "stringAttr", AttributeType.STRING, false);
-		attributeTypeStrategy.addAttributeActive(complexType);
+		AttributeTypeStrategy.addAttributeActive(complexType);
 		attributeTypeStrategy.addRestrictedAttribute(complexType, enumTypedAttribute);
 		attributeTypeStrategy.createHelperTypes().forEach(h -> schema.addSubElement(h));
 		schema.addSubElement(attributeTypeStrategy.createAttributeEnumType(attributeEnum));

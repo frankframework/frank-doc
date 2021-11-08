@@ -23,8 +23,8 @@
     </xs:annotation>
     <xs:complexType>
       <xs:attribute ref="active" />
-      <xs:attribute name="elementRole" type="xs:string" fixed="roleNameTChild" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.TChild" use="prohibited" />
+      <xs:attribute name="elementRole" type="xs:string" fixed="roleNameTChild" />
     </xs:complexType>
   </xs:element>
   <xs:group name="RoleNameIChildElementGroup">
@@ -51,9 +51,7 @@ This is the header of the JavaDoc of "DescribedPossibleIChild".</xs:documentatio
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="DescribedPossibleIChildType">
-              <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="roleNameIChild" />
-              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
@@ -65,9 +63,7 @@ This is the header of the JavaDoc of "DescribedPossibleIChild".</xs:documentatio
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="NotDescribedPossibleIChildType">
-              <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="roleNameIChild" />
-              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
@@ -76,6 +72,7 @@ This is the header of the JavaDoc of "DescribedPossibleIChild".</xs:documentatio
   </xs:group>
   <xs:complexType name="DescribedPossibleIChildType">
     <xs:attributeGroup ref="DescribedPossibleIChildDeclaredAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild" />
   </xs:complexType>
   <xs:attributeGroup name="DescribedPossibleIChildDeclaredAttributeGroup">
     <xs:attribute name="firstAttribute" type="xs:string">
@@ -88,9 +85,11 @@ This is the header of the JavaDoc of "DescribedPossibleIChild".</xs:documentatio
         <xs:documentation>Second attribute of DescribedPossibleIChild</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute ref="active" />
   </xs:attributeGroup>
   <xs:complexType name="NotDescribedPossibleIChildType">
     <xs:attributeGroup ref="NotDescribedPossibleIChildDeclaredAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild" />
   </xs:complexType>
   <xs:attributeGroup name="NotDescribedPossibleIChildDeclaredAttributeGroup">
     <xs:attribute name="firstAttribute">
@@ -100,6 +99,7 @@ This is the header of the JavaDoc of "DescribedPossibleIChild".</xs:documentatio
     </xs:attribute>
     <xs:attribute name="secondAttribute" type="xs:string" />
     <xs:attribute name="thirdAttribute" type="frankInt" />
+    <xs:attribute ref="active" />
   </xs:attributeGroup>
   <xs:simpleType name="MyEnumAttributeValuesType">
     <xs:restriction base="xs:string">

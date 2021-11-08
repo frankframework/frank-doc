@@ -318,6 +318,11 @@ public class FrankElement implements Comparable<FrankElement> {
 			}
 
 			@Override
+			public void handleSelectedChildrenOfTopLevel(List<T> children, FrankElement owner) {
+				handleSelectedChildren(children, owner);
+			}
+
+			@Override
 			public void handleChildrenOf(FrankElement frankElement) {
 				result.addAll(frankElement.getChildrenOfKind(selector, kind));
 			}

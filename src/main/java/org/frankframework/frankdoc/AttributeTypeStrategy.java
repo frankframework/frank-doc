@@ -74,6 +74,10 @@ public enum AttributeTypeStrategy {
 		return delegate.addRestrictedAttribute(context, attribute);
 	}
 
+	static void addAttributeActive(XmlBuilder context) {
+		DocWriterNewXmlUtils.addAttributeRef(context, ATTRIBUTE_ACTIVE_NAME);
+	}
+
 	List<XmlBuilder> createHelperTypes() {
 		return delegate.createHelperTypes();
 	}
