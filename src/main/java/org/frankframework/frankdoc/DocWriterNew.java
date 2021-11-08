@@ -570,7 +570,7 @@ public class DocWriterNew {
 
 		@Override
 		void addAttributeClassName() {
-			log.trace("Adding attributes [{}] for FrankElement [{}]", () -> CLASS_NAME, () -> addingTo.getFullName());
+			log.trace("Adding attribute [{}] for FrankElement [{}]", () -> CLASS_NAME, () -> addingTo.getFullName());
 			addClassNameAttribute(complexType, addingTo);			
 		}
 
@@ -770,7 +770,7 @@ public class DocWriterNew {
 			log.trace("Not yet defined in XML Schema, going to define it");
 			String xsdElementName = frankElement.getXsdElementName(role);
 			XmlBuilder attributeBuilder = recursivelyDefineXsdElementUnchecked(frankElement, xsdElementName);
-			log.trace("Adding attributes [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, () -> frankElement.getFullName());
+			log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, () -> frankElement.getFullName());
 			addAttribute(attributeBuilder, ELEMENT_ROLE, FIXED, role.getRoleName(), version.getRoleNameAttributeUse());
 			log.trace("Done defining FrankElement [{}], XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
 		} else {
@@ -880,7 +880,7 @@ public class DocWriterNew {
 		XmlBuilder complexType = addComplexType(element);
 		XmlBuilder complexContent = addComplexContent(complexType);
 		XmlBuilder extension = addExtension(complexContent, xsdElementType(frankElement));
-		log.trace("Adding attributes [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, () -> frankElement.getFullName());
+		log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, () -> frankElement.getFullName());
 		addAttribute(extension, ELEMENT_ROLE, FIXED, role.getRoleName(), version.getRoleNameAttributeUse());
 	}
 
