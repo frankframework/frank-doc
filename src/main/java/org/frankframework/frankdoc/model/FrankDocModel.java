@@ -313,7 +313,7 @@ public class FrankDocModel {
 				// discovers type mismatches.
 				attribute.typeCheckDefaultValue();
 			} catch(FrankDocException e) {
-				log.error("Attribute [{}] has an invalid default value, [{}, detail {}]", attribute.toString(), attribute.getDefaultValue(), e.getMessage());
+				log.warn("Attribute [{}] has an invalid default value, [{}], detail [{}]", attribute.toString(), attribute.getDefaultValue(), e.getMessage());
 			}
 			attributeExcludedSetter.updateAttribute(attribute, method);
 			result.add(attribute);
@@ -349,7 +349,7 @@ public class FrankDocModel {
 		Map<String, FrankMethod> isserAttributes = getAttributeToMethodMap(methods, "is");
 		for(String isserAttributeName : isserAttributes.keySet()) {
 			if(getterAttributes.containsKey(isserAttributeName)) {
-				log.error("For FrankElement [{}], attribute [{}] has both a getX and an isX method", () -> attributeOwner.getSimpleName(), () -> isserAttributeName);
+				log.warn("For FrankElement [{}], attribute [{}] has both a getX and an isX method", () -> attributeOwner.getSimpleName(), () -> isserAttributeName);
 			} else {
 				getterAttributes.put(isserAttributeName, isserAttributes.get(isserAttributeName));
 			}

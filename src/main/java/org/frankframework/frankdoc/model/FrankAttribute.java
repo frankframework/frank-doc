@@ -91,7 +91,7 @@ public class FrankAttribute extends ElementChild {
 			return;
 		}
 		if(mandatory) {
-			log.error("Attribute [{}] is mandatory, but it also has a default value: [{}]", toString(), getDefaultValue());
+			log.warn("Attribute [{}] is mandatory, but it also has a default value: [{}]", toString(), getDefaultValue());
 		}
 		boolean isExplicitNull = (StringUtils.isBlank(getDefaultValue()) || getDefaultValue().equals("null"));
 		if(isExplicitNull && parameterType.isPrimitive()) {

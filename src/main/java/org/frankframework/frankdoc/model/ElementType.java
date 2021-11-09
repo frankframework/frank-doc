@@ -111,7 +111,7 @@ public class ElementType implements Comparable<ElementType> {
 				FrankClass defaultClass = repository.findClass(value);
 				result = defaultClass.getName();
 			} catch(FrankDocException e) {
-				log.error("JavaDoc tag {} on interface [{}] does not point to a valid class: [{}]", JAVADOC_DEFAULT_CLASSNAME, clazz.getName(), value);
+				log.error("JavaDoc tag {} on interface [{}] does not point to a valid class: [{}]", JAVADOC_DEFAULT_CLASSNAME, clazz.getName(), value, e);
 			}
 		}
 		return result;
