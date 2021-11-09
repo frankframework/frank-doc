@@ -38,6 +38,7 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.FrankType;
 import org.xml.sax.ContentHandler;
@@ -59,6 +60,9 @@ public final class Utils {
 	private static final String JAVA_LONG = "java.lang.Long";
 	private static final String JAVA_BYTE = "java.lang.Byte";
 	private static final String JAVA_SHORT = "java.lang.Short";
+
+	private static final String JAVADOC_LINK_START = "{@link";
+	private static final String JAVADOC_LINK_STOP = "}";
 
 	private static Map<String, String> primitiveToBoxed = new HashMap<>();
 	static {
@@ -210,5 +214,35 @@ public final class Utils {
 		}
 
 		return sw.toString().trim();
+	}
+
+	public static String flattenJavaDocLinksToLastWords(String text) throws FrankDocException {
+		StringBuilder result = new StringBuilder();
+		int currentIndex = 0;
+		int nextLink = text.indexOf(JAVADOC_LINK_START, currentIndex);
+		while(nextLink >= 0) {
+			result.append(text.substring(currentIndex, nextLink));
+			int linkEnd = text.indexOf(JAVADOC_LINK_STOP, nextLink);
+			if(linkEnd < 0) {
+				throw new FrankDocException(String.format("Unfinished JavaDoc link in text [%s] at index [%d]", text, nextLink), null);
+			}
+			String linkBody = text.substring(nextLink + JAVADOC_LINK_START.length(), linkEnd);
+			result.append(getLinkReplacement(linkBody));
+			currentIndex = linkEnd + 1;
+			if(currentIndex >= text.length()) {
+				return result.toString();
+			}
+			nextLink = text.indexOf(JAVADOC_LINK_START, currentIndex);
+		}
+		result.append(text.substring(currentIndex));
+		return result.toString();
+	}
+
+	private static String getLinkReplacement(String linkBody) {
+		String[] words = linkBody.split("[ \\t]");
+		if(words.length == 0) {
+			return "";
+		}
+		return words[words.length - 1];
 	}
 }

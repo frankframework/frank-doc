@@ -51,7 +51,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
-
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.ConfigChild;
 import org.frankframework.frankdoc.model.ConfigChildGroupKind;
@@ -66,6 +65,7 @@ import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.TextConfigChild;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 /**
  * This class writes the XML schema document (XSD) that checks the validity of a
@@ -1157,8 +1157,15 @@ public class DocWriterNew {
 
 	private String getDocumentationText(ElementChild elementChild) {
 		StringBuilder result = new StringBuilder();
-		if(! StringUtils.isEmpty(elementChild.getDescription())) {
-			result.append(elementChild.getDescription());
+		String description = elementChild.getDescription();
+		if(! StringUtils.isEmpty(description)) {
+			try {
+				String flat = Utils.flattenJavaDocLinksToLastWords(description);
+				result.append(flat);
+			} catch(FrankDocException e) {
+				log.error("Error flattening JavaDoc link in [{}]", e);
+				result.append(description);
+			}
 		}
 		if(! StringUtils.isEmpty(elementChild.getDefaultValue())) {
 			if(result.length() >= 1) {
