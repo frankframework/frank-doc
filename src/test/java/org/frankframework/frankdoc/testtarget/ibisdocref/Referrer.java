@@ -32,7 +32,7 @@ public class Referrer {
 	}
 
 	/**
-	 * @ff.refer org.frankframework.frankdoc.testtarget.ibisdocref.ChildTarget
+	 * @ff.ref org.frankframework.frankdoc.testtarget.ibisdocref.ChildTarget
 	 * 
 	 */
 	public void setFfReferInheritedDescription(String value) {
