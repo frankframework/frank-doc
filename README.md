@@ -222,7 +222,7 @@ Third, you can choose in the Frank!Doc website whether you want to see `@Depreca
 
 ![webappShowDeprecated](./picturesForReadme/webappShowDeprecated.jpg)
 
-`Deprecated` Java classes are crossed out in the list of class names to the bottom-left. See the picture below for the example of [DummyTransactionalStorage](./core/src/main/java/nl/nn/adapterframework/jdbc/DummyTransactionalStorage.java):
+`Deprecated` Java classes are crossed out in the list of class names to the bottom-left. See the picture below for the example of [DummyTransactionalStorage](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/jdbc/DummyTransactionalStorage.java):
 
 ![webappDeprecatedClass](./picturesForReadme/webappDeprecatedClass.jpg)
 
