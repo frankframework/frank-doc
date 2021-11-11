@@ -319,10 +319,6 @@ public class FrankDocModel {
 			result.add(attribute);
 			log.trace("Attribute [{}] done", () -> attributeName);
 		}
-		// We may inherit attribute setters from an interface from which we have to reject the attributes.
-		// We must have FrankAttribute instances for these, because otherwise AncestorChildNavigation does not know
-		// how to omit them.
-		result.addAll(attributeExcludedSetter.getExcludedAttributesForRemainingNames(attributeOwner));
 		log.trace("Done creating attributes for {}", attributeOwner.getFullName());
 		return result;
 	}

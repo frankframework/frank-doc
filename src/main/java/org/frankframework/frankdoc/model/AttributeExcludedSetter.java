@@ -16,25 +16,16 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
-
+import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.frankframework.frankdoc.util.LogUtil;
 
 class AttributeExcludedSetter {
 	private static Logger log = LogUtil.getLogger(AttributeExcludedSetter.class);
-
-	private Set<String> namesExcludedDueToIgnoredInterface = new HashSet<>();
 
 	AttributeExcludedSetter(FrankClass clazz, FrankClassRepository repository) {
 		String ignoredInterface = clazz.getJavaDocTag(FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP);
@@ -51,14 +42,7 @@ class AttributeExcludedSetter {
 				}
 				if(ignoredInterfaceClass == null) {
 					log.warn("Javadoc tag {} refers to a non-existing Java interface [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, ignoredInterface);
-				} else {
-					AttributesFromInterfaceRejector rejector = new AttributesFromInterfaceRejector(ignoredInterfaceClass);
-					namesExcludedDueToIgnoredInterface = rejector.getRejects(clazz);					
 				}
-			}
-			if(log.isTraceEnabled()) {
-				String namesNonAttributesStr = namesExcludedDueToIgnoredInterface.stream().collect(Collectors.joining(", "));
-				log.trace("The following will be excluded as attributes: {}", namesNonAttributesStr);
 			}
 		}
 	}
@@ -68,21 +52,5 @@ class AttributeExcludedSetter {
 			log.trace("Attribute [{}] has JavaDoc tag {}, marking as excluded", () -> attribute.getName(), () -> FrankAttribute.JAVADOC_NO_FRANK_ATTRIBUTE);
 			attribute.setExcluded(true);
 		}
-		if(namesExcludedDueToIgnoredInterface.contains(attribute.getName())) {
-			log.trace("Attribute [{}] is excluded because it belongs to an excluded interface", () -> attribute.getName());
-			attribute.setExcluded(true);
-		}
-		namesExcludedDueToIgnoredInterface.remove(attribute.getName());
-	}
-
-	List<FrankAttribute> getExcludedAttributesForRemainingNames(FrankElement attributeOwner) {
-		List<FrankAttribute> result = new ArrayList<>();
-		for(String name: namesExcludedDueToIgnoredInterface) {
-			FrankAttribute a = new FrankAttribute(name, attributeOwner);
-			a.setExcluded(true);
-			result.add(a);
-			log.trace("Created excluded attribute [{}]", () -> a.getName());
-		}
-		return result;
 	}
 }
