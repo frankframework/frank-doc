@@ -61,8 +61,8 @@ public final class Utils {
 	private static final String JAVA_BYTE = "java.lang.Byte";
 	private static final String JAVA_SHORT = "java.lang.Short";
 
-	private static final String JAVADOC_LINK_START = "{@link";
-	private static final String JAVADOC_LINK_STOP = "}";
+	private static final String JAVADOC_TOFLATTEN_START = "{@";
+	private static final String JAVADOC_TOFLATTEN_STOP = "}";
 
 	private static Map<String, String> primitiveToBoxed = new HashMap<>();
 	static {
@@ -219,20 +219,20 @@ public final class Utils {
 	public static String flattenJavaDocLinksToLastWords(String text) throws FrankDocException {
 		StringBuilder result = new StringBuilder();
 		int currentIndex = 0;
-		int nextLink = text.indexOf(JAVADOC_LINK_START, currentIndex);
-		while(nextLink >= 0) {
-			result.append(text.substring(currentIndex, nextLink));
-			int linkEnd = text.indexOf(JAVADOC_LINK_STOP, nextLink);
-			if(linkEnd < 0) {
-				throw new FrankDocException(String.format("Unfinished JavaDoc link in text [%s] at index [%d]", text, nextLink), null);
+		int nextToFlatten = text.indexOf(JAVADOC_TOFLATTEN_START, currentIndex);
+		while(nextToFlatten >= 0) {
+			result.append(text.substring(currentIndex, nextToFlatten));
+			int toFlattenEnd = text.indexOf(JAVADOC_TOFLATTEN_STOP, nextToFlatten);
+			if(toFlattenEnd < 0) {
+				throw new FrankDocException(String.format("Unfinished JavaDoc link in text [%s] at index [%d]", text, nextToFlatten), null);
 			}
-			String linkBody = text.substring(nextLink + JAVADOC_LINK_START.length(), linkEnd);
-			result.append(getLinkReplacement(linkBody));
-			currentIndex = linkEnd + 1;
+			String bodyToFlatten = text.substring(nextToFlatten + JAVADOC_TOFLATTEN_START.length(), toFlattenEnd);
+			result.append(getLinkReplacement(bodyToFlatten));
+			currentIndex = toFlattenEnd + 1;
 			if(currentIndex >= text.length()) {
 				return result.toString();
 			}
-			nextLink = text.indexOf(JAVADOC_LINK_START, currentIndex);
+			nextToFlatten = text.indexOf(JAVADOC_TOFLATTEN_START, currentIndex);
 		}
 		result.append(text.substring(currentIndex));
 		return result.toString();
