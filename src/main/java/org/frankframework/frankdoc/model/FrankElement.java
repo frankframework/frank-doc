@@ -32,16 +32,18 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.wrapper.FrankClass;
-import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.frankframework.frankdoc.util.LogUtil;
 
 /**
  * Models a Java class that can be referred to in a Frank configuration.
@@ -125,13 +127,13 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private Set<String> syntax2ExcludedFromTypes = new HashSet<>();
 
-	FrankElement(FrankClass clazz) {
+	FrankElement(FrankClass clazz, FrankClassRepository repository) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
 		isDeprecated = clazz.getAnnotation(FrankDocletConstants.DEPRECATED) != null;
 		configChildSets = new LinkedHashMap<>();
 		javadocStrategy.completeFrankElement(this, clazz);
 		handleConfigChildSetterCandidates(clazz);
-		handlePossibleFrankDocIgnoreTypeMembershipAnnotation(clazz);
+		handlePossibleFrankDocIgnoreTypeMembershipAnnotation(clazz, repository);
 		handlePossibleParameters(clazz);
 		handlePossibleForwards(clazz);
 	}
@@ -146,7 +148,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		}
 	}
 
-	private void handlePossibleFrankDocIgnoreTypeMembershipAnnotation(FrankClass clazz) {
+	private void handlePossibleFrankDocIgnoreTypeMembershipAnnotation(FrankClass clazz, FrankClassRepository repository) {
 		String excludedFromType = clazz.getJavaDocTag(FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP);
 		if(excludedFromType != null) {
 			if(StringUtils.isBlank(excludedFromType)) {
@@ -154,7 +156,15 @@ public class FrankElement implements Comparable<FrankElement> {
 			} else {
 				log.trace("FrankElement [{}] has JavaDoc tag {}, excluding from type [{}]",
 						() -> fullName, () -> FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, () -> excludedFromType);
-				// AttributeExcludedSetter checks already whether excludedFromType exists as a Java class.
+				FrankClass ignoredInterfaceClass = null;
+				try {
+					ignoredInterfaceClass = repository.findClass(excludedFromType);					
+				} catch(FrankDocException e) {
+					log.warn("Exception when parsing Javadoc tag {} that references Java interface [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, excludedFromType, e);
+				}
+				if(ignoredInterfaceClass == null) {
+					log.warn("Javadoc tag {} refers to a non-existing Java interface [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, excludedFromType);
+				}
 				syntax2ExcludedFromTypes.add(excludedFromType);
 			}
 		}

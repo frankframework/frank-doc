@@ -229,7 +229,7 @@ public class FrankDocModel {
 	private class FrankElementCreationStrategyRoot extends FrankElementCreationStrategy{
 		@Override
 		FrankElement createFromClass(FrankClass clazz) {
-			return new RootFrankElement(clazz);
+			return new RootFrankElement(clazz, classRepository);
 		}
 
 		@Override
@@ -241,7 +241,7 @@ public class FrankDocModel {
 	private class FrankElementCreationStrategyNonRoot extends FrankElementCreationStrategy {
 		@Override
 		FrankElement createFromClass(FrankClass clazz) {
-			return new FrankElement(clazz);
+			return new FrankElement(clazz, classRepository);
 		}
 
 		@Override
@@ -276,7 +276,6 @@ public class FrankDocModel {
 	List<FrankAttribute> createAttributes(FrankClass clazz, FrankElement attributeOwner) throws FrankDocException {
 		log.trace("Creating attributes for FrankElement [{}]", () -> attributeOwner.getFullName());
 		checkForAttributeSetterOverloads(clazz);
-		AttributeExcludedSetter attributeExcludedSetter = new AttributeExcludedSetter(clazz, classRepository);
 		FrankMethod[] methods = clazz.getDeclaredMethods();
 		Map<String, FrankMethod> enumGettersByAttributeName = getEnumGettersByAttributeName(clazz);
 		LinkedHashMap<String, FrankMethod> setterAttributes = getAttributeToMethodMap(methods, "set");
@@ -315,7 +314,10 @@ public class FrankDocModel {
 			} catch(FrankDocException e) {
 				log.warn("Attribute [{}] has an invalid default value, [{}, detail {}]", attribute.toString(), attribute.getDefaultValue(), e.getMessage());
 			}
-			attributeExcludedSetter.updateAttribute(attribute, method);
+			if(method.getJavaDocTag(FrankAttribute.JAVADOC_NO_FRANK_ATTRIBUTE) != null) {
+				log.trace("Attribute [{}] has JavaDoc tag {}, marking as excluded", () -> attribute.getName(), () -> FrankAttribute.JAVADOC_NO_FRANK_ATTRIBUTE);
+				attribute.setExcluded(true);
+			}
 			result.add(attribute);
 			log.trace("Attribute [{}] done", () -> attributeName);
 		}
