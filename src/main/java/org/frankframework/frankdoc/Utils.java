@@ -240,7 +240,8 @@ public final class Utils {
 
 	private static String getLinkReplacement(String linkBody) {
 		String[] words = linkBody.split("[ \\t]");
-		if(words.length == 0) {
+		// {@link} should be replaced by the empty string.
+		if((words.length == 0) || (words.length == 1)) {
 			return "";
 		}
 		return words[words.length - 1];
