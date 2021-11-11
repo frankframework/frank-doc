@@ -172,7 +172,7 @@ Here is again how restricted string attributes are shown, this time with `@EnumL
 
 ![webappAttributeOperation](./picturesForReadme/webappAttributeOperation.jpg)
 
-You see the description in the JavaDoc comment (or [@IbisDoc](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/IbisDoc.java) Java annotation) of the attribute setter (number 1). Enum-restricted string attributes do not show a type (number 2) as said earlier, but it is shown for Boolean and integer attributes. Each enum value (number 3) is shown with its description (number 4) that comes from the JavaDoc comment of the enum value.
+You see the description in the JavaDoc comment (or [@IbisDoc](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/IbisDoc.java) Java annotation) of the attribute setter (number 1). Enum-restricted string attributes do not show a type (number 2) as said earlier (you may have to scroll to the right to see this), but it is shown for Boolean and integer attributes. Each enum value (number 3) is shown with its description (number 4) that comes from the JavaDoc comment of the enum value.
 
 ## Attribute default value
 
