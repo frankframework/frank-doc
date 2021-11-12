@@ -38,6 +38,7 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.FrankType;
 import org.xml.sax.ContentHandler;
@@ -59,6 +60,9 @@ public final class Utils {
 	private static final String JAVA_LONG = "java.lang.Long";
 	private static final String JAVA_BYTE = "java.lang.Byte";
 	private static final String JAVA_SHORT = "java.lang.Short";
+
+	private static final String JAVADOC_TOFLATTEN_START = "{@";
+	private static final String JAVADOC_TOFLATTEN_STOP = "}";
 
 	private static Map<String, String> primitiveToBoxed = new HashMap<>();
 	static {
@@ -210,5 +214,36 @@ public final class Utils {
 		}
 
 		return sw.toString().trim();
+	}
+
+	public static String flattenJavaDocLinksToLastWords(String text) throws FrankDocException {
+		StringBuilder result = new StringBuilder();
+		int currentIndex = 0;
+		int nextToFlatten = text.indexOf(JAVADOC_TOFLATTEN_START, currentIndex);
+		while(nextToFlatten >= 0) {
+			result.append(text.substring(currentIndex, nextToFlatten));
+			int toFlattenEnd = text.indexOf(JAVADOC_TOFLATTEN_STOP, nextToFlatten);
+			if(toFlattenEnd < 0) {
+				throw new FrankDocException(String.format("Unfinished JavaDoc link in text [%s] at index [%d]", text, nextToFlatten), null);
+			}
+			String bodyToFlatten = text.substring(nextToFlatten + JAVADOC_TOFLATTEN_START.length(), toFlattenEnd);
+			result.append(getLinkReplacement(bodyToFlatten));
+			currentIndex = toFlattenEnd + 1;
+			if(currentIndex >= text.length()) {
+				return result.toString();
+			}
+			nextToFlatten = text.indexOf(JAVADOC_TOFLATTEN_START, currentIndex);
+		}
+		result.append(text.substring(currentIndex));
+		return result.toString();
+	}
+
+	private static String getLinkReplacement(String linkBody) {
+		String[] words = linkBody.split("[ \\t]");
+		// {@link} should be replaced by the empty string.
+		if((words.length == 0) || (words.length == 1)) {
+			return "";
+		}
+		return words[words.length - 1];
 	}
 }
