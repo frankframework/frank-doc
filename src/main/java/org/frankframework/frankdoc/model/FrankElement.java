@@ -125,14 +125,19 @@ public class FrankElement implements Comparable<FrankElement> {
 	private @Getter List<ParsedJavaDocTag> specificParameters = new ArrayList<>();
 	private @Getter List<ParsedJavaDocTag> forwards = new ArrayList<>();
 
+	private @Getter(AccessLevel.PACKAGE) FrankDocGroup explicitGroup = null;
+	private Set<String> inTypes = new HashSet<>();
 	private Set<String> syntax2ExcludedFromTypes = new HashSet<>();
 
-	FrankElement(FrankClass clazz, FrankClassRepository repository) {
+	FrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
 		isDeprecated = clazz.getAnnotation(FrankDocletConstants.DEPRECATED) != null;
 		configChildSets = new LinkedHashMap<>();
 		javadocStrategy.completeFrankElement(this, clazz);
 		handleConfigChildSetterCandidates(clazz);
+		if(clazz.getAnnotation(FrankDocGroupFactory.JAVADOC_GROUP_ANNOTATION) != null) {
+			explicitGroup = groupFactory.getGroup(clazz);
+		}
 		handlePossibleFrankDocIgnoreTypeMembershipAnnotation(clazz, repository);
 		handlePossibleParameters(clazz);
 		handlePossibleForwards(clazz);
@@ -208,6 +213,9 @@ public class FrankElement implements Comparable<FrankElement> {
 		this.parent = parent;
 		if(parent != null) {
 			syntax2ExcludedFromTypes.addAll(parent.syntax2ExcludedFromTypes);
+			if(explicitGroup == null) {
+				explicitGroup = parent.explicitGroup;
+			}
 		}
 		this.statistics = new FrankElementStatistics(this);
 	}
@@ -434,6 +442,15 @@ public class FrankElement implements Comparable<FrankElement> {
 			inheritsPluralConfigChildren = ancestor.hasOrInheritsPluralConfigChildren(selector, rejector);
 		}
 		return hasPluralConfigChildren || inheritsPluralConfigChildren;
+	}
+
+	void addTypeMembership(ElementType elementType) {
+		inTypes.add(elementType.getFullName());
+	}
+
+	void syntax2RestrictTo(Collection<ElementType> elementTypes) {
+		syntax2ExcludedFromTypes = new HashSet<>(inTypes);
+		syntax2ExcludedFromTypes.removeAll(elementTypes.stream().map(ElementType::getFullName).collect(Collectors.toSet()));
 	}
 
 	boolean syntax2ExcludedFromType(String typeName) {

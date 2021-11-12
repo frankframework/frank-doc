@@ -24,8 +24,8 @@ import org.frankframework.frankdoc.wrapper.FrankClassRepository;
  * part of a config child, but they have a role name that matches rules in digester-rules.xml.
  */
 class RootFrankElement extends FrankElement {
-	RootFrankElement(FrankClass clazz, FrankClassRepository repository) {
-		super(clazz, repository);
+	RootFrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory) {
+		super(clazz, repository, groupFactory);
 	}
 
 	public String getRoleName() {

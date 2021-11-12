@@ -229,7 +229,7 @@ public class FrankDocModel {
 	private class FrankElementCreationStrategyRoot extends FrankElementCreationStrategy{
 		@Override
 		FrankElement createFromClass(FrankClass clazz) {
-			return new RootFrankElement(clazz, classRepository);
+			return new RootFrankElement(clazz, classRepository, groupFactory);
 		}
 
 		@Override
@@ -241,7 +241,7 @@ public class FrankDocModel {
 	private class FrankElementCreationStrategyNonRoot extends FrankElementCreationStrategy {
 		@Override
 		FrankElement createFromClass(FrankClass clazz) {
-			return new FrankElement(clazz, classRepository);
+			return new FrankElement(clazz, classRepository, groupFactory);
 		}
 
 		@Override
@@ -637,10 +637,13 @@ public class FrankDocModel {
 			for(FrankClass memberClass: memberClasses) {
 				FrankElement frankElement = findOrCreateFrankElement(memberClass.getName());
 				result.addMember(frankElement);
+				frankElement.addTypeMembership(result);
 			}
 		} else {
 			log.trace("Class [{}] is not a Java interface, creating its FrankElement", () -> clazz.getName());
-			result.addMember(findOrCreateFrankElement(clazz.getName()));
+			FrankElement member = findOrCreateFrankElement(clazz.getName());
+			result.addMember(member);
+			member.addTypeMembership(result);
 		}
 		log.trace("Done creating ElementType for class [{}]", () -> clazz.getName());
 		return result;
@@ -853,6 +856,9 @@ public class FrankDocModel {
 			Collections.sort(elementTypes);
 			group.setElementTypes(elementTypes);
 		}
+		allElements.values().stream()
+			.filter(f -> f.getExplicitGroup() != null)
+			.forEach(f -> f.syntax2RestrictTo(f.getExplicitGroup().getElementTypes()));
 		final Map<String, FrankElement> leftOvers = new HashMap<>(allElements);
 		allTypes.values().stream().flatMap(et -> et.getSyntax2Members().stream()).forEach(f -> leftOvers.remove(f.getFullName()));
 		elementsOutsideConfigChildren = leftOvers.values().stream()

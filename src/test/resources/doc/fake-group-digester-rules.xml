@@ -2,4 +2,5 @@
 <digester-rules>
   <rule pattern="*/listener" registerMethod="setListener"/>
   <rule pattern="*/sender" registerMethod="setSender"/>
+  <rule pattern="*/adapter" registerMethod="setAdapter"/>
 </digester-rules>
