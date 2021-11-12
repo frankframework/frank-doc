@@ -641,6 +641,7 @@ public class FrankDocModel {
 			return allTypes.get(clazz.getName());
 		}
 		FrankDocGroup group = groupFactory.getGroup(clazz);
+		log.trace("Creating ElementType [{}] with group [{}]", () -> clazz.getName(), () -> group.getName());
 		final ElementType result = new ElementType(clazz, group, classRepository);
 		// If a containing FrankElement contains the type being created, we do not
 		// want recursion.
@@ -874,7 +875,7 @@ public class FrankDocModel {
 		}
 		allElements.values().stream()
 			.filter(f -> f.getExplicitGroup() != null)
-			.forEach(f -> f.syntax2RestrictTo(f.getExplicitGroup().getElementTypes()));
+			.forEach(f -> f.syntax2RestrictTo(f.getExplicitGroup().getElementTypes(), f.getExplicitGroup().getName()));
 		final Map<String, FrankElement> leftOvers = new HashMap<>(allElements);
 		allTypes.values().stream().flatMap(et -> et.getSyntax2Members().stream()).forEach(f -> leftOvers.remove(f.getFullName()));
 		elementsOutsideConfigChildren = leftOvers.values().stream()

@@ -137,6 +137,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		handleConfigChildSetterCandidates(clazz);
 		if(clazz.getAnnotation(FrankDocGroupFactory.JAVADOC_GROUP_ANNOTATION) != null) {
 			explicitGroup = groupFactory.getGroup(clazz);
+			log.trace("FrankElement [{}] has explicit @FrankDocGroup annotation with group name [{}]", () -> getFullName(), () -> explicitGroup.getName());
 		}
 		handlePossibleFrankDocIgnoreTypeMembershipAnnotation(clazz, repository);
 		handlePossibleParameters(clazz);
@@ -215,6 +216,8 @@ public class FrankElement implements Comparable<FrankElement> {
 			syntax2ExcludedFromTypes.addAll(parent.syntax2ExcludedFromTypes);
 			if(explicitGroup == null) {
 				explicitGroup = parent.explicitGroup;
+				log.trace("FrankElement [{}] inherits @FrankDocGroup annotation with name [{}] from parent [{}]",
+						() -> getFullName(), () -> explicitGroup == null ? "null" : explicitGroup.getName(), () -> parent.getFullName());
 			}
 		}
 		this.statistics = new FrankElementStatistics(this);
@@ -448,9 +451,12 @@ public class FrankElement implements Comparable<FrankElement> {
 		inTypes.add(elementType.getFullName());
 	}
 
-	void syntax2RestrictTo(Collection<ElementType> elementTypes) {
+	void syntax2RestrictTo(Collection<ElementType> elementTypes, String groupName) {
 		syntax2ExcludedFromTypes = new HashSet<>(inTypes);
 		syntax2ExcludedFromTypes.removeAll(elementTypes.stream().map(ElementType::getFullName).collect(Collectors.toSet()));
+		if(syntax2ExcludedFromTypes.equals(inTypes)) {
+			log.error("FrankElement [{}] is put in group [{}], but then it is not visible anymore in the Frank!Doc", getFullName(), groupName);
+		}
 	}
 
 	boolean syntax2ExcludedFromType(String typeName) {
