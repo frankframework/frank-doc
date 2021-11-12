@@ -454,7 +454,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	void syntax2RestrictTo(Collection<ElementType> elementTypes, String groupName) {
 		syntax2ExcludedFromTypes = new HashSet<>(inTypes);
 		syntax2ExcludedFromTypes.removeAll(elementTypes.stream().map(ElementType::getFullName).collect(Collectors.toSet()));
-		if(syntax2ExcludedFromTypes.equals(inTypes)) {
+		if(syntax2ExcludedFromTypes.equals(inTypes) && (! inTypes.isEmpty())) {
 			log.error("FrankElement [{}] is put in group [{}], but then it is not visible anymore in the Frank!Doc", getFullName(), groupName);
 		}
 	}
