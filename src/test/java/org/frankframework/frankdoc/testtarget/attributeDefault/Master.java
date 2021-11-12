@@ -43,4 +43,11 @@ public class Master {
 	 */
 	public void setMandatoryWithDefault(String s) {
 	}
+
+	/**
+	 * attributeWithJavaDocLink with {@link MyLink}.
+	 * @param s
+	 */
+	public void setAttributeWithJavaDocLink(String s) {
+	}
 }
