@@ -112,6 +112,7 @@
     <xs:attributeGroup ref="SuppressingChildDeclaredAttributeGroup" />
     <xs:attribute name="suppressedAttribute" type="xs:string" />
     <xs:attribute name="notSuppressedAttribute" type="xs:string" />
+    <xs:attribute ref="active" />
   </xs:attributeGroup>
   <xs:complexType name="SuppressingChildType">
     <xs:attributeGroup ref="SuppressingChildCumulativeAttributeGroup" />
