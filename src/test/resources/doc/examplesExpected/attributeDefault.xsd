@@ -48,6 +48,11 @@
         <xs:documentation>Default: something</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="attributeWithJavaDocLink" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>attributeWithJavaDocLink with MyLink.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:attributeGroup>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">

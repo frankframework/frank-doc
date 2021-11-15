@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 import lombok.Getter;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 class DocWriterNewXmlUtils {
 	private static Logger log = LogUtil.getLogger(DocWriterNewXmlUtils.class);
@@ -231,11 +232,21 @@ class DocWriterNewXmlUtils {
 	}
 
 	static void addDocumentation(XmlBuilder context, String description) {
+		description = checkedFlatten(description);
 		XmlBuilder annotation = new XmlBuilder("annotation", "xs", XML_SCHEMA_URI);
 		context.addSubElement(annotation);
 		XmlBuilder documentation = new XmlBuilder("documentation", "xs", XML_SCHEMA_URI);
 		annotation.addSubElement(documentation);
 		documentation.setValue(description);
+	}
+
+	private static String checkedFlatten(String text) {
+		try {
+			return Utils.flattenJavaDocLinksToLastWords(text);
+		} catch(FrankDocException e) {
+			log.error("Error flattening JavaDoc link in [{}]", text, e);
+			return text;
+		}
 	}
 
 	static XmlBuilder addGroup(XmlBuilder context, String name) {
