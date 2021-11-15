@@ -189,7 +189,7 @@ public class FrankDocModel {
 				.collect(Collectors.toList());
 		for(RootFrankElement root: roots) {
 			if(! rootRoleNames.contains(root.getRoleName())) {
-				log.warn("Root FrankElement [{}] does not have a matching pattern in digester-rules.xml", root.toString());
+				log.error("The root FrankElement is named [{}] so a digester-rules.xml pattern [{}] is needed, but the pattern misses", root.toString(), root.getRoleName());
 			}
 		}
 	}
