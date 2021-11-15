@@ -132,8 +132,12 @@ public abstract class ConfigChild extends ElementChild {
 			ConfigChild selected = bucket.get(0);
 			result.add(selected);
 			if(selected.isDeprecated()) {
-				log.error("From duplicate config children, only a deprecated one is selected. In mode {}, {} will not have a config child for {}",
-						() -> XsdVersion.STRICT, () -> selected.getOwningElement().getFullName(), () -> selected.toString());
+				if(bucket.stream().allMatch(ElementChild::isDeprecated)) {
+					log.trace("All config children with key [{}] are deprecated", () -> key.toString());
+				} else {
+					log.error("From duplicate config children, only a deprecated one is selected. In mode {}, {} will not have a config child for {}",
+							() -> XsdVersion.STRICT, () -> selected.getOwningElement().getFullName(), () -> selected.toString());
+				}
 			}
 			if(log.isTraceEnabled() && (bucket.size() >= 2)) {
 				for(ConfigChild omitted: bucket.subList(1, bucket.size())) {

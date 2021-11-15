@@ -164,8 +164,21 @@ public class ConfigChildSet {
 			return Optional.of(candidates.get(0));
 		} else {
 			if(candidates.size() >= 2) {
-				log.error("ConfigChildSet [{}] has multiple candidates for the default element: [{}]", toString(),
-						candidates.stream().collect(Collectors.joining(", ")));
+				if(configChildren.stream()
+						.map(ConfigChild::getRoleName)
+						.anyMatch(roleName -> roleName.equals("child"))) {
+					// We cannot fix this for Frank config element <Child>, so the build should not fail.
+					log.warn("ConfigChildSet [{}] has multiple candidates for the default element: [{}]", toString(),
+							candidates.stream().collect(Collectors.joining(", ")));					
+				} else {
+					// We are hiding FrankElement-s. For the sake of the argument, say class Pipe implements interface IPipe,
+					// and say we have a config child with role name "pipe".
+					// Then <Pipe className="..."> should work, syntax 1. But <Pipe> without className should
+					// reference class Pipe. We implement this by having a default value for the className attribute.
+					// But that does not work if there are multiple candidates.
+					log.error("ConfigChildSet [{}] has multiple candidates for the default element: [{}]", toString(),
+							candidates.stream().collect(Collectors.joining(", ")));
+				}
 			}
 			return Optional.empty();
 		}

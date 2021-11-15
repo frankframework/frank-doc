@@ -134,7 +134,7 @@ public class FrankDocModel {
 			String registerTextMethod = rule.getRegisterTextMethod();
 			if(StringUtils.isNotEmpty(rule.getRegisterMethod())) {
 				if(StringUtils.isNotEmpty(registerTextMethod)) {
-					log.error("digester-rules.xml, role name {}: Have both registerMethod and registerTextMethod, ignoring the latter", pattern.getRoleName());
+					log.warn("digester-rules.xml, role name {}: Have both registerMethod and registerTextMethod, ignoring the latter", pattern.getRoleName());
 				}
 				addTypeObject(rule.getRegisterMethod(), pattern);
 			} else {
@@ -189,7 +189,7 @@ public class FrankDocModel {
 				.collect(Collectors.toList());
 		for(RootFrankElement root: roots) {
 			if(! rootRoleNames.contains(root.getRoleName())) {
-				log.error("Root FrankElement [{}] does not have a matching pattern in digester-rules.xml", root.toString());
+				log.warn("Root FrankElement [{}] does not have a matching pattern in digester-rules.xml", root.toString());
 			}
 		}
 	}

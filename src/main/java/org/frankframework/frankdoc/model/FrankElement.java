@@ -165,6 +165,8 @@ public class FrankElement implements Comparable<FrankElement> {
 		for(String specificParameterStr: clazz.getAllJavaDocTagsOf(JAVADOC_PARAMETER)) {
 			if(StringUtils.isBlank(specificParameterStr)) {
 				log.error("FrankElement [{}] has specific parameters without a name or description", fullName);
+			} else if(specificParameterStr.trim().split("[ \\t]").length == 1) {
+				log.warn("Specific parameter [{}] of FrankElement [{}] has no description", specificParameterStr, fullName);
 			}
 			this.specificParameters.add(ParsedJavaDocTag.getInstance(specificParameterStr));
 		}
@@ -174,6 +176,8 @@ public class FrankElement implements Comparable<FrankElement> {
 		for(String forwardStr: clazz.getAllJavaDocTagsOf(JAVADOC_FORWARD)) {
 			if(StringUtils.isBlank(forwardStr)) {
 				log.error("FrankElement [{}] has forwards without a name or description", fullName);
+			} else if(forwardStr.trim().split("[ \\t]").length == 1) {
+				log.warn("Forward [{}] of FrankElement [{}] has no description", forwardStr, fullName);
 			}
 			this.forwards.add(ParsedJavaDocTag.getInstance(forwardStr));
 		}		
