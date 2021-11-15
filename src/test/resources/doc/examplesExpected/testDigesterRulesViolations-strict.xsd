@@ -28,8 +28,8 @@
         <xs:element ref="C" minOccurs="0" maxOccurs="unbounded" />
         <xs:element name="I" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
       </xs:sequence>
-      <xs:attribute ref="active" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.pattern.violation.B" use="prohibited" />
+      <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="b" use="prohibited" />
     </xs:complexType>
   </xs:element>
@@ -38,8 +38,8 @@
       <xs:documentation>org.frankframework.frankdoc.testtarget.examples.pattern.violation.C</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute ref="active" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.pattern.violation.C" use="prohibited" />
+      <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="c" use="prohibited" />
     </xs:complexType>
   </xs:element>

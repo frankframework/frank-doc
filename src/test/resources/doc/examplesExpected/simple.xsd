@@ -24,8 +24,8 @@
       <xs:documentation>org.frankframework.frankdoc.testtarget.examples.simple.TChild - This is the header of the JavaDoc of "TChild", with package name nl.nn.something.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute ref="active" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.TChild" use="prohibited" />
+      <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="roleNameTChild" use="prohibited" />
     </xs:complexType>
   </xs:element>

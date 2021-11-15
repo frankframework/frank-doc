@@ -13,8 +13,8 @@
         </xs:choice>
       </xs:sequence>
       <xs:attribute name="i" type="xs:string" />
-      <xs:attribute ref="active" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.Start" use="prohibited" />
+      <xs:attribute ref="active" />
     </xs:complexType>
   </xs:element>
   <xs:element name="C">
@@ -22,8 +22,8 @@
       <xs:documentation>org.frankframework.frankdoc.testtarget.textconfig.GrandChild</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute ref="active" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.GrandChild" use="prohibited" />
+      <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="c" />
     </xs:complexType>
   </xs:element>

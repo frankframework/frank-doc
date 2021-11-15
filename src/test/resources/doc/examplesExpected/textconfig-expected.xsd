@@ -24,8 +24,8 @@
       <xs:documentation>org.frankframework.frankdoc.testtarget.textconfig.GrandChild</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute ref="active" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.GrandChild" use="prohibited" />
+      <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="c" use="prohibited" />
     </xs:complexType>
   </xs:element>

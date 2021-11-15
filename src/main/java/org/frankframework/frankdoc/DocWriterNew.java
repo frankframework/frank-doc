@@ -470,10 +470,10 @@ public class DocWriterNew {
 		}
 		log.trace("Adding cumulative attributes of FrankElement [{}] to XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
 		addAttributeList(complexType, frankElement.getCumulativeAttributes(version.getChildSelector(), version.getChildRejector()));
-		log.trace("Adding attribute active for FrankElement [{}]", () -> frankElement.getFullName());
-		AttributeTypeStrategy.addAttributeActive(complexType);
 		log.trace("Adding attribute className for FrankElement [{}]", () -> frankElement.getFullName());
 		addClassNameAttribute(complexType, frankElement);
+		log.trace("Adding attribute active for FrankElement [{}]", () -> frankElement.getFullName());
+		AttributeTypeStrategy.addAttributeActive(complexType);
 		return complexType;
 	}
 

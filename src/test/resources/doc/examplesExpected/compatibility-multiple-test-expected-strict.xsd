@@ -24,8 +24,8 @@
       <xs:documentation>org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild3</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute ref="active" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild3" use="prohibited" />
+      <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="d" use="prohibited" />
     </xs:complexType>
   </xs:element>
@@ -34,8 +34,8 @@
       <xs:documentation>org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Child3</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute ref="active" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Child3" use="prohibited" />
+      <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="c" use="prohibited" />
     </xs:complexType>
   </xs:element>

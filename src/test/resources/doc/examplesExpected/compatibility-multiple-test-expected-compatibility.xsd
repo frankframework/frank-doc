@@ -13,8 +13,8 @@
       </xs:sequence>
       <xs:attribute name="myFirstAttribute" type="xs:string" />
       <xs:attribute name="mySecondAttribute" type="xs:string" />
-      <xs:attribute ref="active" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Start" use="prohibited" />
+      <xs:attribute ref="active" />
     </xs:complexType>
   </xs:element>
   <xs:element name="D">
@@ -22,8 +22,8 @@
       <xs:documentation>org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild3</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute ref="active" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.GrandChild3" use="prohibited" />
+      <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="d" />
     </xs:complexType>
   </xs:element>
@@ -32,8 +32,8 @@
       <xs:documentation>org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Child3</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute ref="active" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Child3" use="prohibited" />
+      <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="c" />
     </xs:complexType>
   </xs:element>
