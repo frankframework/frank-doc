@@ -27,4 +27,8 @@ public class LogUtil {
 	public static Logger getLogger(Class<?> clazz) {
 		return LogManager.getLogger(clazz);
 	}
+
+	public static Logger getRootLogger() {
+		return LogManager.getRootLogger();
+	}
 }

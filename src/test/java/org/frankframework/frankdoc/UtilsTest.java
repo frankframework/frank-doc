@@ -101,4 +101,10 @@ public class UtilsTest {
 	public void whenMethodStartsWithSetAndTakesStringThenNotConfigChildSetter() throws FrankDocException {
 		assertFalse(isConfigChildSetter(getTestMethod("setNotTextConfigChildButAttribute")));
 	}
+
+	@Test(expected = FrankDocException.class)
+	public void whenStringHasUnfinishedJavaDocLinkThenError() throws Exception {
+		// No closing "}"
+		Utils.flattenJavaDocLinksToLastWords("{@link Receiver");
+	}
 }

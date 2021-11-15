@@ -109,7 +109,9 @@
   </xs:attributeGroup>
   <xs:attributeGroup name="GrandChildCumulativeAttributeGroup">
     <xs:attributeGroup ref="GrandChildDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="SuppressingChildCumulativeAttributeGroup" />
+    <xs:attributeGroup ref="SuppressingChildDeclaredAttributeGroup" />
+    <xs:attribute name="suppressedAttribute" type="xs:string" />
+    <xs:attribute name="notSuppressedAttribute" type="xs:string" />
   </xs:attributeGroup>
   <xs:complexType name="SuppressingChildType">
     <xs:attributeGroup ref="SuppressingChildCumulativeAttributeGroup" />
@@ -120,8 +122,7 @@
   </xs:attributeGroup>
   <xs:attributeGroup name="SuppressingChildCumulativeAttributeGroup">
     <xs:attributeGroup ref="SuppressingChildDeclaredAttributeGroup" />
-    <xs:attribute name="notSuppressedAttribute" type="xs:string" />
-    <xs:attribute ref="active" />
+    <xs:attributeGroup ref="ParentDeclaredAttributeGroup" />
   </xs:attributeGroup>
   <xs:complexType name="ParentType">
     <xs:attributeGroup ref="ParentDeclaredAttributeGroup" />

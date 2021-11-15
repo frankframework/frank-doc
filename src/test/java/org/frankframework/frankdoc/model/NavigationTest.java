@@ -64,15 +64,6 @@ public class NavigationTest {
 			// Below Parent are technical overrides in GrandParent6. We test here that we
 			// dont get Child6 which has no children, but Parent where the children are.
 			{"GrandChild6", IN_XSD, REJECT_DEPRECATED, asList(ref(RefKind.DECLARED, "Parent"))},
-			// Reference class hierarchy for testing excluded attributes
-			{"TestingExcludedChildNotExcludingInterface", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "TestingExcludedChildNotExcludingInterface"), ref(RefKind.DECLARED, "TestingExcludedParent"))},
-			// Attributes from interface excluded, attribute parentAttribute is repeated
-			{"TestingExcludedChildExcludingInterface", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "TestingExcludedChildExcludingInterface"), ref(RefKind.CHILD_TOP_LEVEL, "parentAttribute"))},
-			// Reintroduces notChildAttribute in TestingExcludedGrandChild1, it was not an attribute before so no need to repeat
-			// attributes of TestingExcludedChildExcludingInterface.
-			{"TestingExcludedGrandChild1", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "TestingExcludedGrandChild1"), ref(RefKind.CUMULATIVE, "TestingExcludedChildExcludingInterface"))},
-			// Reintroduces excludedAttribute2, but it was an excluded attribute before so no need to repeat from TestingExcludedChildExcludingInterface.
-			{"TestingExcludedGrandChild2", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "TestingExcludedGrandChild2"), ref(RefKind.CUMULATIVE, "TestingExcludedChildExcludingInterface"))},
 			// Test RefKind.CHILD
 			{"GrandChild7", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild7"), ref(RefKind.CHILD, "childAttributeFirst"), ref(RefKind.DECLARED, "Parent"))}
 		});

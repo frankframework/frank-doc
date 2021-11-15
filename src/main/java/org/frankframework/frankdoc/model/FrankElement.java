@@ -32,16 +32,18 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.wrapper.FrankClass;
-import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.frankframework.frankdoc.util.LogUtil;
 
 /**
  * Models a Java class that can be referred to in a Frank configuration.
@@ -123,15 +125,21 @@ public class FrankElement implements Comparable<FrankElement> {
 	private @Getter List<ParsedJavaDocTag> specificParameters = new ArrayList<>();
 	private @Getter List<ParsedJavaDocTag> forwards = new ArrayList<>();
 
+	private @Getter(AccessLevel.PACKAGE) FrankDocGroup explicitGroup = null;
+	private Set<String> inTypes = new HashSet<>();
 	private Set<String> syntax2ExcludedFromTypes = new HashSet<>();
 
-	FrankElement(FrankClass clazz) {
+	FrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
 		isDeprecated = clazz.getAnnotation(FrankDocletConstants.DEPRECATED) != null;
 		configChildSets = new LinkedHashMap<>();
 		javadocStrategy.completeFrankElement(this, clazz);
 		handleConfigChildSetterCandidates(clazz);
-		handlePossibleFrankDocIgnoreTypeMembershipAnnotation(clazz);
+		if(clazz.getAnnotation(FrankDocGroupFactory.JAVADOC_GROUP_ANNOTATION) != null) {
+			explicitGroup = groupFactory.getGroup(clazz);
+			log.trace("FrankElement [{}] has explicit @FrankDocGroup annotation with group name [{}]", () -> getFullName(), () -> explicitGroup.getName());
+		}
+		handlePossibleFrankDocIgnoreTypeMembershipAnnotation(clazz, repository);
 		handlePossibleParameters(clazz);
 		handlePossibleForwards(clazz);
 	}
@@ -146,7 +154,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		}
 	}
 
-	private void handlePossibleFrankDocIgnoreTypeMembershipAnnotation(FrankClass clazz) {
+	private void handlePossibleFrankDocIgnoreTypeMembershipAnnotation(FrankClass clazz, FrankClassRepository repository) {
 		String excludedFromType = clazz.getJavaDocTag(FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP);
 		if(excludedFromType != null) {
 			if(StringUtils.isBlank(excludedFromType)) {
@@ -154,7 +162,15 @@ public class FrankElement implements Comparable<FrankElement> {
 			} else {
 				log.trace("FrankElement [{}] has JavaDoc tag {}, excluding from type [{}]",
 						() -> fullName, () -> FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, () -> excludedFromType);
-				// AttributeExcludedSetter checks already whether excludedFromType exists as a Java class.
+				FrankClass ignoredInterfaceClass = null;
+				try {
+					ignoredInterfaceClass = repository.findClass(excludedFromType);					
+				} catch(FrankDocException e) {
+					log.warn("Exception when parsing Javadoc tag {} that references Java interface [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, excludedFromType, e);
+				}
+				if(ignoredInterfaceClass == null) {
+					log.warn("Javadoc tag {} refers to a non-existing Java interface [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, excludedFromType);
+				}
 				syntax2ExcludedFromTypes.add(excludedFromType);
 			}
 		}
@@ -198,6 +214,11 @@ public class FrankElement implements Comparable<FrankElement> {
 		this.parent = parent;
 		if(parent != null) {
 			syntax2ExcludedFromTypes.addAll(parent.syntax2ExcludedFromTypes);
+			if(explicitGroup == null) {
+				explicitGroup = parent.explicitGroup;
+				log.trace("FrankElement [{}] inherits @FrankDocGroup annotation with name [{}] from parent [{}]",
+						() -> getFullName(), () -> explicitGroup == null ? "null" : explicitGroup.getName(), () -> parent.getFullName());
+			}
 		}
 		this.statistics = new FrankElementStatistics(this);
 	}
@@ -429,6 +450,18 @@ public class FrankElement implements Comparable<FrankElement> {
 			inheritsPluralConfigChildren = ancestor.hasOrInheritsPluralConfigChildren(selector, rejector);
 		}
 		return hasPluralConfigChildren || inheritsPluralConfigChildren;
+	}
+
+	void addTypeMembership(ElementType elementType) {
+		inTypes.add(elementType.getFullName());
+	}
+
+	void syntax2RestrictTo(Collection<ElementType> elementTypes, String groupName) {
+		syntax2ExcludedFromTypes = new HashSet<>(inTypes);
+		syntax2ExcludedFromTypes.removeAll(elementTypes.stream().map(ElementType::getFullName).collect(Collectors.toSet()));
+		if(syntax2ExcludedFromTypes.equals(inTypes) && (! inTypes.isEmpty())) {
+			log.error("FrankElement [{}] is put in group [{}], but then it is not visible anymore in the Frank!Doc", getFullName(), groupName);
+		}
 	}
 
 	boolean syntax2ExcludedFromType(String typeName) {

@@ -64,6 +64,11 @@
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.attribute.enumExclude.AttributeOwner" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="AttributeOwnerDeclaredAttributeGroup">
+    <xs:attribute name="ignored">
+      <xs:simpleType>
+        <xs:union memberTypes="MyEnumAttributeValuesType variableRef" />
+      </xs:simpleType>
+    </xs:attribute>
     <xs:attribute name="enumAttribute">
       <xs:simpleType>
         <xs:union memberTypes="MyEnumAttributeValuesType variableRef" />

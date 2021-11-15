@@ -17,14 +17,15 @@ limitations under the License.
 package org.frankframework.frankdoc.model;
 
 import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 
 /**
  * A FrankElement that can appear as the root element in a Frank configuration. Such elements are not
  * part of a config child, but they have a role name that matches rules in digester-rules.xml.
  */
 class RootFrankElement extends FrankElement {
-	RootFrankElement(FrankClass clazz) {
-		super(clazz);
+	RootFrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory) {
+		super(clazz, repository, groupFactory);
 	}
 
 	public String getRoleName() {
