@@ -85,9 +85,8 @@ public class FrankDocModel {
 		FrankDocModel result = new FrankDocModel(classRepository, rootClassName);
 		try {
 			log.trace("Populating FrankDocModel");
-			Set<String> rootRoleNames = result.createConfigChildDescriptorsFrom(digesterRules);
+			result.createConfigChildDescriptorsFrom(digesterRules);
 			result.findOrCreateRootFrankElement(rootClassName);
-			result.checkRootElementsMatchDigesterRules(rootRoleNames);
 			result.buildDescendants();
 			result.allElements.values().forEach(f -> result.finishConfigChildrenFor(f));
 			result.calculateInterfaceBased();
@@ -105,14 +104,12 @@ public class FrankDocModel {
 		return result;
 	}
 
-	Set<String> createConfigChildDescriptorsFrom(final URL digesterRules) throws IOException, SAXException {
+	void createConfigChildDescriptorsFrom(final URL digesterRules) throws IOException, SAXException {
 		log.trace("Creating config child descriptors from file [{}]", () -> digesterRules.toString());
 		InputSource digesterRulesInputSource = Utils.asInputSource(digesterRules);
 		try {
-			Handler handler = new Handler();
-			Utils.parseXml(digesterRulesInputSource, handler);
+			Utils.parseXml(digesterRulesInputSource, new Handler());
 			log.trace("Successfully created config child descriptors");
-			return handler.rootRoleNames;
 		}
 		catch(IOException e) {
 			throw new IOException(String.format("An IOException occurred while parsing XML from [%s]", digesterRulesInputSource.getSystemId()), e);
@@ -123,14 +120,9 @@ public class FrankDocModel {
 	}
 
 	private class Handler extends DigesterRulesHandler {
-		private final Set<String> rootRoleNames = new HashSet<>();
-
 		@Override
 		protected void handle(DigesterRule rule) throws SAXException {
 			DigesterRulesPattern pattern = new DigesterRulesPattern(rule.getPattern());
-			if(pattern.isRoot()) {
-				rootRoleNames.add(pattern.getRoleName());
-			}
 			String registerTextMethod = rule.getRegisterTextMethod();
 			if(StringUtils.isNotEmpty(rule.getRegisterMethod())) {
 				if(StringUtils.isNotEmpty(registerTextMethod)) {
@@ -180,18 +172,6 @@ public class FrankDocModel {
 
 	public boolean hasType(String typeName) {
 		return allTypes.containsKey(typeName);
-	}
-
-	void checkRootElementsMatchDigesterRules(Set<String> rootRoleNames) {
-		List<RootFrankElement> roots = allElements.values().stream()
-				.filter(f -> f instanceof RootFrankElement)
-				.map(f -> (RootFrankElement) f)
-				.collect(Collectors.toList());
-		for(RootFrankElement root: roots) {
-			if(! rootRoleNames.contains(root.getRoleName())) {
-				log.error("The root FrankElement is named [{}] so a digester-rules.xml pattern [{}] is needed, but the pattern misses", root.toString(), root.getRoleName());
-			}
-		}
 	}
 
 	void buildDescendants() throws Exception {

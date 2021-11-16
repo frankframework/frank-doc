@@ -31,7 +31,6 @@ import lombok.Setter;
 class DigesterRulesPattern {
 	private final String originalPattern;
 	private List<String> components;
-	private @Getter boolean root = false;
 	private @Getter Matcher matcher;
 
 	DigesterRulesPattern(String pattern) throws SAXException {
@@ -49,9 +48,6 @@ class DigesterRulesPattern {
 			componentsThatShouldNotBeWildcard = components.subList(1, components.size());
 		} else {
 			matchesOnlyRoot = true;
-			if(components.size() == 1) {
-				root = true;
-			}
 		}
 		if(componentsThatShouldNotBeWildcard.isEmpty()) {
 			throw new SAXException(String.format("digester-rules.xml: A pattern that is only a wildcard is invalid. Encountered [%s]", originalPattern));
