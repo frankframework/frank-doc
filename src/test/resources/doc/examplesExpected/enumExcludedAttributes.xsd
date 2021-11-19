@@ -6,10 +6,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="MasterType">
-          <xs:attribute ref="active" />
-          <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.attribute.enumExclude.Master" use="prohibited" />
-        </xs:extension>
+        <xs:extension base="MasterType" />
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
@@ -24,6 +21,8 @@
   </xs:element>
   <xs:complexType name="MasterType">
     <xs:group ref="MasterDeclaredChildGroup" />
+    <xs:attribute ref="active" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.attribute.enumExclude.Master" use="prohibited" />
   </xs:complexType>
   <xs:group name="MasterDeclaredChildGroup">
     <xs:sequence>
@@ -53,9 +52,7 @@
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="AttributeOwnerType">
-              <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="a" use="prohibited" />
-              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.attribute.enumExclude.AttributeOwner" use="prohibited" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
@@ -64,6 +61,7 @@
   </xs:group>
   <xs:complexType name="AttributeOwnerType">
     <xs:attributeGroup ref="AttributeOwnerDeclaredAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.attribute.enumExclude.AttributeOwner" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="AttributeOwnerDeclaredAttributeGroup">
     <xs:attribute name="ignored">
@@ -76,6 +74,7 @@
         <xs:union memberTypes="MyEnumAttributeValuesType variableRef" />
       </xs:simpleType>
     </xs:attribute>
+    <xs:attribute ref="active" />
   </xs:attributeGroup>
   <xs:simpleType name="MyEnumAttributeValuesType">
     <xs:restriction base="xs:string">

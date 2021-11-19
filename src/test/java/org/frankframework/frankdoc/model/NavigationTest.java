@@ -49,11 +49,11 @@ public class NavigationTest {
 			// Attribute childAttribute is not selected, so we do not have a real override.
 			{"Child", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "Child"), ref(RefKind.DECLARED, "Parent"))},
 			// Attribute parentAttributeFirst is overridden. Keep with Child, omit with Parent
-			{"Child", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "Child"), ref(RefKind.CHILD, "parentAttributeSecond"))},
+			{"Child", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "Child"), ref(RefKind.CHILD_TOP_LEVEL, "parentAttributeSecond"))},
 			// All attributes of Parent were overridden. Nothing to reference for Parent.
 			{"GrandChild", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild"), ref(RefKind.DECLARED, "Child"))},
 			// The override of parentAttributeSecond counts, in Child parentAttributeFirst is ignored as child
-			{"GrandChild", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild"), ref(RefKind.DECLARED, "Child"), ref(RefKind.CHILD, "parentAttributeFirst"))},
+			{"GrandChild", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild"), ref(RefKind.DECLARED, "Child"), ref(RefKind.CHILD_TOP_LEVEL, "parentAttributeFirst"))},
 			{"GrandChild2", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild2"), ref(RefKind.CUMULATIVE, "Child2"))},
 			// All children of Child2 are deprecated, so Child2 is ignored in the ancestor hierarchy
 			{"GrandChild2", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild2"), ref(RefKind.DECLARED, "Parent"))},
@@ -63,12 +63,15 @@ public class NavigationTest {
 			{"GrandChild5", IN_XSD, REJECT_DEPRECATED, asList()},
 			// Below Parent are technical overrides in GrandParent6. We test here that we
 			// dont get Child6 which has no children, but Parent where the children are.
-			{"GrandChild6", IN_XSD, REJECT_DEPRECATED, asList(ref(RefKind.DECLARED, "Parent"))}
+			{"GrandChild6", IN_XSD, REJECT_DEPRECATED, asList(ref(RefKind.DECLARED, "Parent"))},
+			// Test RefKind.CHILD
+			{"GrandChild7", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild7"), ref(RefKind.CHILD, "childAttributeFirst"), ref(RefKind.DECLARED, "Parent"))}
 		});
 	}
 
 	private static enum RefKind {
 		CHILD,
+		CHILD_TOP_LEVEL,
 		DECLARED,
 		CUMULATIVE;
 	}
@@ -122,6 +125,11 @@ public class NavigationTest {
 			@Override
 			public void handleSelectedChildren(List<FrankAttribute> children, FrankElement owner) {
 				children.forEach(c -> actual.add(ref(RefKind.CHILD, c.getName())));
+			}
+
+			@Override
+			public void handleSelectedChildrenOfTopLevel(List<FrankAttribute> children, FrankElement owner) {
+				children.forEach(c -> actual.add(ref(RefKind.CHILD_TOP_LEVEL, c.getName())));
 			}
 
 			@Override
