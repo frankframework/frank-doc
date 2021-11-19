@@ -62,23 +62,26 @@ public class ConfigChildSet {
 			throw new IllegalStateException("A config child cannot have an empty list of config childs");
 		}
 		if(configChildren.size() >= 2) {
-			FrankElement parent = configChildren.get(0).getOwningElement();
-			int order = configChildren.get(0).getOrder();
+			FrankElement owner = configChildren.get(0).getOwningElement();
+			ConfigChild previous = configChildren.get(0);
+			boolean sameOwner;
 			for(ConfigChild c: configChildren.subList(1, configChildren.size())) {
-				if(c.getOwningElement() != parent) {
-					if(c.getOwningElement() != parent.getNextAncestorThatHasConfigChildren(ElementChild.ALL_NOT_EXCLUDED)) {
-						throw new IllegalStateException(String.format("Cumulative config children are not sorted: [%s] should not be followed by [%s]",
-								parent.getFullName(), c.getOwningElement().getFullName()));
+				sameOwner = true;
+				// We have a small selection of the config children here that corresponds to a shared role name.
+				// When these are sorted, the owning elements can skip owning elements in the inheritance hierarchy.
+				while(c.getOwningElement() != owner) {
+					if(owner == null) {
+						throw new IllegalStateException(String.format("Cumulative config children are not sorted by owning elements and their ancestor hierarchy: [%s] should not be followed by [%s]",
+								previous.toString(), c.toString()));
 					}
-					parent = c.getOwningElement();
+					owner = owner.getParent();
+					sameOwner = false;
 				}
-				else {
-					if(! (order <= c.getOrder())) {
-						throw new IllegalStateException(String.format("Cumulative config children are not sorted by order. Offending config child [%s]",
-								c.getKey().toString()));
-					}
-					order = c.getOrder();
+				if(sameOwner && (! (previous.getOrder() <= c.getOrder()))) {
+					throw new IllegalStateException(String.format("Cumulative config children are not sorted by order. Offending config child [%s]",
+							c.getKey().toString()));
 				}
+				previous = c;
 			}
 		}
 	}
