@@ -455,7 +455,8 @@ public class FrankElement implements Comparable<FrankElement> {
 		syntax2ExcludedFromTypes = new HashSet<>(inTypes);
 		syntax2ExcludedFromTypes.removeAll(elementTypes.stream().map(ElementType::getFullName).collect(Collectors.toSet()));
 		if(syntax2ExcludedFromTypes.equals(inTypes) && (! inTypes.isEmpty())) {
-			log.error("FrankElement [{}] is put in group [{}], but then it is not visible anymore in the Frank!Doc", getFullName(), groupName);
+			log.error("It is not allowed to restrict class [{}] to group [{}], because that group does not have an ElementType that contains the mentioned class. "
+					+ "This limitation exists to ensure that [{}] remains visible as a config child", fullName, groupName, fullName);
 		}
 	}
 
