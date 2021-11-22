@@ -148,7 +148,10 @@ public class FrankElement implements Comparable<FrankElement> {
 	private void handlePossibleTags(FrankClass clazz) {
 		for(String tagStr: clazz.getAllJavaDocTagsOf(JAVADOC_TAG)) {
 			if(StringUtils.isBlank(tagStr)) {
-				log.warn("FrankElement [{}] has tags without a name or value", fullName);
+				log.error("FrankElement [{}] has tags without a name and without a value", fullName);
+			} else if(tagStr.split("[ \\t]").length == 1) {
+				// TODO: This does not work when a quoted tag does not have a value.
+				log.warn("FrankElement [{}] has a tag without a value: [{}]", fullName, tagStr);
 			}
 			this.tags.add(ParsedJavaDocTag.getInstance(tagStr));
 		}
