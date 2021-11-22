@@ -37,7 +37,6 @@ import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
@@ -47,41 +46,11 @@ import lombok.Setter;
 
 /**
  * Models a Java class that can be referred to in a Frank configuration.
- * <p>
- * A Java class can have a JavaDoc tag @ff.ignoreTypeMembership, with as an argument
- * the full name of a Java interface. Classes with this tag are treaded as follows by the Frank!Doc:
- * <ul>
- * <li> Attributes in the referenced Java interface are not included and they are rejected from
- * inheritance, unless the attribute is also defined from an interface or class that does not inherit
- * from the referenced Java interface.
- * <li> If the referenced Java interface has a FrankDocGroup annotation, then this annotation
- * influences the groups in the Frank!Doc website. The group in the FrankDocGroup annotation
- * is reduced by the annotated class and the derived classes of the annotated class. These
- * classes are supposed to belong to a group that comes from another implemented Java interface. 
- * </ul>
- * 
- * Example: Class <code>nl.nn.adapterframework.jdbc.MessageStoreSender</code> extends <code>nl.nn.adapterframework.jdbc.JdbcTransactionalStorage</code> which implements
- * <code>nl.nn.adapterframework.core.ITransactionalStorage</code>. <code>nl.nn.adapterframework.jdbc.MessageStoreSender</code> also implements <code>nl.nn.adapterframework.core.ISender</code>.
- * Class <code>nl.nn.adapterframework.jdbc.MessageStoreSender</code> should not produce configurable attributes by inheritance from
- * <code>nl.nn.adapterframework.core.ITransactionalStorage</code>, also not if there are attribute setter methods in <code>nl.nn.adapterframework.jdbc.JdbcTransactionalStorage</code>.
- * But if attribute setters are duplicate in <code>nl.nn.adapterframework.jdbc.MessageStoreSender</code> and <code>nl.nn.adapterframework.core.ISender</code>, then
- * we want those attributes.
- * <p>
- * Both <code>nl.nn.adapterframework.core.ITransactionalStorage</code> and <code>nl.nn.adapterframework.core.ISender</code> have a FrankDocGroup annotation to specify
- * the group in the Frank!Doc website. The Frank!Doc website works with a hierarchy of groups
- * that contain types that contain elements. This annotation removes only for the Frank!Doc
- * website <code>nl.nn.adapterframework.jdbc.MessageStoreSender</code> and its derived classes from the type <code>nl.nn.adapterframework.core.ITransactionalStorage</code>.
- * <p>
- * Please note that you can re-introduce attributes lower in the class inheritance hierarchy if this
- * annotation is applied on a higher level to exclude an attribute. The reason is that omitting
- * attributes is only done on the class that is annotated with this annotation. A derived class that
- * is not annotated is not analyzed for attributes to be omitted.
  * 
  * @author martijn
  *
  */
 public class FrankElement implements Comparable<FrankElement> {
-	static final String JAVADOC_IGNORE_TYPE_MEMBERSHIP = "@ff.ignoreTypeMembership";
 	static final String JAVADOC_PARAMETERS = "@ff.parameters";
 	public static final String JAVADOC_PARAMETER = "@ff.parameter";
 	public static final String JAVADOC_FORWARD = "@ff.forward";
@@ -139,7 +108,6 @@ public class FrankElement implements Comparable<FrankElement> {
 			explicitGroup = groupFactory.getGroup(clazz);
 			log.trace("FrankElement [{}] has explicit @FrankDocGroup annotation with group name [{}]", () -> getFullName(), () -> explicitGroup.getName());
 		}
-		handlePossibleFrankDocIgnoreTypeMembershipAnnotation(clazz, repository);
 		handlePossibleParameters(clazz);
 		handlePossibleForwards(clazz);
 	}
@@ -151,28 +119,6 @@ public class FrankElement implements Comparable<FrankElement> {
 				.collect(Collectors.toList());
 		for(int i = 0; i < methods.size(); ++i) {
 			unusedConfigChildSetterCandidates.put(methods.get(i), i);
-		}
-	}
-
-	private void handlePossibleFrankDocIgnoreTypeMembershipAnnotation(FrankClass clazz, FrankClassRepository repository) {
-		String excludedFromType = clazz.getJavaDocTag(FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP);
-		if(excludedFromType != null) {
-			if(StringUtils.isBlank(excludedFromType)) {
-				log.warn("JavaDoc tag {} should have an argument that is the full name of a Java interface", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP);
-			} else {
-				log.trace("FrankElement [{}] has JavaDoc tag {}, excluding from type [{}]",
-						() -> fullName, () -> FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, () -> excludedFromType);
-				FrankClass ignoredInterfaceClass = null;
-				try {
-					ignoredInterfaceClass = repository.findClass(excludedFromType);					
-				} catch(FrankDocException e) {
-					log.warn("Exception when parsing Javadoc tag {} that references Java interface [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, excludedFromType, e);
-				}
-				if(ignoredInterfaceClass == null) {
-					log.warn("Javadoc tag {} refers to a non-existing Java interface [{}]", FrankElement.JAVADOC_IGNORE_TYPE_MEMBERSHIP, excludedFromType);
-				}
-				syntax2ExcludedFromTypes.add(excludedFromType);
-			}
 		}
 	}
 
@@ -213,7 +159,6 @@ public class FrankElement implements Comparable<FrankElement> {
 	public void setParent(FrankElement parent) {
 		this.parent = parent;
 		if(parent != null) {
-			syntax2ExcludedFromTypes.addAll(parent.syntax2ExcludedFromTypes);
 			if(explicitGroup == null) {
 				explicitGroup = parent.explicitGroup;
 				log.trace("FrankElement [{}] inherits @FrankDocGroup annotation with name [{}] from parent [{}]",
