@@ -33,6 +33,10 @@ public class NavigationUnhappyTest {
 			}
 
 			@Override
+			public void handleSelectedChildrenOfTopLevel(List<FrankAttribute> children, FrankElement owner) {
+			}
+
+			@Override
 			public void handleChildrenOf(FrankElement frankElement) {
 			}
 

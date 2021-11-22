@@ -138,13 +138,6 @@ public class ElementType implements Comparable<ElementType> {
 		Utils.addToSortedListNonUnique(members, member);
 	}
 
-	FrankElement getSingletonElement() throws ReflectiveOperationException {
-		if(members.size() != 1) {
-			throw new ReflectiveOperationException(String.format("Expected that ElementType [%s] contains exactly one element", getFullName()));
-		}
-		return members.iterator().next();
-	}
-
 	void calculateCommonInterfaceHierarchy(FrankDocModel model) {
 		commonInterfaceHierarchy = new ArrayList<>();
 		commonInterfaceHierarchy.add(this);

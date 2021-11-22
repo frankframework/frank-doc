@@ -58,7 +58,7 @@ class DigesterRulesPattern {
 		if(componentsThatShouldNotBeWildcard.size() >= 2) {
 			List<String> violationCheckWords = new ArrayList<>(componentsThatShouldNotBeWildcard.subList(0, componentsThatShouldNotBeWildcard.size() - 1));
 			Collections.reverse(violationCheckWords);
-			matcher = new Matcher(violationCheckWords, pattern);
+			matcher = new Matcher(violationCheckWords);
 			matcher.setPatternOnlyMatchesRoot(matchesOnlyRoot);
 		}
 	}
@@ -75,11 +75,9 @@ class DigesterRulesPattern {
 	static class Matcher {
 		private @Getter @Setter boolean patternOnlyMatchesRoot = false;
 		private final List<String> backtrackRoleNames;
-		private @Getter final String originalPattern;
 
-		Matcher(List<String> backtrackRoleNames, String originalPattern) {
+		Matcher(List<String> backtrackRoleNames) {
 			this.backtrackRoleNames = backtrackRoleNames;
-			this.originalPattern = originalPattern;
 		}
 
 		boolean matches(FrankElement frankElement) {

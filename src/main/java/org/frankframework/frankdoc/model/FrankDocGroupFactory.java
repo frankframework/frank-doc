@@ -30,7 +30,7 @@ import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.util.LogUtil;
 
 class FrankDocGroupFactory {
-	private static final String JAVADOC_GROUP_ANNOTATION = "nl.nn.adapterframework.doc.FrankDocGroup";
+	static final String JAVADOC_GROUP_ANNOTATION = "nl.nn.adapterframework.doc.FrankDocGroup";
 
 	private static Logger log = LogUtil.getLogger(FrankDocGroupFactory.class);
 

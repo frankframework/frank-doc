@@ -27,6 +27,7 @@ import java.util.List;
  */
 public interface CumulativeChildHandler<T extends ElementChild> {
 	void handleSelectedChildren(List<T> children, FrankElement owner);
+	void handleSelectedChildrenOfTopLevel(List<T> children, FrankElement owner);
 	void handleChildrenOf(FrankElement frankElement);
 	void handleCumulativeChildrenOf(FrankElement frankElement);
 }

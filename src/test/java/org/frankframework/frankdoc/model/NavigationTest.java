@@ -49,11 +49,11 @@ public class NavigationTest {
 			// Attribute childAttribute is not selected, so we do not have a real override.
 			{"Child", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "Child"), ref(RefKind.DECLARED, "Parent"))},
 			// Attribute parentAttributeFirst is overridden. Keep with Child, omit with Parent
-			{"Child", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "Child"), ref(RefKind.CHILD, "parentAttributeSecond"))},
+			{"Child", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "Child"), ref(RefKind.CHILD_TOP_LEVEL, "parentAttributeSecond"))},
 			// All attributes of Parent were overridden. Nothing to reference for Parent.
 			{"GrandChild", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild"), ref(RefKind.DECLARED, "Child"))},
 			// The override of parentAttributeSecond counts, in Child parentAttributeFirst is ignored as child
-			{"GrandChild", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild"), ref(RefKind.DECLARED, "Child"), ref(RefKind.CHILD, "parentAttributeFirst"))},
+			{"GrandChild", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild"), ref(RefKind.DECLARED, "Child"), ref(RefKind.CHILD_TOP_LEVEL, "parentAttributeFirst"))},
 			{"GrandChild2", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild2"), ref(RefKind.CUMULATIVE, "Child2"))},
 			// All children of Child2 are deprecated, so Child2 is ignored in the ancestor hierarchy
 			{"GrandChild2", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild2"), ref(RefKind.DECLARED, "Parent"))},
@@ -64,20 +64,14 @@ public class NavigationTest {
 			// Below Parent are technical overrides in GrandParent6. We test here that we
 			// dont get Child6 which has no children, but Parent where the children are.
 			{"GrandChild6", IN_XSD, REJECT_DEPRECATED, asList(ref(RefKind.DECLARED, "Parent"))},
-			// Reference class hierarchy for testing excluded attributes
-			{"TestingExcludedChildNotExcludingInterface", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "TestingExcludedChildNotExcludingInterface"), ref(RefKind.DECLARED, "TestingExcludedParent"))},
-			// Attributes from interface excluded, attribute parentAttribute is repeated
-			{"TestingExcludedChildExcludingInterface", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "TestingExcludedChildExcludingInterface"), ref(RefKind.CHILD, "parentAttribute"))},
-			// Reintroduces notChildAttribute in TestingExcludedGrandChild1, it was not an attribute before so no need to repeat
-			// attributes of TestingExcludedChildExcludingInterface.
-			{"TestingExcludedGrandChild1", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "TestingExcludedGrandChild1"), ref(RefKind.CUMULATIVE, "TestingExcludedChildExcludingInterface"))},
-			// Reintroduces excludedAttribute2, but it was an excluded attribute before so no need to repeat from TestingExcludedChildExcludingInterface.
-			{"TestingExcludedGrandChild2", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "TestingExcludedGrandChild2"), ref(RefKind.CUMULATIVE, "TestingExcludedChildExcludingInterface"))}
+			// Test RefKind.CHILD
+			{"GrandChild7", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild7"), ref(RefKind.CHILD, "childAttributeFirst"), ref(RefKind.DECLARED, "Parent"))}
 		});
 	}
 
 	private static enum RefKind {
 		CHILD,
+		CHILD_TOP_LEVEL,
 		DECLARED,
 		CUMULATIVE;
 	}
@@ -131,6 +125,11 @@ public class NavigationTest {
 			@Override
 			public void handleSelectedChildren(List<FrankAttribute> children, FrankElement owner) {
 				children.forEach(c -> actual.add(ref(RefKind.CHILD, c.getName())));
+			}
+
+			@Override
+			public void handleSelectedChildrenOfTopLevel(List<FrankAttribute> children, FrankElement owner) {
+				children.forEach(c -> actual.add(ref(RefKind.CHILD_TOP_LEVEL, c.getName())));
 			}
 
 			@Override
