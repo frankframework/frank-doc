@@ -210,6 +210,13 @@ public class FrankDocJsonFactory {
 			frankElement.getForwards().forEach(fw -> b.add(getParsedJavaDocTag(fw)));
 			result.add("forwards", b.build());
 		}
+		if(! frankElement.getTags().isEmpty()) {
+			JsonObjectBuilder b = bf.createObjectBuilder();
+			for(ParsedJavaDocTag tag: frankElement.getTags()) {
+				b.add(tag.getName(), tag.getDescription());
+			}
+			result.add("tags", b.build());
+		}
 		return result.build();
 	}
 
