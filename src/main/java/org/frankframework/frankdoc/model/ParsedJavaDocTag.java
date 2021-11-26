@@ -16,8 +16,10 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 import lombok.Getter;
 
@@ -29,7 +31,10 @@ public class ParsedJavaDocTag {
 	private final @Getter String name;
 	private final @Getter String description;
 
-	static ParsedJavaDocTag getInstance(String javaDocTagParameter) {
+	static ParsedJavaDocTag getInstance(String javaDocTagParameter) throws FrankDocException {
+		if(StringUtils.isAllBlank(javaDocTagParameter)) {
+			throw new FrankDocException("Tag has no arguments", null);
+		}
 		// The doclet API already trimmed the argument. We do not have to care about leading spaces.
 		if(javaDocTagParameter.startsWith(QUOTE)) {
 			return getInstanceQuoteDelimited(javaDocTagParameter);
