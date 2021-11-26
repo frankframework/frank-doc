@@ -16,13 +16,43 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
+
 import lombok.Getter;
 
 public class ParsedJavaDocTag {
+	private static Logger log = LogUtil.getLogger(ParsedJavaDocTag.class);
+
+	private static String QUOTE = "\"";
+
 	private final @Getter String name;
 	private final @Getter String description;
 
 	static ParsedJavaDocTag getInstance(String javaDocTagParameter) {
+		// The doclet API already trimmed the argument. We do not have to care about leading spaces.
+		if(javaDocTagParameter.startsWith(QUOTE)) {
+			return getInstanceQuoteDelimited(javaDocTagParameter);
+		}
+		return getInstanceSpaceDelimited(javaDocTagParameter);
+	}
+
+	private static ParsedJavaDocTag getInstanceQuoteDelimited(String javaDocTagParameter) {
+		int startQuoteIdx = javaDocTagParameter.indexOf(QUOTE);
+		int endQuoteIdx = javaDocTagParameter.indexOf(QUOTE, startQuoteIdx+1);
+		if(endQuoteIdx < 0) {
+			log.error("Name of parameter or forward is quoted, but there is no end quote, text is [{}]", javaDocTagParameter);
+			return getInstanceSpaceDelimited(javaDocTagParameter);
+		}
+		String name = javaDocTagParameter.substring(startQuoteIdx + 1, endQuoteIdx);
+		if(endQuoteIdx >= (javaDocTagParameter.length() - 1)) {
+			return new ParsedJavaDocTag(name, null);
+		}
+		String description = javaDocTagParameter.substring(endQuoteIdx + 1).trim();
+		return new ParsedJavaDocTag(name, description);
+	}
+
+	private static ParsedJavaDocTag getInstanceSpaceDelimited(String javaDocTagParameter) {
 		int idx = javaDocTagParameter.indexOf(" ");
 		if(idx < 0) {
 			return new ParsedJavaDocTag(javaDocTagParameter, null);
