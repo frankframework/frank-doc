@@ -169,10 +169,6 @@
                     "name":"childAttribute",
                     "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.SuppressingChild"
                 }
-            ],
-            "nonInheritedAttributes":[
-                "suppressedAttribute",
-                "suppressedAttribute2"
             ]
         }
     ],

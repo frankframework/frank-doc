@@ -117,6 +117,10 @@ public abstract class ElementChild {
 		this.owningElement = owningElement;
 	}
 
+	void clearDefaultValue() {
+		defaultValue = null;
+	}
+
 	void calculateOverriddenFrom() {
 		FrankElement match = getOwningElement();
 		while(match.getParent() != null) {

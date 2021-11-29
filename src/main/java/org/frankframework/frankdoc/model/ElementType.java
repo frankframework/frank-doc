@@ -102,7 +102,10 @@ public class ElementType implements Comparable<ElementType> {
 		String result = null;
 		String value = clazz.getJavaDocTag(JAVADOC_DEFAULT_CLASSNAME);
 		if(StringUtils.isBlank(value)) {
-			log.warn("JavaDoc tag {} of interface [{}] should have a parameter", JAVADOC_DEFAULT_CLASSNAME, clazz.getName());
+			// null means the JavaDoc tag was not present - then nothing to do.
+			if(value != null) {
+				log.warn("JavaDoc tag {} of interface [{}] should have a parameter", JAVADOC_DEFAULT_CLASSNAME, clazz.getName());
+			}
 		} else {
 			try {
 				FrankClass defaultClass = repository.findClass(value);
@@ -133,13 +136,6 @@ public class ElementType implements Comparable<ElementType> {
 
 	void addMember(FrankElement member) {
 		Utils.addToSortedListNonUnique(members, member);
-	}
-
-	FrankElement getSingletonElement() throws ReflectiveOperationException {
-		if(members.size() != 1) {
-			throw new ReflectiveOperationException(String.format("Expected that ElementType [%s] contains exactly one element", getFullName()));
-		}
-		return members.iterator().next();
 	}
 
 	void calculateCommonInterfaceHierarchy(FrankDocModel model) {

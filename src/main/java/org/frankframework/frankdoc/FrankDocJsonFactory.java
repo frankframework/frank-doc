@@ -44,7 +44,7 @@ import org.frankframework.frankdoc.model.FrankDocGroup;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.model.FrankElement;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
-import org.frankframework.frankdoc.model.SpecificParameter;
+import org.frankframework.frankdoc.model.ParsedJavaDocTag;
 import org.frankframework.frankdoc.util.LogUtil;
 
 public class FrankDocJsonFactory {
@@ -202,17 +202,29 @@ public class FrankDocJsonFactory {
 		}
 		if(frankElement.getSpecificParameters().size() >= 1) {
 			JsonArrayBuilder b = bf.createArrayBuilder();
-			frankElement.getSpecificParameters().forEach(sp -> b.add(getParameter(sp)));
+			frankElement.getSpecificParameters().forEach(sp -> b.add(getParsedJavaDocTag(sp)));
 			result.add("parameters", b.build());
+		}
+		if(frankElement.getForwards().size() >= 1) {
+			JsonArrayBuilder b = bf.createArrayBuilder();
+			frankElement.getForwards().forEach(fw -> b.add(getParsedJavaDocTag(fw)));
+			result.add("forwards", b.build());
+		}
+		if(! frankElement.getTags().isEmpty()) {
+			JsonObjectBuilder b = bf.createObjectBuilder();
+			for(ParsedJavaDocTag tag: frankElement.getTags()) {
+				b.add(tag.getName(), tag.getDescription());
+			}
+			result.add("tags", b.build());
 		}
 		return result.build();
 	}
 
-	private JsonObject getParameter(SpecificParameter sp) {
+	private JsonObject getParsedJavaDocTag(ParsedJavaDocTag parsedJavaDocTag) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
-		b.add("name", sp.getName());
-		if(sp.getDescription() != null) {
-			b.add("description", sp.getDescription());
+		b.add("name", parsedJavaDocTag.getName());
+		if(parsedJavaDocTag.getDescription() != null) {
+			b.add("description", parsedJavaDocTag.getDescription());
 		}
 		return b.build();
 	}

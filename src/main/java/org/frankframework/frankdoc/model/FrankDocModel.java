@@ -229,7 +229,7 @@ public class FrankDocModel {
 	private class FrankElementCreationStrategyRoot extends FrankElementCreationStrategy{
 		@Override
 		FrankElement createFromClass(FrankClass clazz) {
-			return new RootFrankElement(clazz);
+			return new RootFrankElement(clazz, classRepository, groupFactory);
 		}
 
 		@Override
@@ -241,7 +241,7 @@ public class FrankDocModel {
 	private class FrankElementCreationStrategyNonRoot extends FrankElementCreationStrategy {
 		@Override
 		FrankElement createFromClass(FrankClass clazz) {
-			return new FrankElement(clazz);
+			return new FrankElement(clazz, classRepository, groupFactory);
 		}
 
 		@Override
@@ -276,7 +276,6 @@ public class FrankDocModel {
 	List<FrankAttribute> createAttributes(FrankClass clazz, FrankElement attributeOwner) throws FrankDocException {
 		log.trace("Creating attributes for FrankElement [{}]", () -> attributeOwner.getFullName());
 		checkForAttributeSetterOverloads(clazz);
-		AttributeExcludedSetter attributeExcludedSetter = new AttributeExcludedSetter(clazz, classRepository);
 		FrankMethod[] methods = clazz.getDeclaredMethods();
 		Map<String, FrankMethod> enumGettersByAttributeName = getEnumGettersByAttributeName(clazz);
 		LinkedHashMap<String, FrankMethod> setterAttributes = getAttributeToMethodMap(methods, "set");
@@ -290,6 +289,9 @@ public class FrankDocModel {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
 			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
+			if(method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_MANDATORY) != null) {
+				attribute.setMandatory(true);
+			}
 			if(method.getParameterTypes()[0].isEnum()) {
 				log.trace("Attribute [{}] has setter that takes enum: [{}]", () -> attribute.getName(), () -> method.getParameterTypes()[0].toString());
 				attribute.setAttributeType(AttributeType.STRING);
@@ -312,14 +314,13 @@ public class FrankDocModel {
 			} catch(FrankDocException e) {
 				log.warn("Attribute [{}] has an invalid default value, [{}, detail {}]", attribute.toString(), attribute.getDefaultValue(), e.getMessage());
 			}
-			attributeExcludedSetter.updateAttribute(attribute, method);
+			if(method.getJavaDocTag(FrankAttribute.JAVADOC_NO_FRANK_ATTRIBUTE) != null) {
+				log.trace("Attribute [{}] has JavaDoc tag {}, marking as excluded", () -> attribute.getName(), () -> FrankAttribute.JAVADOC_NO_FRANK_ATTRIBUTE);
+				attribute.setExcluded(true);
+			}
 			result.add(attribute);
 			log.trace("Attribute [{}] done", () -> attributeName);
 		}
-		// We may inherit attribute setters from an interface from which we have to reject the attributes.
-		// We must have FrankAttribute instances for these, because otherwise AncestorChildNavigation does not know
-		// how to omit them.
-		result.addAll(attributeExcludedSetter.getExcludedAttributesForRemainingNames(attributeOwner));
 		log.trace("Done creating attributes for {}", attributeOwner.getFullName());
 		return result;
 	}
@@ -333,6 +334,7 @@ public class FrankDocModel {
 			List<String> candidateTypes = attributeSetterCandidates.stream()
 					.map(m -> m.getParameterTypes()[0].getName())
 					.distinct()
+					.sorted()
 					.collect(Collectors.toList());
 			if(candidateTypes.size() >= 2) {
 				log.warn("Class [{}] has overloaded declared or inherited attribute setters. Type of attribute [{}] can be any of [{}]",
@@ -431,8 +433,23 @@ public class FrankDocModel {
 				(method.getAnnotation(FrankDocletConstants.IBISDOC) != null)
 				|| (method.getAnnotation(FrankDocletConstants.IBISDOCREF) != null)
 				|| (method.getJavaDoc() != null)
-				|| (method.getJavaDocTag(ElementChild.JAVADOC_DEFAULT_VALUE_TAG) != null));
+				|| (method.getJavaDocTag(ElementChild.JAVADOC_DEFAULT_VALUE_TAG) != null)
+				|| (method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REF) != null));
 		log.trace("Attribute: deprecated = [{}], documented = [{}]", () -> attribute.isDeprecated(), () -> attribute.isDocumented());
+		String ffRefReference = method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REF);
+		if(ffRefReference != null) {
+			if(StringUtils.isBlank(ffRefReference)) {
+				log.error("JavaDoc tag {} should have a full class name or full method name as argument", FrankAttribute.JAVADOC_ATTRIBUTE_REF);
+			} else {
+				FrankMethod referred = getReferredMethod(ffRefReference, method);
+				if(referred == null) {
+					log.error("Referred method [{}] does not exist", ffRefReference);
+				} else {
+					attribute.setDescribingElement(findOrCreateFrankElement(referred.getDeclaringClass().getName()));
+					attribute.setJavaDocBasedDescriptionAndDefault(referred);
+				}
+			}
+		}
 		attribute.setJavaDocBasedDescriptionAndDefault(method);
 		FrankAnnotation ibisDocRef = method.getAnnotationInludingInherited(FrankDocletConstants.IBISDOCREF);
 		if(ibisDocRef != null) {
@@ -459,6 +476,7 @@ public class FrankDocModel {
 			log.trace("For attribute [{}], have @IbisDoc without @IbisDocRef", attribute);
 			attribute.parseIbisDocAnnotation(ibisDoc);
 		}
+		attribute.handleDefaultExplicitNull(method.getParameterTypes()[0]);
 		log.trace("Done documenting attribute [{}]", () -> attribute.getName());
 	}
 
@@ -623,6 +641,7 @@ public class FrankDocModel {
 			return allTypes.get(clazz.getName());
 		}
 		FrankDocGroup group = groupFactory.getGroup(clazz);
+		log.trace("Creating ElementType [{}] with group [{}]", () -> clazz.getName(), () -> group.getName());
 		final ElementType result = new ElementType(clazz, group, classRepository);
 		// If a containing FrankElement contains the type being created, we do not
 		// want recursion.
@@ -635,10 +654,13 @@ public class FrankDocModel {
 			for(FrankClass memberClass: memberClasses) {
 				FrankElement frankElement = findOrCreateFrankElement(memberClass.getName());
 				result.addMember(frankElement);
+				frankElement.addTypeMembership(result);
 			}
 		} else {
 			log.trace("Class [{}] is not a Java interface, creating its FrankElement", () -> clazz.getName());
-			result.addMember(findOrCreateFrankElement(clazz.getName()));
+			FrankElement member = findOrCreateFrankElement(clazz.getName());
+			result.addMember(member);
+			member.addTypeMembership(result);
 		}
 		log.trace("Done creating ElementType for class [{}]", () -> clazz.getName());
 		return result;
@@ -851,6 +873,9 @@ public class FrankDocModel {
 			Collections.sort(elementTypes);
 			group.setElementTypes(elementTypes);
 		}
+		allElements.values().stream()
+			.filter(f -> f.getExplicitGroup() != null)
+			.forEach(f -> f.syntax2RestrictTo(f.getExplicitGroup().getElementTypes(), f.getExplicitGroup().getName()));
 		final Map<String, FrankElement> leftOvers = new HashMap<>(allElements);
 		allTypes.values().stream().flatMap(et -> et.getSyntax2Members().stream()).forEach(f -> leftOvers.remove(f.getFullName()));
 		elementsOutsideConfigChildren = leftOvers.values().stream()

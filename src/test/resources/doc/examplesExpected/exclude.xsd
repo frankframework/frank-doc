@@ -6,10 +6,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="MasterType">
-          <xs:attribute ref="active" />
-          <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.exclude.Master" use="prohibited" />
-        </xs:extension>
+        <xs:extension base="MasterType" />
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
@@ -24,6 +21,8 @@
   </xs:element>
   <xs:complexType name="MasterType">
     <xs:group ref="MasterDeclaredChildGroup" />
+    <xs:attribute ref="active" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.exclude.Master" use="prohibited" />
   </xs:complexType>
   <xs:group name="MasterDeclaredChildGroup">
     <xs:sequence>
@@ -53,9 +52,7 @@
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="ChildType">
-              <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="a" use="prohibited" />
-              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.exclude.Child" use="prohibited" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
@@ -67,9 +64,7 @@
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="GrandChildType">
-              <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="a" use="prohibited" />
-              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.exclude.GrandChild" use="prohibited" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
@@ -81,9 +76,7 @@
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="ParentType">
-              <xs:attribute ref="active" />
               <xs:attribute name="elementRole" type="xs:string" fixed="a" use="prohibited" />
-              <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.exclude.Parent" use="prohibited" />
             </xs:extension>
           </xs:complexContent>
         </xs:complexType>
@@ -92,20 +85,25 @@
   </xs:group>
   <xs:complexType name="ChildType">
     <xs:attributeGroup ref="ChildCumulativeAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.exclude.Child" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="ChildDeclaredAttributeGroup" />
   <xs:attributeGroup name="ChildCumulativeAttributeGroup">
     <xs:attribute name="keptParentAttribute" type="xs:string" />
+    <xs:attribute ref="active" />
   </xs:attributeGroup>
   <xs:complexType name="ParentType">
     <xs:attributeGroup ref="ParentDeclaredAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.exclude.Parent" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="ParentDeclaredAttributeGroup">
     <xs:attribute name="keptParentAttribute" type="xs:string" />
     <xs:attribute name="childExcludedAttribute" type="xs:string" />
+    <xs:attribute ref="active" />
   </xs:attributeGroup>
   <xs:complexType name="GrandChildType">
     <xs:attributeGroup ref="ChildCumulativeAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.exclude.GrandChild" use="prohibited" />
   </xs:complexType>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">

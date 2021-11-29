@@ -10,8 +10,8 @@
           <xs:element ref="B" minOccurs="0" maxOccurs="unbounded" />
         </xs:choice>
       </xs:sequence>
-      <xs:attribute ref="active" />
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.pattern.violation.A" use="prohibited" />
+      <xs:attribute ref="active" />
     </xs:complexType>
   </xs:element>
   <xs:element name="B">
@@ -25,9 +25,9 @@
           <xs:element name="I" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
         </xs:choice>
       </xs:sequence>
+      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.pattern.violation.B" use="prohibited" />
       <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="b" />
-      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.pattern.violation.B" use="prohibited" />
     </xs:complexType>
   </xs:element>
   <xs:element name="C">
@@ -35,9 +35,9 @@
       <xs:documentation>org.frankframework.frankdoc.testtarget.examples.pattern.violation.C</xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.pattern.violation.C" use="prohibited" />
       <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="c" />
-      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.pattern.violation.C" use="prohibited" />
     </xs:complexType>
   </xs:element>
   <xs:simpleType name="frankBoolean">

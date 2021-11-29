@@ -17,14 +17,14 @@ limitations under the License.
 package org.frankframework.frankdoc.doclet;
 
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.ErrorDetectingAppender;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.DocErrorReporter;
 import com.sun.javadoc.LanguageVersion;
 import com.sun.javadoc.RootDoc;
-
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.util.LogUtil;
 
 public class DocletBuilder extends com.sun.javadoc.Doclet {
 	private static final Logger log = LogUtil.getLogger(DocletBuilder.class);
@@ -43,6 +43,10 @@ public class DocletBuilder extends com.sun.javadoc.Doclet {
     	}
     	catch(FrankDocException e) {
     		log.error("FrankDocException occurred while running Frank!Doc Doclet", e);
+    		result = false;
+    	}
+    	if(ErrorDetectingAppender.HAVE_ERRORS) {
+    		log.error("There were log statements with level ERROR or FATAL. Failing");
     		result = false;
     	}
     	return result;

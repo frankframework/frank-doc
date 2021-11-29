@@ -38,6 +38,11 @@
             ],
             "attributes":[
                 {
+                    "name":"ignored",
+                    "describer":"org.frankframework.frankdoc.testtarget.attribute.enumExclude.AttributeOwner",
+                    "enum":"org.frankframework.frankdoc.testtarget.attribute.enumExclude.MyEnum"
+                },
+                {
                     "name":"enumAttribute",
                     "describer":"org.frankframework.frankdoc.testtarget.attribute.enumExclude.AttributeOwner",
                     "enum":"org.frankframework.frankdoc.testtarget.attribute.enumExclude.MyEnum"

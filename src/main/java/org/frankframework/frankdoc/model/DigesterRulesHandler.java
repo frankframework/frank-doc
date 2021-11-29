@@ -15,15 +15,17 @@
 */
 package org.frankframework.frankdoc.model;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import org.frankframework.frankdoc.util.LogUtil;
 
 /**
  * Parses file digester-rules.xml.
@@ -45,7 +47,7 @@ public abstract class DigesterRulesHandler extends DefaultHandler {
 				String method = attributes.getQName(i);
 				String value = attributes.getValue(i);
 				try {
-					BeanUtils.setProperty(rule, method, value);
+					invokeSetter(rule, method, value);
 				} catch (IllegalAccessException | InvocationTargetException e) {
 					log.warn("unable to set method ["+method+"] with value ["+value+"]");
 					e.printStackTrace();
@@ -53,6 +55,22 @@ public abstract class DigesterRulesHandler extends DefaultHandler {
 			}
 
 			handle(rule);
+		}
+	}
+
+	private void invokeSetter(Object bean, String name, Object value) throws IllegalAccessException, InvocationTargetException {
+		Class<?> clazz = bean.getClass();
+		try {
+			BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+			PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+			for (PropertyDescriptor pd : pds) {
+				if(pd.getName().equals(name)) {
+					Object[] args = { value };
+					pd.getWriteMethod().invoke(bean, args);
+				}
+			}
+		} catch (IntrospectionException e) {
+			throw new InvocationTargetException(e);
 		}
 	}
 

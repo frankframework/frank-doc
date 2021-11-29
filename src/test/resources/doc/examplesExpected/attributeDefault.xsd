@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="Master">
+    <xs:annotation>
+      <xs:documentation>org.frankframework.frankdoc.testtarget.attributeDefault.Master</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="MasterType" />
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Module">
+    <xs:annotation>
+      <xs:documentation>Root element for file you include as entity reference. Does not influence the behavior of your Frank config.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute ref="active" />
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="MasterType">
+    <xs:attributeGroup ref="MasterDeclaredAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.attributeDefault.Master" use="prohibited" />
+  </xs:complexType>
+  <xs:attributeGroup name="MasterDeclaredAttributeGroup">
+    <xs:attribute name="booleanExplicitNull" type="frankBoolean">
+      <xs:annotation>
+        <xs:documentation>Description setBooleanExplicitNull()</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="stringExplicitNull" type="xs:string" />
+    <xs:attribute name="integerNoDefault" type="frankInt" />
+    <xs:attribute name="byteWithDefault" type="frankInt">
+      <xs:annotation>
+        <xs:documentation>Default: 50</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="explicitNullOnPrimitive" type="frankInt">
+      <xs:annotation>
+        <xs:documentation>Description setExplicitNullOnPrimitive() Default: null</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="mandatory" type="frankBoolean" use="required" />
+    <xs:attribute name="mandatoryWithDefault" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Default: something</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="attributeWithJavaDocLink" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>attributeWithJavaDocLink with MyLink.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute ref="active" />
+  </xs:attributeGroup>
+  <xs:simpleType name="frankBoolean">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(true|false)|($\{[^\}]+\})" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="frankInt">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="((\+|-)?[0-9]+)|($\{[^\}]+\})" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:attribute name="active">
+    <xs:annotation>
+      <xs:documentation>If defined and empty or false, then this element and all its children are ignored</xs:documentation>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:pattern value="!?(($\{[^\}]+\})|([tT][rR][uU][eE])|([fF][aA][lL][sS][eE]))" />
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:attribute>
+  <xs:simpleType name="variableRef">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="$\{[^\}]+\}" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
