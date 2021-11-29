@@ -246,6 +246,13 @@
 			<version>1.8</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- TODO: This one does not check the regexes in an XSD, find something better -->
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.12.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<reporting>
