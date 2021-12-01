@@ -86,4 +86,20 @@ public class IntegrationWithLogTest {
 			TestAppender.removeAppender(appender);
 		}
 	}
+
+	@Test
+	public void whenSpecificParameterHasNoNameAndNoDescriptionThenLogged() throws Exception {
+		TestAppender appender = TestAppender.newBuilder().build();
+		TestAppender.addToRootLogger(appender);
+		try {
+			String thePackage = "org.frankframework.frankdoc.testtarget.tag.no.name.";
+			String startClassName = thePackage + "Master";
+			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage);
+			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
+			FrankDocModel.populate(digesterRulesUrl, startClassName, classRepository);
+			appender.assertLogged("Error parsing a [@ff.parameter] tag of class [org.frankframework.frankdoc.testtarget.tag.no.name.Master]");
+		} finally {
+			TestAppender.removeAppender(appender);
+		}		
+	}
 }
