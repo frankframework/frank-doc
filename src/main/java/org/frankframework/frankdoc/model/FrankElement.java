@@ -28,16 +28,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
@@ -128,37 +129,15 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private void handlePossibleParameters(FrankClass clazz) {
 		this.meaningOfParameters = clazz.getJavaDocTag(JAVADOC_PARAMETERS);
-		for(String specificParameterStr: clazz.getAllJavaDocTagsOf(JAVADOC_PARAMETER)) {
-			if(StringUtils.isBlank(specificParameterStr)) {
-				log.error("FrankElement [{}] has specific parameters without a name or description", fullName);
-			} else if(specificParameterStr.trim().split("[ \\t]").length == 1) {
-				log.warn("Specific parameter [{}] of FrankElement [{}] has no description", specificParameterStr, fullName);
-			}
-			this.specificParameters.add(ParsedJavaDocTag.getInstance(specificParameterStr));
-		}
+		assembleParsedJavaDocTags(clazz, JAVADOC_PARAMETER, p -> this.specificParameters.add(p));
 	}
 
 	private void handlePossibleForwards(FrankClass clazz) {
-		for(String forwardStr: clazz.getAllJavaDocTagsOf(JAVADOC_FORWARD)) {
-			if(StringUtils.isBlank(forwardStr)) {
-				log.error("FrankElement [{}] has forwards without a name or description", fullName);
-			} else if(forwardStr.trim().split("[ \\t]").length == 1) {
-				log.warn("Forward [{}] of FrankElement [{}] has no description", forwardStr, fullName);
-			}
-			this.forwards.add(ParsedJavaDocTag.getInstance(forwardStr));
-		}
+		assembleParsedJavaDocTags(clazz, JAVADOC_FORWARD, p -> this.forwards.add(p));
 	}
 
 	private void handlePossibleTags(FrankClass clazz) {
-		for(String tagStr: clazz.getAllJavaDocTagsOf(JAVADOC_TAG)) {
-			if(StringUtils.isBlank(tagStr)) {
-				log.error("FrankElement [{}] has tags without a name and without a value", fullName);
-			} else if(tagStr.split("[ \\t]").length == 1) {
-				// TODO: This does not work when a quoted tag does not have a value.
-				log.warn("FrankElement [{}] has a tag without a value: [{}]", fullName, tagStr);
-			}
-			this.tags.add(ParsedJavaDocTag.getInstance(tagStr));
-		}
+		assembleParsedJavaDocTags(clazz, JAVADOC_TAG, p -> this.tags.add(p));
 		Map<String, Long> tagCounts = tags.stream().collect(Collectors.groupingBy(ParsedJavaDocTag::getName, Collectors.counting()));
 		List<String> duplicates = tagCounts.entrySet().stream()
 				.filter(e -> e.getValue() >= 2L)
@@ -167,6 +146,22 @@ public class FrankElement implements Comparable<FrankElement> {
 				.collect(Collectors.toList());
 		for(String duplicate: duplicates) {
 			log.error("FrankElement [{}] has multiple values for tag [{}]", fullName, duplicate);
+		}
+	}
+
+	private void assembleParsedJavaDocTags(FrankClass clazz, String tagName, Consumer<ParsedJavaDocTag> acceptor) {
+		for(String arguments: clazz.getAllJavaDocTagsOf(tagName)) {
+			ParsedJavaDocTag parsed = null;
+			try {
+				parsed = ParsedJavaDocTag.getInstance(arguments);
+			} catch(FrankDocException e) {
+				log.error("Error parsing a [{}] tag of class [{}]", tagName, fullName, e);
+				continue;
+			}
+			if(parsed.getDescription() == null) {
+				log.warn("FrankElement [{}] has a [{}] tag without a value: [{}]", fullName, tagName, arguments);
+			}
+			acceptor.accept(parsed);
 		}
 	}
 
