@@ -72,7 +72,7 @@ public class IntegrationWithLogTest {
 	}
 
 	@Test
-	public void whenParameterOfForwardLacksDescriptionThenLogged() throws Exception {
+	public void whenParameterOrForwardLacksDescriptionThenLogged() throws Exception {
 		TestAppender appender = TestAppender.newBuilder().build();
 		TestAppender.addToRootLogger(appender);
 		try {
@@ -81,8 +81,8 @@ public class IntegrationWithLogTest {
 			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel.populate(digesterRulesUrl, startClassName, classRepository);
-			appender.assertLogged("Specific parameter [myParamWithoutDescription] of FrankElement [org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.Master] has no description");
-			appender.assertLogged("Forward [myForwardWithoutDescription] of FrankElement [org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.Master] has no description");
+			appender.assertLogged("FrankElement [org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.Master] has a [@ff.parameter] tag without a value: [myParamWithoutDescription]");
+			appender.assertLogged("FrankElement [org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.Master] has a [@ff.forward] tag without a value: [myForwardWithoutDescription]");
 		} finally {
 			TestAppender.removeAppender(appender);
 		}		
