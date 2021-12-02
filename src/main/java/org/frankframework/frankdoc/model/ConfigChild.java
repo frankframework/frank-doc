@@ -91,7 +91,7 @@ public abstract class ConfigChild extends ElementChild {
 	private static FrankAnnotation getIbisDoc(FrankMethod method) {
 		FrankAnnotation result = null;
 		try {
-			result = method.getAnnotationInludingInherited(FrankDocletConstants.IBISDOC);
+			result = method.getAnnotationIncludingInherited(FrankDocletConstants.IBISDOC);
 		} catch(FrankDocException e) {
 			log.warn("Could not @IbisDoc annotation or could not obtain JavaDoc for method {}", method, e);
 		}

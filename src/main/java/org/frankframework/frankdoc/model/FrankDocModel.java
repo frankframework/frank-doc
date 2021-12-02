@@ -314,7 +314,7 @@ public class FrankDocModel {
 			} catch(FrankDocException e) {
 				log.warn("Attribute [{}] has an invalid default value, [{}, detail {}]", attribute.toString(), attribute.getDefaultValue(), e.getMessage());
 			}
-			if(method.getAnnotation(FrankDocletConstants.PROTECTED_ATTRIBUTE) != null) {
+			if(method.getAnnotationIncludingInherited(FrankDocletConstants.PROTECTED_ATTRIBUTE) != null) {
 				log.trace("Attribute [{}] has Java annotation {}, marking as excluded", () -> attribute.getName(), () -> FrankDocletConstants.PROTECTED_ATTRIBUTE);
 				attribute.setExcluded(true);
 			}
@@ -451,14 +451,14 @@ public class FrankDocModel {
 			}
 		}
 		attribute.setJavaDocBasedDescriptionAndDefault(method);
-		FrankAnnotation ibisDocRef = method.getAnnotationInludingInherited(FrankDocletConstants.IBISDOCREF);
+		FrankAnnotation ibisDocRef = method.getAnnotationIncludingInherited(FrankDocletConstants.IBISDOCREF);
 		if(ibisDocRef != null) {
 			log.trace("Found @IbisDocRef annotation");
 			ParsedIbisDocRef parsed = parseIbisDocRef(ibisDocRef, method);
 			FrankAnnotation ibisDoc = null;
 			if((parsed != null) && (parsed.getReferredMethod() != null)) {
 				attribute.setJavaDocBasedDescriptionAndDefault(parsed.getReferredMethod());
-				ibisDoc = parsed.getReferredMethod().getAnnotationInludingInherited(FrankDocletConstants.IBISDOC);
+				ibisDoc = parsed.getReferredMethod().getAnnotationIncludingInherited(FrankDocletConstants.IBISDOC);
 				if(ibisDoc != null) {
 					attribute.setDescribingElement(findOrCreateFrankElement(parsed.getReferredMethod().getDeclaringClass().getName()));
 					log.trace("Describing element of attribute [{}].[{}] is [{}]",
@@ -471,7 +471,7 @@ public class FrankDocModel {
 				log.warn("@IbisDocRef of Frank elelement [{}] attribute [{}] points to non-existent method", () -> attributeOwner.getSimpleName(), () -> attribute.getName());
 			}
 		}
-		FrankAnnotation ibisDoc = method.getAnnotationInludingInherited(FrankDocletConstants.IBISDOC);
+		FrankAnnotation ibisDoc = method.getAnnotationIncludingInherited(FrankDocletConstants.IBISDOC);
 		if(ibisDoc != null) {
 			log.trace("For attribute [{}], have @IbisDoc without @IbisDocRef", attribute);
 			attribute.parseIbisDocAnnotation(ibisDoc);
