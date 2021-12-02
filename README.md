@@ -242,7 +242,7 @@ It is taken from [RecordTransformer](https://github.com/ibissource/iaf/blob/mast
 
 There are a few other JavaDoc tags that are relevant for the Frank!Doc:
 
-**@ff.noAttribute:** Put this JavaDoc tag above a setter method to prevent it from becoming an attribute. You can also use this JavaDoc tag to suppress inheritance of an attribute. If you override an attribute setter and put the `@ff.noAttribute` tag above the overriding method, then the overriding Java class will not declare and not inherit the attribute.
+**@ProtectedAttribute:** Put this Java annotation above a setter method to prevent it from becoming an attribute. You can also use this annotation to suppress inheritance of an attribute. If you override an attribute setter and put the `@ProtectedAttribute` annotation above the overriding method, then the overriding Java class will not declare and not inherit the attribute.
 
 **@ff.defaultElement:** To explain this tag, something else must be explained first. Consider the example Frank configuration shown below:
 

@@ -314,8 +314,8 @@ public class FrankDocModel {
 			} catch(FrankDocException e) {
 				log.warn("Attribute [{}] has an invalid default value, [{}, detail {}]", attribute.toString(), attribute.getDefaultValue(), e.getMessage());
 			}
-			if(method.getJavaDocTag(FrankAttribute.JAVADOC_NO_FRANK_ATTRIBUTE) != null) {
-				log.trace("Attribute [{}] has JavaDoc tag {}, marking as excluded", () -> attribute.getName(), () -> FrankAttribute.JAVADOC_NO_FRANK_ATTRIBUTE);
+			if(method.getAnnotation(FrankDocletConstants.PROTECTED_ATTRIBUTE) != null) {
+				log.trace("Attribute [{}] has Java annotation {}, marking as excluded", () -> attribute.getName(), () -> FrankDocletConstants.PROTECTED_ATTRIBUTE);
 				attribute.setExcluded(true);
 			}
 			result.add(attribute);
