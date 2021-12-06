@@ -129,7 +129,7 @@ class FrankMethodDoclet implements FrankMethod {
 	}
 
 	@Override
-	public FrankAnnotation getAnnotationInludingInherited(String name) throws FrankDocException {
+	public FrankAnnotation getAnnotationIncludingInherited(String name) throws FrankDocException {
 		Function<FrankMethodDoclet, FrankAnnotation> getter = m -> m.getAnnotation(name);
 		return searchIncludingInherited(getter);
 	}

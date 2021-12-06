@@ -123,7 +123,7 @@ public class InterfaceAndAnnotationTest {
 		FrankMethod method = actualDeclaredMethods.get(0);
 		assertEquals("annotatedMethod", method.getName());
 		assertNull(method.getAnnotation(FrankDocletConstants.DEPRECATED));
-		FrankAnnotation annotation = method.getAnnotationInludingInherited(FrankDocletConstants.DEPRECATED);
+		FrankAnnotation annotation = method.getAnnotationIncludingInherited(FrankDocletConstants.DEPRECATED);
 		assertEquals(FrankDocletConstants.DEPRECATED, annotation.getName());
 	}
 
@@ -141,7 +141,7 @@ public class InterfaceAndAnnotationTest {
 		FrankMethod method = actualDeclaredMethods.get(0);
 		assertEquals("annotatedMethod", method.getName());
 		assertNull(method.getAnnotation(FrankDocletConstants.DEPRECATED));
-		FrankAnnotation annotation = method.getAnnotationInludingInherited(FrankDocletConstants.DEPRECATED);
+		FrankAnnotation annotation = method.getAnnotationIncludingInherited(FrankDocletConstants.DEPRECATED);
 		assertEquals(FrankDocletConstants.DEPRECATED, annotation.getName());
 	}
 
@@ -156,7 +156,7 @@ public class InterfaceAndAnnotationTest {
 		FrankMethod method = actualDeclaredMethods.get(0);
 		assertEquals("annotatedMethod", method.getName());
 		assertNull(method.getAnnotation(FrankDocletConstants.DEPRECATED));
-		FrankAnnotation annotation = method.getAnnotationInludingInherited(FrankDocletConstants.DEPRECATED);
+		FrankAnnotation annotation = method.getAnnotationIncludingInherited(FrankDocletConstants.DEPRECATED);
 		assertEquals(FrankDocletConstants.DEPRECATED, annotation.getName());
 	}
 }

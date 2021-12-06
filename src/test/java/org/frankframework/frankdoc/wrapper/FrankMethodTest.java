@@ -38,7 +38,7 @@ public class FrankMethodTest extends TestBase {
 		FrankType parameter = parameters[0];
 		assertFalse(parameter.isPrimitive());
 		assertEquals(FrankDocletConstants.STRING, parameter.getName());
-		annotation = setter.getAnnotationInludingInherited(FrankDocletConstants.IBISDOC);
+		annotation = setter.getAnnotationIncludingInherited(FrankDocletConstants.IBISDOC);
 		assertNotNull(annotation);
 		assertEquals(FrankDocletConstants.IBISDOC, annotation.getName());
 	}
@@ -65,7 +65,7 @@ public class FrankMethodTest extends TestBase {
 		assertNotNull(method);
 		FrankAnnotation annotation = method.getAnnotation(FrankDocletConstants.IBISDOC);
 		assertNull(annotation);
-		annotation = method.getAnnotationInludingInherited(FrankDocletConstants.IBISDOC);
+		annotation = method.getAnnotationIncludingInherited(FrankDocletConstants.IBISDOC);
 		assertNotNull(annotation);
 		assertEquals(FrankDocletConstants.IBISDOC, annotation.getName());
 	}
@@ -121,7 +121,7 @@ public class FrankMethodTest extends TestBase {
 	public void annotationCanBeInheritedFromImplementedInterface() throws FrankDocException {
 		FrankClass clazz = classRepository.findClass(PACKAGE + "Child");
 		FrankMethod method = TestUtil.getDeclaredMethodOf(clazz, "myAnnotatedMethod");
-		FrankAnnotation annotation = method.getAnnotationInludingInherited(FrankDocletConstants.DEPRECATED);
+		FrankAnnotation annotation = method.getAnnotationIncludingInherited(FrankDocletConstants.DEPRECATED);
 		assertNotNull(annotation);
 		assertEquals(FrankDocletConstants.DEPRECATED, annotation.getName());
 	}
