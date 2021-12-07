@@ -156,7 +156,7 @@ public abstract class ElementChild {
 				defaultValue = value;
 			}
 		} catch(FrankDocException e) {
-			log.warn("A FrankDocException occurred when searching the (inherited) javadoc of {}", method.toString(), e);
+			log.error("A FrankDocException occurred when searching the (inherited) javadoc of {}", method.toString(), e);
 		}
 	}
 

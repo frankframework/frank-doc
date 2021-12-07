@@ -84,7 +84,7 @@ class FrankClassRepositoryDoclet implements FrankClassRepository {
 				new TransitiveImplementedInterfaceBrowser<FrankClassDoclet>(interfaze).search(i -> loggedAddInterfaceImplementation(i, clazz));
 			}
 		} catch(FrankDocException e) {
-			log.warn("Error setting implemented interfaces of class {}", clazz.getName(), e);
+			log.error("Error setting implemented interfaces of class {}", clazz.getName(), e);
 		}
 	}
 
@@ -93,7 +93,7 @@ class FrankClassRepositoryDoclet implements FrankClassRepository {
 		try {
 			((FrankClassDoclet) interfaze).recursivelyAddInterfaceImplementation(clazz);
 		} catch(FrankDocException e) {
-			log.warn("Could not recurse over chidren of {} to set them as implementations of {}", clazz.getName(), interfaze.getName(), e);
+			log.error("Could not recurse over chidren of {} to set them as implementations of {}", clazz.getName(), interfaze.getName(), e);
 		}
 		return null;
 	}

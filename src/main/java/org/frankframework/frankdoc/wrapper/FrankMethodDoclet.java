@@ -102,7 +102,7 @@ class FrankMethodDoclet implements FrankMethod {
 					return clazz;
 				}
 			} catch(FrankDocException e) {
-				log.warn("Failed to search for class with name {}", typeName, e);
+				log.error("Failed to search for class with name {}", typeName, e);
 				return new FrankNonCompiledClassDoclet(typeName);
 			}
 		}

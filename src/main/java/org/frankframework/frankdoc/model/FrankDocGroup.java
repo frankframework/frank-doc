@@ -53,7 +53,7 @@ public class FrankDocGroup implements Comparable<FrankDocGroup> {
 			// Adding the class name that causes the conflict requires us to
 			// make the class name available. Adding this feature is not worth
 			// the extra complexity of the code.
-			log.warn("Conflicting order values for group {}. Old {}, new {}, selected {}", name, order, newOrder, selectedOrder);
+			log.error("Conflicting order values for group {}. Old {}, new {}, selected {}", name, order, newOrder, selectedOrder);
 			order = selectedOrder;
 		}
 	}

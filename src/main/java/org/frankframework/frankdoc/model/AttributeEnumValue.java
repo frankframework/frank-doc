@@ -44,7 +44,7 @@ public class AttributeEnumValue {
 			try {
 				annotationValue = (String) annotation.getValue();
 			} catch(FrankDocException e) {
-				log.warn("Could not parse annotation value of {}", ENUM_LABEL, e);
+				log.error("Could not parse annotation value of {}", ENUM_LABEL, e);
 			}			
 		}
 		if(! StringUtils.isBlank(annotationValue)) {

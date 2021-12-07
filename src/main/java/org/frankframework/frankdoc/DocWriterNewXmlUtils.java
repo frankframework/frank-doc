@@ -157,7 +157,7 @@ class DocWriterNewXmlUtils {
 		try {
 			addValueToAttribute(result, valueStatus, value);
 		} catch(AttributeFormatException e) {
-			log.warn("Error formatting attribute [{}]", name, e);
+			log.error("Error formatting attribute [{}]", name, e);
 		}
 		addUsageToAttribute(result, attributeUse);
 		return result;

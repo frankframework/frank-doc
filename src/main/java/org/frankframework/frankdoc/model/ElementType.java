@@ -104,14 +104,14 @@ public class ElementType implements Comparable<ElementType> {
 		if(StringUtils.isBlank(value)) {
 			// null means the JavaDoc tag was not present - then nothing to do.
 			if(value != null) {
-				log.warn("JavaDoc tag {} of interface [{}] should have a parameter", JAVADOC_DEFAULT_CLASSNAME, clazz.getName());
+				log.error("JavaDoc tag {} of interface [{}] should have a parameter", JAVADOC_DEFAULT_CLASSNAME, clazz.getName());
 			}
 		} else {
 			try {
 				FrankClass defaultClass = repository.findClass(value);
 				result = defaultClass.getName();
 			} catch(FrankDocException e) {
-				log.warn("JavaDoc tag {} on interface [{}] does not point to a valid class: [{}]", JAVADOC_DEFAULT_CLASSNAME, clazz.getName(), value);
+				log.error("JavaDoc tag {} on interface [{}] does not point to a valid class: [{}]", JAVADOC_DEFAULT_CLASSNAME, clazz.getName(), value, e);
 			}
 		}
 		return result;
@@ -169,7 +169,7 @@ public class ElementType implements Comparable<ElementType> {
 		} else {
 			ElementType result = candidates.get(0);
 			if(candidates.size() >= 2) {
-				log.warn("There are multiple candidates for the next common interface of ElementType [{}], which are [{}]. Chose [{}]",
+				log.error("There are multiple candidates for the next common interface of ElementType [{}], which are [{}]. Chose [{}]",
 						() -> getFullName(), () -> candidates.stream().map(ElementType::getFullName).collect(Collectors.joining(", ")), () -> result.getFullName());
 			}
 			return result;

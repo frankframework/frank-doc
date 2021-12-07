@@ -57,7 +57,7 @@ class FrankDocGroupFactory {
 				result = getGroup(groupName, groupOrder);
 			}
 		} catch(FrankDocException e) {
-			log.warn("Class [{}] has invalid @FrankDocGroup: {}", clazz.getName(), e.getMessage());
+			log.error("Class [{}] has invalid @FrankDocGroup: {}", clazz.getName(), e.getMessage());
 			return getGroup(FrankDocGroup.GROUP_NAME_OTHER);
 		}
 		return result;
