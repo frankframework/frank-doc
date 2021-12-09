@@ -244,10 +244,7 @@ class FrankClassDoclet implements FrankClass {
 	<T> T getMethodItemFromSignature(String methodSignature, Function<FrankMethodDoclet, T> getter) {
 		FrankMethodDoclet frankMethod = getMethodFromSignature(methodSignature);
 		if(frankMethod != null) {
-			T result = getter.apply(frankMethod);
-			if(result != null) {
-				return result;
-			}
+			return getter.apply(frankMethod);
 		}
 		return null;
 	}

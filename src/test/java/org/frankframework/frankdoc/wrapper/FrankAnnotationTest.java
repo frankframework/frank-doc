@@ -3,6 +3,7 @@ package org.frankframework.frankdoc.wrapper;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.frankframework.frankdoc.testtarget.doclet.Java5Annotation;
 import org.junit.Test;
@@ -17,6 +18,7 @@ public class FrankAnnotationTest extends TestBase{
 		assertEquals(1, annotations.length);
 		FrankAnnotation annotation = annotations[0];
 		assertEquals(FrankDocletConstants.IBISDOC, annotation.getName());
+		assertTrue(annotation.isPublic());
 		Object rawValue = annotation.getValue();
 		String[] value = (String[]) rawValue;
 		assertArrayEquals(new String[] {"50"}, value);
