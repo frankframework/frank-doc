@@ -342,10 +342,6 @@ public class DocWriterNew {
 		elementGroupManager = new ElementGroupManager(version.getChildSelector(), version.getChildRejector());
 	}
 
-	public String getOutputFileName() {
-		return outputFileNames.get(version);
-	}
-
 	public String getSchema() {
 		XmlBuilder xsdRoot = getXmlSchema();
 		log.trace("Going to create XmlBuilder objects that will be added to the schema root builder afterwards");
@@ -862,10 +858,7 @@ public class DocWriterNew {
 	private void addElementToElementGroup(XmlBuilder context, FrankElement frankElement, ElementRole role) {
 		String referredXsdElementName = frankElement.getXsdElementName(role);
 		if(isNoElementTypeNeeded(role)) {
-			log.trace("FrankElement [{}] in role [{}] appears as element reference, XSD element [{}]",
-					() -> frankElement.getFullName(), () -> role.toString(), () -> referredXsdElementName);
-			addElementRef(context, referredXsdElementName);
-			recursivelyDefineXsdElement(frankElement, role);			
+			log.error("Expected ElementRole [{}] to be interface-based", role.toString());
 		} else {
 			log.trace("FrankElement [{}] in role [{}] appears as type reference, XSD element [{}]",
 					() -> frankElement.getFullName(), () -> role.toString(), () -> referredXsdElementName);
