@@ -20,7 +20,6 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Attribute;
-import org.jdom2.CDATA;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -42,8 +41,6 @@ import org.jdom2.output.XMLOutputter;
 public class XmlBuilder {
 	static Logger log = LogUtil.getLogger(XmlBuilder.class);
 	
-	private final String CDATA_END="]]>";
-
 	private Element element;
 
 	public XmlBuilder(String tagName) {
@@ -68,22 +65,8 @@ public class XmlBuilder {
 		}
 	}
 
-	public void addAttribute(String name, boolean value) {
-		addAttribute(name, "" + value);
-	}
-
-	public void addAttribute(String name, long value) {
-		addAttribute(name, "" + value);
-	}
-
 	public void addSubElement(XmlBuilder newElement) {
 		addSubElement(newElement, true);
-	}
-
-	public void addSubElement(String name, String value) {
-		XmlBuilder subElement = new XmlBuilder(name);
-		subElement.setValue(value);
-		addSubElement(subElement, true);
 	}
 
 	public void addSubElement(XmlBuilder newElement, boolean adoptNamespace) {
@@ -105,21 +88,6 @@ public class XmlBuilder {
 				for (Element child : childList) {
 					addNamespaceRecursive(child, namespace);
 				}
-			}
-		}
-	}
-
-	public void setCdataValue(String value) {
-		if (value != null) {
-			if (value.contains(CDATA_END)) {
-				int cdata_end_pos;
-				while ((cdata_end_pos=value.indexOf(CDATA_END))>=0) {
-					element.addContent(new CDATA(value.substring(0, cdata_end_pos+1)));
-					value = value.substring(cdata_end_pos+1);
-				}
-				element.addContent(new CDATA(value));
-			} else {
-				element.setContent(new CDATA(value));
 			}
 		}
 	}
