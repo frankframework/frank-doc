@@ -957,7 +957,7 @@ public class DocWriterNew {
 		String roleName = configChildren.get(0).getRoleName();
 		switch(ConfigChildGroupKind.groupKind(configChildren)) {
 		case TEXT:
-			addTextConfigChild(context, roleName);
+			addTextConfigChildToGenericOption(context, roleName);
 			break;
 		case MIXED:
 			log.error("Encountered group of config children that mixes TextConfigChild and ObjectConfigChild, not supported: [{}]",
@@ -1001,17 +1001,18 @@ public class DocWriterNew {
 	}
 
 	private void addTextConfigChild(XmlBuilder context, TextConfigChild child) {
-		addTextConfigChild(context, child.getRoleName());
+		addElement(context, Utils.toUpperCamelCase(child.getRoleName()), "xs:string", getMinOccurs(child), getMaxOccurs(child));
 	}
 
 	/*
-	 * We can assume that a text config child has allowMultiple = true.
-	 * The reason is that TextConfigChild objects only correspond to
-	 * config child setter descriptors that start with "add" or "register".
-	 * They cannot start with "set" because a method setX(String) is
-	 * an attribute setter.
+	 * In the generic element option, all member children are treated as optional. This is justified
+	 * by the follow abstract argument. Say there is an interface-based config child with role name "a".
+	 * It gives rise to XML tag <A> that has a className attribute. It can stand for any class
+	 * that implements the interface of the config child. If some of these classes have a mandatory
+	 * config child, the mandatory config child should not be a mandatory child element of <A>.
+	 * The reason is that <A> may also stand for a class that does not have the config child.
 	 */
-	private void addTextConfigChild(XmlBuilder context, String roleName) {
+	private void addTextConfigChildToGenericOption(XmlBuilder context, String roleName) {
 		addElement(context, Utils.toUpperCamelCase(roleName), "xs:string", "0", "unbounded");
 	}
 
@@ -1087,7 +1088,16 @@ public class DocWriterNew {
 	}
 
 	private void addPluralTextConfigChild(XmlBuilder choice, ConfigChildSet configChildSet) {
-		addTextConfigChild(choice, configChildSet.getRoleName());
+		List<ConfigChild> filteredConfigChildren = configChildSet.getConfigChildren().stream()
+				.filter(version.getChildSelector())
+				.filter(c -> ! version.getChildRejector().test(c))
+				.collect(Collectors.toList());
+		if(filteredConfigChildren.size() == 1) {
+			addTextConfigChild(choice, (TextConfigChild) filteredConfigChildren.get(0));
+		} else {
+			log.warn("[{}] has multiple config children that include TextConfigChild instances. Do not know whether or not mandatory");
+			addElement(choice, Utils.toUpperCamelCase(configChildSet.getRoleName()), "xs:string", "0", "unbounded");
+		}
 	}
 
 	private void addAttributes(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
