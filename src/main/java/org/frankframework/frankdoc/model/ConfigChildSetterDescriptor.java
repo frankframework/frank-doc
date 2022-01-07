@@ -45,14 +45,12 @@ abstract class ConfigChildSetterDescriptor {
 	private static Logger log = LogUtil.getLogger(ConfigChildSetterDescriptor.class);
 
 	private @Getter String methodName;
-	private @Getter boolean mandatory;
 	private @Getter boolean allowMultiple;
 	private @Getter DigesterRulesPattern pattern;
 
 	ConfigChildSetterDescriptor(String methodName, DigesterRulesPattern pattern) throws SAXException {
 		this.methodName = methodName;
 		this.pattern = pattern;
-		mandatory = false;
 		if(methodName.startsWith("set")) {
 			allowMultiple = false;
 		} else if((methodName.startsWith("add")) || methodName.startsWith("register")) {
@@ -73,7 +71,7 @@ abstract class ConfigChildSetterDescriptor {
 
 	@Override
 	public String toString() {
-		return String.format("%s(method = %s, roleName = %s, mandatory = %b, allowMultiple = %b, pattern = %s)", getClass().getSimpleName(), methodName, getRoleName(), mandatory, allowMultiple, pattern.toString());
+		return String.format("%s(method = %s, roleName = %s, allowMultiple = %b, pattern = %s)", getClass().getSimpleName(), methodName, getRoleName(), allowMultiple, pattern.toString());
 	}
 
 	abstract ConfigChild createConfigChild(FrankElement parent, FrankMethod method);

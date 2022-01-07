@@ -40,6 +40,8 @@ import org.frankframework.frankdoc.util.LogUtil;
 public abstract class ConfigChild extends ElementChild {
 	private static Logger log = LogUtil.getLogger(ConfigChild.class);
 
+	static final String JAVADOC_MANDATORY_TAG = "@ff.mandatory";
+
 	private static final Comparator<ConfigChild> SINGLE_ELEMENT_ONLY =
 			Comparator.comparing(c -> ! c.isAllowMultiple());
 
