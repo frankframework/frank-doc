@@ -268,7 +268,7 @@ public class FrankDocModel {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
 			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
-			if(method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_MANDATORY) != null) {
+			if(method.getJavaDocTag(ElementChild.JAVADOC_MANDATORY) != null) {
 				attribute.setMandatory(true);
 			}
 			if(method.getParameterTypes()[0].isEnum()) {
@@ -552,7 +552,8 @@ public class FrankDocModel {
 			log.trace("Have ConfigChildSetterDescriptor [{}]", () -> configChildDescriptor.toString());
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);
 			configChild.setAllowMultiple(configChildDescriptor.isAllowMultiple());
-			if(frankMethod.getAnnotation(ConfigChild.JAVADOC_MANDATORY_TAG) != null) {
+			if(frankMethod.getJavaDocTag(ElementChild.JAVADOC_MANDATORY) != null) {
+				log.trace("Config child is mandatory");
 				configChild.setMandatory(true);
 			}
 			if(configChildDescriptor.isForObject()) {

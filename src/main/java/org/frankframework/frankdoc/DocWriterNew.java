@@ -448,6 +448,13 @@ public class DocWriterNew {
 		log.trace("Adding cumulative config chidren of FrankElement [{}] to XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
 		if(frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
 			log.trace("FrankElement [{}] has plural config children", () -> frankElement.getFullName());
+			// Within <xs:sequence><xs:choice> group, we cannot enforce that mandatory config children are
+			// included. We also do not check there that non-plural config children occur at most once.
+			// Martijn investigated whether the <xs:all> element can be used instead. That element
+			// enforces that each <xs:element> inside occurs exactly once without enforcing a sequence.
+			// However, within <xs:all> the <xs:group> element is not allowed. Therefore <xs:all> will
+			// not work. We accept the limitations of <xs:sequence><xs:choice>, becuase plural config
+			// children are rare within the Frank!Doc.
 			XmlBuilder sequence = addSequence(complexType);
 			XmlBuilder choice = addChoice(sequence, "0", "unbounded");
 			for(ConfigChildSet configChildSet: frankElement.getCumulativeConfigChildSets()) {
@@ -1041,6 +1048,9 @@ public class DocWriterNew {
 		elementBuildingStrategy.addThePluralConfigChildGroup(groupName);
 		XmlBuilder builder = createGroup(groupName);
 		xsdComplexItems.add(builder);
+		// Within <xs:sequence><xs:choice> group, we cannot enforce that mandatory config children are
+		// included. We also do not check there that non-plural config children occur at most once.
+		// See comment in recursivelyDefineXsdElementUnchecked().
 		XmlBuilder sequence = addSequence(builder);
 		XmlBuilder choice = addChoice(sequence, "0", "unbounded");
 		// Adds <Module> as a child of <Configuration>
@@ -1087,17 +1097,12 @@ public class DocWriterNew {
 		}
 	}
 
+	// It does not make sense to set minOccurs="1" for mandatory config children.
+	// Plural config children are wrapped inside <xs:sequence minOccurs="0" maxOccurs="unbounded"><xs:choice>.
+	// Setting <xs:element minOccurs="1"...> has no effect.
+	// See also the comment in recursivelyDefineXsdElementUnchecked().
 	private void addPluralTextConfigChild(XmlBuilder choice, ConfigChildSet configChildSet) {
-		List<ConfigChild> filteredConfigChildren = configChildSet.getConfigChildren().stream()
-				.filter(version.getChildSelector())
-				.filter(c -> ! version.getChildRejector().test(c))
-				.collect(Collectors.toList());
-		if(filteredConfigChildren.size() == 1) {
-			addTextConfigChild(choice, (TextConfigChild) filteredConfigChildren.get(0));
-		} else {
-			log.warn("[{}] has multiple config children that include TextConfigChild instances. Do not know whether or not mandatory");
-			addElement(choice, Utils.toUpperCamelCase(configChildSet.getRoleName()), "xs:string", "0", "unbounded");
-		}
+		addElement(choice, Utils.toUpperCamelCase(configChildSet.getRoleName()), "xs:string", "0", "unbounded");
 	}
 
 	private void addAttributes(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {

@@ -30,7 +30,6 @@ import lombok.Setter;
 public class FrankAttribute extends ElementChild {
 	private static Logger log = LogUtil.getLogger(FrankAttribute.class);
 
-	static final String JAVADOC_ATTRIBUTE_MANDATORY = "@ff.mandatory";
 	static final String JAVADOC_ATTRIBUTE_REF = "@ff.ref";
 
 	@EqualsAndHashCode(callSuper = false)
