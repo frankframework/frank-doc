@@ -36,21 +36,6 @@ public final class FrankElementFilters {
 	 */
 	public static Set<String> getExcludeFilter() {
 		Set<String> excludeFilters = new TreeSet<>();
-		// Exclude classes that will give conflicts with existing, non-compatible bean definition of same name and class
-		excludeFilters.add("nl.nn.adapterframework.extensions.esb.WsdlGeneratorPipe");
-		excludeFilters.add("nl.nn.adapterframework.extensions.sap.SapSender");
-		excludeFilters.add("nl.nn.adapterframework.extensions.sap.SapListener");
-		excludeFilters.add("nl.nn.adapterframework.extensions.sap.SapLUWManager");
-		// Excluding "nl.nn.adapterframework.extensions.sap" does not work - the Frank!Doc needs full class names for this filter.
-		excludeFilters.add("nl.nn.adapterframework.extensions.sap.IdocSender");
-		excludeFilters.add("nl.nn.adapterframework.extensions.sap.jco2.SapSender");
-		excludeFilters.add("nl.nn.adapterframework.extensions.sap.jco2.SapListener");
-		excludeFilters.add("nl.nn.adapterframework.extensions.sap.jco2.SapLUWManager");
-		excludeFilters.add("nl.nn.adapterframework.extensions.sap.jco2.IdocSender");
-		excludeFilters.add("nl.nn.adapterframework.extensions.sap.jco3.SapSender");
-		excludeFilters.add("nl.nn.adapterframework.extensions.sap.jco3.SapListener");
-		excludeFilters.add("nl.nn.adapterframework.extensions.sap.jco3.SapLUWManager");
-		excludeFilters.add("nl.nn.adapterframework.extensions.sap.jco3.IdocSender");
 		// Here are replacements for:
 		// excludeFilters.add(".*\\.IbisstoreSummaryQuerySender");
 		excludeFilters.add("nl.nn.adapterframework.webcontrol.action.IbisstoreSummaryQuerySender");
