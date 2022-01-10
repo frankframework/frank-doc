@@ -348,6 +348,9 @@ public class FrankDocJsonFactory {
 			if(v.getDescription() != null) {
 				valueBuilder.add("description", v.getDescription());
 			}
+			if(v.isDeprecated()) {
+				valueBuilder.add("deprecated", true);
+			}
 			result.add(valueBuilder.build());
 		}
 		return result.build();	

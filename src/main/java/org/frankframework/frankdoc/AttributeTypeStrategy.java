@@ -44,7 +44,10 @@ import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
 public enum AttributeTypeStrategy {
+	// Also excludes deprecated enum values
 	ALLOW_PROPERTY_REF(new DelegateAllowPropertyRefEnumDocumentedCaseSensitive()),
+
+	// Also includes deprecated enum values
 	ALLOW_PROPERTY_REF_ENUM_VALUES_IGNORE_CASE(new DelegateAllowPropertyRefEnumIgnoreCase());
 
 	private static Logger log = LogUtil.getLogger(AttributeTypeStrategy.class);
@@ -200,9 +203,11 @@ public enum AttributeTypeStrategy {
 	private static class DelegateAllowPropertyRefEnumDocumentedCaseSensitive extends Delegate {
 		@Override
 		void addEnumValue(XmlBuilder restriction, AttributeEnumValue v) {
-			XmlBuilder valueBuilder = addEnumeration(restriction, v.getLabel());
-			if(v.getDescription() != null) {
-				addDocumentation(valueBuilder, v.getDescription());
+			if(! v.isDeprecated()) {
+				XmlBuilder valueBuilder = addEnumeration(restriction, v.getLabel());
+				if(v.getDescription() != null) {
+					addDocumentation(valueBuilder, v.getDescription());
+				}
 			}
 		}
 	}

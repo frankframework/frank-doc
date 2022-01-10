@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import lombok.Getter;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.util.LogUtil;
 
@@ -34,6 +35,7 @@ public class AttributeEnumValue {
 	private @Getter String javaTag;
 	private @Getter String label;
 	private @Getter String description;
+	private @Getter boolean deprecated = false;
 
 	AttributeEnumValue(FrankEnumConstant c) {
 		this.javaTag = c.getName();
@@ -54,6 +56,9 @@ public class AttributeEnumValue {
 		String javaDoc = c.getJavaDoc();
 		if(! StringUtils.isBlank(javaDoc)) {
 			this.description = javaDoc;
+		}
+		if(c.getAnnotation(FrankDocletConstants.DEPRECATED) != null) {
+			this.deprecated = true;
 		}
 	}
 }
