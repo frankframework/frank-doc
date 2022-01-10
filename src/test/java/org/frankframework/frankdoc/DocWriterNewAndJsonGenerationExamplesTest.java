@@ -72,7 +72,10 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.sameEnum.only.once.Master", "enumOnlyOnce.xsd", null},
 			// Also tests tags.
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.forwards.Master", null, "forwards.json"},
-			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.parent.without.attributes.Master", "handleParentOnlyExcludedAttributes.xsd", null}
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.parent.without.attributes.Master", "handleParentOnlyExcludedAttributes.xsd", null},
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Master", "mandatoryMultiple.xsd", "mandatoryMultiple.json"},
+			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Master", "mandatoryMultipleCompatibility.xsd", null},
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "singular-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Master", "mandatorySingle.xsd", "mandatorySingle.json"}
 		});
 	}
 

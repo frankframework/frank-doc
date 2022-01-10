@@ -47,7 +47,6 @@ public class ConfigChildSetterDescriptorTest {
 		assertTrue(configChildDescriptor.isForObject());
 		assertEquals("setItemSingular", configChildDescriptor.getMethodName());
 		assertEquals("roleNameItemSingular", configChildDescriptor.getRoleName());
-		assertFalse(configChildDescriptor.isMandatory());
 		assertFalse(configChildDescriptor.isAllowMultiple());
 	}
 
@@ -58,7 +57,6 @@ public class ConfigChildSetterDescriptorTest {
 		assertTrue(configChildDescriptor.isForObject());
 		assertEquals("addItemPlural", configChildDescriptor.getMethodName());
 		assertEquals("roleNameItemPluralAdd", configChildDescriptor.getRoleName());
-		assertFalse(configChildDescriptor.isMandatory());
 		assertTrue(configChildDescriptor.isAllowMultiple());
 	}
 
@@ -69,7 +67,6 @@ public class ConfigChildSetterDescriptorTest {
 		assertTrue(configChildDescriptor.isForObject());
 		assertEquals("registerItemPlural", configChildDescriptor.getMethodName());
 		assertEquals("roleNameItemPluralRegister", configChildDescriptor.getRoleName());
-		assertFalse(configChildDescriptor.isMandatory());
 		assertTrue(configChildDescriptor.isAllowMultiple());
 	}
 
@@ -85,7 +82,6 @@ public class ConfigChildSetterDescriptorTest {
 		assertFalse(configChildDescriptor.isForObject());
 		assertEquals("registerText", configChildDescriptor.getMethodName());
 		assertEquals("roleNameText", configChildDescriptor.getRoleName());
-		assertFalse(configChildDescriptor.isMandatory());
 		assertTrue(configChildDescriptor.isAllowMultiple());
 	}
 

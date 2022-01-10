@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,19 +34,19 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import lombok.Getter;
-import lombok.Setter;
 import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.frankframework.frankdoc.util.LogUtil;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class FrankDocModel {
 	private static Logger log = LogUtil.getLogger(FrankDocModel.class);
@@ -269,7 +268,7 @@ public class FrankDocModel {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
 			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
-			if(method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_MANDATORY) != null) {
+			if(method.getJavaDocTag(ElementChild.JAVADOC_MANDATORY) != null) {
 				attribute.setMandatory(true);
 			}
 			if(method.getParameterTypes()[0].isEnum()) {
@@ -553,7 +552,10 @@ public class FrankDocModel {
 			log.trace("Have ConfigChildSetterDescriptor [{}]", () -> configChildDescriptor.toString());
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);
 			configChild.setAllowMultiple(configChildDescriptor.isAllowMultiple());
-			configChild.setMandatory(configChildDescriptor.isMandatory());
+			if(frankMethod.getJavaDocTag(ElementChild.JAVADOC_MANDATORY) != null) {
+				log.trace("Config child is mandatory");
+				configChild.setMandatory(true);
+			}
 			if(configChildDescriptor.isForObject()) {
 				log.trace("For FrankElement [{}] method [{}], going to search element role", () -> parent.getFullName(), () -> frankMethod.getName());
 				FrankClass elementTypeClass = (FrankClass) frankMethod.getParameterTypes()[0];

@@ -45,6 +45,7 @@ import org.frankframework.frankdoc.util.LogUtil;
  */
 public abstract class ElementChild {
 	static final String JAVADOC_DEFAULT_VALUE_TAG = "@ff.default";
+	static final String JAVADOC_MANDATORY = "@ff.mandatory";
 
 	private static Logger log = LogUtil.getLogger(ElementChild.class);
 
