@@ -36,11 +36,9 @@ public final class FrankElementFilters {
 	 */
 	public static Set<String> getExcludeFilter() {
 		Set<String> excludeFilters = new TreeSet<>();
-		// Here are replacements for:
-		// excludeFilters.add(".*\\.IbisstoreSummaryQuerySender");
-		excludeFilters.add("nl.nn.adapterframework.webcontrol.action.IbisstoreSummaryQuerySender");
-		excludeFilters.add("nl.nn.adapterframework.webcontrol.api.IbisstoreSummaryQuerySender");
-		// End of replacements
+
+		// Exclude classes that will give conflicts with existing, non-compatible bean definition of same name and class
+		excludeFilters.add("nl.nn.adapterframework.extensions.esb.WsdlGeneratorPipe");
 
 		// Exclude classes that cannot be used directly in configurations
 		excludeFilters.add("nl.nn.adapterframework.pipes.MessageSendingPipe");
