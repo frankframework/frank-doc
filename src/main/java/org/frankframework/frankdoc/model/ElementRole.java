@@ -109,6 +109,7 @@ public class ElementRole implements Comparable<ElementRole> {
 				log.error("Cannot resolve XML name conflict for non-deprecated FrankElement-s [{}]", () -> FrankElement.describe(conflictingElementsByDeprecated.get(false)));
 				nameConflicts.addAll(membersByXsdName.get(name));
 			} else {
+				log.trace("Found name conflicts for FrankElement-s [{}]", () -> FrankElement.describe(conflictingElementsByDeprecated.get(true)));
 				nameConflicts.addAll(conflictingElementsByDeprecated.get(true));
 			}
 		}

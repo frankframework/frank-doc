@@ -75,7 +75,11 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.parent.without.attributes.Master", "handleParentOnlyExcludedAttributes.xsd", null},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Master", "mandatoryMultiple.xsd", "mandatoryMultiple.json"},
 			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Master", "mandatoryMultipleCompatibility.xsd", null},
-			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "singular-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Master", "mandatorySingle.xsd", "mandatorySingle.json"}
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "singular-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Master", "mandatorySingle.xsd", "mandatorySingle.json"},
+			// Classes in package "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second" are also added although that package is not shown in this table.
+			// See method getAllRequiredPackages().
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master", "nameConflictStrict.xsd", "nameConflict.json"},
+			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master", "nameConflictCompatibility.xsd", null},
 		});
 	}
 
@@ -118,8 +122,19 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 	}
 
 	private FrankDocModel createModel() throws Exception {
-		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(packageOfClasses);
+		String[] requiredPackages = getAllRequiredPackages(packageOfClasses);
+		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(requiredPackages);
 		return FrankDocModel.populate(getDigesterRulesURL(digesterRulesFileName), startClassName, classRepository);
+	}
+
+	// It would be nice to put this information in the test case table, method data(). That table is quite wide however.
+	// Adding data there would make the table harder to read.
+	private String[] getAllRequiredPackages(String originalPackage) {
+		if(originalPackage.equals("org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first")) {
+			return new String[] {"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first", "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second"};
+		} else {
+			return new String[] {originalPackage};
+		}
 	}
 
 	private URL getDigesterRulesURL(String fileName) throws IOException {
