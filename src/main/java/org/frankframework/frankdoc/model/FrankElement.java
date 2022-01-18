@@ -70,6 +70,10 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private final @Getter String fullName;
 	private final @Getter String simpleName;
+	
+	// Needed to handle a corner case that is explained with method FrankDocModel.calculateTypeNameSeq
+	private @Setter int typeNameSeq = 1;
+	
 	private final @Getter boolean isAbstract;
 	private @Getter boolean isDeprecated = false;
 
@@ -419,6 +423,14 @@ public class FrankElement implements Comparable<FrankElement> {
 			inheritsPluralConfigChildren = ancestor.hasOrInheritsPluralConfigChildren(selector, rejector);
 		}
 		return hasPluralConfigChildren || inheritsPluralConfigChildren;
+	}
+
+	public String getTypeNameBase() {
+		if(typeNameSeq <= 1) {
+			return getSimpleName();
+		} else {
+			return getSimpleName() + Integer.valueOf(typeNameSeq).toString();
+		}
 	}
 
 	void addTypeMembership(ElementType elementType) {

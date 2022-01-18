@@ -1236,28 +1236,35 @@ public class DocWriterNew {
 		return result.toString();
 	}
 
+	// We cannot simply use getSimpleName(). If multiple elements share
+	// a simple name, then only one should be non-deprecated. The deprecated
+	// elements sharing a simple name are omitted as members of an ElementRole.
+	// This way, no duplicate elements are defined in the XSD. However, this
+	// is not enough to avoid duplicate type names, because the inheritance parent
+	// of an element may have the same simple name as the child. This issue is solved
+	// by adding a sequence number.
 	private String xsdElementType(FrankElement frankElement) {
-		return frankElement.getSimpleName() + "Type";
+		return frankElement.getTypeNameBase() + "Type";
 	}
 
 	private static String xsdDeclaredGroupNameForChildren(FrankElement element) {
-		return element.getSimpleName() + "DeclaredChildGroup";
+		return element.getTypeNameBase() + "DeclaredChildGroup";
 	}
 
 	private static String xsdCumulativeGroupNameForChildren(FrankElement element) {
-		return element.getSimpleName() + "CumulativeChildGroup";
+		return element.getTypeNameBase() + "CumulativeChildGroup";
 	}
 
 	private static String xsdPluralGroupNameForChildren(FrankElement element) {
-		return element.getSimpleName() + "PluralConfigChildGroup";
+		return element.getTypeNameBase() + "PluralConfigChildGroup";
 	}
 	
 	private static String xsdDeclaredGroupNameForAttributes(FrankElement element) {
-		return element.getSimpleName() + "DeclaredAttributeGroup";
+		return element.getTypeNameBase() + "DeclaredAttributeGroup";
 	}
 
 	private static String xsdCumulativeGroupNameForAttributes(FrankElement element) {
-		return element.getSimpleName() + "CumulativeAttributeGroup";
+		return element.getTypeNameBase() + "CumulativeAttributeGroup";
 	}
 
 	private static String getMinOccurs(ConfigChild child) {

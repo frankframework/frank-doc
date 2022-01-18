@@ -88,6 +88,7 @@ public class FrankDocModel {
 			result.findOrCreateRootFrankElement(rootClassName);
 			result.buildDescendants();
 			result.allElements.values().forEach(f -> result.finishConfigChildrenFor(f));
+			result.calculateTypeNameSeq();
 			result.calculateInterfaceBased();
 			result.calculateCommonInterfacesHierarchies();
 			result.setHighestCommonInterface();
@@ -834,7 +835,32 @@ public class FrankDocModel {
 		return attributeEnumFactory.getAll();
 	}
 
-	public void calculateInterfaceBased() {
+	// This method handles a corner case regarding Java classes that share a simple name.
+	// Typically, if multiple Java classes share a simple name, then some of these classes are deprecated,
+	// leaving only one of the Java classes non-deprecated. ElementRole detects the conflict. FrankElement
+	// instances that are deprecated and that have a duplicate name are not returned as members of the ElementRole,
+	// allowing them to be omitted as elements in the XSD.
+	//
+	// However, when a deprecated FrankElement with a duplicate name is the inheritance parent of a
+	// non-deprecated FrankElement with the same simple name, then we still may need type definitions
+	// for the parent. To produce unique type names, we need a sequence number. Setting
+	// that sequence number is the purpose of this method.
+	void calculateTypeNameSeq() {
+		Map<String, List<FrankElement>> elementsBySimpleName = allElements.values().stream()
+				.collect(Collectors.groupingBy(FrankElement::getSimpleName));
+		for(String name: elementsBySimpleName.keySet()) {
+			List<FrankElement> nameGroup = new ArrayList<>(elementsBySimpleName.get(name));
+			Collections.sort(nameGroup);
+			for(int seq = 0; seq < nameGroup.size(); ++seq) {
+				// When we make names unique, we omit the first sequence number. We want names like
+				// xxx, xxx2, xxx3. If we would start with zero, we would have xxx, xxx1, xxx2 which
+				// looks strange.
+				nameGroup.get(seq).setTypeNameSeq(seq + 1);
+			}
+		}
+	}
+
+	void calculateInterfaceBased() {
 		allTypes.values().stream().filter(ElementType::isFromJavaInterface)
 			.flatMap(et -> et.getMembers().stream())
 			.forEach(f -> f.setInterfaceBased(true));
