@@ -504,9 +504,12 @@ public class DocWriterNew {
 			addConfigChildren(elementBuildingStrategy, frankElement);
 			log.trace("Visiting attributes for FrankElement [{}]", () -> frankElement.getFullName());
 			addAttributes(elementBuildingStrategy, frankElement);
-			elementBuildingStrategy.addAttributeClassName();
+			if(! frankElement.isAbstract()) {
+				addClassNameAttribute(elementBuildingStrategy.getElementTypeBuilder(), frankElement);
+			}
 			if(elementBuildingStrategy.needsSpecialAttributesInElementType()) {
-				log.trace("Adding anyAttribute in another namespace in the element type of [{}], because there are no attribute groups to put this in", () -> frankElement.toString());
+				log.trace("Adding attribute active and anyAttribute in another namespace to the element type of [{}], because there are no attribute groups to put this in", () -> frankElement.toString());
+				AttributeTypeStrategy.addAttributeActive(elementBuildingStrategy.getElementTypeBuilder());
 				addAnyOtherNamespaceAttribute(elementBuildingStrategy.getElementTypeBuilder());
 			}
 			log.trace("Creating type definitions (or only groups) for Java ancestors of FrankElement [{}]", () -> frankElement.getFullName());
@@ -544,22 +547,11 @@ public class DocWriterNew {
 	 * outside the scope of this class.
 	 */
 	private abstract class ElementBuildingStrategy {
-		abstract void addAttributeClassName();
-		abstract void addAttributeActive();
 		abstract void onNoAttributes();
 		abstract boolean needsSpecialAttributesInElementType();
 		abstract XmlBuilder getElementTypeBuilder();
 		abstract void addGroupRef(String referencedGroupName);
 		abstract void addAttributeGroupRef(String referencedGroupName);
-		// When there are config children that share a role name (plural config children),
-		// then the element type under construction references only one config child group.
-		// The config child group does not check the sequence of the included elements.
-		// There is no need to also wrap the singleton config child group reference into
-		// <sequence><choice> if the order is not important.
-		//
-		// This method is added to ElementBuildingStrategy because we know here
-		// to which XmlBuilder we want to add the group reference.
-		abstract void addThePluralConfigChildGroup(String referencedGroupName);
 	}
 
 	private ElementBuildingStrategy getElementBuildingStrategy(FrankElement element) {
@@ -573,27 +565,15 @@ public class DocWriterNew {
 	}
 
 	private class ElementAdder extends ElementBuildingStrategy {
-		private final XmlBuilder complexType;
+		private final XmlBuilder elementTypeBuilder;
 		private XmlBuilder configChildBuilder;
 		private final FrankElement addingTo;
 		private boolean noAttributes = false;
 
 		ElementAdder(FrankElement frankElement) {
-			complexType = createComplexType(xsdElementType(frankElement));
-			xsdComplexItems.add(complexType);
+			elementTypeBuilder = createComplexType(xsdElementType(frankElement));
+			xsdComplexItems.add(elementTypeBuilder);
 			this.addingTo = frankElement;
-		}
-
-		@Override
-		void addAttributeClassName() {
-			log.trace("Adding attribute [{}] for FrankElement [{}]", () -> CLASS_NAME, () -> addingTo.getFullName());
-			addClassNameAttribute(complexType, addingTo);			
-		}
-
-		@Override
-		void addAttributeActive() {
-			log.trace("Adding attribute active");
-			AttributeTypeStrategy.addAttributeActive(complexType);
 		}
 
 		@Override
@@ -608,7 +588,7 @@ public class DocWriterNew {
 
 		@Override
 		XmlBuilder getElementTypeBuilder() {
-			return complexType;
+			return elementTypeBuilder;
 		}
 
 		@Override
@@ -619,7 +599,7 @@ public class DocWriterNew {
 			// config children.
 			if(configChildBuilder == null) {
 				log.trace("Create <sequence><choice> to wrap the config children in");
-				configChildBuilder = version.configChildBuilder(complexType);				
+				configChildBuilder = version.configChildBuilder(elementTypeBuilder);				
 			} else {
 				log.trace("Already have <sequence><choice> for the config children");
 			}
@@ -629,24 +609,11 @@ public class DocWriterNew {
 		@Override
 		void addAttributeGroupRef(String referencedGroupName) {
 			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}]", () -> addingTo.getFullName(), () -> referencedGroupName);
-			DocWriterNewXmlUtils.addAttributeGroupRef(complexType, referencedGroupName);
-		}
-
-		@Override
-		void addThePluralConfigChildGroup(String referencedGroupName) {
-			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}], without adding <sequence><choice>",
-					() -> addingTo.getFullName(), () -> referencedGroupName);
-			DocWriterNewXmlUtils.addGroupRef(complexType, referencedGroupName);
+			DocWriterNewXmlUtils.addAttributeGroupRef(elementTypeBuilder, referencedGroupName);
 		}
 	}
 
 	private class ElementOmitter extends ElementBuildingStrategy {
-		@Override
-		void addAttributeClassName() {
-		}
-		@Override
-		void addAttributeActive() {
-		}
 		@Override
 		void onNoAttributes() {
 		}
@@ -664,14 +631,11 @@ public class DocWriterNew {
 		@Override
 		void addAttributeGroupRef(String referencedGroupName) {
 		}
-		@Override
-		void addThePluralConfigChildGroup(String referencedGroupName) {
-		}
 	}
 
 	private void addConfigChildren(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
 		if(frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
-			addConfigChildrenWithPluralConfigChildSets(elementBuildingStrategy, frankElement);
+			addConfigChildrenWithPluralConfigChildSets(elementBuildingStrategy.getElementTypeBuilder(), frankElement);
 		} else {
 			addConfigChildrenNoPluralConfigChildSets(elementBuildingStrategy, frankElement);
 		}
@@ -1071,22 +1035,25 @@ public class DocWriterNew {
 		}
 	}
 
-	void addConfigChildrenWithPluralConfigChildSets(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
+	void addConfigChildrenWithPluralConfigChildSets(XmlBuilder context, FrankElement frankElement) {
 		log.trace("Applying algorithm for plural config children for FrankElement [{}]", () -> frankElement.getFullName());
 		if(! frankElement.hasFilledConfigChildSets(version.getChildSelector(), version.getChildRejector())) {
 			FrankElement ancestor = frankElement.getNextPluralConfigChildrenAncestor(version.getChildSelector(), version.getChildRejector());
+			String ancestorGroupName = xsdPluralGroupNameForChildren(ancestor);
 			log.trace("No config children, inheriting from [{}]", () -> ancestor.getFullName());
-			elementBuildingStrategy.addThePluralConfigChildGroup(xsdPluralGroupNameForChildren(ancestor));
+			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}], without adding <sequence><choice>",
+					() -> frankElement.getFullName(), () -> ancestorGroupName);
+			DocWriterNewXmlUtils.addGroupRef(context, ancestorGroupName);
 		} else {
 			log.trace("Adding new group for plural config children for FrankElement [{}]", () -> frankElement.getFullName());
-			addConfigChildrenWithPluralConfigChildSetsUnchecked(elementBuildingStrategy, frankElement);
+			addConfigChildrenWithPluralConfigChildSetsUnchecked(context, frankElement);
 		}
 		log.trace("Done applying algorithm for plural config children for FrankElement [{}]", () -> frankElement.getFullName());
 	}
 
-	private void addConfigChildrenWithPluralConfigChildSetsUnchecked(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
+	private void addConfigChildrenWithPluralConfigChildSetsUnchecked(XmlBuilder context, FrankElement frankElement) {
 		String groupName = xsdPluralGroupNameForChildren(frankElement);
-		elementBuildingStrategy.addThePluralConfigChildGroup(groupName);
+		DocWriterNewXmlUtils.addGroupRef(context, groupName);
 		XmlBuilder builder = createGroup(groupName);
 		xsdComplexItems.add(builder);
 		// Within <xs:sequence><xs:choice> group, we cannot enforce that mandatory config children are
@@ -1155,8 +1122,6 @@ public class DocWriterNew {
 
 			@Override
 			public void noChildren() {
-				// TODO: Now that we have onNoAttributes, we can move adding attribute active outside the ElementBuildingStrategy.
-				elementBuildingStrategy.addAttributeActive();
 				elementBuildingStrategy.onNoAttributes();
 			}
 
