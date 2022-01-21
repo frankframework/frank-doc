@@ -224,6 +224,14 @@ class DocWriterNewXmlUtils {
 		return attribute;
 	}
 
+	static XmlBuilder addAnyOtherNamespaceAttribute(XmlBuilder context) {
+		XmlBuilder attribute = new XmlBuilder("anyAttribute", "xs", XML_SCHEMA_URI);
+		context.addSubElement(attribute);
+		attribute.addAttribute("namespace", "##other");
+		attribute.addAttribute("processContents", "skip");
+		return attribute;		
+	}
+
 	static XmlBuilder addAttributeWithType(XmlBuilder context, String name) {
 		XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
 		attribute.addAttribute("name", name);
