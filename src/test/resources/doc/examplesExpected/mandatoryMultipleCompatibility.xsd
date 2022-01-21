@@ -14,6 +14,7 @@
       </xs:sequence>
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Master" use="prohibited" />
       <xs:attribute ref="active" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
   <xs:element name="C">
@@ -24,6 +25,7 @@
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Child" use="prohibited" />
       <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="c" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
   <xs:group name="AElementGroup">
@@ -58,6 +60,7 @@
   <xs:complexType name="InterfaceImplType">
     <xs:attribute ref="active" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.InterfaceImpl" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">

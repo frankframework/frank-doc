@@ -12,6 +12,7 @@
       </xs:sequence>
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master" use="prohibited" />
       <xs:attribute ref="active" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
   <xs:group name="AElementGroup">
@@ -61,6 +62,7 @@
   <xs:attributeGroup name="Member2DeclaredAttributeGroup">
     <xs:attribute name="myAttribute" type="xs:string" />
     <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
