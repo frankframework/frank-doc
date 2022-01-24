@@ -407,7 +407,7 @@ public class DocWriterNew {
 		if(declaredChildGroup != null) {
 			DocWriterNewXmlUtils.addGroupRef(complexType, declaredChildGroup);
 		}
-		log.trace("Adding attribute active explicitly to [{}]", Constants.MODULE_ELEMENT_NAME);
+		log.trace("Adding attribute active explicitly to [{}] and also any attribute in another namespace", () -> Constants.MODULE_ELEMENT_NAME);
 		AttributeTypeStrategy.addAttributeActive(complexType);
 		addAnyOtherNamespaceAttribute(complexType);
 	}
@@ -435,6 +435,7 @@ public class DocWriterNew {
 			XmlBuilder attributeBuilder = recursivelyDefineXsdElementUnchecked(frankElement, xsdElementName);
 			// Adding the other-namespace attribute cannot be done in recursivelyDefineXsdElementUnchecked() because the anyAttribute must be last.
 			// After recursivelyDefineXsdElementUnchecked(), the "elementRole" attribute is added separately for non-root elements.
+			log.trace("Adding any attribute in another namespace to root element [{}]", () -> frankElement.getFullName());
 			addAnyOtherNamespaceAttribute(attributeBuilder);
 		}
 		log.trace("Leave top FrankElement [{}]", () -> frankElement.getFullName());
@@ -505,6 +506,7 @@ public class DocWriterNew {
 			log.trace("Visiting attributes for FrankElement [{}]", () -> frankElement.getFullName());
 			addAttributes(elementBuildingStrategy, frankElement);
 			if(! frankElement.isAbstract()) {
+				log.trace("Adding attribute className to the element type of [{}]", () -> frankElement.getFullName());
 				addClassNameAttribute(elementBuildingStrategy.getElementTypeBuilder(), frankElement);
 			}
 			if(elementBuildingStrategy.needsSpecialAttributesInElementType()) {
@@ -798,6 +800,7 @@ public class DocWriterNew {
 			log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, () -> frankElement.getFullName());
 			addAttribute(attributeBuilder, ELEMENT_ROLE, FIXED, role.getRoleName(), version.getRoleNameAttributeUse());
 			// Adding the other-namespace attribute cannot be done in recursivelyDefineXsdElementUnchecked because the anyAttribute must be last.
+			log.trace("Adding any attribute in another namespace to FrankElement [{}]", () -> frankElement.getFullName());
 			addAnyOtherNamespaceAttribute(attributeBuilder);
 			log.trace("Done defining FrankElement [{}], XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
 		} else {
@@ -1156,6 +1159,7 @@ public class DocWriterNew {
 				XmlBuilder attributeGroup = commonAddAttributeGroup();
 				log.trace("Adding attribute active");
 				AttributeTypeStrategy.addAttributeActive(attributeGroup);
+				log.trace("Adding any attribute in another namespace");
 				addAnyOtherNamespaceAttribute(attributeGroup);
 			}
 
@@ -1193,6 +1197,7 @@ public class DocWriterNew {
 				handleSelectedChildren(children, owner);
 				log.trace("Adding attribute active because [{}] has no ancestors with children", () -> owner.getFullName());
 				AttributeTypeStrategy.addAttributeActive(cumulativeBuilder);
+				log.trace("Adding any attribute in another namespace");
 				addAnyOtherNamespaceAttribute(cumulativeBuilder);
 			}
 
