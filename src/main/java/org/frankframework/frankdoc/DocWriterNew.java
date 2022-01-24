@@ -552,6 +552,15 @@ public class DocWriterNew {
 		abstract XmlBuilder getElementTypeBuilder();
 		abstract void addGroupRef(String referencedGroupName);
 		abstract void addAttributeGroupRef(String referencedGroupName);
+		// When there are config children that share a role name (plural config children),
+		// then the element type under construction references only one config child group.
+		// The config child group does not check the sequence of the included elements.
+		// There is no need to also wrap the singleton config child group reference into
+		// <sequence><choice> if the order is not important.
+		//
+		// This method is added to ElementBuildingStrategy because we know here
+		// to which XmlBuilder we want to add the group reference.
+		abstract void addThePluralConfigChildGroup(String referencedGroupName);
 	}
 
 	private ElementBuildingStrategy getElementBuildingStrategy(FrankElement element) {
@@ -611,6 +620,13 @@ public class DocWriterNew {
 			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}]", () -> addingTo.getFullName(), () -> referencedGroupName);
 			DocWriterNewXmlUtils.addAttributeGroupRef(elementTypeBuilder, referencedGroupName);
 		}
+
+		@Override
+		void addThePluralConfigChildGroup(String referencedGroupName) {
+			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}], without adding <sequence><choice>",
+					() -> addingTo.getFullName(), () -> referencedGroupName);
+			DocWriterNewXmlUtils.addGroupRef(elementTypeBuilder, referencedGroupName);
+		}
 	}
 
 	private class ElementOmitter extends ElementBuildingStrategy {
@@ -631,11 +647,14 @@ public class DocWriterNew {
 		@Override
 		void addAttributeGroupRef(String referencedGroupName) {
 		}
+		@Override
+		void addThePluralConfigChildGroup(String referencedGroupName) {
+		}
 	}
 
 	private void addConfigChildren(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
 		if(frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
-			addConfigChildrenWithPluralConfigChildSets(elementBuildingStrategy.getElementTypeBuilder(), frankElement);
+			addConfigChildrenWithPluralConfigChildSets(elementBuildingStrategy, frankElement);
 		} else {
 			addConfigChildrenNoPluralConfigChildSets(elementBuildingStrategy, frankElement);
 		}
@@ -1035,25 +1054,22 @@ public class DocWriterNew {
 		}
 	}
 
-	void addConfigChildrenWithPluralConfigChildSets(XmlBuilder context, FrankElement frankElement) {
+	void addConfigChildrenWithPluralConfigChildSets(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
 		log.trace("Applying algorithm for plural config children for FrankElement [{}]", () -> frankElement.getFullName());
 		if(! frankElement.hasFilledConfigChildSets(version.getChildSelector(), version.getChildRejector())) {
 			FrankElement ancestor = frankElement.getNextPluralConfigChildrenAncestor(version.getChildSelector(), version.getChildRejector());
-			String ancestorGroupName = xsdPluralGroupNameForChildren(ancestor);
 			log.trace("No config children, inheriting from [{}]", () -> ancestor.getFullName());
-			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}], without adding <sequence><choice>",
-					() -> frankElement.getFullName(), () -> ancestorGroupName);
-			DocWriterNewXmlUtils.addGroupRef(context, ancestorGroupName);
+			elementBuildingStrategy.addThePluralConfigChildGroup(xsdPluralGroupNameForChildren(ancestor));
 		} else {
 			log.trace("Adding new group for plural config children for FrankElement [{}]", () -> frankElement.getFullName());
-			addConfigChildrenWithPluralConfigChildSetsUnchecked(context, frankElement);
+			addConfigChildrenWithPluralConfigChildSetsUnchecked(elementBuildingStrategy, frankElement);
 		}
 		log.trace("Done applying algorithm for plural config children for FrankElement [{}]", () -> frankElement.getFullName());
 	}
 
-	private void addConfigChildrenWithPluralConfigChildSetsUnchecked(XmlBuilder context, FrankElement frankElement) {
+	private void addConfigChildrenWithPluralConfigChildSetsUnchecked(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
 		String groupName = xsdPluralGroupNameForChildren(frankElement);
-		DocWriterNewXmlUtils.addGroupRef(context, groupName);
+		elementBuildingStrategy.addThePluralConfigChildGroup(groupName);
 		XmlBuilder builder = createGroup(groupName);
 		xsdComplexItems.add(builder);
 		// Within <xs:sequence><xs:choice> group, we cannot enforce that mandatory config children are
