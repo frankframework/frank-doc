@@ -33,8 +33,8 @@
   </xs:element>
   <xs:complexType name="MasterType">
     <xs:group ref="MasterDeclaredChildGroup" />
-    <xs:attribute ref="active" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Master" use="prohibited" />
+    <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="MasterDeclaredChildGroup">
@@ -75,8 +75,8 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="InterfaceImplType">
-    <xs:attribute ref="active" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.InterfaceImpl" use="prohibited" />
+    <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:simpleType name="frankBoolean">
