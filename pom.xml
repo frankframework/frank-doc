@@ -6,16 +6,15 @@
 	<groupId>org.ibissource</groupId>
 	<artifactId>frank-doc</artifactId>
 
-	<name>frank-doc</name>
+	<name>Frank!Doc</name>
 	<version>1.0-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
-	<!-- This URL does not work yet -->
-	<url>http://maven.ibissource.org/frank-doc</url>
+	<url>https://ibissource.org</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<log4j2.version>2.14.1</log4j2.version>
+		<log4j2.version>2.17.1</log4j2.version>
 		<argLine></argLine> <!-- add empty default argLine so Surefire won't fail when JaCoCo isn't present -->
 	</properties>
 
@@ -40,7 +39,6 @@
 			<organizationUrl>https://wearefrank.nl</organizationUrl>
 		</developer>
 		<developer>
-			<!-- I copied these from the IAF repository, but is this data still correct? -->
 			<name>Niels Meijer</name>
 			<email>niels@ibissource.org</email>
 			<organization>Ibissource</organization>
@@ -52,16 +50,11 @@
 			<organization>Ibissource</organization>
 			<organizationUrl>https://ibissource.org</organizationUrl>
 		</developer>
-		<developer>
-			<name>Jaco de Groot</name>
-			<email>jaco@ibissource.org</email>
-			<organization>Ibissource</organization>
-			<organizationUrl>https://ibissource.org</organizationUrl>
-		</developer>
 	</developers>
 
 	<build>
 		<defaultGoal>install</defaultGoal>
+
 		<testResources>
 			<testResource>
 				<directory>src/test/resources</directory>
@@ -78,42 +71,19 @@
 				<filtering>true</filtering>
 			</testResource>
 		</testResources>
+
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.0</version>
-				<configuration>
-					<archive>
-						<addMavenDescriptor>true</addMavenDescriptor>
-						<manifest>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-					</archive>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.glassfish.copyright</groupId>
@@ -174,18 +144,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
-				<configuration>
-					<doclint>none</doclint>
-				</configuration>
-				<executions>
-					<execution>
-						<id>javadoc</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -203,6 +161,76 @@
 				</executions>
 			</plugin>
 		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.1</version>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.2.0</version>
+					<configuration>
+						<archive>
+							<addMavenDescriptor>true</addMavenDescriptor>
+							<manifest>
+								<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							</manifest>
+						</archive>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.2.1</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.2.0</version>
+					<configuration>
+						<doclint>none</doclint>
+						<useStandardDocletOptions>true</useStandardDocletOptions>
+					</configuration>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+							<configuration>
+								<failOnError>false</failOnError>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+						<skipDeploy>true</skipDeploy>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<dependencies>
@@ -219,7 +247,7 @@
 		<dependency>
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom2</artifactId>
-			<version>2.0.5</version>
+			<version>2.0.6.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish</groupId>
@@ -271,7 +299,7 @@
 			<distributionManagement>
 				<repository>
 					<id>ibissource</id>
-					<url>https://nexus.ibissource.org/content/repositories/thirdparty</url>
+					<url>https://nexus.ibissource.org/content/repositories/releases</url>
 				</repository>
 				<snapshotRepository>
 					<id>ibissource</id>
@@ -290,7 +318,7 @@
 			</repositories>
 		</profile>
 		<profile>
-			<id>ossrh</id>
+			<id>release</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -320,6 +348,9 @@
 					</plugin>
 				</plugins>
 			</build>
+		</profile>
+		<profile>
+			<id>ossrh</id>
 			<distributionManagement>
 				<repository>
 					<id>ossrh</id>
