@@ -17,12 +17,14 @@
     <xs:complexType>
       <xs:group ref="MasterDeclaredChildGroup" />
       <xs:attribute ref="active" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
   <xs:complexType name="MasterType">
     <xs:group ref="MasterDeclaredChildGroup" />
-    <xs:attribute ref="active" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.highest.commonInterface.Master" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="MasterDeclaredChildGroup">
     <xs:sequence>
@@ -61,8 +63,9 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="MyListenerType">
-    <xs:attribute ref="active" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="BElementGroup">
     <xs:choice>

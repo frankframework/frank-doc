@@ -17,6 +17,7 @@ limitations under the License.
 package org.frankframework.frankdoc;
 
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnyAttribute;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnyOtherNamespaceAttribute;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAttribute;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addChoice;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexContent;
@@ -406,8 +407,9 @@ public class DocWriterNew {
 		if(declaredChildGroup != null) {
 			DocWriterNewXmlUtils.addGroupRef(complexType, declaredChildGroup);
 		}
-		log.trace("Adding attribute active explicitly to [{}]", Constants.MODULE_ELEMENT_NAME);
+		log.trace("Adding attribute active explicitly to [{}] and also any attribute in another namespace", () -> Constants.MODULE_ELEMENT_NAME);
 		AttributeTypeStrategy.addAttributeActive(complexType);
+		addAnyOtherNamespaceAttribute(complexType);
 	}
 
 	private String getConfigChildGroupOf(FrankElement frankElement) {
@@ -430,7 +432,11 @@ public class DocWriterNew {
 		log.trace("Enter top FrankElement [{}]", () -> frankElement.getFullName());
 		if(checkNotDefined(frankElement)) {
 			String xsdElementName = frankElement.getSimpleName();
-			recursivelyDefineXsdElementUnchecked(frankElement, xsdElementName);
+			XmlBuilder attributeBuilder = recursivelyDefineXsdElementUnchecked(frankElement, xsdElementName);
+			// Adding the other-namespace attribute cannot be done in recursivelyDefineXsdElementUnchecked() because the anyAttribute must be last.
+			// After recursivelyDefineXsdElementUnchecked(), the "elementRole" attribute is added separately for non-root elements.
+			log.trace("Adding any attribute in another namespace to root element [{}]", () -> frankElement.getFullName());
+			addAnyOtherNamespaceAttribute(attributeBuilder);
 		}
 		log.trace("Leave top FrankElement [{}]", () -> frankElement.getFullName());
 	}
@@ -499,7 +505,15 @@ public class DocWriterNew {
 			addConfigChildren(elementBuildingStrategy, frankElement);
 			log.trace("Visiting attributes for FrankElement [{}]", () -> frankElement.getFullName());
 			addAttributes(elementBuildingStrategy, frankElement);
-			elementBuildingStrategy.addAttributeClassName();
+			if(! frankElement.isAbstract()) {
+				log.trace("Adding attribute className to the element type of [{}]", () -> frankElement.getFullName());
+				addClassNameAttribute(elementBuildingStrategy.getElementTypeBuilder(), frankElement);
+			}
+			if(elementBuildingStrategy.needsSpecialAttributesInElementType()) {
+				log.trace("Adding attribute active and anyAttribute in another namespace to the element type of [{}], because there are no attribute groups to put this in", () -> frankElement.toString());
+				AttributeTypeStrategy.addAttributeActive(elementBuildingStrategy.getElementTypeBuilder());
+				addAnyOtherNamespaceAttribute(elementBuildingStrategy.getElementTypeBuilder());
+			}
 			log.trace("Creating type definitions (or only groups) for Java ancestors of FrankElement [{}]", () -> frankElement.getFullName());
 			recursivelyDefineXsdElementType(frankElement.getNextAncestorThatHasConfigChildren(version.getChildSelector()));
 			recursivelyDefineXsdElementType(frankElement.getNextAncestorThatHasAttributes(version.getChildSelector()));
@@ -535,8 +549,9 @@ public class DocWriterNew {
 	 * outside the scope of this class.
 	 */
 	private abstract class ElementBuildingStrategy {
-		abstract void addAttributeClassName();
-		abstract void addAttributeActive();
+		abstract void onNoAttributes();
+		abstract boolean needsSpecialAttributesInElementType();
+		abstract XmlBuilder getElementTypeBuilder();
 		abstract void addGroupRef(String referencedGroupName);
 		abstract void addAttributeGroupRef(String referencedGroupName);
 		// When there are config children that share a role name (plural config children),
@@ -561,26 +576,30 @@ public class DocWriterNew {
 	}
 
 	private class ElementAdder extends ElementBuildingStrategy {
-		private final XmlBuilder complexType;
+		private final XmlBuilder elementTypeBuilder;
 		private XmlBuilder configChildBuilder;
 		private final FrankElement addingTo;
+		private boolean noAttributes = false;
 
 		ElementAdder(FrankElement frankElement) {
-			complexType = createComplexType(xsdElementType(frankElement));
-			xsdComplexItems.add(complexType);
+			elementTypeBuilder = createComplexType(xsdElementType(frankElement));
+			xsdComplexItems.add(elementTypeBuilder);
 			this.addingTo = frankElement;
 		}
 
 		@Override
-		void addAttributeClassName() {
-			log.trace("Adding attribute [{}] for FrankElement [{}]", () -> CLASS_NAME, () -> addingTo.getFullName());
-			addClassNameAttribute(complexType, addingTo);			
+		void onNoAttributes() {
+			noAttributes = true;
 		}
 
 		@Override
-		void addAttributeActive() {
-			log.trace("Adding attribute active");
-			AttributeTypeStrategy.addAttributeActive(complexType);
+		boolean needsSpecialAttributesInElementType() {
+			return noAttributes;
+		}
+
+		@Override
+		XmlBuilder getElementTypeBuilder() {
+			return elementTypeBuilder;
 		}
 
 		@Override
@@ -591,7 +610,7 @@ public class DocWriterNew {
 			// config children.
 			if(configChildBuilder == null) {
 				log.trace("Create <sequence><choice> to wrap the config children in");
-				configChildBuilder = version.configChildBuilder(complexType);				
+				configChildBuilder = version.configChildBuilder(elementTypeBuilder);				
 			} else {
 				log.trace("Already have <sequence><choice> for the config children");
 			}
@@ -601,23 +620,28 @@ public class DocWriterNew {
 		@Override
 		void addAttributeGroupRef(String referencedGroupName) {
 			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}]", () -> addingTo.getFullName(), () -> referencedGroupName);
-			DocWriterNewXmlUtils.addAttributeGroupRef(complexType, referencedGroupName);
+			DocWriterNewXmlUtils.addAttributeGroupRef(elementTypeBuilder, referencedGroupName);
 		}
 
 		@Override
 		void addThePluralConfigChildGroup(String referencedGroupName) {
 			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}], without adding <sequence><choice>",
 					() -> addingTo.getFullName(), () -> referencedGroupName);
-			DocWriterNewXmlUtils.addGroupRef(complexType, referencedGroupName);
+			DocWriterNewXmlUtils.addGroupRef(elementTypeBuilder, referencedGroupName);
 		}
 	}
 
 	private class ElementOmitter extends ElementBuildingStrategy {
 		@Override
-		void addAttributeClassName() {
+		void onNoAttributes() {
 		}
 		@Override
-		void addAttributeActive() {
+		boolean needsSpecialAttributesInElementType() {
+			return false;
+		}
+		@Override
+		XmlBuilder getElementTypeBuilder() {
+			return null;
 		}
 		@Override
 		void addGroupRef(String referencedGroupName) {
@@ -775,6 +799,9 @@ public class DocWriterNew {
 			XmlBuilder attributeBuilder = recursivelyDefineXsdElementUnchecked(frankElement, xsdElementName);
 			log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, () -> frankElement.getFullName());
 			addAttribute(attributeBuilder, ELEMENT_ROLE, FIXED, role.getRoleName(), version.getRoleNameAttributeUse());
+			// Adding the other-namespace attribute cannot be done in recursivelyDefineXsdElementUnchecked because the anyAttribute must be last.
+			log.trace("Adding any attribute in another namespace to FrankElement [{}]", () -> frankElement.getFullName());
+			addAnyOtherNamespaceAttribute(attributeBuilder);
 			log.trace("Done defining FrankElement [{}], XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
 		} else {
 			log.trace("Already defined in XML Schema");
@@ -1114,7 +1141,7 @@ public class DocWriterNew {
 
 			@Override
 			public void noChildren() {
-				elementBuildingStrategy.addAttributeActive();
+				elementBuildingStrategy.onNoAttributes();
 			}
 
 			@Override
@@ -1132,6 +1159,8 @@ public class DocWriterNew {
 				XmlBuilder attributeGroup = commonAddAttributeGroup();
 				log.trace("Adding attribute active");
 				AttributeTypeStrategy.addAttributeActive(attributeGroup);
+				log.trace("Adding any attribute in another namespace");
+				addAnyOtherNamespaceAttribute(attributeGroup);
 			}
 
 			@Override
@@ -1168,6 +1197,8 @@ public class DocWriterNew {
 				handleSelectedChildren(children, owner);
 				log.trace("Adding attribute active because [{}] has no ancestors with children", () -> owner.getFullName());
 				AttributeTypeStrategy.addAttributeActive(cumulativeBuilder);
+				log.trace("Adding any attribute in another namespace");
+				addAnyOtherNamespaceAttribute(cumulativeBuilder);
 			}
 
 			@Override

@@ -16,6 +16,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:attribute ref="active" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
   <xs:complexType name="MasterType">
@@ -34,6 +35,7 @@
       </xs:simpleType>
     </xs:attribute>
     <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
   <xs:simpleType name="MyEnumAttributeValuesType">
     <xs:restriction base="xs:string">

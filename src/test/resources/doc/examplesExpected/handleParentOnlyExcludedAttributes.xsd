@@ -17,12 +17,14 @@
     <xs:complexType>
       <xs:group ref="MasterDeclaredChildGroup" />
       <xs:attribute ref="active" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
   <xs:complexType name="MasterType">
     <xs:group ref="MasterDeclaredChildGroup" />
-    <xs:attribute ref="active" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.parent.without.attributes.Master" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="MasterDeclaredChildGroup">
     <xs:sequence>
@@ -111,6 +113,7 @@
   </xs:complexType>
   <xs:attributeGroup name="ParentOnlyExcludedAttributesDeclaredAttributeGroup">
     <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">

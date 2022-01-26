@@ -13,6 +13,7 @@
       </xs:sequence>
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.fortype.Start" use="prohibited" />
       <xs:attribute ref="active" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
   <xs:element name="A">
@@ -23,6 +24,7 @@
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.fortype.FirstGrandChild" use="prohibited" />
       <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="a" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
   <xs:element name="B">
@@ -33,6 +35,7 @@
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.fortype.SecondGrandChild" use="prohibited" />
       <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="b" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
   <xs:group name="CElementGroup">
@@ -76,8 +79,9 @@
         <xs:group ref="Child1DeclaredChildGroup" />
       </xs:choice>
     </xs:sequence>
-    <xs:attribute ref="active" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.compatibility.fortype.Child1" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="Child1DeclaredChildGroup">
     <xs:sequence>
