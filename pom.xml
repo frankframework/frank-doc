@@ -3,7 +3,7 @@
 
 	<groupId>org.ibissource</groupId>
 	<artifactId>frank-doc</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
 	<name>Frank!Doc</name>
@@ -13,7 +13,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<log4j2.version>2.17.1</log4j2.version>
-		<argLine></argLine> <!-- add empty default argLine so Surefire won't fail when JaCoCo isn't present -->
+		<argLine /> <!-- add empty default argLine so Surefire won't fail when JaCoCo isn't present -->
 	</properties>
 
 	<organization>
@@ -288,7 +288,7 @@
 		<url>https://github.com/ibissource/frank-doc</url>
 		<connection>scm:git:https://github.com/ibissource/frank-doc.git</connection>
 		<developerConnection>scm:git:https://github.com/ibissource/frank-doc.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>v1.0</tag>
 	</scm>
 
 	<profiles>
