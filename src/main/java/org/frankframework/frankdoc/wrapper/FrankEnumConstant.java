@@ -19,4 +19,5 @@ package org.frankframework.frankdoc.wrapper;
 public interface FrankEnumConstant extends FrankProgramElement {
 	String getJavaDoc();
 	FrankAnnotation getAnnotation(String name);
+	String getJavaDocTag(String tagName);
 }

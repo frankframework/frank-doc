@@ -84,8 +84,7 @@ public abstract class ConfigChild extends ElementChild {
 	}
 
 	private static boolean isDeprecated(FrankMethod m) {
-		FrankAnnotation deprecated = m.getAnnotation(FrankDocletConstants.DEPRECATED);
-		return (deprecated != null);
+		return Feature.DEPRECATED.hasFeature(m);
 	}
 
 	private static FrankAnnotation getIbisDoc(FrankMethod method) {

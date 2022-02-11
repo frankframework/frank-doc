@@ -44,9 +44,6 @@ import org.frankframework.frankdoc.util.LogUtil;
  * @author martijn
  */
 public abstract class ElementChild {
-	static final String JAVADOC_DEFAULT_VALUE_TAG = "@ff.default";
-	static final String JAVADOC_MANDATORY = "@ff.mandatory";
-
 	private static Logger log = LogUtil.getLogger(ElementChild.class);
 
 	private @Getter FrankElement owningElement;
@@ -152,7 +149,7 @@ public abstract class ElementChild {
 			if(value != null) {
 				description = value;
 			}
-			value = method.getJavaDocTagIncludingInherited(JAVADOC_DEFAULT_VALUE_TAG);
+			value = Feature.DEFAULT.featureValueIncludingInherited(method);
 			if(value != null) {
 				defaultValue = value;
 			}

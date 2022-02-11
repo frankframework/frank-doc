@@ -17,7 +17,6 @@ limitations under the License.
 package org.frankframework.frankdoc.wrapper;
 
 public class FrankDocletConstants {
-	public static final String DEPRECATED = "java.lang.Deprecated";
 	public static final String IBISDOC = "nl.nn.adapterframework.doc.IbisDoc";
 	public static final String PROTECTED_ATTRIBUTE = "nl.nn.adapterframework.doc.ProtectedAttribute";
 	public static final String IBISDOCREF = "nl.nn.adapterframework.doc.IbisDocRef";

@@ -121,9 +121,9 @@ public class FrankMethodTest extends TestBase {
 	public void annotationCanBeInheritedFromImplementedInterface() throws FrankDocException {
 		FrankClass clazz = classRepository.findClass(PACKAGE + "Child");
 		FrankMethod method = TestUtil.getDeclaredMethodOf(clazz, "myAnnotatedMethod");
-		FrankAnnotation annotation = method.getAnnotationIncludingInherited(FrankDocletConstants.DEPRECATED);
+		FrankAnnotation annotation = method.getAnnotationIncludingInherited(TestUtil.DEPRECATED);
 		assertNotNull(annotation);
-		assertEquals(FrankDocletConstants.DEPRECATED, annotation.getName());
+		assertEquals(TestUtil.DEPRECATED, annotation.getName());
 	}
 
 	@Test
