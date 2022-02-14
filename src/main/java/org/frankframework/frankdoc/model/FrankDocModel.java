@@ -270,6 +270,7 @@ public class FrankDocModel {
 			}
 			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
 			if(Feature.MANDATORY.hasFeature(method)) {
+				log.trace("Attribute is mandatory");
 				attribute.setMandatory(true);
 			}
 			if(method.getParameterTypes()[0].isEnum()) {
