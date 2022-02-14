@@ -50,7 +50,6 @@ class FrankEnumConstantDoclet implements FrankEnumConstant {
 		return annotationsByName.get(name);
 	}
 
-	// TODO: Cover with unit tests
 	@Override
 	public String getJavaDocTag(String tagName) {
 		Tag[] tags = fieldDoc.tags(tagName);
