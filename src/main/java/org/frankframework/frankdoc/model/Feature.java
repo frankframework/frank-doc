@@ -22,8 +22,8 @@ import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 final class Feature {
-	static final Feature MANDATORY = new Feature("nl.nn.adapterframework.doc.FrankMandatory", "@ff.mandatory");
-	static final Feature DEFAULT = new Feature("nl.nn.adapterframework.doc.DefaultValue", "@ff.default");
+	static final Feature MANDATORY = new Feature("nl.nn.adapterframework.doc.Mandatory", "@ff.mandatory");
+	static final Feature DEFAULT = new Feature("nl.nn.adapterframework.doc.Default", "@ff.default");
 	static final Feature DEPRECATED = new Feature("java.lang.Deprecated", "@deprecated");
 
 	private final String javaAnnotation;

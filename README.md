@@ -178,10 +178,10 @@ Here is again how restricted string attributes are shown, this time with `@EnumL
 
 You see the description in the JavaDoc comment (or [@IbisDoc](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/IbisDoc.java) Java annotation) of the attribute setter (number 1). Enum-restricted string attributes do not show a type (number 2) as said earlier (you may have to scroll to the right to see this), but it is shown for Boolean and integer attributes. Each enum value (number 3) is shown with its description (number 4) that comes from the JavaDoc comment of the enum value.
 
-## Attribute default value (or Java annotation DefaultValue)
+## Attribute default value (or Java annotation @Default)
 
 You can document a default value for attributes. The preferred way to do this is using JavaDoc tag `@ff.default` or using
-Java annotation `nl.nn.adapterframework.doc.DefaultValue`. Using the [@IbisDoc](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/IbisDoc.java) Java annotation is deprecated. You document here what value is assumed if the attribute is not set. Only document this value if this default is applied already by the F!F source code. The `@ff.default` JavaDoc annotation does not alter the behavior of the Frank!Framework.
+Java annotation `nl.nn.adapterframework.doc.Default`. Using the [@IbisDoc](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/IbisDoc.java) Java annotation is deprecated. You document here what value is assumed if the attribute is not set. Only document this value if this default is applied already by the F!F source code. The `@ff.default` JavaDoc annotation does not alter the behavior of the Frank!Framework.
 
 Here is how it looks like in the Java source code:
 
@@ -264,6 +264,6 @@ The default value is `nl.nn.adapterframework.pipes.SenderPipe` in this example. 
 
 **@ff.mandatory:** JavaDoc tag that applies to attribute setters and has no arguments. If an attribute setter has this annotation, then the attribute definition in the strict XSD gets a `use="required"` attribute. Frank developers will see an error in their text editor if they omit the attribute. The compatibility XSD is affected in the same way. Configurations in which the attribute is not set will not load.
 
-**@FrankMandatory:** Java annotation that does the same as JavaDoc tag `@ff.mandatory`. Full name is `nl.nn.adapterframework.doc.FrankMandatory`.
+**@Mandatory:** Java annotation that does the same as JavaDoc tag `@ff.mandatory`. Full name is `nl.nn.adapterframework.doc.Mandatory`.
 
 **@ff.tag:** Add tag to Java class that is shown in the Frank!Doc webapplication. Add the `@ff.tag` JavaDoc tag in the JavaDoc comment above a class. There are two arguments. The first argument is the tag name and the second argument is the tag value.

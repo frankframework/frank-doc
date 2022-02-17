@@ -1,9 +1,9 @@
 package org.frankframework.frankdoc.testtarget.feature;
 
-import nl.nn.adapterframework.doc.DefaultValue;
+import nl.nn.adapterframework.doc.Default;
 
 public class ForMethods {
-	@DefaultValue("myDefault")
+	@Default("myDefault")
 	public void withDefaultWithAnnotation() {
 	}
 

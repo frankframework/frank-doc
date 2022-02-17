@@ -56,7 +56,7 @@ public class FrankMethodDocletTest {
 	@Test
 	public void whenMethodHasDefaultThenReturnedByGetDefaultValueFromJavadoc() {
 		FrankMethod method = getMethodByName(clazz, "setInherited");
-		assertEquals("DefaultValue", method.getJavaDocTag(TestUtil.JAVADOC_DEFAULT_VALUE_TAG));
+		assertEquals("Default", method.getJavaDocTag(TestUtil.JAVADOC_DEFAULT_VALUE_TAG));
 	}
 
 	@Test
