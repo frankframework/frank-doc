@@ -37,8 +37,8 @@ public class FeatureTest {
 	public void whenMethodHasTheJavaAnnotationThenHasFeature() throws Exception {
 		FrankMethod method = findMethod(forMethods, "withDefaultWithAnnotation");
 		FrankMethod inheritedMethod = findMethod(forInheritanceFromMethods, "withDefaultWithAnnotation");
-		assertTrue(Feature.DEFAULT.hasFeature(method));
-		assertTrue(Feature.DEFAULT.hasOrInheritsFeature(inheritedMethod));
+		assertTrue(Feature.DEFAULT.isSetOn(method));
+		assertTrue(Feature.DEFAULT.isEffectivelySetOn(inheritedMethod));
 		assertEquals("myDefault", Feature.DEFAULT.featureValueIncludingInherited(method));
 		assertEquals("myDefault", Feature.DEFAULT.featureValueIncludingInherited(inheritedMethod));
 	}
@@ -47,8 +47,8 @@ public class FeatureTest {
 	public void whenMethodHasTheTagThenHasFeature() throws Exception {
 		FrankMethod method = findMethod(forMethods, "withDefaultByTag");
 		FrankMethod inheritedMethod = findMethod(forInheritanceFromMethods, "withDefaultByTag");
-		assertTrue(Feature.DEFAULT.hasFeature(method));
-		assertTrue(Feature.DEFAULT.hasOrInheritsFeature(inheritedMethod));
+		assertTrue(Feature.DEFAULT.isSetOn(method));
+		assertTrue(Feature.DEFAULT.isEffectivelySetOn(inheritedMethod));
 		assertEquals("myDefault", Feature.DEFAULT.featureValueIncludingInherited(method));
 		assertEquals("myDefault", Feature.DEFAULT.featureValueIncludingInherited(inheritedMethod));
 	}
@@ -57,25 +57,25 @@ public class FeatureTest {
 	public void whenMethodDoesNotHaveTheFeatureThenFeatureNotAssigned() throws Exception {
 		FrankMethod method = findMethod(forMethods, "withoutDefault");
 		FrankMethod inheritedMethod = findMethod(forInheritanceFromMethods, "withoutDefault");
-		assertFalse(Feature.DEFAULT.hasFeature(method));
-		assertFalse(Feature.DEFAULT.hasOrInheritsFeature(inheritedMethod));
+		assertFalse(Feature.DEFAULT.isSetOn(method));
+		assertFalse(Feature.DEFAULT.isEffectivelySetOn(inheritedMethod));
 		assertNull(Feature.DEFAULT.featureValueIncludingInherited(method));
 		assertNull(Feature.DEFAULT.featureValueIncludingInherited(inheritedMethod));
 	}
 
 	@Test
 	public void testForClass() {
-		assertTrue(Feature.DEPRECATED.hasFeature(deprecatedByAnnotation));
-		assertTrue(Feature.DEPRECATED.hasFeature(deprecatedByTag));
-		assertFalse(Feature.DEPRECATED.hasFeature(forMethods));
+		assertTrue(Feature.DEPRECATED.isSetOn(deprecatedByAnnotation));
+		assertTrue(Feature.DEPRECATED.isSetOn(deprecatedByTag));
+		assertFalse(Feature.DEPRECATED.isSetOn(forMethods));
 	}
 
 	@Test
 	public void testForEnum() throws Exception {
 		FrankEnumConstant[] constants = myEnum.getEnumConstants();
-		assertTrue(Feature.DEPRECATED.hasFeature(constants[0]));
-		assertTrue(Feature.DEPRECATED.hasFeature(constants[1]));
-		assertFalse(Feature.DEPRECATED.hasFeature(constants[2]));
+		assertTrue(Feature.DEPRECATED.isSetOn(constants[0]));
+		assertTrue(Feature.DEPRECATED.isSetOn(constants[1]));
+		assertFalse(Feature.DEPRECATED.isSetOn(constants[2]));
 	}
 
 	private FrankMethod findMethod(FrankClass clazz, String methodName) {

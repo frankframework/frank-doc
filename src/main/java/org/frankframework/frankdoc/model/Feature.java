@@ -34,12 +34,12 @@ final class Feature {
 		this.javaDocTag = javaDocTag;
 	}
 
-	boolean hasFeature(FrankMethod method) {
+	boolean isSetOn(FrankMethod method) {
 		return (method.getAnnotation(javaAnnotation) != null)
 				|| (method.getJavaDocTag(javaDocTag) != null);
 	}
 
-	boolean hasOrInheritsFeature(FrankMethod method) throws FrankDocException {
+	boolean isEffectivelySetOn(FrankMethod method) throws FrankDocException {
 		return (method.getAnnotationIncludingInherited(javaAnnotation) != null)
 				|| (method.getJavaDocTagIncludingInherited(javaDocTag) != null);
 	}
@@ -56,12 +56,12 @@ final class Feature {
 		return result;
 	}
 
-	boolean hasFeature(FrankEnumConstant c) throws FrankDocException {
+	boolean isSetOn(FrankEnumConstant c) throws FrankDocException {
 		return (c.getAnnotation(javaAnnotation) != null)
 				|| (c.getJavaDocTag(javaDocTag) != null);
 	}
 
-	boolean hasFeature(FrankClass clazz) {
+	boolean isSetOn(FrankClass clazz) {
 		return (clazz.getAnnotation(javaAnnotation) != null)
 				|| (clazz.getJavaDocTag(javaDocTag) != null);		
 	}

@@ -107,7 +107,7 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	FrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
-		isDeprecated = Feature.DEPRECATED.hasFeature(clazz);
+		isDeprecated = Feature.DEPRECATED.isSetOn(clazz);
 		configChildSets = new LinkedHashMap<>();
 		javadocStrategy.completeFrankElement(this, clazz);
 		handleConfigChildSetterCandidates(clazz);

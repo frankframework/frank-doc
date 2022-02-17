@@ -57,7 +57,7 @@ public class AttributeEnumValue {
 			this.description = javaDoc;
 		}
 		try {
-			if(Feature.DEPRECATED.hasFeature(c)) {
+			if(Feature.DEPRECATED.isSetOn(c)) {
 				this.deprecated = true;
 			}
 		} catch(FrankDocException e) {

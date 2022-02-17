@@ -269,7 +269,7 @@ public class FrankDocModel {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
 			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
-			if(Feature.MANDATORY.hasFeature(method)) {
+			if(Feature.MANDATORY.isSetOn(method)) {
 				log.trace("Attribute is mandatory");
 				attribute.setMandatory(true);
 			}
@@ -409,12 +409,12 @@ public class FrankDocModel {
 	}
 
 	private void documentAttribute(FrankAttribute attribute, FrankMethod method, FrankElement attributeOwner) throws FrankDocException {
-		attribute.setDeprecated(Feature.DEPRECATED.hasFeature(method));
+		attribute.setDeprecated(Feature.DEPRECATED.isSetOn(method));
 		attribute.setDocumented(
 				(method.getAnnotation(FrankDocletConstants.IBISDOC) != null)
 				|| (method.getAnnotation(FrankDocletConstants.IBISDOCREF) != null)
 				|| (method.getJavaDoc() != null)
-				|| Feature.DEFAULT.hasFeature(method)
+				|| Feature.DEFAULT.isSetOn(method)
 				|| (method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REF) != null));
 		log.trace("Attribute: deprecated = [{}], documented = [{}]", () -> attribute.isDeprecated(), () -> attribute.isDocumented());
 		String ffRefReference = method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REF);
@@ -554,7 +554,7 @@ public class FrankDocModel {
 			log.trace("Have ConfigChildSetterDescriptor [{}]", () -> configChildDescriptor.toString());
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);
 			configChild.setAllowMultiple(configChildDescriptor.isAllowMultiple());
-			if(Feature.MANDATORY.hasFeature(frankMethod)) {
+			if(Feature.MANDATORY.isSetOn(frankMethod)) {
 				log.trace("Config child is mandatory");
 				configChild.setMandatory(true);
 			}
