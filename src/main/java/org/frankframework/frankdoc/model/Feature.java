@@ -47,7 +47,6 @@ final class Feature {
 	String featureValueIncludingInherited(FrankMethod method) throws FrankDocException {
 		String result = method.getJavaDocTagIncludingInherited(javaDocTag);
 		if(result == null) {
-			// TODO: Unit test this.
 			FrankAnnotation annotation = method.getAnnotationIncludingInherited(javaAnnotation);
 			if(annotation != null) {
 				result = (String) annotation.getValue();
