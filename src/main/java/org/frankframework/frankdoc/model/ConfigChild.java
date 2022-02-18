@@ -1,5 +1,5 @@
 /* 
-Copyright 2020, 2021 WeAreFrank! 
+Copyright 2020, 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -84,8 +84,7 @@ public abstract class ConfigChild extends ElementChild {
 	}
 
 	private static boolean isDeprecated(FrankMethod m) {
-		FrankAnnotation deprecated = m.getAnnotation(FrankDocletConstants.DEPRECATED);
-		return (deprecated != null);
+		return Feature.DEPRECATED.isSetOn(m);
 	}
 
 	private static FrankAnnotation getIbisDoc(FrankMethod method) {

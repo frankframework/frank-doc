@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -17,7 +17,6 @@ limitations under the License.
 package org.frankframework.frankdoc.wrapper;
 
 public class FrankDocletConstants {
-	public static final String DEPRECATED = "java.lang.Deprecated";
 	public static final String IBISDOC = "nl.nn.adapterframework.doc.IbisDoc";
 	public static final String PROTECTED_ATTRIBUTE = "nl.nn.adapterframework.doc.ProtectedAttribute";
 	public static final String IBISDOCREF = "nl.nn.adapterframework.doc.IbisDocRef";

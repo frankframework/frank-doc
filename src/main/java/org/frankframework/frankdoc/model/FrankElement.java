@@ -1,5 +1,5 @@
 /* 
-Copyright 2020, 2021 WeAreFrank! 
+Copyright 2020, 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -39,7 +39,6 @@ import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 import lombok.AccessLevel;
@@ -108,7 +107,7 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	FrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
-		isDeprecated = clazz.getAnnotation(FrankDocletConstants.DEPRECATED) != null;
+		isDeprecated = Feature.DEPRECATED.isSetOn(clazz);
 		configChildSets = new LinkedHashMap<>();
 		javadocStrategy.completeFrankElement(this, clazz);
 		handleConfigChildSetterCandidates(clazz);

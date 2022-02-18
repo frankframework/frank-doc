@@ -27,7 +27,7 @@ public class FrankClassTest extends TestBase {
 		assertEquals(PACKAGE + "Child", instance.getName());
 		assertTrue(instance.isPublic());
 		assertEquals(0, instance.getAnnotations().length);
-		assertNull(instance.getAnnotation(FrankDocletConstants.DEPRECATED));
+		assertNull(instance.getAnnotation(TestUtil.DEPRECATED));
 		assertFalse(instance.isAbstract());
 		assertEquals("Child", instance.getSimpleName());
 		assertEquals("Parent", instance.getSuperclass().getSimpleName());
@@ -48,10 +48,10 @@ public class FrankClassTest extends TestBase {
 		FrankAnnotation[] annotations = instance.getAnnotations();
 		assertEquals(1, annotations.length);
 		FrankAnnotation annotation = annotations[0];
-		assertEquals(FrankDocletConstants.DEPRECATED, annotation.getName());
-		annotation = instance.getAnnotation(FrankDocletConstants.DEPRECATED);
+		assertEquals(TestUtil.DEPRECATED, annotation.getName());
+		annotation = instance.getAnnotation(TestUtil.DEPRECATED);
 		assertNotNull(annotation);
-		assertEquals(FrankDocletConstants.DEPRECATED, annotation.getName());
+		assertEquals(TestUtil.DEPRECATED, annotation.getName());
 	}
 
 	@Test
@@ -171,7 +171,10 @@ public class FrankClassTest extends TestBase {
 		FrankEnumConstant aConstant = actual[0];
 		assertTrue(aConstant.isPublic());
 		assertNull(aConstant.getAnnotation(JAVA_5_ANNOTATION));
+		assertNull(aConstant.getJavaDocTag(JAVADOC_TAG));
 		assertEquals("", aConstant.getJavaDoc());
+		aConstant = actual[1];
+		assertEquals("MyValue", aConstant.getJavaDocTag(JAVADOC_TAG));
 	}
 
 	@Test

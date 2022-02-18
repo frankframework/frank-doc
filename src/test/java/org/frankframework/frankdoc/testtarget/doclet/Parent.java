@@ -16,7 +16,7 @@ public class Parent {
 	/**
 	 * This is the JavaDoc of method "setInherited".
 	 * @param value
-	 * @ff.default   DefaultValue   
+	 * @ff.default   Default   
 	 */
 	@IbisDoc("50")
 	public void setInherited(String value) {
