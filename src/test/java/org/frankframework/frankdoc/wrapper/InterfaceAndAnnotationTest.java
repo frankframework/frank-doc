@@ -122,9 +122,9 @@ public class InterfaceAndAnnotationTest {
 		assertEquals(1, actualDeclaredMethods.size());
 		FrankMethod method = actualDeclaredMethods.get(0);
 		assertEquals("annotatedMethod", method.getName());
-		assertNull(method.getAnnotation(FrankDocletConstants.DEPRECATED));
-		FrankAnnotation annotation = method.getAnnotationIncludingInherited(FrankDocletConstants.DEPRECATED);
-		assertEquals(FrankDocletConstants.DEPRECATED, annotation.getName());
+		assertNull(method.getAnnotation(TestUtil.DEPRECATED));
+		FrankAnnotation annotation = method.getAnnotationIncludingInherited(TestUtil.DEPRECATED);
+		assertEquals(TestUtil.DEPRECATED, annotation.getName());
 	}
 
 	private List<FrankMethod> getNonJacocoDeclaredMethods(FrankClass clazz) {
@@ -140,9 +140,9 @@ public class InterfaceAndAnnotationTest {
 		assertEquals(1, actualDeclaredMethods.size());
 		FrankMethod method = actualDeclaredMethods.get(0);
 		assertEquals("annotatedMethod", method.getName());
-		assertNull(method.getAnnotation(FrankDocletConstants.DEPRECATED));
-		FrankAnnotation annotation = method.getAnnotationIncludingInherited(FrankDocletConstants.DEPRECATED);
-		assertEquals(FrankDocletConstants.DEPRECATED, annotation.getName());
+		assertNull(method.getAnnotation(TestUtil.DEPRECATED));
+		FrankAnnotation annotation = method.getAnnotationIncludingInherited(TestUtil.DEPRECATED);
+		assertEquals(TestUtil.DEPRECATED, annotation.getName());
 	}
 
 	@Test
@@ -155,8 +155,8 @@ public class InterfaceAndAnnotationTest {
 		assertEquals(String.format("Have methods [%s]",  actualDeclaredMethodsString), 1, actualDeclaredMethods.size());
 		FrankMethod method = actualDeclaredMethods.get(0);
 		assertEquals("annotatedMethod", method.getName());
-		assertNull(method.getAnnotation(FrankDocletConstants.DEPRECATED));
-		FrankAnnotation annotation = method.getAnnotationIncludingInherited(FrankDocletConstants.DEPRECATED);
-		assertEquals(FrankDocletConstants.DEPRECATED, annotation.getName());
+		assertNull(method.getAnnotation(TestUtil.DEPRECATED));
+		FrankAnnotation annotation = method.getAnnotationIncludingInherited(TestUtil.DEPRECATED);
+		assertEquals(TestUtil.DEPRECATED, annotation.getName());
 	}
 }

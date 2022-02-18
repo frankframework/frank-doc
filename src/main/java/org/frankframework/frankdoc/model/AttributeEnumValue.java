@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -18,13 +18,12 @@ package org.frankframework.frankdoc.model;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
-
-import lombok.Getter;
+import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
-import org.frankframework.frankdoc.util.LogUtil;
+
+import lombok.Getter;
 
 public class AttributeEnumValue {
 	private static Logger log = LogUtil.getLogger(AttributeEnumValue.class);
@@ -57,8 +56,12 @@ public class AttributeEnumValue {
 		if(! StringUtils.isBlank(javaDoc)) {
 			this.description = javaDoc;
 		}
-		if(c.getAnnotation(FrankDocletConstants.DEPRECATED) != null) {
-			this.deprecated = true;
+		try {
+			if(Feature.DEPRECATED.isSetOn(c)) {
+				this.deprecated = true;
+			}
+		} catch(FrankDocException e) {
+			log.error("Could not parse Java annotation or JavaDoc tag for enum constant [{}]", c.getName(), e);
 		}
 	}
 }

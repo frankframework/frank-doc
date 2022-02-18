@@ -1,5 +1,5 @@
 /* 
-Copyright 2020, 2021 WeAreFrank! 
+Copyright 2020, 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -269,7 +269,8 @@ public class FrankDocModel {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
 			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
-			if(method.getJavaDocTag(ElementChild.JAVADOC_MANDATORY) != null) {
+			if(Feature.MANDATORY.isSetOn(method)) {
+				log.trace("Attribute is mandatory");
 				attribute.setMandatory(true);
 			}
 			if(method.getParameterTypes()[0].isEnum()) {
@@ -408,12 +409,12 @@ public class FrankDocModel {
 	}
 
 	private void documentAttribute(FrankAttribute attribute, FrankMethod method, FrankElement attributeOwner) throws FrankDocException {
-		attribute.setDeprecated(method.getAnnotation(FrankDocletConstants.DEPRECATED) != null);
+		attribute.setDeprecated(Feature.DEPRECATED.isSetOn(method));
 		attribute.setDocumented(
 				(method.getAnnotation(FrankDocletConstants.IBISDOC) != null)
 				|| (method.getAnnotation(FrankDocletConstants.IBISDOCREF) != null)
 				|| (method.getJavaDoc() != null)
-				|| (method.getJavaDocTag(ElementChild.JAVADOC_DEFAULT_VALUE_TAG) != null)
+				|| Feature.DEFAULT.isSetOn(method)
 				|| (method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REF) != null));
 		log.trace("Attribute: deprecated = [{}], documented = [{}]", () -> attribute.isDeprecated(), () -> attribute.isDocumented());
 		String ffRefReference = method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REF);
@@ -553,7 +554,7 @@ public class FrankDocModel {
 			log.trace("Have ConfigChildSetterDescriptor [{}]", () -> configChildDescriptor.toString());
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);
 			configChild.setAllowMultiple(configChildDescriptor.isAllowMultiple());
-			if(frankMethod.getJavaDocTag(ElementChild.JAVADOC_MANDATORY) != null) {
+			if(Feature.MANDATORY.isSetOn(frankMethod)) {
 				log.trace("Config child is mandatory");
 				configChild.setMandatory(true);
 			}
