@@ -149,7 +149,7 @@ public abstract class ElementChild {
 			if(value != null) {
 				description = value;
 			}
-			value = Feature.DEFAULT.featureValueIncludingInherited(method);
+			value = Feature.DEFAULT.valueOf(method);
 			if(value != null) {
 				defaultValue = value;
 			}

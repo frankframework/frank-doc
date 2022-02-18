@@ -39,8 +39,8 @@ public class FeatureTest {
 		FrankMethod inheritedMethod = findMethod(forInheritanceFromMethods, "withDefaultWithAnnotation");
 		assertTrue(Feature.DEFAULT.isSetOn(method));
 		assertTrue(Feature.DEFAULT.isEffectivelySetOn(inheritedMethod));
-		assertEquals("myDefault", Feature.DEFAULT.featureValueIncludingInherited(method));
-		assertEquals("myDefault", Feature.DEFAULT.featureValueIncludingInherited(inheritedMethod));
+		assertEquals("myDefault", Feature.DEFAULT.valueOf(method));
+		assertEquals("myDefault", Feature.DEFAULT.valueOf(inheritedMethod));
 	}
 
 	@Test
@@ -49,8 +49,8 @@ public class FeatureTest {
 		FrankMethod inheritedMethod = findMethod(forInheritanceFromMethods, "withDefaultByTag");
 		assertTrue(Feature.DEFAULT.isSetOn(method));
 		assertTrue(Feature.DEFAULT.isEffectivelySetOn(inheritedMethod));
-		assertEquals("myDefault", Feature.DEFAULT.featureValueIncludingInherited(method));
-		assertEquals("myDefault", Feature.DEFAULT.featureValueIncludingInherited(inheritedMethod));
+		assertEquals("myDefault", Feature.DEFAULT.valueOf(method));
+		assertEquals("myDefault", Feature.DEFAULT.valueOf(inheritedMethod));
 	}
 
 	@Test
@@ -59,8 +59,8 @@ public class FeatureTest {
 		FrankMethod inheritedMethod = findMethod(forInheritanceFromMethods, "withoutDefault");
 		assertFalse(Feature.DEFAULT.isSetOn(method));
 		assertFalse(Feature.DEFAULT.isEffectivelySetOn(inheritedMethod));
-		assertNull(Feature.DEFAULT.featureValueIncludingInherited(method));
-		assertNull(Feature.DEFAULT.featureValueIncludingInherited(inheritedMethod));
+		assertNull(Feature.DEFAULT.valueOf(method));
+		assertNull(Feature.DEFAULT.valueOf(inheritedMethod));
 	}
 
 	@Test
