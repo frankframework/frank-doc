@@ -74,11 +74,21 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="ChildType">
-    <!-- This is not OK. There should be a ChildDeclaredAttributeGroup that reintroduces the attribute.
-         Otherwise, we miss that the attribute has become mandatory -->
-    <xs:attributeGroup ref="ParentDeclaredAttributeGroup" />
+    <xs:attributeGroup ref="ChildCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Child" use="prohibited" />
   </xs:complexType>
+  <xs:attributeGroup name="ChildDeclaredAttributeGroup">
+    <xs:attribute name="myAttribute" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>This attribute is not mandatory here.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="ChildCumulativeAttributeGroup">
+    <xs:attributeGroup ref="ChildDeclaredAttributeGroup" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:attributeGroup>
   <xs:complexType name="ParentType">
     <xs:attributeGroup ref="ParentDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Parent" use="prohibited" />
