@@ -415,6 +415,7 @@ public class FrankDocModel {
 				|| (method.getAnnotation(FrankDocletConstants.IBISDOCREF) != null)
 				|| (method.getJavaDoc() != null)
 				|| Feature.DEFAULT.isSetOn(method)
+				|| Feature.MANDATORY.isSetOn(method)
 				|| (method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REF) != null));
 		log.trace("Attribute: deprecated = [{}], documented = [{}]", () -> attribute.isDeprecated(), () -> attribute.isDocumented());
 		String ffRefReference = method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REF);
