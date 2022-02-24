@@ -19,15 +19,15 @@ package org.frankframework.frankdoc.model;
 import java.util.function.Predicate;
 
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.DocWriterNew;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankAnnotation;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.frankframework.frankdoc.DocWriterNew;
-import org.frankframework.frankdoc.wrapper.FrankAnnotation;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.frankframework.frankdoc.util.LogUtil;
 
 /**
  * Base class of FrankAttribute and ConfigChild. This class was introduced
@@ -52,7 +52,9 @@ public abstract class ElementChild {
 	 * The value is inherited from ElementChild corresponding to superclass.
 	 */
 	private @Getter @Setter boolean deprecated = false;
-	
+
+	private @Getter boolean mandatory = false;
+
 	/**
 	 * Only set to true if there is an IbisDoc or IbisDocRef annotation for
 	 * this specific ElementChild, excluding inheritance. This property is
@@ -117,6 +119,22 @@ public abstract class ElementChild {
 
 	void clearDefaultValue() {
 		defaultValue = null;
+	}
+
+	void setMandatory(FrankMethod method) {
+		try {
+			if(Feature.OPTIONAL.isEffectivelySetOn(method)) {
+				log.trace("Attribute or config child is optional, setting mandatory=false");
+				mandatory = false;
+			} else if(Feature.MANDATORY.isEffectivelySetOn(method)) {
+				log.trace("Attribute or config child is mandatory");
+				mandatory = true;
+			} else {
+				mandatory = false;
+			}
+		} catch(FrankDocException e) {
+			log.error("Error setting mandatory attribute of [{}]", toString(), e);
+		}
 	}
 
 	void calculateOverriddenFrom() {

@@ -46,7 +46,6 @@ public abstract class ConfigChild extends ElementChild {
 	private static final Comparator<ConfigChild> REMOVE_DUPLICATES_COMPARATOR =
 			SINGLE_ELEMENT_ONLY.thenComparing(c -> ! c.isMandatory());
 
-	private @Getter @Setter boolean mandatory;
 	private @Getter @Setter boolean allowMultiple;
 	private @Getter(AccessLevel.PACKAGE) String methodName;
 	private boolean isOverrideMeaningfulLogged = false;
@@ -150,7 +149,7 @@ public abstract class ConfigChild extends ElementChild {
 	@Override
 	boolean overrideIsMeaningful(ElementChild overriddenFrom) {
 		ConfigChild match = (ConfigChild) overriddenFrom;
-		boolean result = (allowMultiple != match.allowMultiple) || (mandatory != match.mandatory);
+		boolean result = (allowMultiple != match.allowMultiple) || (isMandatory() != match.isMandatory());
 		if(log.isTraceEnabled() && (! isOverrideMeaningfulLogged) && result) {
 			isOverrideMeaningfulLogged = true;
 			log.trace("Config {} overrides {} and changes isAllowMultiple() or isMandatory()", toString(), overriddenFrom.toString());
