@@ -7,4 +7,18 @@ public class Parent implements IInterface {
 	 */
 	public void setMyAttribute(String value) {
 	}
+
+	/**
+	 * @ff.mandatory
+	 * @param value
+	 */
+	public void setMandatoryAttributeThatBecomesOptional(String value) {
+	}
+
+	/**
+	 * @ff.mandatory
+	 * @param value
+	 */
+	public void setMandatoryAttributeThatRemainsMandatory(String value) {
+	}
 }
