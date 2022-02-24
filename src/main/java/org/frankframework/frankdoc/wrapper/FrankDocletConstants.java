@@ -18,7 +18,6 @@ package org.frankframework.frankdoc.wrapper;
 
 public class FrankDocletConstants {
 	public static final String IBISDOC = "nl.nn.adapterframework.doc.IbisDoc";
-	public static final String PROTECTED_ATTRIBUTE = "nl.nn.adapterframework.doc.ProtectedAttribute";
 	public static final String IBISDOCREF = "nl.nn.adapterframework.doc.IbisDocRef";
 	public static final String OBJECT = "java.lang.Object";
 	public static final String STRING = "java.lang.String";

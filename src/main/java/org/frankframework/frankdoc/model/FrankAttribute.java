@@ -56,12 +56,6 @@ public class FrankAttribute extends ElementChild {
 	 */
 	private @Getter @Setter AttributeEnum attributeEnum;
 
-	/**
-	 * This field supports the ff.noAttribute and ff.ignoreTypeMembership JavaDoc tags. 
-	 * These annotations should cause attributes to not exist. If an attribute should
-	 * not exist, then it also should not be inherited.
-	 */
-	private @Getter @Setter(AccessLevel.PACKAGE) boolean excluded = false;
 	private @Getter @Setter(AccessLevel.PACKAGE) boolean mandatory = false;
 
 	public FrankAttribute(String name, FrankElement attributeOwner) {

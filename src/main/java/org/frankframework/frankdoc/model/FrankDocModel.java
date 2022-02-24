@@ -295,10 +295,7 @@ public class FrankDocModel {
 			} catch(FrankDocException e) {
 				log.warn("Attribute [{}] has an invalid default value, [{}], detail [{}]", attribute.toString(), attribute.getDefaultValue(), e.getMessage());
 			}
-			if(method.getAnnotationIncludingInherited(FrankDocletConstants.PROTECTED_ATTRIBUTE) != null) {
-				log.trace("Attribute [{}] has Java annotation {}, marking as excluded", () -> attribute.getName(), () -> FrankDocletConstants.PROTECTED_ATTRIBUTE);
-				attribute.setExcluded(true);
-			}
+			attribute.setExcluded(method);
 			result.add(attribute);
 			log.trace("Attribute [{}] done", () -> attributeName);
 		}
@@ -554,6 +551,7 @@ public class FrankDocModel {
 			}
 			log.trace("Have ConfigChildSetterDescriptor [{}]", () -> configChildDescriptor.toString());
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);
+			configChild.setExcluded(frankMethod);
 			configChild.setAllowMultiple(configChildDescriptor.isAllowMultiple());
 			if(Feature.MANDATORY.isSetOn(frankMethod)) {
 				log.trace("Config child is mandatory");

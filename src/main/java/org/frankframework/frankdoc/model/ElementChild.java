@@ -52,7 +52,13 @@ public abstract class ElementChild {
 	 * The value is inherited from ElementChild corresponding to superclass.
 	 */
 	private @Getter @Setter boolean deprecated = false;
-	
+
+	/**
+	 * This field supports the PROTECTED feature, which causes an attribute or config child to be excluded.
+	 * Also suppresses inheritance. 
+	 */
+	private @Getter boolean excluded = false;
+
 	/**
 	 * Only set to true if there is an IbisDoc or IbisDocRef annotation for
 	 * this specific ElementChild, excluding inheritance. This property is
@@ -115,6 +121,17 @@ public abstract class ElementChild {
 		this.owningElement = owningElement;
 	}
 
+	void setExcluded(FrankMethod method) {
+		try {
+			if(Feature.PROTECTED.isEffectivelySetOn(method)) {
+				log.trace("Attribute or config child [{}] has feature PROTECTED, marking as excluded", () -> toString());
+				excluded = true;
+			}
+		} catch(FrankDocException e) {
+			log.error("Error checking PROTECTED feature on [{}]", () -> toString(), () -> e);
+		}
+	}
+
 	void clearDefaultValue() {
 		defaultValue = null;
 	}
@@ -140,8 +157,6 @@ public abstract class ElementChild {
 	}
 
 	abstract boolean overrideIsMeaningful(ElementChild overriddenFrom);
-
-	abstract boolean isExcluded();
 
 	void setJavaDocBasedDescriptionAndDefault(FrankMethod method) {
 		try {

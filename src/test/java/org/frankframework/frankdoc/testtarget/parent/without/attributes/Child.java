@@ -5,7 +5,7 @@ public class Child extends ParentOnlyExcludedAttributes {
 	}
 
 	/** Not an attribute even though this is a non-technical override.
-	 * The overridden method has annotation ProtectedAttribute, which
+	 * The overridden method has annotation Protected, which
 	 * is inherited.
 	 */
 	public void setNoAttribute(String value) {
