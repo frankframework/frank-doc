@@ -83,6 +83,13 @@
         <xs:documentation>This attribute is not mandatory here.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="mandatoryAttributeThatBecomesOptional" type="xs:string" />
+    <xs:attribute name="mandatoryAttributeThatRemainsMandatory" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>This attribute is documented. It should be re-introduced with the child and it
+ should inherit the @ff.mandatory from the parent.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:attributeGroup>
   <xs:attributeGroup name="ChildCumulativeAttributeGroup">
     <xs:attributeGroup ref="ChildDeclaredAttributeGroup" />
@@ -99,6 +106,8 @@
         <xs:documentation>This attribute is not mandatory here.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="mandatoryAttributeThatBecomesOptional" type="xs:string" use="required" />
+    <xs:attribute name="mandatoryAttributeThatRemainsMandatory" type="xs:string" use="required" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>

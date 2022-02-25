@@ -269,10 +269,7 @@ public class FrankDocModel {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
 			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
-			if(Feature.MANDATORY.isSetOn(method)) {
-				log.trace("Attribute is mandatory");
-				attribute.setMandatory(true);
-			}
+			attribute.setMandatory(method);
 			if(method.getParameterTypes()[0].isEnum()) {
 				log.trace("Attribute [{}] has setter that takes enum: [{}]", () -> attribute.getName(), () -> method.getParameterTypes()[0].toString());
 				attribute.setAttributeType(AttributeType.STRING);
@@ -413,6 +410,7 @@ public class FrankDocModel {
 				|| (method.getJavaDoc() != null)
 				|| Feature.DEFAULT.isSetOn(method)
 				|| Feature.MANDATORY.isSetOn(method)
+				|| Feature.OPTIONAL.isSetOn(method)
 				|| (method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REF) != null));
 		log.trace("Attribute: deprecated = [{}], documented = [{}]", () -> attribute.isDeprecated(), () -> attribute.isDocumented());
 		String ffRefReference = method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REF);
@@ -553,10 +551,7 @@ public class FrankDocModel {
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);
 			configChild.setExcluded(frankMethod);
 			configChild.setAllowMultiple(configChildDescriptor.isAllowMultiple());
-			if(Feature.MANDATORY.isSetOn(frankMethod)) {
-				log.trace("Config child is mandatory");
-				configChild.setMandatory(true);
-			}
+			configChild.setMandatory(frankMethod);
 			if(configChildDescriptor.isForObject()) {
 				log.trace("For FrankElement [{}] method [{}], going to search element role", () -> parent.getFullName(), () -> frankMethod.getName());
 				FrankClass elementTypeClass = (FrankClass) frankMethod.getParameterTypes()[0];

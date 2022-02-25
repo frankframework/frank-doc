@@ -268,4 +268,8 @@ The default value is `nl.nn.adapterframework.pipes.SenderPipe` in this example. 
 
 **@Mandatory:** Java annotation that does the same as JavaDoc tag `@ff.mandatory`. Full name is `nl.nn.adapterframework.doc.Mandatory`.
 
+**@ff.optional:** JavaDoc tag that undoes the effect of an inherited `@ff.mandatory` or `@Mandatory`. Makes an attribute or config child optional even if it overrides a mandatory attribute or config child.
+
+**@Optional:** Java annotation that does the same as JavaDoc tag `@ff.optional`.
+
 **@ff.tag:** Add tag to Java class that is shown in the Frank!Doc webapplication. Add the `@ff.tag` JavaDoc tag in the JavaDoc comment above a class. There are two arguments. The first argument is the tag name and the second argument is the tag value.

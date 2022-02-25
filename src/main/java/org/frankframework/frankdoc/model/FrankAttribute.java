@@ -56,8 +56,6 @@ public class FrankAttribute extends ElementChild {
 	 */
 	private @Getter @Setter AttributeEnum attributeEnum;
 
-	private @Getter @Setter(AccessLevel.PACKAGE) boolean mandatory = false;
-
 	public FrankAttribute(String name, FrankElement attributeOwner) {
 		super(attributeOwner);
 		this.name = name;
@@ -71,6 +69,10 @@ public class FrankAttribute extends ElementChild {
 
 	@Override
 	boolean overrideIsMeaningful(ElementChild overriddenFrom) {
+		// There is no need to check here for a change of the mandatory field. If the inherited
+		// attribute has different mandatory or optional features, then it already gets
+		// documented=true. This is enough to have the attribute again in the declared
+		// attribute group of the child.
 		return false;
 	}
 
@@ -83,7 +85,7 @@ public class FrankAttribute extends ElementChild {
 		if(getDefaultValue() == null) {
 			return;
 		}
-		if(mandatory) {
+		if(isMandatory()) {
 			log.warn("Attribute [{}] is mandatory, but it also has a default value: [{}]", toString(), getDefaultValue());
 		}
 		boolean isExplicitNull = (StringUtils.isBlank(getDefaultValue()) || getDefaultValue().equals("null"));
