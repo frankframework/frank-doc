@@ -79,7 +79,8 @@ class Doclet {
 
 	void writeStrictXsd() throws FrankDocException {
 		log.info("Calculating XSD without deprecated items that allows property references");
-		DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF);
+		// TODO: Add the right Frank!Framework version
+		DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "1.2.3-SNAPSHOT");
 		docWriter.init(XsdVersion.STRICT);
 		String schemaText = docWriter.getSchema();
 		log.info("Done calculating XSD without deprecated items that allows property references, writing it to file {}", xsdStrictFile.getAbsolutePath());
@@ -108,7 +109,8 @@ class Doclet {
 
 	void writeCompatibilityXsd() throws FrankDocException {
 		log.info("Calculating XSD with deprecated items that does not allow property references");
-		DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF_ENUM_VALUES_IGNORE_CASE);
+		// Add the right Frank!Framework version
+		DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF_ENUM_VALUES_IGNORE_CASE, "1.2.3-SNAPSHOT");
 		docWriter.init(XsdVersion.COMPATIBILITY);
 		String schemaText = docWriter.getSchema();
 		log.info("Done calculating XSD with deprecated items that does not allow property references, writing it to file {}", xsdCompatibilityFile.getAbsolutePath());

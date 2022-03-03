@@ -241,11 +241,22 @@ class DocWriterNewXmlUtils {
 
 	static void addDocumentation(XmlBuilder context, String description) {
 		description = checkedFlatten(description);
-		XmlBuilder annotation = new XmlBuilder("annotation", "xs", XML_SCHEMA_URI);
-		context.addSubElement(annotation);
+		XmlBuilder annotation = addAnnotation(context);
 		XmlBuilder documentation = new XmlBuilder("documentation", "xs", XML_SCHEMA_URI);
 		annotation.addSubElement(documentation);
 		documentation.setValue(description);
+	}
+
+	static XmlBuilder addAnnotation(XmlBuilder context) {
+		XmlBuilder annotation = new XmlBuilder("annotation", "xs", XML_SCHEMA_URI);
+		context.addSubElement(annotation);
+		return annotation;
+	}
+
+	static XmlBuilder addAppinfo(XmlBuilder context) {
+		XmlBuilder appinfo = new XmlBuilder("appinfo", "xs", XML_SCHEMA_URI);
+		context.addSubElement(appinfo);
+		return appinfo;
 	}
 
 	private static String checkedFlatten(String text) {

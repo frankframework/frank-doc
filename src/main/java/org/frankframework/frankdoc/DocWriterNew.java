@@ -16,8 +16,10 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnnotation;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnyAttribute;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnyOtherNamespaceAttribute;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAppinfo;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAttribute;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addChoice;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexContent;
@@ -325,10 +327,12 @@ public class DocWriterNew {
 	private ElementGroupManager elementGroupManager;
 	private Set<String> definedAttributeEnumInstances = new HashSet<>();
 	private AttributeTypeStrategy attributeTypeStrategy;
+	private final String frankFrameworkVersion;
 
-	public DocWriterNew(FrankDocModel model, AttributeTypeStrategy attributeTypeStrategy) {
+	public DocWriterNew(FrankDocModel model, AttributeTypeStrategy attributeTypeStrategy, String frankFrameworkVersion) {
 		this.model = model;
 		this.attributeTypeStrategy = attributeTypeStrategy;
+		this.frankFrameworkVersion = frankFrameworkVersion;
 	}
 
 	public void init(XsdVersion version) {
@@ -347,6 +351,7 @@ public class DocWriterNew {
 		XmlBuilder xsdRoot = getXmlSchema();
 		log.trace("Going to create XmlBuilder objects that will be added to the schema root builder afterwards");
 		FrankElement startElement = model.findFrankElement(startClassName);
+		addMetadata(xsdRoot);
 		defineElements(startElement);
 		// This call is needed to address generic element option recursion as
 		// described in the package doc of the model. If there are generic
@@ -359,6 +364,14 @@ public class DocWriterNew {
 		xsdComplexItems.forEach(xsdRoot::addSubElement);
 		log.trace("Populating schema root builder is done. Going to create the XML string to return");
 		return xsdRoot.toXML(true);
+	}
+
+	private void addMetadata(XmlBuilder xsdRoot) {
+		XmlBuilder annotation = addAnnotation(xsdRoot);
+		XmlBuilder appinfo = addAppinfo(annotation);
+		XmlBuilder version = new XmlBuilder("version");
+		appinfo.addSubElement(version);
+		version.setValue(frankFrameworkVersion);
 	}
 
 	// Starts the recursion to generate all XML element definitions.

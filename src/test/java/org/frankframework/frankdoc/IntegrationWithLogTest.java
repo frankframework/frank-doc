@@ -18,7 +18,7 @@ public class IntegrationWithLogTest {
 			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel model = FrankDocModel.populate(digesterRulesUrl, startClassName, classRepository);
-			DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF);
+			DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "1.2.3-SNAPSHOT");
 			docWriter.init(startClassName, XsdVersion.STRICT);
 			String actualXsd = docWriter.getSchema();
 			String expectedXsd = TestUtil.getTestFile("/doc/examplesExpected/testPluralConflictDefaultOption.xsd");
@@ -59,7 +59,7 @@ public class IntegrationWithLogTest {
 			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel model = FrankDocModel.populate(digesterRulesUrl, startClassName, classRepository);
-			DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF);
+			DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "1.2.3-SNAPSHOT");
 			docWriter.init(startClassName, XsdVersion.STRICT);
 			String actualXsd = docWriter.getSchema();
 			String expectedXsd = TestUtil.getTestFile("/doc/examplesExpected/attributeDefault.xsd");
