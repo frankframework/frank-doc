@@ -109,7 +109,7 @@ class Doclet {
 
 	void writeCompatibilityXsd() throws FrankDocException {
 		log.info("Calculating XSD with deprecated items that does not allow property references");
-		// Add the right Frank!Framework version
+		// TODO: Add the right Frank!Framework version
 		DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF_ENUM_VALUES_IGNORE_CASE, "1.2.3-SNAPSHOT");
 		docWriter.init(XsdVersion.COMPATIBILITY);
 		String schemaText = docWriter.getSchema();
@@ -120,7 +120,8 @@ class Doclet {
 
 	void writeJson() throws FrankDocException {
 		log.info("Calculating JSON file with documentation of the F!F");
-		FrankDocJsonFactory jsonFactory = new FrankDocJsonFactory(model);
+		// TODO: Add the right Frank!Framework version
+		FrankDocJsonFactory jsonFactory = new FrankDocJsonFactory(model, "1.2.3-SNAPSHOT");
 		JsonObject jsonObject = jsonFactory.getJson();
 		String jsonText = Utils.jsonPretty(jsonObject.toString());
 		log.info("Done calculating JSON file with documentation of the F!F, writing the text to file {}", jsonFile.getAbsolutePath());

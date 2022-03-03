@@ -146,7 +146,7 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 	public void testJson() throws Exception {
 		assumeNotNull(expectedJsonFileName);
 		FrankDocModel model = createModel();
-		FrankDocJsonFactory jsonFactory = new FrankDocJsonFactory(model);
+		FrankDocJsonFactory jsonFactory = new FrankDocJsonFactory(model, "1.2.3-SNAPSHOT");
 		JsonObject jsonObject = jsonFactory.getJson();
 		String actual = jsonObject.toString();
 		System.out.println(Utils.jsonPretty(actual));

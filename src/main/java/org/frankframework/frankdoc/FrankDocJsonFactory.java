@@ -55,16 +55,19 @@ public class FrankDocJsonFactory {
 	private FrankDocModel model;
 	private JsonBuilderFactory bf;
 	List<FrankElement> elementsOutsideChildren;
+	private final String frankFrameworkVersion;
 
-	public FrankDocJsonFactory(FrankDocModel model) {
+	public FrankDocJsonFactory(FrankDocModel model, String frankFrameworkVersion) {
 		this.model = model;
 		elementsOutsideChildren = new ArrayList<>(model.getElementsOutsideConfigChildren());
 		bf = Json.createBuilderFactory(null);
+		this.frankFrameworkVersion = frankFrameworkVersion;
 	}
 
 	public JsonObject getJson() {
 		try {
 			JsonObjectBuilder result = bf.createObjectBuilder();
+			result.add("metadata", getMetadata());
 			result.add("groups", getGroups());
 			result.add("types", getTypes());
 			result.add("elements", getElements());
@@ -74,6 +77,12 @@ public class FrankDocJsonFactory {
 			log.error("Error producing JSON", e);
 			return null;
 		}
+	}
+
+	private JsonObject getMetadata() {
+		JsonObjectBuilder metadata = bf.createObjectBuilder();
+		metadata.add("version", frankFrameworkVersion);
+		return metadata.build();
 	}
 
 	private JsonArray getGroups() throws JsonException {
