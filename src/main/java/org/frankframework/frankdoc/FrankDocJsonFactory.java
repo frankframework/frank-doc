@@ -67,7 +67,10 @@ public class FrankDocJsonFactory {
 	public JsonObject getJson() {
 		try {
 			JsonObjectBuilder result = bf.createObjectBuilder();
-			result.add("metadata", getMetadata());
+			// If the Frank!Framework version is null, the error is logged elsewhere.
+			if(frankFrameworkVersion != null) {
+				result.add("metadata", getMetadata());
+			}
 			result.add("groups", getGroups());
 			result.add("types", getTypes());
 			result.add("elements", getElements());

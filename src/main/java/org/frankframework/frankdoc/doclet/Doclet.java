@@ -73,6 +73,9 @@ class Doclet {
 	}
 
 	void run() throws FrankDocException {
+		if(frankFrameworkVersion == null) {
+			log.error("No Frank!Framework version set; please configure it in your pom.xml as argument -frankFrameworkVersion");
+		}
 		writeStrictXsd();
 		writeCompatibilityXsd();
 		writeJson();
