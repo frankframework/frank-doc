@@ -118,7 +118,7 @@ public class AttributeTypeStrategyTest {
 	}
 
 	private static String getXsd(AttributeTypeStrategy attributeTypeStrategy, AttributeEnum attributeEnum, FrankAttribute enumTypedAttribute) {
-		XmlBuilder schema = getXmlSchema();
+		XmlBuilder schema = getXmlSchema("1.2.3-SNAPSHOT");
 		XmlBuilder element = addElementWithType(schema, "myElement");
 		XmlBuilder complexType = addComplexType(element);
 		// We do not test mandatory attributes here. Therefore the fourth argument is "false".

@@ -34,10 +34,11 @@ class DocWriterNewXmlUtils {
 	private DocWriterNewXmlUtils() {
 	}
 
-	static XmlBuilder getXmlSchema() {
+	static XmlBuilder getXmlSchema(String version) {
 		XmlBuilder schema = new XmlBuilder("schema", "xs", XML_SCHEMA_URI);
 		schema.addAttribute("xmlns:xs", XML_SCHEMA_URI);
 		schema.addAttribute("elementFormDefault", "qualified");
+		schema.addAttribute("version", version);
 		return schema;
 	}
 

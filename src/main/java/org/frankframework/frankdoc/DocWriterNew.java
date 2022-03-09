@@ -348,10 +348,9 @@ public class DocWriterNew {
 	}
 
 	public String getSchema() {
-		XmlBuilder xsdRoot = getXmlSchema();
+		XmlBuilder xsdRoot = getXmlSchema(frankFrameworkVersion);
 		log.trace("Going to create XmlBuilder objects that will be added to the schema root builder afterwards");
 		FrankElement startElement = model.findFrankElement(startClassName);
-		addMetadata(xsdRoot);
 		defineElements(startElement);
 		// This call is needed to address generic element option recursion as
 		// described in the package doc of the model. If there are generic
@@ -364,14 +363,6 @@ public class DocWriterNew {
 		xsdComplexItems.forEach(xsdRoot::addSubElement);
 		log.trace("Populating schema root builder is done. Going to create the XML string to return");
 		return xsdRoot.toXML(true);
-	}
-
-	private void addMetadata(XmlBuilder xsdRoot) {
-		XmlBuilder annotation = addAnnotation(xsdRoot);
-		XmlBuilder appinfo = addAppinfo(annotation);
-		XmlBuilder version = new XmlBuilder("version");
-		appinfo.addSubElement(version);
-		version.setValue(frankFrameworkVersion);
 	}
 
 	// Starts the recursion to generate all XML element definitions.
