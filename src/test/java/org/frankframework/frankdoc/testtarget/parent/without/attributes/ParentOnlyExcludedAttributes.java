@@ -1,12 +1,12 @@
 package org.frankframework.frankdoc.testtarget.parent.without.attributes;
 
-import nl.nn.adapterframework.doc.ProtectedAttribute;
+import nl.nn.adapterframework.doc.Protected;
 
 public class ParentOnlyExcludedAttributes implements IInterface {
 	/**
 	 * @param value
 	 */
-	@ProtectedAttribute
+	@Protected
 	public void setNoAttribute(String value) {
 	}
 }

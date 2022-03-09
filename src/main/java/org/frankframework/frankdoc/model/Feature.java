@@ -26,6 +26,7 @@ final class Feature {
 	static final Feature OPTIONAL = new Feature("nl.nn.adapterframework.doc.Optional", "@ff.optional");
 	static final Feature DEFAULT = new Feature("nl.nn.adapterframework.doc.Default", "@ff.default");
 	static final Feature DEPRECATED = new Feature("java.lang.Deprecated", "@deprecated");
+	static final Feature PROTECTED = new Feature("nl.nn.adapterframework.doc.Protected", "@ff.protected");
 
 	private final String javaAnnotation;
 	private final String javaDocTag;
