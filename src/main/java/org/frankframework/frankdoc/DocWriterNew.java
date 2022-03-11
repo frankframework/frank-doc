@@ -1,5 +1,5 @@
 /* 
-Copyright 2020, 2021 WeAreFrank! 
+Copyright 2020, 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -16,8 +16,10 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnnotation;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnyAttribute;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnyOtherNamespaceAttribute;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAppinfo;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAttribute;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addChoice;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexContent;
@@ -325,10 +327,12 @@ public class DocWriterNew {
 	private ElementGroupManager elementGroupManager;
 	private Set<String> definedAttributeEnumInstances = new HashSet<>();
 	private AttributeTypeStrategy attributeTypeStrategy;
+	private final String frankFrameworkVersion;
 
-	public DocWriterNew(FrankDocModel model, AttributeTypeStrategy attributeTypeStrategy) {
+	public DocWriterNew(FrankDocModel model, AttributeTypeStrategy attributeTypeStrategy, String frankFrameworkVersion) {
 		this.model = model;
 		this.attributeTypeStrategy = attributeTypeStrategy;
+		this.frankFrameworkVersion = frankFrameworkVersion;
 	}
 
 	public void init(XsdVersion version) {
@@ -344,7 +348,7 @@ public class DocWriterNew {
 	}
 
 	public String getSchema() {
-		XmlBuilder xsdRoot = getXmlSchema();
+		XmlBuilder xsdRoot = getXmlSchema(frankFrameworkVersion);
 		log.trace("Going to create XmlBuilder objects that will be added to the schema root builder afterwards");
 		FrankElement startElement = model.findFrankElement(startClassName);
 		defineElements(startElement);

@@ -1,5 +1,5 @@
 /* 
-Copyright 2020, 2021 WeAreFrank! 
+Copyright 2020, 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -34,10 +34,11 @@ class DocWriterNewXmlUtils {
 	private DocWriterNewXmlUtils() {
 	}
 
-	static XmlBuilder getXmlSchema() {
+	static XmlBuilder getXmlSchema(String version) {
 		XmlBuilder schema = new XmlBuilder("schema", "xs", XML_SCHEMA_URI);
 		schema.addAttribute("xmlns:xs", XML_SCHEMA_URI);
 		schema.addAttribute("elementFormDefault", "qualified");
+		schema.addAttribute("version", version);
 		return schema;
 	}
 
@@ -241,11 +242,22 @@ class DocWriterNewXmlUtils {
 
 	static void addDocumentation(XmlBuilder context, String description) {
 		description = checkedFlatten(description);
-		XmlBuilder annotation = new XmlBuilder("annotation", "xs", XML_SCHEMA_URI);
-		context.addSubElement(annotation);
+		XmlBuilder annotation = addAnnotation(context);
 		XmlBuilder documentation = new XmlBuilder("documentation", "xs", XML_SCHEMA_URI);
 		annotation.addSubElement(documentation);
 		documentation.setValue(description);
+	}
+
+	static XmlBuilder addAnnotation(XmlBuilder context) {
+		XmlBuilder annotation = new XmlBuilder("annotation", "xs", XML_SCHEMA_URI);
+		context.addSubElement(annotation);
+		return annotation;
+	}
+
+	static XmlBuilder addAppinfo(XmlBuilder context) {
+		XmlBuilder appinfo = new XmlBuilder("appinfo", "xs", XML_SCHEMA_URI);
+		context.addSubElement(appinfo);
+		return appinfo;
 	}
 
 	private static String checkedFlatten(String text) {

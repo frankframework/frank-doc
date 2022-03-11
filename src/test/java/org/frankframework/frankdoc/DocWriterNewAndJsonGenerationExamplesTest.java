@@ -115,7 +115,7 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 	public void testXsd() throws Exception {
 		assumeNotNull(expectedXsdFileName);
 		FrankDocModel model = createModel();
-		DocWriterNew docWriter = new DocWriterNew(model, attributeTypeStrategy);
+		DocWriterNew docWriter = new DocWriterNew(model, attributeTypeStrategy, "1.2.3-SNAPSHOT");
 		docWriter.init(startClassName, xsdVersion);
 		String actualXsd = docWriter.getSchema();
 		System.out.println(actualXsd);
@@ -147,7 +147,7 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 	public void testJson() throws Exception {
 		assumeNotNull(expectedJsonFileName);
 		FrankDocModel model = createModel();
-		FrankDocJsonFactory jsonFactory = new FrankDocJsonFactory(model);
+		FrankDocJsonFactory jsonFactory = new FrankDocJsonFactory(model, "1.2.3-SNAPSHOT");
 		JsonObject jsonObject = jsonFactory.getJson();
 		String actual = jsonObject.toString();
 		System.out.println(Utils.jsonPretty(actual));

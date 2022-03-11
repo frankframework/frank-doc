@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -55,16 +55,22 @@ public class FrankDocJsonFactory {
 	private FrankDocModel model;
 	private JsonBuilderFactory bf;
 	List<FrankElement> elementsOutsideChildren;
+	private final String frankFrameworkVersion;
 
-	public FrankDocJsonFactory(FrankDocModel model) {
+	public FrankDocJsonFactory(FrankDocModel model, String frankFrameworkVersion) {
 		this.model = model;
 		elementsOutsideChildren = new ArrayList<>(model.getElementsOutsideConfigChildren());
 		bf = Json.createBuilderFactory(null);
+		this.frankFrameworkVersion = frankFrameworkVersion;
 	}
 
 	public JsonObject getJson() {
 		try {
 			JsonObjectBuilder result = bf.createObjectBuilder();
+			// If the Frank!Framework version is null, the error is logged elsewhere.
+			if(frankFrameworkVersion != null) {
+				result.add("metadata", getMetadata());
+			}
 			result.add("groups", getGroups());
 			result.add("types", getTypes());
 			result.add("elements", getElements());
@@ -74,6 +80,12 @@ public class FrankDocJsonFactory {
 			log.error("Error producing JSON", e);
 			return null;
 		}
+	}
+
+	private JsonObject getMetadata() {
+		JsonObjectBuilder metadata = bf.createObjectBuilder();
+		metadata.add("version", frankFrameworkVersion);
+		return metadata.build();
 	}
 
 	private JsonArray getGroups() throws JsonException {
