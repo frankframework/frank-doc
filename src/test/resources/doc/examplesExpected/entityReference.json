@@ -69,7 +69,7 @@
                 {
                     "multiple":true,
                     "roleName":"module",
-                    "description":"Root element for file you include as entity reference. Does not influence the behavior of your Frank config.",
+                    "description":"Root element for XML files that contain multiple adapters and/or cron jobs and are included as entity reference in another XML file. It does not influence the behavior of your Frank config.",
                     "type":"Module"
                 },
                 {
@@ -83,7 +83,7 @@
         {
             "name":"Module",
             "fullName":"Module",
-            "description":"Root element for file you include as entity reference. Does not influence the behavior of your Frank config.",
+            "description":"Root element for XML files that contain multiple adapters and/or cron jobs and are included as entity reference in another XML file. It does not influence the behavior of your Frank config.",
             "elementNames":[
                 "Module"
             ]
