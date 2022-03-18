@@ -19,10 +19,8 @@ package org.frankframework.frankdoc.model;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankType;
 
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -96,15 +94,6 @@ public class FrankAttribute extends ElementChild {
 		if(isExplicitNull) {
 			log.trace("Attribute [{}] has explicit default value [{}], clearing the default value", () -> toString(), () -> getDefaultValue());
 			clearDefaultValue();
-		}
-	}
-
-	void typeCheckDefaultValue() throws FrankDocException {
-		if(getDefaultValue() != null) {
-			attributeType.typeCheck(getDefaultValue());
-			if((attributeType == AttributeType.STRING) && (attributeEnum != null)) {
-				attributeEnum.typeCheck(getDefaultValue());
-			}
 		}
 	}
 
