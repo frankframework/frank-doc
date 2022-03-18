@@ -17,23 +17,18 @@ limitations under the License.
 package org.frankframework.frankdoc.model;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import lombok.Getter;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 public class AttributeEnum {
 	private @Getter String fullName;
 	private String simpleName;
 	private final @Getter List<AttributeEnumValue> values;
-	private final Set<String> valueSet;
 	private int seq;
 
 	AttributeEnum(String fullName, String simpleName, List<AttributeEnumValue> values, int seq) {
 		this.fullName = fullName;
 		this.values = values;
-		this.valueSet = values.stream().map(v -> v.getLabel()).collect(Collectors.toSet());
 		this.simpleName = simpleName;
 		this.seq = seq;
 	}
@@ -43,13 +38,6 @@ public class AttributeEnum {
 			return String.format("%s%s", simpleName, groupWord);
 		} else {
 			return String.format("%s%s_%d", simpleName, groupWord, seq);
-		}
-	}
-
-	void typeCheck(String value) throws FrankDocException {
-		if(! valueSet.contains(value)) {
-			throw new FrankDocException(String.format("Value [%s] is not allowed, expected one of [%s]", value,
-					valueSet.stream().collect(Collectors.joining(", "))), null);
 		}
 	}
 }
