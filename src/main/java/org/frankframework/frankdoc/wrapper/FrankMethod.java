@@ -17,6 +17,7 @@ limitations under the License.
 package org.frankframework.frankdoc.wrapper;
 
 public interface FrankMethod extends FrankProgramElement {
+	String getSignature();
 	FrankAnnotation[] getAnnotations();
 	FrankAnnotation getAnnotation(String name);
 	FrankClass getDeclaringClass();

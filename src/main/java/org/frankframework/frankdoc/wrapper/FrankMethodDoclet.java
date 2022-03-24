@@ -170,7 +170,8 @@ class FrankMethodDoclet implements FrankMethod {
 		return null;
 	}
 
-	String getSignature() {
+	@Override
+	public String getSignature() {
 		List<String> components = new ArrayList<>();
 		components.add(getName());
 		for(FrankType type: getParameterTypes()) {
