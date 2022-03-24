@@ -43,7 +43,11 @@ public class ObjectConfigChild extends ConfigChild {
 
 	@Override
 	public String toString() {
+		String elementTypeName = "<under construction>";
+		if(elementRole != null) {
+			elementTypeName = getElementType().getSimpleName();
+		}
 		return String.format("%s(%s.%s(%s))",
-				this.getClass().getSimpleName(), getOwningElement().getSimpleName(), getMethodName(), getElementType().getSimpleName());
+				this.getClass().getSimpleName(), getOwningElement().getSimpleName(), getMethodName(), elementTypeName);
 	}
 }
