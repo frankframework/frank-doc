@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -100,6 +100,7 @@ public enum AttributeTypeStrategy {
 
 		private final XmlBuilder addAttribute(XmlBuilder context, String name, AttributeType modelAttributeType, boolean isMandatory,
 				String boolType, String intType) {
+			log.trace("Attribute isMandatory={}", () -> isMandatory);
 			XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
 			attribute.addAttribute("name", name);
 			String typeName = null;
@@ -123,8 +124,12 @@ public enum AttributeTypeStrategy {
 		}
 
 		final XmlBuilder addRestrictedAttribute(XmlBuilder context, FrankAttribute attribute) {
+			log.trace("Attribute isMandatory={}", () -> attribute.isMandatory());
 			AttributeEnum attributeEnum = attribute.getAttributeEnum();
 			XmlBuilder attributeBuilder = addAttributeWithType(context, attribute.getName());
+			if(attribute.isMandatory()) {
+				attributeBuilder.addAttribute("use", "required");
+			}
 			XmlBuilder simpleType = addSimpleType(attributeBuilder);
 			return addUnion(simpleType, attributeEnum.getUniqueName(ATTRIBUTE_VALUES_TYPE), VARIABLE_REFERENCE);
 		}

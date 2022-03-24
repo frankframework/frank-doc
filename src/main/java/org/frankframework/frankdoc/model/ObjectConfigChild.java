@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -43,7 +43,11 @@ public class ObjectConfigChild extends ConfigChild {
 
 	@Override
 	public String toString() {
+		String elementTypeName = "<under construction>";
+		if(elementRole != null) {
+			elementTypeName = getElementType().getSimpleName();
+		}
 		return String.format("%s(%s.%s(%s))",
-				this.getClass().getSimpleName(), getOwningElement().getSimpleName(), getMethodName(), getElementType().getSimpleName());
+				this.getClass().getSimpleName(), getOwningElement().getSimpleName(), getMethodName(), elementTypeName);
 	}
 }

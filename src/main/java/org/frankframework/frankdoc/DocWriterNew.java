@@ -16,10 +16,8 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnnotation;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnyAttribute;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnyOtherNamespaceAttribute;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAppinfo;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAttribute;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addChoice;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexContent;
