@@ -248,16 +248,10 @@ class DocWriterNewXmlUtils {
 		documentation.setValue(description);
 	}
 
-	static XmlBuilder addAnnotation(XmlBuilder context) {
+	private static XmlBuilder addAnnotation(XmlBuilder context) {
 		XmlBuilder annotation = new XmlBuilder("annotation", "xs", XML_SCHEMA_URI);
 		context.addSubElement(annotation);
 		return annotation;
-	}
-
-	static XmlBuilder addAppinfo(XmlBuilder context) {
-		XmlBuilder appinfo = new XmlBuilder("appinfo", "xs", XML_SCHEMA_URI);
-		context.addSubElement(appinfo);
-		return appinfo;
 	}
 
 	private static String checkedFlatten(String text) {
