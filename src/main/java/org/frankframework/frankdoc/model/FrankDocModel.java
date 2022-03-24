@@ -256,7 +256,7 @@ public class FrankDocModel {
 	List<FrankAttribute> createAttributes(FrankClass clazz, FrankElement attributeOwner) throws FrankDocException {
 		log.trace("Creating attributes for FrankElement [{}]", () -> attributeOwner.getFullName());
 		checkForAttributeSetterOverloads(clazz);
-		FrankMethod[] methods = clazz.getDeclaredMethods();
+		FrankMethod[] methods = ReInheritedMethods.declaredAndReinheritedFor(clazz);
 		Map<String, FrankMethod> enumGettersByAttributeName = getEnumGettersByAttributeName(clazz);
 		LinkedHashMap<String, FrankMethod> setterAttributes = getAttributeToMethodMap(methods, "set");
 		Map<String, FrankMethod> getterAttributes = getGetterAndIsserAttributes(methods, attributeOwner);

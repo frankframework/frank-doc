@@ -40,6 +40,12 @@
             "parent":"org.frankframework.frankdoc.testtarget.examples.mandatory.optional.reinherit.Parent",
             "elementNames":[
                 "ChildA"
+            ],
+            "attributes":[
+                {
+                    "name":"reinherited",
+                    "describer":"org.frankframework.frankdoc.testtarget.examples.mandatory.optional.reinherit.Child"
+                }
             ]
         },
         {

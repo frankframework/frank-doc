@@ -43,6 +43,13 @@ import org.frankframework.frankdoc.wrapper.FrankMethod;
  *
  */
 class ReInheritedMethods {
+	public static FrankMethod[] declaredAndReinheritedFor(FrankClass clazz) {
+		List<FrankMethod> result = new ArrayList<>();
+		result.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+		result.addAll(findFor(clazz));
+		return result.toArray(new FrankMethod[] {});
+	}
+
 	public static List<FrankMethod> findFor(FrankClass clazz) {
 		Map<String, FrankClass> interfazes = new LinkedHashMap<>();
 		getInterfaceHierarchy(clazz, interfazes);
