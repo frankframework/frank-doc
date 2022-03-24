@@ -29,7 +29,7 @@
         <xs:union memberTypes="MyEnumAttributeValuesType variableRef" />
       </xs:simpleType>
     </xs:attribute>
-    <xs:attribute name="secondAttribute">
+    <xs:attribute name="secondAttribute" use="required">
       <xs:simpleType>
         <xs:union memberTypes="MyEnumAttributeValuesType variableRef" />
       </xs:simpleType>
