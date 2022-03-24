@@ -18,5 +18,5 @@ package org.frankframework.frankdoc;
 
 class Constants {
 	static final String MODULE_ELEMENT_NAME = "Module";
-	static final String MODULE_ELEMENT_DESCRIPTION = "Root element for file you include as entity reference. Does not influence the behavior of your Frank config.";
+	static final String MODULE_ELEMENT_DESCRIPTION = "Root element for XML files that contain multiple adapters and/or cron jobs and are included as entity reference in another XML file. It does not influence the behavior of your Frank config.";
 }
