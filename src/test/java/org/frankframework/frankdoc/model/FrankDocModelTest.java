@@ -24,21 +24,19 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class FrankDocModelTest {
 	private static final String SIMPLE = "org.frankframework.frankdoc.testtarget.simple";
@@ -355,8 +353,7 @@ public class FrankDocModelTest {
 				"attributeWithInheritedJavaDoc", "attributeWithIbisDocThatOverrulesJavadocDescription",
 				"attributeWithIbisDocLackingDescription", "attributeWithJavaDocDefault",
 				"attributeWithInheritedJavaDocDefault", "attributeWithIbisDocThatOverrulesJavadocDefault",
-				"intAttributeWithStringDefault", "boolAttributeWithStringDefault",
-				"enumAttributeWithInvalidDefault", "attributeSetterTakingEnum"};
+				"attributeSetterTakingEnum"};
 		assertArrayEquals(expectedAttributeNames, actualAttributeNames.toArray(new String[] {}));
 	}
 
@@ -555,42 +552,5 @@ public class FrankDocModelTest {
 		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("attributeWithIbisDocRefReferringIbisDocWithoutDescriptionButWithJavadoc");
 		String expected = "This Javadoc is the description, because the IbisDoc annotation lacks a description.";
 		assertEquals(expected, actual.getDescription());
-	}
-
-	@Test(expected = FrankDocException.class)
-	public void whenIntAttributeHasNonIntDefaultThenExceptionThrown() throws Exception {
-		FrankAttribute attribute = null;
-		try {
-			attribute = checkReflectAttributeCreated("intAttributeWithStringDefault");
-		} catch(FrankDocException e) {
-			fail(e.toString());
-		}
-		assertEquals("This is a string, not an integer", attribute.getDefaultValue());
-		attribute.typeCheckDefaultValue();
-	}
-
-	@Test(expected = FrankDocException.class)
-	public void whenBoolAttributeHasNonBoolDefaultThenExceptionThrown() throws Exception {
-		FrankAttribute attribute = null;
-		try {
-			attribute = checkReflectAttributeCreated("boolAttributeWithStringDefault");
-		} catch(FrankDocException e) {
-			fail(e.toString());
-		}
-		assertEquals("This is a string, not a Boolean", attribute.getDefaultValue());
-		attribute.typeCheckDefaultValue();
-	}
-
-	@Test(expected = FrankDocException.class)
-	public void whenEnumAttributeHasInvalidDefaultThenExceptionThrown() throws Exception {
-		FrankAttribute attribute = null;
-		try {
-			attribute = checkReflectAttributeCreated("enumAttributeWithInvalidDefault");
-		} catch(FrankDocException e) {
-			fail(e.toString());
-		}
-		assertEquals("String that does not match enum values.", attribute.getDefaultValue());
-		assertEquals("org.frankframework.frankdoc.testtarget.reflect.FrankAttributeTarget.FrankAttributeTargetEnum", attribute.getAttributeEnum().getFullName());
-		attribute.typeCheckDefaultValue();
 	}
 }

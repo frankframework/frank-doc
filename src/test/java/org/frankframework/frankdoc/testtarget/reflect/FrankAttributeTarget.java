@@ -130,24 +130,6 @@ public class FrankAttributeTarget extends FrankAttributeTargetParent {
 	public void setAttributeWithIbisDocThatOverrulesJavadocDefault(String value) {
 	}
 
-	/**
-	 * @ff.default This is a string, not an integer
-	 */
-	public void setIntAttributeWithStringDefault(int value) {
-	}
-
-	/**
-	 * @ff.default This is a string, not a Boolean
-	 */
-	public void setBoolAttributeWithStringDefault(boolean value) {
-	}
-
-	/**
-	 * @ff.default String that does not match enum values.
-	 */
-	public void setEnumAttributeWithInvalidDefault(String value) {
-	}
-
 	public FrankAttributeTargetEnum getEnumAttributeWithInvalidDefaultEnum() {
 		return null;
 	}

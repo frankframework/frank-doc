@@ -284,14 +284,8 @@ public class FrankDocModel {
 			}
 			documentAttribute(attribute, method, attributeOwner);
 			log.trace("Default [{}]", () -> attribute.getDefaultValue());
-			try {
-				// Method FrankAttribute.typeCheckDefaultValue() does not write the warning
-				// but only throws an exception. This allows us to test that method
-				// discovers type mismatches.
-				attribute.typeCheckDefaultValue();
-			} catch(FrankDocException e) {
-				log.warn("Attribute [{}] has an invalid default value, [{}], detail [{}]", attribute.toString(), attribute.getDefaultValue(), e.getMessage());
-			}
+			// We do not type-check the default value. The default value is actually a description of the default.
+			// It may not be the literal default value.
 			attribute.setExcluded(method);
 			result.add(attribute);
 			log.trace("Attribute [{}] done", () -> attributeName);
