@@ -16,15 +16,15 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
-import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Deque;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
 class TransitiveImplementedInterfaceBrowser<T> {
-	final Deque<FrankClass> interfazes = new ArrayDeque<>();
+	final List<FrankClass> interfazes = new ArrayList<>();
 	final Set<String> interfaceNamesDone = new HashSet<>();
 
 	TransitiveImplementedInterfaceBrowser(FrankClass clazz) throws FrankDocException {
@@ -32,24 +32,35 @@ class TransitiveImplementedInterfaceBrowser<T> {
 	}
 
 	private void uniquelyEnqueueSuperInterfaces(FrankClass clazz) {
+		uniquelyEnqueueInterfacesOf(clazz);
+		if(! interfazes.isEmpty()) {
+			for(int index = 0; index < interfazes.size(); ++index) {
+				uniquelyEnqueueInterfacesOf(interfazes.get(index));
+			}
+		}
+	}
+
+	private void uniquelyEnqueueInterfacesOf(FrankClass clazz) {
 		Arrays.asList(clazz.getInterfaces()).forEach(this::enqueueUniquely);
 	}
 
 	private void enqueueUniquely(FrankClass clazz) {
 		if(! interfaceNamesDone.contains(clazz.getName())) {
 			interfaceNamesDone.add(clazz.getName());
-			interfazes.addLast(clazz);
+			interfazes.add(clazz);
 		}
 	}
 
+	List<FrankClass> getInterfacesAndTheirAncestors() {
+		return interfazes;
+	}
+
 	T search(Function<FrankClass, T> testFunction) throws FrankDocException {
-		while(! interfazes.isEmpty()) {
-			FrankClass current = interfazes.removeFirst();
-			T result = testFunction.apply(current);
+		for(FrankClass intf: interfazes) {
+			T result = testFunction.apply(intf);
 			if(result != null) {
 				return result;
 			}
-			uniquelyEnqueueSuperInterfaces(current);
 		}
 		return null;
 	}

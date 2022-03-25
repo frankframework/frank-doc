@@ -44,6 +44,7 @@ public interface FrankClass extends FrankType {
 
 	FrankMethod[] getDeclaredMethods();
 	FrankMethod[] getDeclaredAndInheritedMethods();
+	FrankMethod[] getDeclaredMethodsAndMultiplyInheritedPlaceholders();
 
 	FrankEnumConstant[] getEnumConstants();
 	String getJavaDoc();

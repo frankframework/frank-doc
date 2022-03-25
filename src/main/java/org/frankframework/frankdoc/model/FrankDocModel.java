@@ -256,7 +256,7 @@ public class FrankDocModel {
 	List<FrankAttribute> createAttributes(FrankClass clazz, FrankElement attributeOwner) throws FrankDocException {
 		log.trace("Creating attributes for FrankElement [{}]", () -> attributeOwner.getFullName());
 		checkForAttributeSetterOverloads(clazz);
-		FrankMethod[] methods = ReInheritedMethods.declaredAndReinheritedFor(clazz);
+		FrankMethod[] methods = clazz.getDeclaredMethodsAndMultiplyInheritedPlaceholders();
 		Map<String, FrankMethod> enumGettersByAttributeName = getEnumGettersByAttributeName(clazz);
 		LinkedHashMap<String, FrankMethod> setterAttributes = getAttributeToMethodMap(methods, "set");
 		Map<String, FrankMethod> getterAttributes = getGetterAndIsserAttributes(methods, attributeOwner);
@@ -265,6 +265,9 @@ public class FrankDocModel {
 			String attributeName = entry.getKey();
 			log.trace("Attribute [{}]", () -> attributeName);
 			FrankMethod method = entry.getValue();
+			if(log.isTraceEnabled() && method.isMultiplyEnheritedPlaceholder()) {
+				log.trace("Attribute [{}] does not come from a declared method, but may be relevant because of multiple inheritance", attributeName);	
+			}
 			if(getterAttributes.containsKey(attributeName)) {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
@@ -557,6 +560,9 @@ public class FrankDocModel {
 			createdNewConfigChildren = true;
 			parent.getConfigChildrenUnderConstruction().add(configChild);
 			parent.getUnusedConfigChildSetterCandidates().remove(frankMethod);
+			if(log.isTraceEnabled() && frankMethod.isMultiplyEnheritedPlaceholder()) {
+				log.trace("Config child [{}] is not based on a declared method, but was added because of possible multiple inheritance", configChild.toString());
+			}
 			log.trace("Done creating config child {}, the order is {}", () -> configChild.toString(), () -> configChild.getOrder());
 		}
 		log.trace("Done creating config children of FrankElement [{}]", () -> parent.getFullName());

@@ -1,4 +1,4 @@
-package org.frankframework.frankdoc.testtarget.reinherit;
+package org.frankframework.frankdoc.testtarget.wrapper.reinherit;
 
 public interface ImplementedInterface1 extends ParentInterface {
 	void reInherited1();

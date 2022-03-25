@@ -121,7 +121,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	private void handleConfigChildSetterCandidates(FrankClass clazz) {
-		List<FrankMethod> methods = Arrays.asList(clazz.getDeclaredMethods()).stream()
+		List<FrankMethod> methods = Arrays.asList(clazz.getDeclaredMethodsAndMultiplyInheritedPlaceholders()).stream()
 				.filter(FrankMethod::isPublic)
 				.filter(Utils::isConfigChildSetter)
 				.collect(Collectors.toList());

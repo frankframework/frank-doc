@@ -67,11 +67,7 @@ public class FrankAttribute extends ElementChild {
 
 	@Override
 	boolean overrideIsMeaningful(ElementChild overriddenFrom) {
-		// There is no need to check here for a change of the mandatory field. If the inherited
-		// attribute has different mandatory or optional features, then it already gets
-		// documented=true. This is enough to have the attribute again in the declared
-		// attribute group of the child.
-		return false;
+		return isMandatory() != overriddenFrom.isMandatory();
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package org.frankframework.frankdoc.testtarget.reinherit;
+package org.frankframework.frankdoc.testtarget.wrapper.reinherit;
 
 public class Subject extends ParentClass implements ImplementedInterface1, ImplementedInterface2, ParentInterface {
 	@Override

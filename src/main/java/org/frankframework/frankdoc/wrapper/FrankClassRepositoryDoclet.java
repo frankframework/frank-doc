@@ -56,6 +56,7 @@ class FrankClassRepositoryDoclet implements FrankClassRepository {
 			setInterfaceImplementations(c);
 			log.trace("Done examining what interfaces are implemented by class [{}]", () -> c.getName());
 		}
+		classesByName.values().forEach(FrankClassDoclet::addMultiplyInheritedMethodPlaceholders);
 	}
 
 	private FrankClassDoclet findOrCreateClass(ClassDoc classDoc) {

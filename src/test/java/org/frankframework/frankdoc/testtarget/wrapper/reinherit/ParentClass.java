@@ -1,4 +1,4 @@
-package org.frankframework.frankdoc.testtarget.reinherit;
+package org.frankframework.frankdoc.testtarget.wrapper.reinherit;
 
 public class ParentClass {
 	public void reInherited1() {
