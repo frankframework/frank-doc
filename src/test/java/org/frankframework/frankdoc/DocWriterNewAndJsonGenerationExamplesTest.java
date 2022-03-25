@@ -77,12 +77,11 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Master", "mandatoryMultiple.xsd", "mandatoryMultiple.json"},
 			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Master", "mandatoryMultipleCompatibility.xsd", null},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "singular-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Master", "mandatorySingle.xsd", "mandatorySingle.json"},
-			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.mandatory.optional.reinherit.Master", "reinherit.xsd", "reinherit.json"},
 			// Classes in package "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second" are also added although that package is not shown in this table.
 			// See method getAllRequiredPackages().
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master", "nameConflictStrict.xsd", "nameConflict.json"},
 			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master", "nameConflictCompatibility.xsd", null},
-			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master", "makingMandatoryReintroduces.xsd", null},
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master", "makingMandatoryReintroduces.xsd", "makingMandatoryReintroduces.json"},
 		});
 	}
 
