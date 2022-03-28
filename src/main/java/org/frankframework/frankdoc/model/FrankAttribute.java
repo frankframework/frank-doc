@@ -18,6 +18,7 @@ package org.frankframework.frankdoc.model;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankType;
 
@@ -67,7 +68,13 @@ public class FrankAttribute extends ElementChild {
 
 	@Override
 	boolean overrideIsMeaningful(ElementChild overriddenFrom) {
-		return isMandatory() != overriddenFrom.isMandatory();
+		return (isMandatory() != overriddenFrom.isMandatory())
+				|| (isDeprecated() != overriddenFrom.isDeprecated())
+				|| (isExcluded() != overriddenFrom.isExcluded())
+				|| (! Utils.equalsNullable(getDescription(), overriddenFrom.getDescription()))
+				|| (! Utils.equalsNullable(getDefaultValue(), overriddenFrom.getDefaultValue()))
+				|| (! Utils.equalsNullable(getDescribingElement(), ((FrankAttribute) overriddenFrom).getDescribingElement()))
+				|| (! Utils.equalsNullable(getAttributeEnum(), ((FrankAttribute) overriddenFrom).getAttributeEnum()));
 	}
 
 	/**
