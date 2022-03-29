@@ -148,7 +148,8 @@ public class FrankDocModelConfigChildrenTest {
 		assertTrue(actual.isDocumented());
 		assertFalse(actual.isDeprecated());
 		assertEquals("ContainerParent", actual.getOverriddenFrom().getSimpleName());
-		assertTrue(actual.isTechnicalOverride());
+		// The description has changed. Not a technical override
+		assertFalse(actual.isTechnicalOverride());
 		assertTrue(IN_XSD.test(actual));
 	}
 
