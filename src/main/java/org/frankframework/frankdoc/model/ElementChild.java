@@ -176,7 +176,7 @@ public abstract class ElementChild {
 		}
 	}
 
-	boolean overrideIsMeaningful(ElementChild overriddenFrom) {
+	final boolean overrideIsMeaningful(ElementChild overriddenFrom) {
 		// Do not test whether property "deprecated" has changed. If an overridden method is deprecated
 		// and the overriding method is not deprecated, then the override can have no annotations and no
 		// JavaDoc. Then it is still a technical override.
