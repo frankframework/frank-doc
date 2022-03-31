@@ -26,7 +26,7 @@ public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 	}
 
 	@Override
-	public boolean isMultiplyEnheritedPlaceholder() {
+	public boolean isMultiplyInheritedPlaceholder() {
 		return true;
 	}
 

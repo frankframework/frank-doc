@@ -265,7 +265,7 @@ public class FrankDocModel {
 			String attributeName = entry.getKey();
 			log.trace("Attribute [{}]", () -> attributeName);
 			FrankMethod method = entry.getValue();
-			if(log.isTraceEnabled() && method.isMultiplyEnheritedPlaceholder()) {
+			if(log.isTraceEnabled() && method.isMultiplyInheritedPlaceholder()) {
 				log.trace("Attribute [{}] does not come from a declared method, but may be relevant because of multiple inheritance", attributeName);	
 			}
 			if(getterAttributes.containsKey(attributeName)) {
@@ -560,7 +560,7 @@ public class FrankDocModel {
 			createdNewConfigChildren = true;
 			parent.getConfigChildrenUnderConstruction().add(configChild);
 			parent.getUnusedConfigChildSetterCandidates().remove(frankMethod);
-			if(log.isTraceEnabled() && frankMethod.isMultiplyEnheritedPlaceholder()) {
+			if(log.isTraceEnabled() && frankMethod.isMultiplyInheritedPlaceholder()) {
 				log.trace("Config child [{}] is not based on a declared method, but was added because of possible multiple inheritance", configChild.toString());
 			}
 			log.trace("Done creating config child {}, the order is {}", () -> configChild.toString(), () -> configChild.getOrder());
