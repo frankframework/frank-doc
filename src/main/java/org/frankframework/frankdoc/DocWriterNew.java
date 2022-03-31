@@ -393,7 +393,7 @@ public class DocWriterNew {
 		XmlBuilder startElementBuilder = createElementWithType(startElement.getSimpleName());
 		xsdElements.add(startElementBuilder);
 		String elementDescription = startElement.getDescriptionHeader();
-		if(elementDescription != null) {
+		if(! StringUtils.isBlank(elementDescription)) {
 			addDocumentation(startElementBuilder, elementDescription);
 		}
 		XmlBuilder complexType = addComplexType(startElementBuilder);
@@ -454,7 +454,7 @@ public class DocWriterNew {
 		log.trace("FrankElement [{}] has XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
 		XmlBuilder elementBuilder = createElementWithType(xsdElementName);
 		String elementDescription = frankElement.getDescriptionHeader();
-		if(elementDescription != null) {
+		if(! StringUtils.isBlank(elementDescription)) {
 			addDocumentation(elementBuilder, elementDescription);
 		}
 		xsdElements.add(elementBuilder);
@@ -904,7 +904,7 @@ public class DocWriterNew {
 	private void addElementTypeRefToElementGroup(XmlBuilder context, FrankElement frankElement, ElementRole role) {
 		XmlBuilder element = addElementWithType(context, frankElement.getXsdElementName(role));
 		String elementDescription = frankElement.getDescriptionHeader();
-		if(elementDescription != null) {
+		if(! StringUtils.isBlank(elementDescription)) {
 			addDocumentation(element, elementDescription);
 		}
 		XmlBuilder complexType = addComplexType(element);

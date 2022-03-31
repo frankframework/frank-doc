@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Configuration">
     <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.entity.reference.Configuration - The Configuration is placeholder of all configuration objects.</xs:documentation>
+      <xs:documentation>The Configuration is placeholder of all configuration objects.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
@@ -22,7 +22,7 @@
   </xs:element>
   <xs:element name="Adapter">
     <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.entity.reference.Adapter - The Adapter is the central manager in the IBIS Adapterframework, that has knowledge
+      <xs:documentation>The Adapter is the central manager in the IBIS Adapterframework, that has knowledge
  and uses Receiver and a PipeLine.</xs:documentation>
     </xs:annotation>
     <xs:complexType>

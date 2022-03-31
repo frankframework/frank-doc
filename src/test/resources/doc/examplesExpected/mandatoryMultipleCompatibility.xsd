@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Master">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Master</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -18,9 +15,6 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="C">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Child</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Child" use="prohibited" />
       <xs:attribute ref="active" />
@@ -44,9 +38,6 @@
   <xs:group name="AElementGroupBase">
     <xs:choice>
       <xs:element name="InterfaceImplA">
-        <xs:annotation>
-          <xs:documentation>InterfaceImplA - org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.InterfaceImpl used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="InterfaceImplType">

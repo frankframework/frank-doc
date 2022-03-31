@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Master">
     <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.sequence.Master - We test here that the sequence of groups, config children and attributes is right.</xs:documentation>
+      <xs:documentation>We test here that the sequence of groups, config children and attributes is right.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
@@ -21,9 +21,6 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="RoleEpsilon">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.sequence.Opaque</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.sequence.Opaque" use="prohibited" />
       <xs:attribute ref="active" />

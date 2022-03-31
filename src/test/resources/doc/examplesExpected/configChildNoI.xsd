@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Master">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.config.child.no.i.Master</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="MasterType" />
@@ -49,9 +46,7 @@
     <xs:choice>
       <xs:element name="MyA">
         <xs:annotation>
-          <xs:documentation>MyA - org.frankframework.frankdoc.testtarget.config.child.no.i.MyChild used as A
-
-We test that this class produces MyA.</xs:documentation>
+          <xs:documentation>We test that this class produces MyA.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
