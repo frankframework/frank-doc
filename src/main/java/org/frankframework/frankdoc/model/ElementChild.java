@@ -187,7 +187,7 @@ public abstract class ElementChild {
 		result = result || specificOverrideIsMeaningful(overriddenFrom);
 		if(log.isTraceEnabled() && (! isOverrideMeaningfulLogged) && result) {
 			isOverrideMeaningfulLogged = true;
-			log.trace("Config {} overrides {} and changes isAllowMultiple() or isMandatory()", toString(), overriddenFrom.toString());
+			log.trace("ElementChld {} overrides {} and changes something relevant for the Frank!Doc", toString(), overriddenFrom.toString());
 		}
 		return result;
 	}
