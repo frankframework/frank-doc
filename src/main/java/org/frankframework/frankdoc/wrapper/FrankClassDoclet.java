@@ -323,9 +323,9 @@ class FrankClassDoclet implements FrankClass {
 
 	void addMultiplyInheritedMethodPlaceholders() {
 		try {
-			List<FrankClass> interfazes = new TransitiveImplementedInterfaceBrowser<Object>(this).getInterfacesAndTheirAncestors();
-			if(! interfazes.isEmpty()) {
-				multiplyInheritedMethodPlaceholders = getReinheritedMethods(interfazes).stream()
+			List<FrankClass> interfaces = new TransitiveImplementedInterfaceBrowser<Object>(this).getInterfacesAndTheirAncestors();
+			if(! interfaces.isEmpty()) {
+				multiplyInheritedMethodPlaceholders = getReinheritedMethods(interfaces).stream()
 						.map(m -> (FrankMethodDoclet) m)
 						.map(m -> new MultiplyInheritedMethodPlaceholder(m, this))
 						.collect(Collectors.toList());
