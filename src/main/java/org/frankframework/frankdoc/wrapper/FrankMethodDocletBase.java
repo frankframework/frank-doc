@@ -16,12 +16,20 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Function;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
 
 import com.sun.javadoc.MethodDoc;
 
 abstract class FrankMethodDocletBase implements FrankMethod {
+	private static Logger log = LogUtil.getLogger(FrankMethodDocletBase.class);
+
 	private final FrankClassDoclet declaringClass;
+	private final Set<MethodDoc> warnedMethodsNotInJavaDoc = new HashSet<>();
 
 	FrankMethodDocletBase(FrankClassDoclet declaringClass) {
 		this.declaringClass = declaringClass;
@@ -69,12 +77,12 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 			if(overriddenMethod != null) {
 				return overriddenMethod.searchExcludingImplementedInterfaces(getter);
 			} else {
-				// The overridden method is not included in the produced JavaDocs. This
-				// means that the overridden method is not public. Therefore it is not
-				// relevant.
-				//
-				// This empty else branch is covered by test
-				// FrankMethodOverrideTest.whenPackagePrivateOverriddenByPublicThenOnlyChildMethodConsidered()
+				if(! warnedMethodsNotInJavaDoc.contains(overriddenMethodDoc)) {
+					warnedMethodsNotInJavaDoc.add(overriddenMethodDoc);
+					// To see this warning, run test FrankMethodOverrideTest.whenPackagePrivateOverriddenByPublicThenOnlyChildMethodConsidered().
+					log.warn("Class {} inherits method {}, but no annotations or JavaDocs are known because the overridden method is not public.",
+							() -> declaringClass.getName(), () -> overriddenMethodDoc.qualifiedName());
+				}
 			}
 		}
 		return null;
