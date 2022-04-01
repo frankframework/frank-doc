@@ -17,6 +17,19 @@ package org.frankframework.frankdoc.wrapper;
 
 import com.sun.javadoc.MethodDoc;
 
+/**
+ * Placeholder for a method that is inherited from the superclass and also from interfaces in the
+ * <code>implements</code> clause of a Java class.
+ * 
+ * There is no corresponding {@link com.sun.javadoc.MethodDoc} because this placeholder does not
+ * correspond to a declared Java method. An object of this type corresponds to an inherited
+ * method that may be different from the inherited method because of inheritance from the
+ * interfaces implemented by the class. The Frank!Doc needs this placeholder to see that a
+ * derived attribute or config child may differ from the overridden attribute or config child.
+ * 
+ * @author martijn
+ *
+ */
 public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 	private FrankMethodDoclet classAncestorMethod;
 
@@ -35,11 +48,17 @@ public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 		return classAncestorMethod.getSignature();
 	}
 
+	/**
+	 * This is not a declared method, so it has no annotations.
+	 */
 	@Override
 	public FrankAnnotation[] getAnnotations() {
 		return new FrankAnnotation[] {};
 	}
 
+	/**
+	 * This is not a declared method, so it has no annotations.
+	 */
 	@Override
 	public FrankAnnotation getAnnotation(String name) {
 		return null;
@@ -65,11 +84,17 @@ public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 		return classAncestorMethod.isVarargs();
 	}
 
+	/**
+	 * This is not a declared method, so it has no JavaDoc.
+	 */
 	@Override
 	public String getJavaDoc() {
 		return null;
 	}
 
+	/**
+	 * This is not a declared method, so it has no JavaDoc tags.
+	 */
 	@Override
 	public String getJavaDocTag(String tagName) {
 		return null;
