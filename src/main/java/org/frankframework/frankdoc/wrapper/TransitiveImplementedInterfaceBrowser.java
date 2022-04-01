@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 class TransitiveImplementedInterfaceBrowser<T> {
-	final List<FrankClass> interfazes = new ArrayList<>();
+	final List<FrankClass> interfaces = new ArrayList<>();
 	final Set<String> interfaceNamesDone = new HashSet<>();
 
 	TransitiveImplementedInterfaceBrowser(FrankClass clazz) throws FrankDocException {
@@ -33,9 +33,9 @@ class TransitiveImplementedInterfaceBrowser<T> {
 
 	private void uniquelyEnqueueSuperInterfaces(FrankClass clazz) {
 		uniquelyEnqueueInterfacesOf(clazz);
-		if(! interfazes.isEmpty()) {
-			for(int index = 0; index < interfazes.size(); ++index) {
-				uniquelyEnqueueInterfacesOf(interfazes.get(index));
+		if(! interfaces.isEmpty()) {
+			for(int index = 0; index < interfaces.size(); ++index) {
+				uniquelyEnqueueInterfacesOf(interfaces.get(index));
 			}
 		}
 	}
@@ -47,16 +47,16 @@ class TransitiveImplementedInterfaceBrowser<T> {
 	private void enqueueUniquely(FrankClass clazz) {
 		if(! interfaceNamesDone.contains(clazz.getName())) {
 			interfaceNamesDone.add(clazz.getName());
-			interfazes.add(clazz);
+			interfaces.add(clazz);
 		}
 	}
 
 	List<FrankClass> getInterfacesAndTheirAncestors() {
-		return interfazes;
+		return interfaces;
 	}
 
 	T search(Function<FrankClass, T> testFunction) throws FrankDocException {
-		for(FrankClass intf: interfazes) {
+		for(FrankClass intf: interfaces) {
 			T result = testFunction.apply(intf);
 			if(result != null) {
 				return result;

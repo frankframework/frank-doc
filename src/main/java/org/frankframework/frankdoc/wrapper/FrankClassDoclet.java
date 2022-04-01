@@ -340,12 +340,12 @@ class FrankClassDoclet implements FrankClass {
 		}
 	}
 
-	List<FrankMethod> getReinheritedMethods(List<FrankClass> interfazes) {
+	List<FrankMethod> getReinheritedMethods(List<FrankClass> interfaces) {
 		List<FrankMethod> result = new ArrayList<>();
 		Set<String> declaredMethodSignatures = Arrays.asList(getDeclaredMethods()).stream()
 				.map(FrankMethod::getSignature)
 				.collect(Collectors.toSet());
-		Set<String> methodSignaturesFromImplementedInterfaces = interfazes.stream()
+		Set<String> methodSignaturesFromImplementedInterfaces = interfaces.stream()
 				.flatMap(FrankClassDoclet::methodSignaturesOf)
 				.collect(Collectors.toSet());
 		for(FrankMethod candidate: getDeclaredAndInheritedMethods()) {
