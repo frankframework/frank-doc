@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Master">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.deprecated.enumValue.Master</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="MasterType" />

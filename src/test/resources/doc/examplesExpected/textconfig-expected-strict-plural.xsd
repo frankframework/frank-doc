@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Start">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.textconfig.plural.Start</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="StartType" />
@@ -72,9 +69,6 @@
   <xs:group name="BElementGroupBase">
     <xs:choice>
       <xs:element name="GrandChild1ImplB">
-        <xs:annotation>
-          <xs:documentation>GrandChild1ImplB - org.frankframework.frankdoc.testtarget.textconfig.plural.GrandChild1Impl used as B</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="GrandChild1ImplType">
@@ -93,9 +87,6 @@
   <xs:group name="BElementGroupBase_2">
     <xs:choice>
       <xs:element name="GrandChild2ImplB">
-        <xs:annotation>
-          <xs:documentation>GrandChild2ImplB - org.frankframework.frankdoc.testtarget.textconfig.plural.GrandChild2Impl used as B</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="GrandChild2ImplType">
@@ -114,9 +105,6 @@
   <xs:group name="AElementGroupBase">
     <xs:choice>
       <xs:element name="Child1ImplA">
-        <xs:annotation>
-          <xs:documentation>Child1ImplA - org.frankframework.frankdoc.testtarget.textconfig.plural.Child1Impl used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Child1ImplType">
@@ -144,9 +132,6 @@
   <xs:group name="AElementGroupBase_2">
     <xs:choice>
       <xs:element name="Child2ImplA">
-        <xs:annotation>
-          <xs:documentation>Child2ImplA - org.frankframework.frankdoc.testtarget.textconfig.plural.Child2Impl used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Child2ImplType">

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Master">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.type.defaultElement.Master</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="MasterType" />
@@ -66,9 +63,6 @@
   <xs:group name="BElementGroupBase">
     <xs:choice>
       <xs:element name="TheDefaultB">
-        <xs:annotation>
-          <xs:documentation>TheDefaultB - org.frankframework.frankdoc.testtarget.type.defaultElement.TheDefault used as B</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="TheDefaultType">
@@ -100,9 +94,6 @@
   <xs:group name="CElementGroupBase">
     <xs:choice>
       <xs:element name="SomeElementC">
-        <xs:annotation>
-          <xs:documentation>SomeElementC - org.frankframework.frankdoc.testtarget.type.defaultElement.SomeElement used as C</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="SomeElementType">

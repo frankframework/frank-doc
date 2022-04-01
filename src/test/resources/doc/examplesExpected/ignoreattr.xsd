@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Master">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Master</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="MasterType" />
@@ -47,9 +44,6 @@
   <xs:group name="AElementGroupBase">
     <xs:choice>
       <xs:element name="GrandChildA">
-        <xs:annotation>
-          <xs:documentation>GrandChildA - org.frankframework.frankdoc.testtarget.examples.ignore.attributes.GrandChild used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="GrandChildType">
@@ -59,9 +53,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="NotSuppressingChildA">
-        <xs:annotation>
-          <xs:documentation>NotSuppressingChildA - org.frankframework.frankdoc.testtarget.examples.ignore.attributes.NotSuppressingChild used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="NotSuppressingChildType">
@@ -71,9 +62,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="ParentA">
-        <xs:annotation>
-          <xs:documentation>ParentA - org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Parent used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="ParentType">
@@ -83,9 +71,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="SuppressingChildA">
-        <xs:annotation>
-          <xs:documentation>SuppressingChildA - org.frankframework.frankdoc.testtarget.examples.ignore.attributes.SuppressingChild used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="SuppressingChildType">
@@ -166,9 +151,6 @@
   <xs:group name="BElementGroupBase">
     <xs:choice>
       <xs:element name="GrandChildB">
-        <xs:annotation>
-          <xs:documentation>GrandChildB - org.frankframework.frankdoc.testtarget.examples.ignore.attributes.GrandChild used as B</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="GrandChildType">
@@ -178,9 +160,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="SuppressingChildB">
-        <xs:annotation>
-          <xs:documentation>SuppressingChildB - org.frankframework.frankdoc.testtarget.examples.ignore.attributes.SuppressingChild used as B</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="SuppressingChildType">

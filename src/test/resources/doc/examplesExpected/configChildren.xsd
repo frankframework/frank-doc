@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Master">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.config.children.Master</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="MasterType" />
@@ -70,9 +67,6 @@
   <xs:group name="AElementGroupBase_2">
     <xs:choice>
       <xs:element name="My1A">
-        <xs:annotation>
-          <xs:documentation>My1A - org.frankframework.frankdoc.testtarget.examples.config.children.My1 used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="My1Type">
@@ -91,9 +85,6 @@
   <xs:group name="AElementGroupBase_3">
     <xs:choice>
       <xs:element name="My2A">
-        <xs:annotation>
-          <xs:documentation>My2A - org.frankframework.frankdoc.testtarget.examples.config.children.My2 used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="My2Type">
@@ -126,9 +117,6 @@
   <xs:group name="BElementGroupBase">
     <xs:choice>
       <xs:element name="My1B">
-        <xs:annotation>
-          <xs:documentation>My1B - org.frankframework.frankdoc.testtarget.examples.config.children.My1 used as B</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="My1Type">
@@ -142,9 +130,6 @@
   <xs:group name="BElementGroupBase_2">
     <xs:choice>
       <xs:element name="My2B">
-        <xs:annotation>
-          <xs:documentation>My2B - org.frankframework.frankdoc.testtarget.examples.config.children.My2 used as B</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="My2Type">
@@ -171,9 +156,6 @@
   <xs:group name="CElementGroupBase">
     <xs:choice>
       <xs:element name="My1C">
-        <xs:annotation>
-          <xs:documentation>My1C - org.frankframework.frankdoc.testtarget.examples.config.children.My1 used as C</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="My1Type">
@@ -200,9 +182,6 @@
   <xs:group name="DElementGroupBase">
     <xs:choice>
       <xs:element name="My1D">
-        <xs:annotation>
-          <xs:documentation>My1D - org.frankframework.frankdoc.testtarget.examples.config.children.My1 used as D</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="My1Type">
@@ -216,9 +195,6 @@
   <xs:group name="AElementGroupBase">
     <xs:choice>
       <xs:element name="Level1A">
-        <xs:annotation>
-          <xs:documentation>Level1A - org.frankframework.frankdoc.testtarget.examples.config.children.Level1 used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Level1Type">
@@ -228,9 +204,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="Level2A">
-        <xs:annotation>
-          <xs:documentation>Level2A - org.frankframework.frankdoc.testtarget.examples.config.children.Level2 used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Level2Type">
@@ -240,9 +213,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="Level3A">
-        <xs:annotation>
-          <xs:documentation>Level3A - org.frankframework.frankdoc.testtarget.examples.config.children.Level3 used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Level3Type">
@@ -252,9 +222,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="LevelWithCumulativeA">
-        <xs:annotation>
-          <xs:documentation>LevelWithCumulativeA - org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulative used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="LevelWithCumulativeType">
@@ -264,9 +231,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="LevelWithCumulativeNoReuseA">
-        <xs:annotation>
-          <xs:documentation>LevelWithCumulativeNoReuseA - org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulativeNoReuse used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="LevelWithCumulativeNoReuseType">

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Master">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.config.children2.Master</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="MasterType" />
@@ -21,9 +18,6 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="C">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.config.children2.C</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children2.C" use="prohibited" />
       <xs:attribute ref="active" />
@@ -32,9 +26,6 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="D">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.config.children2.D</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children2.D" use="prohibited" />
       <xs:attribute ref="active" />
@@ -93,9 +84,6 @@
   <xs:group name="AElementGroupBase">
     <xs:choice>
       <xs:element name="Level1A">
-        <xs:annotation>
-          <xs:documentation>Level1A - org.frankframework.frankdoc.testtarget.examples.config.children2.Level1 used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Level1Type">
@@ -105,9 +93,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="Level2A">
-        <xs:annotation>
-          <xs:documentation>Level2A - org.frankframework.frankdoc.testtarget.examples.config.children2.Level2 used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Level2Type">
@@ -117,9 +102,6 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="Level3A">
-        <xs:annotation>
-          <xs:documentation>Level3A - org.frankframework.frankdoc.testtarget.examples.config.children2.Level3 used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="Level3Type">

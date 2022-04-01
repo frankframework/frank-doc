@@ -392,7 +392,10 @@ public class DocWriterNew {
 		log.trace("Adding element [{}] as type reference", () -> startElement.getSimpleName());
 		XmlBuilder startElementBuilder = createElementWithType(startElement.getSimpleName());
 		xsdElements.add(startElementBuilder);
-		addDocumentation(startElementBuilder, getElementDescription(startElement));
+		String elementDescription = startElement.getDescriptionHeader();
+		if(! StringUtils.isBlank(elementDescription)) {
+			addDocumentation(startElementBuilder, elementDescription);
+		}
 		XmlBuilder complexType = addComplexType(startElementBuilder);
 		XmlBuilder complexContent = addComplexContent(complexType);
 		addExtension(complexContent, xsdElementType(startElement));
@@ -450,7 +453,10 @@ public class DocWriterNew {
 	private XmlBuilder recursivelyDefineXsdElementUnchecked(FrankElement frankElement, String xsdElementName) {
 		log.trace("FrankElement [{}] has XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
 		XmlBuilder elementBuilder = createElementWithType(xsdElementName);
-		addDocumentation(elementBuilder, getElementDescription(frankElement));
+		String elementDescription = frankElement.getDescriptionHeader();
+		if(! StringUtils.isBlank(elementDescription)) {
+			addDocumentation(elementBuilder, elementDescription);
+		}
 		xsdElements.add(elementBuilder);
 		XmlBuilder complexType = addComplexType(elementBuilder);
 		log.trace("Adding cumulative config chidren of FrankElement [{}] to XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
@@ -486,14 +492,6 @@ public class DocWriterNew {
 		log.trace("Adding attribute active for FrankElement [{}]", () -> frankElement.getFullName());
 		AttributeTypeStrategy.addAttributeActive(complexType);
 		return complexType;
-	}
-
-	private String getElementDescription(FrankElement frankElement) {
-		if(StringUtils.isBlank(frankElement.getDescriptionHeader())) {
-			return frankElement.getFullName();
-		} else {
-			return String.format("%s - %s", frankElement.getFullName(), frankElement.getDescriptionHeader());
-		}
 	}
 
 	private void recursivelyDefineXsdElementType(FrankElement frankElement) {
@@ -905,21 +903,15 @@ public class DocWriterNew {
 
 	private void addElementTypeRefToElementGroup(XmlBuilder context, FrankElement frankElement, ElementRole role) {
 		XmlBuilder element = addElementWithType(context, frankElement.getXsdElementName(role));
-		addDocumentation(element, getElementDescription(frankElement, role));
+		String elementDescription = frankElement.getDescriptionHeader();
+		if(! StringUtils.isBlank(elementDescription)) {
+			addDocumentation(element, elementDescription);
+		}
 		XmlBuilder complexType = addComplexType(element);
 		XmlBuilder complexContent = addComplexContent(complexType);
 		XmlBuilder extension = addExtension(complexContent, xsdElementType(frankElement));
 		log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, () -> frankElement.getFullName());
 		addAttribute(extension, ELEMENT_ROLE, FIXED, role.getRoleName(), version.getRoleNameAttributeUse());
-	}
-
-	String getElementDescription(FrankElement frankElement, ElementRole role) {
-		if(StringUtils.isBlank(frankElement.getDescriptionHeader())) {
-			return String.format("%s - %s used as %s", frankElement.getXsdElementName(role), frankElement.getFullName(), Utils.toUpperCamelCase(role.getRoleName()));
-		} else {
-			return String.format("%s - %s used as %s\n\n%s",
-					frankElement.getXsdElementName(role), frankElement.getFullName(), Utils.toUpperCamelCase(role.getRoleName()), frankElement.getDescriptionHeader());
-		}
 	}
 
 	private void addElementGroupGenericOption(XmlBuilder context, List<ElementRole> roles) {

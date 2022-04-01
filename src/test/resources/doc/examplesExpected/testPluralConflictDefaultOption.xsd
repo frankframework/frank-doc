@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Master">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Master</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="MasterType" />
@@ -79,9 +76,6 @@
   <xs:group name="AElementGroupBase_2">
     <xs:choice>
       <xs:element name="MyElementA">
-        <xs:annotation>
-          <xs:documentation>MyElementA - org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.MyElement used as A</xs:documentation>
-        </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="MyElementType">

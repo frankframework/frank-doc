@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="A">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.pattern.violation.A</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -16,9 +13,6 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="B">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.pattern.violation.B</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -33,9 +27,6 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="C">
-    <xs:annotation>
-      <xs:documentation>org.frankframework.frankdoc.testtarget.examples.pattern.violation.C</xs:documentation>
-    </xs:annotation>
     <xs:complexType>
       <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.pattern.violation.C" use="prohibited" />
       <xs:attribute ref="active" />
