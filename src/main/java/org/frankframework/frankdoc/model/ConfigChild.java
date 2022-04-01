@@ -48,7 +48,6 @@ public abstract class ConfigChild extends ElementChild {
 
 	private @Getter @Setter boolean allowMultiple;
 	private @Getter(AccessLevel.PACKAGE) String methodName;
-	private boolean isOverrideMeaningfulLogged = false;
 
 	ConfigChild(FrankElement owningElement, FrankMethod method) {
 		super(owningElement);
@@ -138,14 +137,9 @@ public abstract class ConfigChild extends ElementChild {
 	}
 
 	@Override
-	boolean overrideIsMeaningful(ElementChild overriddenFrom) {
+	boolean specificOverrideIsMeaningful(ElementChild overriddenFrom) {
 		ConfigChild match = (ConfigChild) overriddenFrom;
-		boolean result = (allowMultiple != match.allowMultiple) || (isMandatory() != match.isMandatory());
-		if(log.isTraceEnabled() && (! isOverrideMeaningfulLogged) && result) {
-			isOverrideMeaningfulLogged = true;
-			log.trace("Config {} overrides {} and changes isAllowMultiple() or isMandatory()", toString(), overriddenFrom.toString());
-		}
-		return result;
+		return (allowMultiple != match.allowMultiple);
 	}
 
 	public static Stream<ElementRole> getElementRoleStream(Collection<ConfigChild> configChildren) {

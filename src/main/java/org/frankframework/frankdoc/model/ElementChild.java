@@ -20,6 +20,7 @@ import java.util.function.Predicate;
 
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.DocWriterNew;
+import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
@@ -85,6 +86,7 @@ public abstract class ElementChild {
 	 * config children.
 	 */
 	private @Getter @Setter boolean technicalOverride = false;
+	private boolean isOverrideMeaningfulLogged = false;
 
 	/**
 	 * Different {@link ElementChild} of the same FrankElement are allowed to have the same order.
@@ -174,8 +176,24 @@ public abstract class ElementChild {
 		}
 	}
 
-	abstract boolean overrideIsMeaningful(ElementChild overriddenFrom);
+	final boolean overrideIsMeaningful(ElementChild overriddenFrom) {
+		// Do not test whether property "deprecated" has changed. If an overridden method is deprecated
+		// and the overriding method is not deprecated, then the override can have no annotations and no
+		// JavaDoc. Then it is still a technical override.
+		boolean result = (isMandatory() != overriddenFrom.isMandatory())
+				|| (isExcluded() != overriddenFrom.isExcluded())
+				|| (! Utils.equalsNullable(getDescription(), overriddenFrom.getDescription()))
+				|| (! Utils.equalsNullable(getDefaultValue(), overriddenFrom.getDefaultValue()));
+		result = result || specificOverrideIsMeaningful(overriddenFrom);
+		if(log.isTraceEnabled() && (! isOverrideMeaningfulLogged) && result) {
+			isOverrideMeaningfulLogged = true;
+			log.trace("ElementChld {} overrides {} and changes something relevant for the Frank!Doc", toString(), overriddenFrom.toString());
+		}
+		return result;
+	}
 
+	abstract boolean specificOverrideIsMeaningful(ElementChild overriddenFrom);
+	
 	void setJavaDocBasedDescriptionAndDefault(FrankMethod method) {
 		try {
 			String value = method.getJavaDocIncludingInherited();

@@ -2,6 +2,5 @@ package org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintro
 
 public class Master {
 	public void registerA(IInterface child) {
-
 	}
 }

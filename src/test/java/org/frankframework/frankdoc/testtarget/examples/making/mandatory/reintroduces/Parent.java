@@ -21,4 +21,18 @@ public class Parent implements IInterface {
 	 */
 	public void setMandatoryAttributeThatRemainsMandatory(String value) {
 	}
+
+	/**
+	 * @ff.mandatory
+	 * @param child
+	 */
+	public void registerB(ConfigChild child) {
+	}
+
+	/**
+	 * @ff.mandatory
+	 * @param child
+	 */
+	public void registerC(ConfigChild2 child) {
+	}
 }

@@ -81,7 +81,7 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			// See method getAllRequiredPackages().
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master", "nameConflictStrict.xsd", "nameConflict.json"},
 			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master", "nameConflictCompatibility.xsd", null},
-			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master", "makingMandatoryReintroduces.xsd", null},
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master", "makingMandatoryReintroduces.xsd", "makingMandatoryReintroduces.json"},
 		});
 	}
 

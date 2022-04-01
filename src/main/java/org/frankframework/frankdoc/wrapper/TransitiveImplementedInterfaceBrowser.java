@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -16,15 +16,15 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
-import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Deque;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
 class TransitiveImplementedInterfaceBrowser<T> {
-	final Deque<FrankClass> interfazes = new ArrayDeque<>();
+	final List<FrankClass> interfaces = new ArrayList<>();
 	final Set<String> interfaceNamesDone = new HashSet<>();
 
 	TransitiveImplementedInterfaceBrowser(FrankClass clazz) throws FrankDocException {
@@ -32,24 +32,35 @@ class TransitiveImplementedInterfaceBrowser<T> {
 	}
 
 	private void uniquelyEnqueueSuperInterfaces(FrankClass clazz) {
+		uniquelyEnqueueInterfacesOf(clazz);
+		if(! interfaces.isEmpty()) {
+			for(int index = 0; index < interfaces.size(); ++index) {
+				uniquelyEnqueueInterfacesOf(interfaces.get(index));
+			}
+		}
+	}
+
+	private void uniquelyEnqueueInterfacesOf(FrankClass clazz) {
 		Arrays.asList(clazz.getInterfaces()).forEach(this::enqueueUniquely);
 	}
 
 	private void enqueueUniquely(FrankClass clazz) {
 		if(! interfaceNamesDone.contains(clazz.getName())) {
 			interfaceNamesDone.add(clazz.getName());
-			interfazes.addLast(clazz);
+			interfaces.add(clazz);
 		}
 	}
 
+	List<FrankClass> getInterfacesAndTheirAncestors() {
+		return interfaces;
+	}
+
 	T search(Function<FrankClass, T> testFunction) throws FrankDocException {
-		while(! interfazes.isEmpty()) {
-			FrankClass current = interfazes.removeFirst();
-			T result = testFunction.apply(current);
+		for(FrankClass intf: interfaces) {
+			T result = testFunction.apply(intf);
 			if(result != null) {
 				return result;
 			}
-			uniquelyEnqueueSuperInterfaces(current);
 		}
 		return null;
 	}

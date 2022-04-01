@@ -107,4 +107,29 @@ public class UtilsTest {
 		// No closing "}"
 		Utils.flattenJavaDocLinksToLastWords("{@link Receiver");
 	}
+
+	@Test
+	public void nullEqualsNull() {
+		assertTrue(Utils.equalsNullable(null, null));
+	}
+
+	@Test
+	public void nullDoesNotEqualNonNull() {
+		assertFalse(Utils.equalsNullable(null, "something"));
+	}
+
+	@Test
+	public void nonNullDoesNotEqualNull() {
+		assertFalse(Utils.equalsNullable("something", null));
+	}
+
+	@Test
+	public void nonEqualObjectsAreNotEqualNullable() {
+		assertFalse(Utils.equalsNullable("this", "other"));
+	}
+
+	@Test
+	public void equalObjectsAreEqualNullable() {
+		assertTrue(Utils.equalsNullable("this", "thi" + "s"));
+	}
 }

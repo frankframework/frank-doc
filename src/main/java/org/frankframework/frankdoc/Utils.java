@@ -1,5 +1,5 @@
 /* 
-Copyright 2020, 2021 WeAreFrank! 
+Copyright 2020, 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -245,5 +245,21 @@ public final class Utils {
 			return "";
 		}
 		return words[words.length - 1];
+	}
+
+	public static boolean equalsNullable(Object o1, Object o2) {
+		if(o1 == null) {
+			if(o2 == null) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			if(o2 == null) {
+				return false;
+			} else {
+				return o1.equals(o2);
+			}
+		}
 	}
 }

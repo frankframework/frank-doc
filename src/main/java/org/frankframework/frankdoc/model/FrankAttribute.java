@@ -18,6 +18,7 @@ package org.frankframework.frankdoc.model;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankType;
 
@@ -66,12 +67,9 @@ public class FrankAttribute extends ElementChild {
 	}
 
 	@Override
-	boolean overrideIsMeaningful(ElementChild overriddenFrom) {
-		// There is no need to check here for a change of the mandatory field. If the inherited
-		// attribute has different mandatory or optional features, then it already gets
-		// documented=true. This is enough to have the attribute again in the declared
-		// attribute group of the child.
-		return false;
+	boolean specificOverrideIsMeaningful(ElementChild overriddenFrom) {
+		// We do not have to check here for describingElement, because we are checking on the description already.
+		return (! Utils.equalsNullable(getAttributeEnum(), ((FrankAttribute) overriddenFrom).getAttributeEnum()));
 	}
 
 	/**

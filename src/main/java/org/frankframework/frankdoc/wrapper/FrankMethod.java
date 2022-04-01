@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -17,6 +17,8 @@ limitations under the License.
 package org.frankframework.frankdoc.wrapper;
 
 public interface FrankMethod extends FrankProgramElement {
+	boolean isMultiplyInheritedPlaceholder();
+	String getSignature();
 	FrankAnnotation[] getAnnotations();
 	FrankAnnotation getAnnotation(String name);
 	FrankClass getDeclaringClass();

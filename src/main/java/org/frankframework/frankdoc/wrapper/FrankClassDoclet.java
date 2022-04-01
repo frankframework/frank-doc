@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
@@ -35,6 +36,9 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Tag;
+
+import lombok.AccessLevel;
+import lombok.Getter;
 
 class FrankClassDoclet implements FrankClass {
 	private static Logger log = LogUtil.getLogger(FrankClassDoclet.class);
@@ -46,7 +50,8 @@ class FrankClassDoclet implements FrankClass {
 	private final LinkedHashMap<MethodDoc, FrankMethod> frankMethodsByDocletMethod = new LinkedHashMap<>();
 	private final Map<String, FrankMethodDoclet> methodsBySignature = new HashMap<>();
 	private final Map<String, FrankAnnotation> frankAnnotationsByName;
-
+	private @Getter(AccessLevel.PACKAGE) List<MultiplyInheritedMethodPlaceholder> multiplyInheritedMethodPlaceholders = new ArrayList<>();
+	
 	FrankClassDoclet(ClassDoc clazz, FrankClassRepository repository) {
 		this.repository = repository;
 		this.clazz = clazz;
@@ -241,10 +246,10 @@ class FrankClassDoclet implements FrankClass {
 		return methodsBySignature.get(signature);
 	}
 
-	<T> T getMethodItemFromSignature(String methodSignature, Function<FrankMethodDoclet, T> getter) {
+	<T> T getMethodItemFromSignature(String methodSignature, Function<FrankMethodDocletBase, T> getter) {
 		FrankMethodDoclet frankMethod = getMethodFromSignature(methodSignature);
 		if(frankMethod != null) {
-			return getter.apply(frankMethod);
+			return getter.apply((FrankMethodDocletBase) frankMethod);
 		}
 		return null;
 	}
@@ -306,5 +311,55 @@ class FrankClassDoclet implements FrankClass {
 			return new ArrayList<>();
 		}
 		return Arrays.asList(tags).stream().map(Tag::text).collect(Collectors.toList());		
+	}
+
+	@Override
+	public FrankMethod[] getDeclaredMethodsAndMultiplyInheritedPlaceholders() {
+		List<FrankMethod> result = new ArrayList<>();
+		result.addAll(frankMethodsByDocletMethod.values());
+		result.addAll(multiplyInheritedMethodPlaceholders);
+		return result.toArray(new FrankMethod[] {});
+	}
+
+	void addMultiplyInheritedMethodPlaceholders() {
+		try {
+			List<FrankClass> interfaces = new TransitiveImplementedInterfaceBrowser<Object>(this).getInterfacesAndTheirAncestors();
+			if(! interfaces.isEmpty()) {
+				multiplyInheritedMethodPlaceholders = getReinheritedMethods(interfaces).stream()
+						.map(m -> (FrankMethodDoclet) m)
+						.map(m -> new MultiplyInheritedMethodPlaceholder(m, this))
+						.collect(Collectors.toList());
+				if(log.isTraceEnabled()) {
+					String placeholderMethodNames = multiplyInheritedMethodPlaceholders.stream()
+							.map(FrankMethod::getName).collect(Collectors.joining(", "));
+					log.trace("Class [{}] has multiply inherited methods: [{}]", getName(), placeholderMethodNames);
+				}
+			}
+		} catch(FrankDocException e) {
+			log.error("Failed to add multiply inherited method placeholders for FrankClass [{}]", getName(), e);
+		}
+	}
+
+	List<FrankMethod> getReinheritedMethods(List<FrankClass> interfaces) {
+		List<FrankMethod> result = new ArrayList<>();
+		Set<String> declaredMethodSignatures = Arrays.asList(getDeclaredMethods()).stream()
+				.map(FrankMethod::getSignature)
+				.collect(Collectors.toSet());
+		Set<String> methodSignaturesFromImplementedInterfaces = interfaces.stream()
+				.flatMap(FrankClassDoclet::methodSignaturesOf)
+				.collect(Collectors.toSet());
+		for(FrankMethod candidate: getDeclaredAndInheritedMethods()) {
+			String candidateSignature = candidate.getSignature();
+			boolean notDeclared = ! declaredMethodSignatures.contains(candidateSignature);
+			boolean reinherited = methodSignaturesFromImplementedInterfaces.contains(candidateSignature);
+			if(notDeclared && reinherited) {
+				result.add(candidate);
+			}
+		}
+		return result;
+	}
+
+	private static Stream<String> methodSignaturesOf(FrankClass intf) {
+		return Arrays.asList(intf.getDeclaredMethods()).stream().map(FrankMethod::getSignature);
 	}
 }

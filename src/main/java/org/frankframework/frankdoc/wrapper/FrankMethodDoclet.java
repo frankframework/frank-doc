@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -19,7 +19,6 @@ package org.frankframework.frankdoc.wrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,18 +31,22 @@ import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Tag;
 import com.sun.javadoc.Type;
 
-class FrankMethodDoclet implements FrankMethod {
+class FrankMethodDoclet extends FrankMethodDocletBase {
 	private static Logger log = LogUtil.getLogger(FrankMethodDoclet.class);
 
-	private final MethodDoc method;
-	private final FrankClassDoclet declaringClass;
+	final MethodDoc method;
 	private final Map<String, FrankAnnotation> frankAnnotationsByName;
 
 	FrankMethodDoclet(MethodDoc method, FrankClassDoclet declaringClass) {
+		super(declaringClass);
 		this.method = method;
-		this.declaringClass = declaringClass;
 		AnnotationDesc[] annotationDescs = method.annotations();
 		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(annotationDescs);
+	}
+
+	@Override
+	public boolean isMultiplyInheritedPlaceholder() {
+		return false;
 	}
 
 	@Override
@@ -79,11 +82,6 @@ class FrankMethodDoclet implements FrankMethod {
 	}
 
 	@Override
-	public FrankClass getDeclaringClass() {
-		return declaringClass;
-	}
-
-	@Override
 	public FrankType getReturnType() {
 		Type docletType = method.returnType();
 		return typeOf(docletType);
@@ -95,7 +93,7 @@ class FrankMethodDoclet implements FrankMethod {
 		} else {
 			String typeName = docletType.qualifiedTypeName();
 			try {
-				FrankClass clazz = declaringClass.getRepository().findClass(typeName);
+				FrankClass clazz = ((FrankClassDoclet) getDeclaringClass()).getRepository().findClass(typeName);
 				if(clazz == null) {
 					return new FrankNonCompiledClassDoclet(typeName);
 				} else {
@@ -129,67 +127,13 @@ class FrankMethodDoclet implements FrankMethod {
 	}
 
 	@Override
-	public FrankAnnotation getAnnotationIncludingInherited(String name) throws FrankDocException {
-		Function<FrankMethodDoclet, FrankAnnotation> getter = m -> m.getAnnotation(name);
-		return searchIncludingInherited(getter);
-	}
-
-	@Override
-	public String getJavaDocIncludingInherited() throws FrankDocException {
-		Function<FrankMethodDoclet, String> getter = m -> m.getJavaDoc();
-		return searchIncludingInherited(getter);
-	}
-
-	private <T> T searchIncludingInherited(Function<FrankMethodDoclet, T> getter) throws FrankDocException {
-		T result = searchExcludingImplementedInterfaces(getter);
-		if(result == null) {
-			result = searchImplementedInterfaces(this.getDeclaringClass(), this.getSignature(), getter);
-		}
-		return result;
-	}
-
-	private <T> T searchExcludingImplementedInterfaces(Function<FrankMethodDoclet, T> getter) throws FrankDocException {
-		T result = getter.apply(this);
-		if(result != null) {
-			return result;
-		}
-		MethodDoc overriddenMethodDoc = method.overriddenMethod();
-		if(overriddenMethodDoc != null) {
-			FrankMethodDoclet overriddenMethod = (FrankMethodDoclet) declaringClass.recursivelyFindFrankMethod(overriddenMethodDoc);
-			if(overriddenMethod != null) {
-				return overriddenMethod.searchExcludingImplementedInterfaces(getter);
-			} else {
-				// The overridden method is not included in the produced JavaDocs. This
-				// means that the overridden method is not public. Therefore it is not
-				// relevant.
-				//
-				// This empty else branch is covered by test
-				// FrankMethodOverrideTest.whenPackagePrivateOverriddenByPublicThenOnlyChildMethodConsidered()
-			}
-		}
-		return null;
-	}
-
-	String getSignature() {
+	public String getSignature() {
 		List<String> components = new ArrayList<>();
 		components.add(getName());
 		for(FrankType type: getParameterTypes()) {
 			components.add(type.getName());
 		}
 		return components.stream().collect(Collectors.joining(", "));
-	}
-
-	private <T> T searchImplementedInterfaces(FrankClass clazz, String methodSignature, Function<FrankMethodDoclet, T> getter) throws FrankDocException {
-		TransitiveImplementedInterfaceBrowser<T> interfaceBrowser = new TransitiveImplementedInterfaceBrowser<>((FrankClassDoclet) clazz);
-		Function<FrankClass, T> classGetter = interfaze -> ((FrankClassDoclet) interfaze).getMethodItemFromSignature(methodSignature, getter);
-		T result = interfaceBrowser.search(classGetter);
-		if(result != null) {
-			return result;
-		}
-		if(clazz.getSuperclass() == null) {
-			return null;
-		}
-		return searchImplementedInterfaces(clazz.getSuperclass(), methodSignature, getter);
 	}
 
 	void removeOverriddenFrom(Map<MethodDoc, FrankMethod> methodRepository) {
@@ -212,13 +156,12 @@ class FrankMethodDoclet implements FrankMethod {
 	}
 
 	@Override
-	public String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException {
-		Function<FrankMethodDoclet, String> getter = m -> m.getJavaDocTag(tagName);
-		return searchIncludingInherited(getter);		
+	public String toString() {
+		return toStringImpl();
 	}
 
 	@Override
-	public String toString() {
-		return toStringImpl();
+	MethodDoc getOverriddenMethodDoc() {
+		return method.overriddenMethod();
 	}
 }
