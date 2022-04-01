@@ -58,7 +58,7 @@ public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 
 	/**
 	 * This is not a declared method, so it has no declared annotations. To see an inherited
-	 * annotation, use method <code>getAnnotationIncludingInherited</code> which is
+	 * annotation, use method <code>getAnnotationIncludingInherited()</code> which is
 	 * inherited from {@link FrankMethodDocletBase}.
 	 */
 	@Override
@@ -88,7 +88,7 @@ public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 
 	/**
 	 * This is not a declared method, so it has no declared JavaDoc. To
-	 * see the inherited JavaDoc, use method <code>getJavaDocIncludingInherited</code>
+	 * see the inherited JavaDoc, use method <code>getJavaDocIncludingInherited()</code>
 	 * which is inherited from {@link FrankMethodDocletBase}.
 	 */
 	@Override
