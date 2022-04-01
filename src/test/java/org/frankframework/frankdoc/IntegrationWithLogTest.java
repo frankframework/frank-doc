@@ -21,7 +21,6 @@ public class IntegrationWithLogTest {
 			DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "1.2.3-SNAPSHOT");
 			docWriter.init(startClassName, XsdVersion.STRICT);
 			String actualXsd = docWriter.getSchema();
-			System.out.println(actualXsd);
 			String expectedXsd = TestUtil.getTestFile("/doc/examplesExpected/testPluralConflictDefaultOption.xsd");
 			TestUtil.assertEqualsIgnoreCRLF(expectedXsd, actualXsd);
 			appender.assertLogged("ConfigChildSet [ConfigChildSet(ObjectConfigChild(MyElement.registerB(IChild1)), ObjectConfigChild(MyElement.registerB(IChild2)))] has multiple candidates for the default element: [org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Child1, org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Child2]");
