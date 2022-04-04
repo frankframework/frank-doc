@@ -358,6 +358,10 @@ public class DocWriterNew {
 		xsdComplexItems.addAll(attributeTypeStrategy.createHelperTypes());
 		log.trace("Have the XmlBuilder objects. Going to add them in the right order to the schema root builder");
 		xsdElements.forEach(xsdRoot::addSubElement);
+		if(log.isTraceEnabled()) {
+			log.trace("Complex items are:");
+			xsdComplexItems.stream().forEach(b -> log.trace("  [{}]", b.toString()));
+		}
 		xsdComplexItems.forEach(xsdRoot::addSubElement);
 		log.trace("Populating schema root builder is done. Going to create the XML string to return");
 		return xsdRoot.toXML(true);
@@ -515,8 +519,8 @@ public class DocWriterNew {
 				addAnyOtherNamespaceAttribute(elementBuildingStrategy.getElementTypeBuilder());
 			}
 			log.trace("Creating type definitions (or only groups) for Java ancestors of FrankElement [{}]", () -> frankElement.getFullName());
-			recursivelyDefineXsdElementType(frankElement.getNextAncestorThatHasConfigChildren(version.getChildSelector()));
-			recursivelyDefineXsdElementType(frankElement.getNextAncestorThatHasAttributes(version.getChildSelector()));
+			recursivelyDefineXsdElementType(frankElement.getNextAncestorThatHasOrRejectsConfigChildren(version.getChildSelector(), version.getChildRejector()));
+			recursivelyDefineXsdElementType(frankElement.getNextAncestorThatHasOrRejectsAttributes(version.getChildSelector(), version.getChildRejector()));
 			log.trace("Done with XSD type definition of FrankElement [{}]", () -> frankElement.getFullName());
 		} else {
 			log.trace("Type definition was already included");

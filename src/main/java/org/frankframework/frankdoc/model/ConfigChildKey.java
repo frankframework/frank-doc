@@ -31,6 +31,10 @@ class ConfigChildKey extends ElementChild.AbstractKey {
 
 	@Override
 	public String toString() {
-		return "(roleName=" + roleName + ", elementType=" + elementType.getFullName() + ")";
+		if(elementType == null) {
+			return "(roleName=" + roleName + ", no element type)";
+		} else {
+			return "(roleName=" + roleName + ", elementType=" + elementType.getFullName() + ")";
+		}
 	}
 }

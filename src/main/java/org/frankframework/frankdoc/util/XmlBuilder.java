@@ -46,15 +46,24 @@ public class XmlBuilder {
 
 	private Element element;
 
+	// Only for toString()
+	private final String tagName;
+	private String valueOfAttributeName = "<no name>";
+
 	public XmlBuilder(String tagName) {
 		element = new Element(tagName);
+		this.tagName = tagName;
 	}
 
 	public XmlBuilder(String tagName, String prefix, String uri) {
 		element = new Element(tagName, prefix, uri);
+		this.tagName = prefix + ":" + tagName;
 	}
 
 	public void addAttribute(String name, String value) {
+		if(name.equals("name")) {
+			valueOfAttributeName = value;
+		}
 		if (value != null) {
 			if (name.equalsIgnoreCase("xmlns")) {
 				element.setNamespace(Namespace.getNamespace(value));
@@ -69,10 +78,16 @@ public class XmlBuilder {
 	}
 
 	public void addAttribute(String name, boolean value) {
+		if(name.equals("name")) {
+			valueOfAttributeName = Boolean.valueOf(value).toString();
+		}
 		addAttribute(name, "" + value);
 	}
 
 	public void addAttribute(String name, long value) {
+		if(name.equals("name")) {
+			valueOfAttributeName = Long.valueOf(value).toString();
+		}
 		addAttribute(name, "" + value);
 	}
 
@@ -140,5 +155,10 @@ public class XmlBuilder {
 		xmlOutputter.setFormat(
 				Format.getPrettyFormat().setOmitDeclaration(!xmlHeader));
 		return xmlOutputter.outputString(document);
+	}
+
+	@Override
+	public String toString() {
+		return String.format("(%s, %s)", tagName, valueOfAttributeName);
 	}
 }

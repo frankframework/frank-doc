@@ -25,14 +25,14 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
+import org.frankframework.frankdoc.util.XmlBuilder;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
+import org.junit.Before;
+import org.junit.Test;
  
 public class UtilsTest {
 	private static final String SIMPLE = "org.frankframework.frankdoc.testtarget.simple";
@@ -131,5 +131,12 @@ public class UtilsTest {
 	@Test
 	public void equalObjectsAreEqualNullable() {
 		assertTrue(Utils.equalsNullable("this", "thi" + "s"));
+	}
+
+	@Test
+	public void testXmlBuilderToString() {
+		XmlBuilder element = new XmlBuilder("element");
+		element.addSubElement(new XmlBuilder("child"));
+		assertEquals("(element, <no name>)", element.toString());
 	}
 }
