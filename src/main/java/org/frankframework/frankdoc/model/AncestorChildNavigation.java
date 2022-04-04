@@ -134,10 +134,11 @@ class AncestorChildNavigation<T extends ElementChild> {
 			boolean isRenewedOverride = selectedOrRejectedChildKeys.contains(child.getKey());
 			boolean isExistingOverride = overridden.keySet().contains(child.getKey());
 			if(isRenewedOverride || isExistingOverride) {
-				if(child.getOverriddenFrom() == null) {
+				ElementChild overriddenFrom = getSelectedOrRejectedChildAncestor(child);
+				if(overriddenFrom == null) {
 					overridden.remove(child.getKey());
 				} else {
-					overridden.put(child.getKey(), child.getOverriddenFrom());
+					overridden.put(child.getKey(), overriddenFrom.getOwningElement());
 				}				
 			}
 		}
@@ -157,6 +158,21 @@ class AncestorChildNavigation<T extends ElementChild> {
 	private Map<FrankElement, Set<AbstractKey>> getOverriddenByOwner() {
 		return overridden.keySet().stream()
 				.collect(Collectors.groupingBy(k -> overridden.get(k), Collectors.toSet()));
+	}
+
+	private ElementChild getSelectedOrRejectedChildAncestor(ElementChild child) {
+		FrankElement candidateOwner = child.getOverriddenFrom();
+		while(candidateOwner != null) {
+			ElementChild candidate = candidateOwner.findElementChildMatch(child);
+			if(candidate == null) {
+				throw new IllegalStateException("Cannot happen. If this would happen, method getOverriddenFrom() would not work correctly.");
+			} else if(childSelector.test(candidate) || childRejector.test(candidate)) {
+				return candidate;
+			}
+			child = candidate;
+			candidateOwner = child.getOverriddenFrom();
+		}
+		return null;
 	}
 
 	private List<ElementChild> getOverriddenChildren() {
