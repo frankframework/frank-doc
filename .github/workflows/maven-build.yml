@@ -7,7 +7,7 @@ env:
   PROFILES:
 on:
   push:
-    branches: [master,artifacts]
+    branches: [master,artifacts,testValidatingValidConfig]
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -24,6 +24,7 @@ jobs:
         # We must fetch at least the immediate parents so that if this is
         # a pull request then we can checkout the head.
         fetch-depth: 2
+        path: frank-doc
 
     - name: Cache local Maven repository
       uses: actions/cache@v2
@@ -45,7 +46,32 @@ jobs:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
         JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
-      run: mvn -B -V -T1 -Pibissource,codecoverage -Dmaven.javadoc.skip=true package
+      run: mvn -B -V -T1 -Pibissource,codecoverage -Dmaven.javadoc.skip=true package install
+      working-directory: frank-doc
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
+      files: frank-doc/target/site/jacoco/jacoco.xml
+
+    - name: Checkout Frank!Framework
+      uses: actions/checkout@v2
+      with:
+        # We must fetch at least the immediate parents so that if this is
+        # a pull request then we can checkout the head.
+        fetch-depth: 2
+        repository: ibissource/iaf
+        path: iaf
+
+    - name: Build Frank!Framework
+      env:
+        CI_SERVICE: GITHUB
+        TZ: Europe/Amsterdam
+        JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
+      run: mvn -B -V -T1 -PattachFrankDoc -DskipTests package
+      working-directory: iaf
+
+    - name: Check FrankConfig-strict.xsd
+      run: java -jar frank-doc/target/frank-doc-1.1-SNAPSHOT.jar frank-doc/.github/workflows/validConfig.xml iaf/target/frankdoc/xml/xsd/FrankConfig-strict.xsd
+
+    - name: Check FrankConfig-compatibility.xsd
+      run: java -jar frank-doc/target/frank-doc-1.1-SNAPSHOT.jar frank-doc/.github/workflows/validConfig.xml iaf/target/frankdoc/xml/xsd/FrankConfig-compatibility.xsd
