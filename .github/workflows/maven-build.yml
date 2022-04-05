@@ -46,7 +46,7 @@ jobs:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
         JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
-      run: mvn -B -V -T1 -Pibissource,codecoverage -Dmaven.javadoc.skip=true process-sources
+      run: mvn -B -V -T1 -Pibissource,codecoverage -Dmaven.javadoc.skip=true package install
       working-directory: frank-doc
 
     - name: Upload coverage to Codecov
@@ -67,7 +67,7 @@ jobs:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
         JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
-      run: mvn -B -V -T1 -PattachFrankDoc -DskipTests -Dfrankdoc.version=$(cat ../frankDocVersion.txt) package
+      run: mvn -B -V -T1 -PattachFrankDoc -DskipTests -Dfrankdoc.version=$(cat ../frankDocVersion.txt) process-sources
       working-directory: iaf
 
     - name: Check FrankConfig-strict.xsd
