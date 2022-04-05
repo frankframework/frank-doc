@@ -78,7 +78,36 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<!-- This manifest makes the JAR file executable. When you use the JAR as executable,
+						     you can use it to verify an XML file against an XSD file.
+						     You can still use this JAR file as a doclet, because in a pom.xml file you
+						     pass the class name of the doclet to javadoc.
+						-->
+					  	<manifest>
+					  		<addClasspath>true</addClasspath>
+					  		<mainClass>org.frankframework.frankdoc.cmd.XmlAgainstXsdValidator</mainClass>
+					  	</manifest>
+					</archive>
+				</configuration>
 			</plugin>
+			<!--
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>org.frankframework.frankdoc.cmd.XmlAgainstXsdValidator</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
+			 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
