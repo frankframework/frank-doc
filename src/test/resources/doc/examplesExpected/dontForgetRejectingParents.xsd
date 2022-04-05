@@ -118,6 +118,20 @@
     <xs:attributeGroup ref="GrandChildDeclaredAttributeGroup" />
     <xs:attributeGroup ref="RejectingChildCumulativeAttributeGroup" />
   </xs:attributeGroup>
+  <xs:group name="RejectingChildDeclaredChildGroup">
+    <xs:sequence />
+  </xs:group>
+  <xs:group name="RejectingChildCumulativeChildGroup">
+    <xs:sequence>
+      <xs:element ref="B" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="RejectingChildDeclaredAttributeGroup" />
+  <xs:attributeGroup name="RejectingChildCumulativeAttributeGroup">
+    <xs:attribute name="attribute" type="xs:string" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:attributeGroup>
   <xs:complexType name="ParentType">
     <xs:group ref="ParentDeclaredChildGroup" />
     <xs:attributeGroup ref="ParentDeclaredAttributeGroup" />
