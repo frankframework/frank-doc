@@ -347,6 +347,8 @@ public class DocWriterNew {
 
 	public String getSchema() {
 		XmlBuilder xsdRoot = getXmlSchema(frankFrameworkVersion);
+		XmlBuilder faulty = new XmlBuilder("xxx");
+		xsdRoot.addSubElement(faulty);
 		log.trace("Going to create XmlBuilder objects that will be added to the schema root builder afterwards");
 		FrankElement startElement = model.findFrankElement(startClassName);
 		defineElements(startElement);
