@@ -53,7 +53,7 @@ jobs:
       uses: codecov/codecov-action@v1
 
     - name: Read Frank!Doc version
-      run: bash .github/workflows/getFrankDocVersion.sh
+      run: bash frank-doc/.github/workflows/getFrankDocVersion.sh
 
     - name: Checkout Frank!Framework
       uses: actions/checkout@v2
