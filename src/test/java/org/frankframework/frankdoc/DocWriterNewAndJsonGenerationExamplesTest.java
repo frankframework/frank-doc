@@ -82,6 +82,10 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master", "nameConflictStrict.xsd", "nameConflict.json"},
 			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master", "nameConflictCompatibility.xsd", null},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master", "makingMandatoryReintroduces.xsd", "makingMandatoryReintroduces.json"},
+			// Test issue: Cannot resolve the name 'MailListenerCumulativeAttributeGroup' to a(n) 'attribute group' component #101.
+			// When a FrankElement rejects attributes or config children without creating new config children or groups, AncestorChildNavigation
+			// still references its declared and cumulative groups. Therefore such a parent should still be processed to produce groups.
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Master", "dontForgetRejectingParents.xsd", null},
 		});
 	}
 
