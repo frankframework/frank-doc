@@ -358,10 +358,6 @@ public class DocWriterNew {
 		xsdComplexItems.addAll(attributeTypeStrategy.createHelperTypes());
 		log.trace("Have the XmlBuilder objects. Going to add them in the right order to the schema root builder");
 		xsdElements.forEach(xsdRoot::addSubElement);
-		if(log.isTraceEnabled()) {
-			log.trace("Complex items are:");
-			xsdComplexItems.stream().forEach(b -> log.trace("  [{}]", b.toString()));
-		}
 		xsdComplexItems.forEach(xsdRoot::addSubElement);
 		log.trace("Populating schema root builder is done. Going to create the XML string to return");
 		return xsdRoot.toXML(true);
