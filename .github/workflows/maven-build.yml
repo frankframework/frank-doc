@@ -56,8 +56,6 @@ jobs:
     - name: Checkout Frank!Framework
       uses: actions/checkout@v2
       with:
-        # We must fetch at least the immediate parents so that if this is
-        # a pull request then we can checkout the head.
         fetch-depth: 2
         repository: ibissource/iaf
         path: iaf
