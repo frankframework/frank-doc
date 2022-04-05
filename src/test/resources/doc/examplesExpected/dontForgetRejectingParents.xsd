@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
+  <xs:element name="Master">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="MasterType" />
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Module">
+    <xs:annotation>
+      <xs:documentation>Root element for XML files that contain multiple adapters and/or cron jobs and are included as entity reference in another XML file. It does not influence the behavior of your Frank config.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:group ref="MasterDeclaredChildGroup" />
+      <xs:attribute ref="active" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="B">
+    <xs:complexType>
+      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Nested1" use="prohibited" />
+      <xs:attribute ref="active" />
+      <xs:attribute name="elementRole" type="xs:string" fixed="b" use="prohibited" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C">
+    <xs:complexType>
+      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Nested2" use="prohibited" />
+      <xs:attribute ref="active" />
+      <xs:attribute name="elementRole" type="xs:string" fixed="c" use="prohibited" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="D">
+    <xs:complexType>
+      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Nested3" use="prohibited" />
+      <xs:attribute ref="active" />
+      <xs:attribute name="elementRole" type="xs:string" fixed="d" use="prohibited" />
+      <xs:anyAttribute namespace="##other" processContents="skip" />
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="MasterType">
+    <xs:group ref="MasterDeclaredChildGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Master" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
+  <xs:group name="MasterDeclaredChildGroup">
+    <xs:sequence>
+      <xs:element ref="Module" minOccurs="0" maxOccurs="unbounded" />
+      <xs:group ref="AElementGroup" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="AElementGroup">
+    <xs:choice>
+      <xs:element name="A">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="B" />
+              <xs:element ref="C" />
+              <xs:element ref="D" />
+            </xs:choice>
+          </xs:sequence>
+          <xs:attribute ref="active" />
+          <xs:attribute name="elementRole" type="xs:string" fixed="a" use="prohibited" />
+          <xs:attribute name="className" type="xs:string" use="required" />
+          <xs:anyAttribute processContents="skip" />
+        </xs:complexType>
+      </xs:element>
+      <xs:group ref="AElementGroupBase" />
+    </xs:choice>
+  </xs:group>
+  <xs:group name="AElementGroupBase">
+    <xs:choice>
+      <xs:element name="GrandChildA">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="GrandChildType">
+              <xs:attribute name="elementRole" type="xs:string" fixed="a" use="prohibited" />
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ParentA">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="ParentType">
+              <xs:attribute name="elementRole" type="xs:string" fixed="a" use="prohibited" />
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="GrandChildType">
+    <xs:group ref="GrandChildCumulativeChildGroup" />
+    <xs:attributeGroup ref="GrandChildCumulativeAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.GrandChild" use="prohibited" />
+  </xs:complexType>
+  <xs:group name="GrandChildDeclaredChildGroup">
+    <xs:sequence>
+      <xs:element ref="D" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="GrandChildCumulativeChildGroup">
+    <xs:sequence>
+      <xs:group ref="GrandChildDeclaredChildGroup" />
+      <xs:group ref="RejectingChildCumulativeChildGroup" />
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="GrandChildDeclaredAttributeGroup">
+    <xs:attribute name="newAttribute" type="xs:string" />
+  </xs:attributeGroup>
+  <xs:attributeGroup name="GrandChildCumulativeAttributeGroup">
+    <xs:attributeGroup ref="GrandChildDeclaredAttributeGroup" />
+    <xs:attributeGroup ref="RejectingChildCumulativeAttributeGroup" />
+  </xs:attributeGroup>
+  <xs:group name="RejectingChildDeclaredChildGroup">
+    <xs:sequence />
+  </xs:group>
+  <xs:group name="RejectingChildCumulativeChildGroup">
+    <xs:sequence>
+      <xs:element ref="B" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="RejectingChildDeclaredAttributeGroup" />
+  <xs:attributeGroup name="RejectingChildCumulativeAttributeGroup">
+    <xs:attribute name="attribute" type="xs:string" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:attributeGroup>
+  <xs:complexType name="ParentType">
+    <xs:group ref="ParentDeclaredChildGroup" />
+    <xs:attributeGroup ref="ParentDeclaredAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Parent" use="prohibited" />
+  </xs:complexType>
+  <xs:group name="ParentDeclaredChildGroup">
+    <xs:sequence>
+      <xs:element ref="B" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element ref="C" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="ParentDeclaredAttributeGroup">
+    <xs:attribute name="attribute" type="xs:string" />
+    <xs:attribute name="rejectedAttribute" type="xs:string" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:attributeGroup>
+  <xs:simpleType name="frankBoolean">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(true|false)|($\{[^\}]+\})" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="frankInt">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="((\+|-)?[0-9]+)|($\{[^\}]+\})" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:attribute name="active">
+    <xs:annotation>
+      <xs:documentation>If defined and empty or false, then this element and all its children are ignored</xs:documentation>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:pattern value="!?(($\{[^\}]+\})|([tT][rR][uU][eE])|([fF][aA][lL][sS][eE]))" />
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:attribute>
+  <xs:simpleType name="variableRef">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="$\{[^\}]+\}" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

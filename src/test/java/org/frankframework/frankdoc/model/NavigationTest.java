@@ -65,7 +65,12 @@ public class NavigationTest {
 			// dont get Child6 which has no children, but Parent where the children are.
 			{"GrandChild6", IN_XSD, REJECT_DEPRECATED, asList(ref(RefKind.DECLARED, "Parent"))},
 			// Test RefKind.CHILD
-			{"GrandChild7", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild7"), ref(RefKind.CHILD, "childAttributeFirst"), ref(RefKind.DECLARED, "Parent"))}
+			{"GrandChild7", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild7"), ref(RefKind.CHILD, "childAttributeFirst"), ref(RefKind.DECLARED, "Parent"))},
+			// Test fix of issue: Invalid XSDs generated #100.
+			// When an attribute (or config child) is overridden by an attribute that is not selected, then
+			// the cumulative group was erroneously taken. Instead, the algorithm should use the ancestor
+			// of the overridden attribute that is selected.
+			{"GrandChild8", IN_XSD, REJECT_DEPRECATED, asList(ref(RefKind.DECLARED, "GrandChild8"), ref(RefKind.CHILD_TOP_LEVEL, "parentAttributeSecond"))}
 		});
 	}
 
