@@ -52,6 +52,9 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
 
+    - name: Read Frank!Doc version
+      run: bash .github/workflows/getFrankDocVersion.sh
+
     - name: Checkout Frank!Framework
       uses: actions/checkout@v2
       with:
@@ -64,11 +67,11 @@ jobs:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
         JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
-      run: mvn -B -V -T1 -PattachFrankDoc -DskipTests package
+      run: mvn -B -V -T1 -PattachFrankDoc -DskipTests -Dfrankdoc.version=$(cat ../frankDocVersion.txt) package
       working-directory: iaf
 
     - name: Check FrankConfig-strict.xsd
-      run: java -jar frank-doc/target/frank-doc-1.1-SNAPSHOT.jar frank-doc/.github/workflows/validConfig.xml iaf/target/frankdoc/xml/xsd/FrankConfig-strict.xsd
+      run: java -jar frank-doc/target/frank-doc-$(cat frankDocVersion.txt).jar frank-doc/.github/workflows/validConfig.xml iaf/target/frankdoc/xml/xsd/FrankConfig-strict.xsd
 
     - name: Check FrankConfig-compatibility.xsd
-      run: java -jar frank-doc/target/frank-doc-1.1-SNAPSHOT.jar frank-doc/.github/workflows/validConfig.xml iaf/target/frankdoc/xml/xsd/FrankConfig-compatibility.xsd
+      run: java -jar frank-doc/target/frank-doc-$(cat frankDocVersion.txt).jar frank-doc/.github/workflows/validConfig.xml iaf/target/frankdoc/xml/xsd/FrankConfig-compatibility.xsd
