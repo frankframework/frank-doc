@@ -49,6 +49,9 @@ jobs:
       run: mvn -B -V -T1 -Pibissource,codecoverage -Dmaven.javadoc.skip=true package install
       working-directory: frank-doc
 
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+
     - name: Checkout Frank!Framework
       uses: actions/checkout@v2
       with:
