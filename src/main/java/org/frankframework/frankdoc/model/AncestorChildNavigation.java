@@ -16,6 +16,7 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,9 +25,13 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
+import org.frankframework.frankdoc.util.LogUtil;
 
 class AncestorChildNavigation<T extends ElementChild> {
+	private static Logger log = LogUtil.getLogger(AncestorChildNavigation.class);
+
 	private final CumulativeChildHandler<T> handler;
 	private final Predicate<ElementChild> childSelector;
 	private final Predicate<ElementChild> childRejector;
@@ -48,6 +53,7 @@ class AncestorChildNavigation<T extends ElementChild> {
 	}
 
 	void run(FrankElement start) {
+		log.trace("Enter for FrankElement [{}] and child kind [{}]", () -> start.toString(), () -> kind.toString());
 		enter(start);
 		overridden = new HashMap<>();
 		addDeclaredGroupOrRepeatChildrenInXsd();
@@ -59,6 +65,7 @@ class AncestorChildNavigation<T extends ElementChild> {
 			}
 			addDeclaredGroupOrRepeatChildrenInXsd();
 		}
+		log.trace("Leave for FrankElement [{}] and child kind [{}]", () -> start.toString(), () -> kind.toString());
 	}
 
 	private void enter(FrankElement current) {
@@ -70,6 +77,19 @@ class AncestorChildNavigation<T extends ElementChild> {
 		checkSelectedChildKeysAreNotRejected(rejectedChildKeys);
 		selectedOrRejectedChildKeys = new HashSet<>(selectedChildKeys);
 		selectedOrRejectedChildKeys.addAll(rejectedChildKeys);
+		if(log.isTraceEnabled()) {
+			logEnter();
+		}
+	}
+
+	private void logEnter() {
+		log.trace("current: [{}]", current.toString());
+		log.trace("selectedChildKeys: [{}]", keysToString(selectedChildKeys));
+		log.trace("selectedOrRejectedChildKeys: [{}]", keysToString(selectedOrRejectedChildKeys));
+	}
+
+	private static String keysToString(Collection<AbstractKey> keys) {
+		return keys.stream().map(AbstractKey::toString).collect(Collectors.joining(", "));
 	}
 
 	private void checkSelectedChildKeysAreNotRejected(Set<AbstractKey> rejectedChildKeys) {
@@ -114,18 +134,49 @@ class AncestorChildNavigation<T extends ElementChild> {
 			boolean isRenewedOverride = selectedOrRejectedChildKeys.contains(child.getKey());
 			boolean isExistingOverride = overridden.keySet().contains(child.getKey());
 			if(isRenewedOverride || isExistingOverride) {
-				if(child.getOverriddenFrom() == null) {
+				ElementChild overriddenFrom = getSelectedOrRejectedChildAncestor(child);
+				if(overriddenFrom == null) {
 					overridden.remove(child.getKey());
 				} else {
-					overridden.put(child.getKey(), child.getOverriddenFrom());
+					overridden.put(child.getKey(), overriddenFrom.getOwningElement());
 				}				
 			}
 		}
+		if(log.isTraceEnabled()) {
+			logOverriddenFrom();
+		}
+	}
+
+	private void logOverriddenFrom() {
+		Map<FrankElement, Set<AbstractKey>> overriddenByOwner = getOverriddenByOwner();
+		log.trace("Below follows the contents of overridden, grouped by owning FrankElement");
+		for(FrankElement element: overriddenByOwner.keySet()) {
+			log.trace("  From [{}]: [{}]", element.toString(), keysToString(overriddenByOwner.get(element)));
+		}
+	}
+
+	private Map<FrankElement, Set<AbstractKey>> getOverriddenByOwner() {
+		return overridden.keySet().stream()
+				.collect(Collectors.groupingBy(k -> overridden.get(k), Collectors.toSet()));
+	}
+
+	private ElementChild getSelectedOrRejectedChildAncestor(ElementChild child) {
+		FrankElement candidateOwner = child.getOverriddenFrom();
+		while(candidateOwner != null) {
+			ElementChild candidate = candidateOwner.findElementChildMatch(child);
+			if(candidate == null) {
+				throw new IllegalStateException("Cannot happen. If this would happen, method getOverriddenFrom() would not work correctly.");
+			} else if(childSelector.test(candidate) || childRejector.test(candidate)) {
+				return candidate;
+			}
+			child = candidate;
+			candidateOwner = child.getOverriddenFrom();
+		}
+		return null;
 	}
 
 	private List<ElementChild> getOverriddenChildren() {
-		Map<FrankElement, Set<AbstractKey>> overriddenByOwner = overridden.keySet().stream()
-				.collect(Collectors.groupingBy(k -> overridden.get(k), Collectors.toSet()));
+		Map<FrankElement, Set<AbstractKey>> overriddenByOwner = getOverriddenByOwner();
 		return overriddenByOwner.keySet().stream()
 				.flatMap(frankElement -> frankElement.getChildrenOfKind(ElementChild.ALL, kind).stream()
 						.filter(c -> overriddenByOwner.get(frankElement).contains(c.getKey())))

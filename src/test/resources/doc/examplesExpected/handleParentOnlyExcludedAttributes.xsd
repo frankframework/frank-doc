@@ -84,6 +84,14 @@
     <xs:attributeGroup ref="ChildDeclaredAttributeGroup" />
     <xs:attributeGroup ref="ParentOnlyExcludedAttributesDeclaredAttributeGroup" />
   </xs:attributeGroup>
+  <xs:complexType name="ParentOnlyExcludedAttributesType">
+    <xs:attributeGroup ref="ParentOnlyExcludedAttributesDeclaredAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.parent.without.attributes.ParentOnlyExcludedAttributes" use="prohibited" />
+  </xs:complexType>
+  <xs:attributeGroup name="ParentOnlyExcludedAttributesDeclaredAttributeGroup">
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:attributeGroup>
   <xs:complexType name="GrandChildType">
     <xs:attributeGroup ref="GrandChildCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.parent.without.attributes.GrandChild" use="prohibited" />
@@ -94,14 +102,6 @@
   <xs:attributeGroup name="GrandChildCumulativeAttributeGroup">
     <xs:attributeGroup ref="GrandChildDeclaredAttributeGroup" />
     <xs:attributeGroup ref="ChildCumulativeAttributeGroup" />
-  </xs:attributeGroup>
-  <xs:complexType name="ParentOnlyExcludedAttributesType">
-    <xs:attributeGroup ref="ParentOnlyExcludedAttributesDeclaredAttributeGroup" />
-    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.parent.without.attributes.ParentOnlyExcludedAttributes" use="prohibited" />
-  </xs:complexType>
-  <xs:attributeGroup name="ParentOnlyExcludedAttributesDeclaredAttributeGroup">
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">

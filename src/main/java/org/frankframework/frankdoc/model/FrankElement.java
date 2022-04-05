@@ -264,19 +264,17 @@ public class FrankElement implements Comparable<FrankElement> {
 		return ancestor;
 	}
 
-	public boolean hasAncestorThatHasConfigChildrenOrAttributes(Predicate<ElementChild> selector) {
-		FrankElement ancestorAttributes = getNextAncestorThatHasAttributes(selector);
-		FrankElement ancestorConfigChildren = getNextAncestorThatHasConfigChildren(selector);
-		return (ancestorAttributes != null) || (ancestorConfigChildren != null);
-	}
-
-	public FrankElement getNextAncestorThatHasConfigChildren(Predicate<ElementChild> selector) {
-		FrankElement ancestorConfigChildren = getNextAncestorThatHasChildren(el -> el.getChildrenOfKind(selector, ConfigChild.class).isEmpty());
+	public FrankElement getNextAncestorThatHasOrRejectsConfigChildren(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
+		FrankElement ancestorConfigChildren = getNextAncestorThatHasChildren(el -> (
+				el.getChildrenOfKind(selector, ConfigChild.class).isEmpty()
+				&& el.getChildrenOfKind(rejector, ConfigChild.class).isEmpty()));
 		return ancestorConfigChildren;
 	}
 
-	public FrankElement getNextAncestorThatHasAttributes(Predicate<ElementChild> selector) {
-		FrankElement ancestorAttributes = getNextAncestorThatHasChildren(el -> el.getChildrenOfKind(selector, FrankAttribute.class).isEmpty());
+	public FrankElement getNextAncestorThatHasOrRejectsAttributes(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
+		FrankElement ancestorAttributes = getNextAncestorThatHasChildren(el -> (
+				el.getChildrenOfKind(selector, FrankAttribute.class).isEmpty()
+				&& el.getChildrenOfKind(rejector, FrankAttribute.class).isEmpty()));
 		return ancestorAttributes;
 	}
 
@@ -417,7 +415,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		boolean hasPluralConfigChildren = configChildSets.values().stream()
 				.anyMatch(c -> c.getFilteredElementRoles(selector, rejector).size() >= 2);
 		boolean inheritsPluralConfigChildren = false;
-		FrankElement ancestor = getNextAncestorThatHasConfigChildren(selector);
+		FrankElement ancestor = getNextAncestorThatHasOrRejectsConfigChildren(selector, rejector);
 		if(ancestor != null) {
 			inheritsPluralConfigChildren = ancestor.hasOrInheritsPluralConfigChildren(selector, rejector);
 		}
