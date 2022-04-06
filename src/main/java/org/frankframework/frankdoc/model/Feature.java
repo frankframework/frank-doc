@@ -21,12 +21,13 @@ import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
-final class Feature {
-	static final Feature MANDATORY = new Feature("nl.nn.adapterframework.doc.Mandatory", "@ff.mandatory");
-	static final Feature OPTIONAL = new Feature("nl.nn.adapterframework.doc.Optional", "@ff.optional");
-	static final Feature DEFAULT = new Feature("nl.nn.adapterframework.doc.Default", "@ff.default");
-	static final Feature DEPRECATED = new Feature("java.lang.Deprecated", "@deprecated");
-	static final Feature PROTECTED = new Feature("nl.nn.adapterframework.doc.Protected", "@ff.protected");
+enum Feature {
+	MANDATORY("nl.nn.adapterframework.doc.Mandatory", "@ff.mandatory"),
+	BECOMES_MANDATORY("nl.nn.adapterframework.doc.BecomesMandatory", "@ff.becomesMandatory"),
+	OPTIONAL("nl.nn.adapterframework.doc.Optional", "@ff.optional"),
+	DEFAULT("nl.nn.adapterframework.doc.Default", "@ff.default"),
+	DEPRECATED("java.lang.Deprecated", "@deprecated"),
+	PROTECTED("nl.nn.adapterframework.doc.Protected", "@ff.protected");
 
 	private final String javaAnnotation;
 	private final String javaDocTag;

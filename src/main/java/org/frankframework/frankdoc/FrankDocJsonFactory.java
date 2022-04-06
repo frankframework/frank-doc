@@ -43,6 +43,7 @@ import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.model.FrankDocGroup;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.model.FrankElement;
+import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.ParsedJavaDocTag;
 import org.frankframework.frankdoc.util.LogUtil;
@@ -325,8 +326,8 @@ public class FrankDocJsonFactory {
 		if(child.isDeprecated()) {
 			result.add("deprecated", child.isDeprecated());
 		}
-		if(child.isMandatory()) {
-			result.add("mandatory", child.isMandatory());
+		if(child.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
+			result.add("mandatory", true);
 		}
 		result.add("multiple", child.isAllowMultiple());
 		result.add("roleName", child.getRoleName());

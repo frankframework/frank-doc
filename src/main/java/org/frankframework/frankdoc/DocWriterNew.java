@@ -1221,7 +1221,7 @@ public class DocWriterNew {
 				// Therefore, it should be added to the description in the xs:attribute.
 				// The "default" attribute of the xs:attribute should not be set.
 				attribute = attributeTypeStrategy.addAttribute(
-						context, frankAttribute.getName(), frankAttribute.getAttributeType(), frankAttribute.isMandatory());
+						context, frankAttribute.getName(), frankAttribute.getAttributeType(), version.childIsMandatory(frankAttribute));
 			} else {
 				attribute = addRestrictedAttribute(context, frankAttribute);
 			}
@@ -1233,7 +1233,7 @@ public class DocWriterNew {
 	}
 
 	private XmlBuilder addRestrictedAttribute(XmlBuilder context, FrankAttribute attribute) {
-		XmlBuilder result = attributeTypeStrategy.addRestrictedAttribute(context, attribute);
+		XmlBuilder result = attributeTypeStrategy.addRestrictedAttribute(context, attribute, version.childIsMandatory(attribute));
 		AttributeEnum attributeEnum = attribute.getAttributeEnum();
 		if(! definedAttributeEnumInstances.contains(attributeEnum.getFullName())) {
 			definedAttributeEnumInstances.add(attributeEnum.getFullName());
@@ -1292,8 +1292,8 @@ public class DocWriterNew {
 		return element.getTypeNameBase() + "CumulativeAttributeGroup";
 	}
 
-	private static String getMinOccurs(ConfigChild child) {
-		if(child.isMandatory()) {
+	private String getMinOccurs(ConfigChild child) {
+		if(version.childIsMandatory(child)) {
 			return "1";
 		} else {
 			return "0";

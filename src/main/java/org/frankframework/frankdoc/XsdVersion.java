@@ -28,6 +28,7 @@ import org.frankframework.frankdoc.model.ConfigChild;
 import org.frankframework.frankdoc.model.ElementChild;
 import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.model.FrankElement;
+import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
@@ -77,6 +78,10 @@ public enum XsdVersion {
 		return delegate.configChildBuilder(context);
 	}
 
+	boolean childIsMandatory(ElementChild child) {
+		return delegate.childIsMandatory(child);
+	}
+
 	private static abstract class Delegate {
 		abstract void checkForMissingDescription(FrankAttribute attribute);
 		abstract void checkForMissingDescription(ConfigChild configChild);
@@ -84,6 +89,7 @@ public enum XsdVersion {
 		abstract AttributeUse getClassNameAttributeUse(FrankElement frankElement);
 		abstract XmlBuilder configChildBuilderWithinSequence(XmlBuilder context);
 		abstract XmlBuilder configChildBuilder(XmlBuilder context);
+		abstract boolean childIsMandatory(ElementChild child);
 	}
 
 	private static class DelegateStrict extends Delegate {
@@ -121,6 +127,11 @@ public enum XsdVersion {
 		XmlBuilder configChildBuilder(XmlBuilder context) {
 			return context;
 		}
+
+		@Override
+		boolean childIsMandatory(ElementChild child) {
+			return child.getMandatoryStatus() != MandatoryStatus.OPTIONAL;
+		}
 	}
 
 	private static class DelegateCompatibility extends Delegate {
@@ -156,13 +167,20 @@ public enum XsdVersion {
 			}
 		}
 
+		@Override
 		XmlBuilder configChildBuilderWithinSequence(XmlBuilder context) {
 			return addChoice(context, "0", "unbounded");
 		}
 
+		@Override
 		XmlBuilder configChildBuilder(XmlBuilder context) {
 			XmlBuilder sequence = addSequence(context);
 			return addChoice(sequence, "0", "unbounded");
+		}
+
+		@Override
+		boolean childIsMandatory(ElementChild child) {
+			return child.getMandatoryStatus() == MandatoryStatus.MANDATORY;
 		}
 	}
 }
