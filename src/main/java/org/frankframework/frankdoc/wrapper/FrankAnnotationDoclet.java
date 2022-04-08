@@ -65,7 +65,7 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 			return null;
 		} else {
 			Object raw = candidates.get(0);
-			if((raw instanceof Integer) || (raw instanceof String)) {
+			if((raw instanceof Integer) || (raw instanceof String) || (raw instanceof Boolean)) {
 				return raw;
 			} else {
 				return parseAnnotationValueAsStringArray(raw);

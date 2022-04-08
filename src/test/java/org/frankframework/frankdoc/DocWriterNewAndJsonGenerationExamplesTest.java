@@ -86,6 +86,8 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			// When a FrankElement rejects attributes or config children without creating new config children or groups, AncestorChildNavigation
 			// still references its declared and cumulative groups. Therefore such a parent should still be processed to produce groups.
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Master", "dontForgetRejectingParents.xsd", null},
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Master", "becomesMandatoryStrict.xsd", "becomesMandatory.json"},
+			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Master", "becomesMandatoryCompatibility.xsd", null},
 		});
 	}
 

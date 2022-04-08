@@ -12,4 +12,16 @@ public class ForInheritanceFromMethods extends ForMethods {
 	@Override
 	public void withoutDefault() {
 	}
+
+	@Override
+	public void notMandatory() {
+	}
+
+	@Override
+	public void mandatoryByAnnotation() {
+	}
+
+	@Override
+	public void mandatoryByTag() {
+	}
 }

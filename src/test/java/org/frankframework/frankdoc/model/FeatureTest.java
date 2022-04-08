@@ -78,6 +78,36 @@ public class FeatureTest {
 		assertFalse(Feature.DEPRECATED.isSetOn(constants[2]));
 	}
 
+	@Test
+	public void whenMethodIsNotMandatoryThenNoFeatureMandatory() throws Exception {
+		FrankMethod method = findMethod(forMethods, "notMandatory");
+		FrankMethod inheritedMethod = findMethod(forInheritanceFromMethods, "notMandatory");
+		assertFalse(Feature.MANDATORY.isSetOn(method));
+		assertFalse(Feature.MANDATORY.isEffectivelySetOn(inheritedMethod));
+		assertNull(Feature.MANDATORY.valueOf(method));
+		assertNull(Feature.MANDATORY.valueOf(inheritedMethod));
+	}
+
+	@Test
+	public void whenMethodHasMandatoryJavaAnnotationThenHasFeatureMandatory() throws Exception {
+		FrankMethod method = findMethod(forMethods, "mandatoryByAnnotation");
+		FrankMethod inheritedMethod = findMethod(forInheritanceFromMethods, "mandatoryByAnnotation");
+		assertTrue(Feature.MANDATORY.isSetOn(method));
+		assertTrue(Feature.MANDATORY.isEffectivelySetOn(inheritedMethod));
+		assertEquals("true", Feature.MANDATORY.valueOf(method));
+		assertEquals("true", Feature.MANDATORY.valueOf(inheritedMethod));
+	}
+
+	@Test
+	public void whenMethodHasMandatoryTagThenHasFeatureMandatory() throws Exception {
+		FrankMethod method = findMethod(forMethods, "mandatoryByTag");
+		FrankMethod inheritedMethod = findMethod(forInheritanceFromMethods, "mandatoryByTag");
+		assertTrue(Feature.MANDATORY.isSetOn(method));
+		assertTrue(Feature.MANDATORY.isEffectivelySetOn(inheritedMethod));
+		assertEquals("ignoreInCompatibilityMode", Feature.MANDATORY.valueOf(method));
+		assertEquals("ignoreInCompatibilityMode", Feature.MANDATORY.valueOf(inheritedMethod));
+	}
+
 	private FrankMethod findMethod(FrankClass clazz, String methodName) {
 		for(FrankMethod m: clazz.getDeclaredMethods()) {
 			if(m.getName().equals(methodName)) {

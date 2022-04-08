@@ -24,7 +24,7 @@ public class Child extends Parent implements MyInterface {
 		
 		// It would be nice if the JavaDoc could go after the Java 5 annotation.
 		// The doclet API does not support that, however.
-		/** Description of INNER_SECOND */ @Java5Annotation(myStringArray = {"a", "b"}, myString = "s", myInt = 4)
+		/** Description of INNER_SECOND */ @Java5Annotation(myStringArray = {"a", "b"}, myString = "s", myInt = 4, myBoolean = false)
 		INNER_SECOND};
 
 	public MyInnerEnum getMyInnerEnum() {
