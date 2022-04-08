@@ -1,0 +1,15 @@
+<Configuration>
+  <!-- This is a valid configuration. This has been tested by temporarily referencing
+       FrankConfig-strict.xsd. Here we do not reference a schema, because we will
+       check it also against FrankConfig-compatibility.xsd. The test will
+       refer to the schema, so this will not happen here.
+  -->
+  <Adapter name="MyAdapter">
+      <Receiver>
+          <ApiListener uriPattern="myurl" />
+      </Receiver>
+      <Pipeline firstPipe="myPipe">
+          <FixedResultPipe name="myPipe" returnString="Hello World!"></FixedResultPipe>
+      </Pipeline>
+  </Adapter>
+</Configuration>
