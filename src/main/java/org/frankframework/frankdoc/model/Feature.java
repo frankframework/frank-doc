@@ -24,10 +24,10 @@ import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 enum Feature {
 	MANDATORY("nl.nn.adapterframework.doc.Mandatory", Constants.JAVA_DOC_TAG_MANDATORY, Constants.IGNORE_COMPATIBILITY_MODE),
-	OPTIONAL("nl.nn.adapterframework.doc.Optional", "@ff.optional", null),
-	DEFAULT("nl.nn.adapterframework.doc.Default", "@ff.default", null),
-	DEPRECATED("java.lang.Deprecated", "@deprecated", null),
-	PROTECTED("nl.nn.adapterframework.doc.Protected", "@ff.protected", null);
+	OPTIONAL("nl.nn.adapterframework.doc.Optional", "@ff.optional"),
+	DEFAULT("nl.nn.adapterframework.doc.Default", "@ff.default"),
+	DEPRECATED("java.lang.Deprecated", "@deprecated"),
+	PROTECTED("nl.nn.adapterframework.doc.Protected", "@ff.protected");
 
 	private final String javaAnnotation;
 	private final String javaDocTag;
@@ -37,6 +37,12 @@ enum Feature {
 		this.javaAnnotation = javaAnnotation;
 		this.javaDocTag = javaDocTag;
 		this.fieldName = fieldName;
+	}
+
+	private Feature(String javaAnnotation, String javaDocTag) {
+		this.javaAnnotation = javaAnnotation;
+		this.javaDocTag = javaDocTag;
+		this.fieldName = null;
 	}
 
 	boolean isSetOn(FrankMethod method) {
