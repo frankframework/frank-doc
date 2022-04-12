@@ -129,7 +129,7 @@ public enum AttributeTypeStrategy {
 		}
 
 		final XmlBuilder addRestrictedAttribute(XmlBuilder context, FrankAttribute attribute, boolean isMandatory) {
-			log.trace("Attribute mandatoryStatus=[{}]", () -> attribute.getMandatoryStatus());
+			log.trace("isMandatory=[{}]", () -> isMandatory);
 			AttributeEnum attributeEnum = attribute.getAttributeEnum();
 			XmlBuilder attributeBuilder = addAttributeWithType(context, attribute.getName());
 			if(isMandatory) {

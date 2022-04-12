@@ -23,20 +23,20 @@ import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 enum Feature {
-	MANDATORY("nl.nn.adapterframework.doc.Mandatory", Constants.JAVA_DOC_TAG_MANDATORY, new AnnotationValueGetter(Constants.IGNORE_COMPATIBILITY_MODE)),
-	OPTIONAL("nl.nn.adapterframework.doc.Optional", "@ff.optional", new AnnotationValueGetter()),
-	DEFAULT("nl.nn.adapterframework.doc.Default", "@ff.default", new AnnotationValueGetter()),
-	DEPRECATED("java.lang.Deprecated", "@deprecated", new AnnotationValueGetter()),
-	PROTECTED("nl.nn.adapterframework.doc.Protected", "@ff.protected", new AnnotationValueGetter());
+	MANDATORY("nl.nn.adapterframework.doc.Mandatory", Constants.JAVA_DOC_TAG_MANDATORY, Constants.IGNORE_COMPATIBILITY_MODE),
+	OPTIONAL("nl.nn.adapterframework.doc.Optional", "@ff.optional", null),
+	DEFAULT("nl.nn.adapterframework.doc.Default", "@ff.default", null),
+	DEPRECATED("java.lang.Deprecated", "@deprecated", null),
+	PROTECTED("nl.nn.adapterframework.doc.Protected", "@ff.protected", null);
 
 	private final String javaAnnotation;
 	private final String javaDocTag;
-	private final AnnotationValueGetter annotationValueGetter;
+	private final String fieldName;
 
 	private Feature(String javaAnnotation, String javaDocTag, AnnotationValueGetter annotationValueGetter) {
 		this.javaAnnotation = javaAnnotation;
 		this.javaDocTag = javaDocTag;
-		this.annotationValueGetter = annotationValueGetter;
+		this.fieldName = fieldName;
 	}
 
 	boolean isSetOn(FrankMethod method) {
@@ -54,10 +54,19 @@ enum Feature {
 		if(result == null) {
 			FrankAnnotation annotation = method.getAnnotationIncludingInherited(javaAnnotation);
 			if(annotation != null) {
-				result = annotationValueGetter.apply(annotation);
+				result = getValueFromAnnotation(annotation);
 			}
 		}
 		return result;
+	}
+
+	private String getValueFromAnnotation(FrankAnnotation a) {
+		if(fieldName == null) {
+			return a.getValue().toString();
+		} else {
+			Object value = a.getValueOf(fieldName);
+			return (value == null) ? null : value.toString();
+		}
 	}
 
 	boolean isSetOn(FrankEnumConstant c) throws FrankDocException {
@@ -68,26 +77,5 @@ enum Feature {
 	boolean isSetOn(FrankClass clazz) {
 		return (clazz.getAnnotation(javaAnnotation) != null)
 				|| (clazz.getJavaDocTag(javaDocTag) != null);		
-	}
-
-	private static class AnnotationValueGetter {
-		private final String fieldName;
-
-		AnnotationValueGetter() {
-			this.fieldName = null;
-		}
-
-		AnnotationValueGetter(String fieldName) {
-			this.fieldName = fieldName;
-		}
-
-		String apply(FrankAnnotation a) throws FrankDocException {
-			if(fieldName == null) {
-				return a.getValue().toString();
-			} else {
-				Object value = a.getValueOf(fieldName);
-				return (value == null) ? null : value.toString();
-			}
-		}
 	}
 }
