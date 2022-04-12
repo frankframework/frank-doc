@@ -6,23 +6,23 @@
         {
             "name":"Other",
             "types":[
-                "org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Nested",
-                "org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Master",
+                "org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Nested",
+                "org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Master",
                 "Module"
             ]
         }
     ],
     "types":[
         {
-            "name":"org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Nested",
+            "name":"org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Nested",
             "members":[
-                "org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Nested"
+                "org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Nested"
             ]
         },
         {
-            "name":"org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Master",
+            "name":"org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Master",
             "members":[
-                "org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Master"
+                "org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Master"
             ]
         },
         {
@@ -35,14 +35,14 @@
     "elements":[
         {
             "name":"Master",
-            "fullName":"org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Master",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Master",
             "elementNames":[
                 "Master"
             ],
             "attributes":[
                 {
                     "name":"becomesMandatory",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Master"
+                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Master"
                 },
                 {
                     "name":"active",
@@ -60,7 +60,7 @@
                     "mandatory":true,
                     "multiple":true,
                     "roleName":"a",
-                    "type":"org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Nested"
+                    "type":"org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Nested"
                 }
             ]
         },
@@ -74,7 +74,7 @@
         },
         {
             "name":"Nested",
-            "fullName":"org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Nested",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Nested",
             "elementNames":[
                 "A"
             ],

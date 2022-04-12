@@ -1,4 +1,4 @@
-package org.frankframework.frankdoc.testtarget.examples.becomes.mandatory;
+package org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility;
 
 import nl.nn.adapterframework.doc.Mandatory;
 

@@ -40,9 +40,7 @@ enum Feature {
 	}
 
 	private Feature(String javaAnnotation, String javaDocTag) {
-		this.javaAnnotation = javaAnnotation;
-		this.javaDocTag = javaDocTag;
-		this.fieldName = null;
+		this(javaAnnotation, javaDocTag, null);
 	}
 
 	boolean isSetOn(FrankMethod method) {

@@ -19,7 +19,7 @@
   </xs:element>
   <xs:element name="A">
     <xs:complexType>
-      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Nested" use="prohibited" />
+      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Nested" use="prohibited" />
       <xs:attribute ref="active" />
       <xs:attribute name="elementRole" type="xs:string" fixed="a" use="prohibited" />
       <xs:anyAttribute namespace="##other" processContents="skip" />
@@ -28,7 +28,7 @@
   <xs:complexType name="MasterType">
     <xs:group ref="MasterDeclaredChildGroup" />
     <xs:attributeGroup ref="MasterDeclaredAttributeGroup" />
-    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.becomes.mandatory.Master" use="prohibited" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Master" use="prohibited" />
   </xs:complexType>
   <xs:group name="MasterDeclaredChildGroup">
     <xs:sequence>
