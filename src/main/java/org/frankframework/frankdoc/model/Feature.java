@@ -33,7 +33,7 @@ enum Feature {
 	private final String javaDocTag;
 	private final String fieldName;
 
-	private Feature(String javaAnnotation, String javaDocTag, AnnotationValueGetter annotationValueGetter) {
+	private Feature(String javaAnnotation, String javaDocTag, String fieldName) {
 		this.javaAnnotation = javaAnnotation;
 		this.javaDocTag = javaDocTag;
 		this.fieldName = fieldName;
@@ -60,7 +60,7 @@ enum Feature {
 		return result;
 	}
 
-	private String getValueFromAnnotation(FrankAnnotation a) {
+	private String getValueFromAnnotation(FrankAnnotation a) throws FrankDocException {
 		if(fieldName == null) {
 			return a.getValue().toString();
 		} else {
