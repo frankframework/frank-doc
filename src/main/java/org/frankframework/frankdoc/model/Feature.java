@@ -15,25 +15,32 @@
 */
 package org.frankframework.frankdoc.model;
 
+import org.frankframework.frankdoc.Constants;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
-final class Feature {
-	static final Feature MANDATORY = new Feature("nl.nn.adapterframework.doc.Mandatory", "@ff.mandatory");
-	static final Feature OPTIONAL = new Feature("nl.nn.adapterframework.doc.Optional", "@ff.optional");
-	static final Feature DEFAULT = new Feature("nl.nn.adapterframework.doc.Default", "@ff.default");
-	static final Feature DEPRECATED = new Feature("java.lang.Deprecated", "@deprecated");
-	static final Feature PROTECTED = new Feature("nl.nn.adapterframework.doc.Protected", "@ff.protected");
+enum Feature {
+	MANDATORY("nl.nn.adapterframework.doc.Mandatory", Constants.JAVA_DOC_TAG_MANDATORY, Constants.IGNORE_COMPATIBILITY_MODE),
+	OPTIONAL("nl.nn.adapterframework.doc.Optional", "@ff.optional"),
+	DEFAULT("nl.nn.adapterframework.doc.Default", "@ff.default"),
+	DEPRECATED("java.lang.Deprecated", "@deprecated"),
+	PROTECTED("nl.nn.adapterframework.doc.Protected", "@ff.protected");
 
 	private final String javaAnnotation;
 	private final String javaDocTag;
+	private final String fieldName;
 
-	private Feature(String javaAnnotation, String javaDocTag) {
+	private Feature(String javaAnnotation, String javaDocTag, String fieldName) {
 		this.javaAnnotation = javaAnnotation;
 		this.javaDocTag = javaDocTag;
+		this.fieldName = fieldName;
+	}
+
+	private Feature(String javaAnnotation, String javaDocTag) {
+		this(javaAnnotation, javaDocTag, null);
 	}
 
 	boolean isSetOn(FrankMethod method) {
@@ -51,10 +58,19 @@ final class Feature {
 		if(result == null) {
 			FrankAnnotation annotation = method.getAnnotationIncludingInherited(javaAnnotation);
 			if(annotation != null) {
-				result = (String) annotation.getValue();
+				result = getValueFromAnnotation(annotation);
 			}
 		}
 		return result;
+	}
+
+	private String getValueFromAnnotation(FrankAnnotation a) throws FrankDocException {
+		if(fieldName == null) {
+			return a.getValue().toString();
+		} else {
+			Object value = a.getValueOf(fieldName);
+			return (value == null) ? null : value.toString();
+		}
 	}
 
 	boolean isSetOn(FrankEnumConstant c) throws FrankDocException {

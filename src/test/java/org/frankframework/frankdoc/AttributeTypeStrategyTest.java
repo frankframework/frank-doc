@@ -126,7 +126,9 @@ public class AttributeTypeStrategyTest {
 		attributeTypeStrategy.addAttribute(complexType, "intAttr", AttributeType.INT, false);
 		attributeTypeStrategy.addAttribute(complexType, "stringAttr", AttributeType.STRING, false);
 		AttributeTypeStrategy.addAttributeActive(complexType);
-		attributeTypeStrategy.addRestrictedAttribute(complexType, enumTypedAttribute);
+		// This test does not test whether use="required" is included. It is about
+		// attribute types. Therefore we take the attribute not to be mandatory.
+		attributeTypeStrategy.addRestrictedAttribute(complexType, enumTypedAttribute, false);
 		attributeTypeStrategy.createHelperTypes().forEach(h -> schema.addSubElement(h));
 		schema.addSubElement(attributeTypeStrategy.createAttributeEnumType(attributeEnum));
 		return schema.toXML(true);

@@ -65,7 +65,7 @@ public class IntegrationWithLogTest {
 			String expectedXsd = TestUtil.getTestFile("/doc/examplesExpected/attributeDefault.xsd");
 			TestUtil.assertEqualsIgnoreCRLF(expectedXsd, actualXsd);
 			appender.assertLogged("Attribute [Master.explicitNullOnPrimitive] is of primitive type [short] but has default value null");
-			appender.assertLogged("Attribute [Master.mandatoryWithDefault] is mandatory, but it also has a default value: [something]");
+			appender.assertLogged("Attribute [Master.mandatoryWithDefault] is [MANDATORY], but it also has a default value: [something]");
 		} finally {
 			TestAppender.removeAppender(appender);
 		}		

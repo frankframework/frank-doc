@@ -44,7 +44,7 @@ public abstract class ConfigChild extends ElementChild {
 			Comparator.comparing(c -> ! c.isAllowMultiple());
 
 	private static final Comparator<ConfigChild> REMOVE_DUPLICATES_COMPARATOR =
-			SINGLE_ELEMENT_ONLY.thenComparing(c -> ! c.isMandatory());
+			SINGLE_ELEMENT_ONLY.thenComparing(ElementChild::getMandatoryStatus);
 
 	private @Getter @Setter boolean allowMultiple;
 	private @Getter(AccessLevel.PACKAGE) String methodName;

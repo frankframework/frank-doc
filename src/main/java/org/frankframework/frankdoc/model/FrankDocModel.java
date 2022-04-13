@@ -272,7 +272,11 @@ public class FrankDocModel {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
 			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
-			attribute.setMandatory(method);
+			try {
+				attribute.setMandatoryStatus(MandatoryStatus.fromMethod(method));
+			} catch(FrankDocException e) {
+				log.error("Could not calculate mandatoryStatus for attribute [{}]", attribute.getName(), e);
+			}
 			if(method.getParameterTypes()[0].isEnum()) {
 				log.trace("Attribute [{}] has setter that takes enum: [{}]", () -> attribute.getName(), () -> method.getParameterTypes()[0].toString());
 				attribute.setAttributeType(AttributeType.STRING);
@@ -548,7 +552,11 @@ public class FrankDocModel {
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);
 			configChild.setExcluded(frankMethod);
 			configChild.setAllowMultiple(configChildDescriptor.isAllowMultiple());
-			configChild.setMandatory(frankMethod);
+			try {
+				configChild.setMandatoryStatus(MandatoryStatus.fromMethod(frankMethod));
+			} catch(FrankDocException e) {
+				log.error("Could not calculate mandatoryStatus for config child [{}]", configChild.toString(), e);
+			}
 			if(configChildDescriptor.isForObject()) {
 				log.trace("For FrankElement [{}] method [{}], going to search element role", () -> parent.getFullName(), () -> frankMethod.getName());
 				FrankClass elementTypeClass = (FrankClass) frankMethod.getParameterTypes()[0];

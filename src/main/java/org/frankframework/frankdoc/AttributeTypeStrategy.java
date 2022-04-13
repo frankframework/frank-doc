@@ -73,8 +73,13 @@ public enum AttributeTypeStrategy {
 		return delegate.addAttribute(context, name, modelAttributeType, isMandatory);
 	}
 
-	XmlBuilder addRestrictedAttribute(XmlBuilder context, FrankAttribute attribute) {
-		return delegate.addRestrictedAttribute(context, attribute);
+	// A code smell - passing a Boolean argument and using it in an if-statement.
+	// An alternative approach would be to determine here whether the attribute is mandatory,
+	// duplicating logic from XsdVersion. Or XsdVersion would have to become responsible for
+	// setting the use="required" attribute. Or we would have to merge XsdVersion and
+	// AttributeTypeStrategy, which would require a lot of code modifications.
+	XmlBuilder addRestrictedAttribute(XmlBuilder context, FrankAttribute attribute, boolean isMandatory) {
+		return delegate.addRestrictedAttribute(context, attribute, isMandatory);
 	}
 
 	static void addAttributeActive(XmlBuilder context) {
@@ -123,11 +128,11 @@ public enum AttributeTypeStrategy {
 			return attribute;						
 		}
 
-		final XmlBuilder addRestrictedAttribute(XmlBuilder context, FrankAttribute attribute) {
-			log.trace("Attribute isMandatory={}", () -> attribute.isMandatory());
+		final XmlBuilder addRestrictedAttribute(XmlBuilder context, FrankAttribute attribute, boolean isMandatory) {
+			log.trace("isMandatory=[{}]", () -> isMandatory);
 			AttributeEnum attributeEnum = attribute.getAttributeEnum();
 			XmlBuilder attributeBuilder = addAttributeWithType(context, attribute.getName());
-			if(attribute.isMandatory()) {
+			if(isMandatory) {
 				attributeBuilder.addAttribute("use", "required");
 			}
 			XmlBuilder simpleType = addSimpleType(attributeBuilder);

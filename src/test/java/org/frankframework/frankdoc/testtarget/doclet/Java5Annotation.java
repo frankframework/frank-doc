@@ -10,4 +10,5 @@ public @interface Java5Annotation {
 	String[] myStringArray();
 	String myString();
 	int myInt();
+	boolean myBoolean();
 }

@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -65,7 +65,7 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 			return null;
 		} else {
 			Object raw = candidates.get(0);
-			if((raw instanceof Integer) || (raw instanceof String)) {
+			if((raw instanceof Integer) || (raw instanceof String) || (raw instanceof Boolean)) {
 				return raw;
 			} else {
 				return parseAnnotationValueAsStringArray(raw);

@@ -73,7 +73,7 @@ public class FrankDocModelConfigChildrenTest {
 		assertFalse(actual.isDocumented());
 		assertTrue(actual.isAllowMultiple());
 		assertFalse(actual.isDeprecated());
-		assertFalse(actual.isMandatory());
+		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());
 		assertNull(actual.getOverriddenFrom());
 		assertTrue(IN_XSD.test(actual));		
 	}
@@ -89,7 +89,7 @@ public class FrankDocModelConfigChildrenTest {
 		assertTrue(actual.isDocumented());
 		assertFalse(actual.isAllowMultiple());
 		assertFalse(actual.isDeprecated());
-		assertFalse(actual.isMandatory());
+		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());
 		assertNull(actual.getOverriddenFrom());
 		assertTrue(IN_XSD.test(actual));
 	}
@@ -113,7 +113,7 @@ public class FrankDocModelConfigChildrenTest {
 		assertTrue(actual.isDocumented());
 		assertFalse(actual.isAllowMultiple());
 		assertTrue(actual.isDeprecated());
-		assertFalse(actual.isMandatory());
+		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());
 		assertNull(actual.getOverriddenFrom());
 		assertFalse(IN_XSD.test(actual));
 	}
@@ -129,7 +129,7 @@ public class FrankDocModelConfigChildrenTest {
 		assertFalse(actual.isDocumented());
 		assertTrue(actual.isAllowMultiple());
 		assertFalse(actual.isDeprecated());
-		assertFalse(actual.isMandatory());
+		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());
 		// The method in the parent is protected, so not overridden
 		assertNull(actual.getOverriddenFrom());
 		assertFalse(actual.isTechnicalOverride());

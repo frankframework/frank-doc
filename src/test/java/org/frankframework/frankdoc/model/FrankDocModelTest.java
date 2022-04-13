@@ -512,7 +512,7 @@ public class FrankDocModelTest {
 	public void testFfReferWithInheritedDescriptionAndDefault() throws Exception {
 		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("ffReferInheritedDescription");
 		assertTrue(actual.isDocumented());
-		assertFalse(actual.isMandatory());
+		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());
 		assertSame(instance.getAllElements().get(REFERRED_PARENT), actual.getDescribingElement());
 		assertSame(attributeOwner, actual.getOwningElement());
 		assertEquals("Description of setFfReferInheritedDescription", actual.getDescription());

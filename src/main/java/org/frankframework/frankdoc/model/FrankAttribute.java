@@ -16,6 +16,8 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import java.util.EnumSet;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
@@ -81,8 +83,8 @@ public class FrankAttribute extends ElementChild {
 		if(getDefaultValue() == null) {
 			return;
 		}
-		if(isMandatory()) {
-			log.warn("Attribute [{}] is mandatory, but it also has a default value: [{}]", toString(), getDefaultValue());
+		if(EnumSet.of(MandatoryStatus.MANDATORY, MandatoryStatus.BECOMES_MANDATORY).contains(getMandatoryStatus())) {
+			log.warn("Attribute [{}] is [{}], but it also has a default value: [{}]", toString(), getMandatoryStatus(), getDefaultValue());
 		}
 		boolean isExplicitNull = (StringUtils.isBlank(getDefaultValue()) || getDefaultValue().equals("null"));
 		if(isExplicitNull && parameterType.isPrimitive()) {

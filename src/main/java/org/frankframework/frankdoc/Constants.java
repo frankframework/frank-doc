@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -16,7 +16,9 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-class Constants {
+public class Constants {
 	static final String MODULE_ELEMENT_NAME = "Module";
 	static final String MODULE_ELEMENT_DESCRIPTION = "Root element for XML files that contain multiple adapters and/or cron jobs and are included as entity reference in another XML file. It does not influence the behavior of your Frank config.";
+	public static final String IGNORE_COMPATIBILITY_MODE = "ignoreInCompatibilityMode";
+	public static final String JAVA_DOC_TAG_MANDATORY = "@ff.mandatory";
 }

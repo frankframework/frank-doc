@@ -53,4 +53,14 @@ public class FrankAnnotationTest extends TestBase{
 		String stringValue = (String) stringRawValue;
 		assertEquals("A string", stringValue);
 	}
+
+	@Test
+	public void whenAnnotationHasBooleanFieldThenReadable() throws Exception {
+		FrankClass clazz = classRepository.findClass(PACKAGE + "Parent");
+		FrankAnnotation annotation = clazz.getAnnotation(Java5Annotation.class.getName());
+		assertNotNull(annotation);
+		Object booleanRawValue = annotation.getValueOf("myBoolean");
+		Boolean booleanValue = (Boolean) booleanRawValue;
+		assertTrue(booleanValue);
+	}	
 }

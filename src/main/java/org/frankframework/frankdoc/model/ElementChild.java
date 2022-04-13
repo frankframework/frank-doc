@@ -60,7 +60,7 @@ public abstract class ElementChild {
 	 */
 	private @Getter boolean excluded = false;
 
-	private @Getter boolean mandatory = false;
+	private @Getter @Setter(AccessLevel.PACKAGE) MandatoryStatus mandatoryStatus = MandatoryStatus.OPTIONAL;
 
 	/**
 	 * Only set to true if there is an IbisDoc or IbisDocRef annotation for
@@ -140,22 +140,6 @@ public abstract class ElementChild {
 		defaultValue = null;
 	}
 
-	void setMandatory(FrankMethod method) {
-		try {
-			if(Feature.OPTIONAL.isEffectivelySetOn(method)) {
-				log.trace("Attribute or config child is optional, setting mandatory=false");
-				mandatory = false;
-			} else if(Feature.MANDATORY.isEffectivelySetOn(method)) {
-				log.trace("Attribute or config child is mandatory");
-				mandatory = true;
-			} else {
-				mandatory = false;
-			}
-		} catch(FrankDocException e) {
-			log.error("Error setting mandatory attribute of [{}]", toString(), e);
-		}
-	}
-
 	void calculateOverriddenFrom() {
 		FrankElement match = getOwningElement();
 		while(match.getParent() != null) {
@@ -180,7 +164,17 @@ public abstract class ElementChild {
 		// Do not test whether property "deprecated" has changed. If an overridden method is deprecated
 		// and the overriding method is not deprecated, then the override can have no annotations and no
 		// JavaDoc. Then it is still a technical override.
-		boolean result = (isMandatory() != overriddenFrom.isMandatory())
+		//
+		// There are corner cases in which a technical override is not recognized, which
+		// causes an attribute to be reintroduced for a derived class. For example,
+		// if an attribute is MANDATORY in a parent class and BECOMES_MANDATORY in a
+		// derived class, then this is no reason to reintroduce it in FrankConfig-strict.xsd.
+		// Reintroducing is not an error however. It only makes the XSDs larger than is
+		// strictly necessary. We accept this behavior to avoid code complexity. In the
+		// mentioned example, we have a meaningful override for FrankConfig-compatibility.xsd.
+		// We do not want to make overrideIsMeaningful() dependent on the XsdVersion, because
+		// that is not part of the model.
+		boolean result = (getMandatoryStatus() != overriddenFrom.getMandatoryStatus())
 				|| (isExcluded() != overriddenFrom.isExcluded())
 				|| (! Utils.equalsNullable(getDescription(), overriddenFrom.getDescription()))
 				|| (! Utils.equalsNullable(getDefaultValue(), overriddenFrom.getDefaultValue()));
