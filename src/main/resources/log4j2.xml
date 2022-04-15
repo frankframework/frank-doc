@@ -2,14 +2,19 @@
 <log4j2:Configuration xmlns:log4j2="log4j-config.xsd" name="frank-doc">
 	<Appenders>
 		<Console name="stdout">
+			<ThresholdFilter level="INFO"/>
 			<PatternLayout pattern="%d{HH:mm:ss,SSS} %-5p %C{1}.%M():%L%x %m%n"/>
 		</Console>
+		<File name="details" append="false" fileName="frankDocDetails.log">
+			<PatternLayout pattern="%d{HH:mm:ss,SSS} %-5p %C{1}.%M():%L%x %m%n"/>
+		</File>
 		<ErrorDetectingAppender name="detectErrors" />
 	</Appenders>
 
 	<Loggers>
-		<Root level="INFO">
+		<Root level="TRACE">
 			<AppenderRef ref="stdout"/>
+			<AppenderRef ref="details"/>
 			<AppenderRef ref="detectErrors" />
 		</Root>
 	</Loggers>
