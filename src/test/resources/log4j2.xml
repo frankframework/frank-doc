@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <log4j2:Configuration xmlns:log4j2="log4j-config.xsd" name="frank-doc">
 	<Appenders>
+		<!-- After running the unit tests, find the log output in target/surefire-reports -->
 		<Console name="stdout">
 			<PatternLayout pattern="%d{HH:mm:ss,SSS} %-5p %C{1}.%M():%L%x %m%n"/>
 		</Console>
-		<ErrorDetectingAppender name="detectErrors" />
 	</Appenders>
 
 	<Loggers>
-		<Root level="INFO">
+		<Root level="TRACE">
 			<AppenderRef ref="stdout"/>
-			<AppenderRef ref="detectErrors" />
 		</Root>
 	</Loggers>
 </log4j2:Configuration>
