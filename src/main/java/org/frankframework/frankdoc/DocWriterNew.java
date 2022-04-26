@@ -392,10 +392,7 @@ public class DocWriterNew {
 		log.trace("Adding element [{}] as type reference", () -> startElement.getSimpleName());
 		XmlBuilder startElementBuilder = createElementWithType(startElement.getSimpleName());
 		xsdElements.add(startElementBuilder);
-		String elementDescription = startElement.getDescriptionHeader();
-		if(! StringUtils.isBlank(elementDescription)) {
-			addDocumentation(startElementBuilder, elementDescription);
-		}
+		addDocumentationFrom(startElementBuilder, startElement);
 		XmlBuilder complexType = addComplexType(startElementBuilder);
 		XmlBuilder complexContent = addComplexContent(complexType);
 		addExtension(complexContent, xsdElementType(startElement));
@@ -453,10 +450,7 @@ public class DocWriterNew {
 	private XmlBuilder recursivelyDefineXsdElementUnchecked(FrankElement frankElement, String xsdElementName) {
 		log.trace("FrankElement [{}] has XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
 		XmlBuilder elementBuilder = createElementWithType(xsdElementName);
-		String elementDescription = frankElement.getDescriptionHeader();
-		if(! StringUtils.isBlank(elementDescription)) {
-			addDocumentation(elementBuilder, elementDescription);
-		}
+		addDocumentationFrom(elementBuilder, frankElement);
 		xsdElements.add(elementBuilder);
 		XmlBuilder complexType = addComplexType(elementBuilder);
 		log.trace("Adding cumulative config chidren of FrankElement [{}] to XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
@@ -903,15 +897,21 @@ public class DocWriterNew {
 
 	private void addElementTypeRefToElementGroup(XmlBuilder context, FrankElement frankElement, ElementRole role) {
 		XmlBuilder element = addElementWithType(context, frankElement.getXsdElementName(role));
-		String elementDescription = frankElement.getDescriptionHeader();
-		if(! StringUtils.isBlank(elementDescription)) {
-			addDocumentation(element, elementDescription);
-		}
+		addDocumentationFrom(element, frankElement);
 		XmlBuilder complexType = addComplexType(element);
 		XmlBuilder complexContent = addComplexContent(complexType);
 		XmlBuilder extension = addExtension(complexContent, xsdElementType(frankElement));
 		log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, () -> frankElement.getFullName());
 		addAttribute(extension, ELEMENT_ROLE, FIXED, role.getRoleName(), version.getRoleNameAttributeUse());
+	}
+
+	private void addDocumentationFrom(XmlBuilder element, FrankElement frankElement) {
+		if(version == XsdVersion.STRICT) {
+			String elementDescription = frankElement.getDescription();
+			if(! StringUtils.isBlank(elementDescription)) {
+				addDocumentation(element, elementDescription);
+			}
+		}
 	}
 
 	private void addElementGroupGenericOption(XmlBuilder context, List<ElementRole> roles) {
