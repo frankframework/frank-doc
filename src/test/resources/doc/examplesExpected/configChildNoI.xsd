@@ -46,7 +46,8 @@
     <xs:choice>
       <xs:element name="MyA">
         <xs:annotation>
-          <xs:documentation>We test that this class produces MyA.</xs:documentation>
+          <xs:documentation>We test that this class produces MyA. We remove the interface name "Child" and add the role name "A".
+ We cover the case that the interface name does not start with "I".</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>

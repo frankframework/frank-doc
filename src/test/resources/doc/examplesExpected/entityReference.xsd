@@ -2,7 +2,8 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Configuration">
     <xs:annotation>
-      <xs:documentation>The Configuration is placeholder of all configuration objects.</xs:documentation>
+      <xs:documentation>The Configuration is placeholder of all configuration objects. Besides that, it provides
+ functions for starting and stopping adapters as a facade.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>

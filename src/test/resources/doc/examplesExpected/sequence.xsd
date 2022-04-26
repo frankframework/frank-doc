@@ -2,7 +2,9 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Master">
     <xs:annotation>
-      <xs:documentation>We test here that the sequence of groups, config children and attributes is right.</xs:documentation>
+      <xs:documentation>We test here that the sequence of groups, config children and attributes is right.
+ It is important that the sequences in @IbisDoc annotations, in the alphabetic order
+ and in the order of appearance are all different.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
