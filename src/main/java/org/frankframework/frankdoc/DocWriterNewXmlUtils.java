@@ -42,6 +42,21 @@ class DocWriterNewXmlUtils {
 		return schema;
 	}
 
+	static XmlBuilder createElement(String elementName, String elementType) {
+		XmlBuilder element = new XmlBuilder("element", "xs", XML_SCHEMA_URI);
+		element.addAttribute("name", elementName);
+		element.addAttribute("type", elementType);
+		return element;
+	}
+
+	static XmlBuilder addElement(XmlBuilder context, String elementName, String elementType) {
+		XmlBuilder element = new XmlBuilder("element", "xs", XML_SCHEMA_URI);
+		element.addAttribute("name", elementName);
+		element.addAttribute("type", elementType);
+		context.addSubElement(element);
+		return element;
+	}
+
 	static XmlBuilder addElement(XmlBuilder context, String elementName, String elementType, String minOccurs, String maxOccurs) {
 		XmlBuilder element = new XmlBuilder("element", "xs", XML_SCHEMA_URI);
 		element.addAttribute("name", elementName);

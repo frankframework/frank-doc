@@ -30,6 +30,7 @@ import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addExtension;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addSequence;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createAttributeGroup;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createComplexType;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createElement;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createElementWithType;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createGroup;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.getXmlSchema;
@@ -434,7 +435,9 @@ public class DocWriterNew {
 		log.trace("Enter top FrankElement [{}]", () -> frankElement.getFullName());
 		if(checkNotDefined(frankElement)) {
 			String xsdElementName = frankElement.getSimpleName();
-			XmlBuilder attributeBuilder = recursivelyDefineXsdElementUnchecked(frankElement, xsdElementName);
+			XmlBuilder elementBuilder = createElement(xsdElementName, getTypeName(xsdElementName));
+			xsdElements.add(elementBuilder);
+			XmlBuilder attributeBuilder = recursivelyDefineXsdElementUnchecked(frankElement, getTypeName(xsdElementName));
 			// Adding the other-namespace attribute cannot be done in recursivelyDefineXsdElementUnchecked() because the anyAttribute must be last.
 			// After recursivelyDefineXsdElementUnchecked(), the "elementRole" attribute is added separately for non-root elements.
 			log.trace("Adding any attribute in another namespace to root element [{}]", () -> frankElement.getFullName());
@@ -443,17 +446,20 @@ public class DocWriterNew {
 		log.trace("Leave top FrankElement [{}]", () -> frankElement.getFullName());
 	}
 
+	private String getTypeName(String elementName) {
+		return elementName + "Type";
+	}
+
 	private void addClassNameAttribute(XmlBuilder context, FrankElement frankElement) {
 		addAttribute(context, CLASS_NAME, FIXED, frankElement.getFullName(), version.getClassNameAttributeUse(frankElement));
 	}
 
-	private XmlBuilder recursivelyDefineXsdElementUnchecked(FrankElement frankElement, String xsdElementName) {
-		log.trace("FrankElement [{}] has XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
-		XmlBuilder elementBuilder = createElementWithType(xsdElementName);
-		addDocumentationFrom(elementBuilder, frankElement);
-		xsdElements.add(elementBuilder);
-		XmlBuilder complexType = addComplexType(elementBuilder);
-		log.trace("Adding cumulative config chidren of FrankElement [{}] to XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
+	private XmlBuilder recursivelyDefineXsdElementUnchecked(FrankElement frankElement, String xsdElementTypeName) {
+		log.trace("Defining [{}] for FrankElement [{}]", () -> xsdElementTypeName, () -> frankElement.getFullName());
+		XmlBuilder complexType = createComplexType(xsdElementTypeName);
+		xsdElements.add(complexType);
+		addDocumentationFrom(complexType, frankElement);
+		log.trace("Adding cumulative config chidren of FrankElement [{}] to XSD type [{}]", () -> frankElement.getFullName(), () -> xsdElementTypeName);
 		if(frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
 			log.trace("FrankElement [{}] has plural config children", () -> frankElement.getFullName());
 			// Within <xs:sequence><xs:choice> group, we cannot enforce that mandatory config children are
@@ -479,7 +485,7 @@ public class DocWriterNew {
 				cumulativeConfigChildren.forEach(c -> addConfigChild(childContext, c));				
 			}
 		}
-		log.trace("Adding cumulative attributes of FrankElement [{}] to XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
+		log.trace("Adding cumulative attributes of FrankElement [{}] to XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementTypeName);
 		addAttributeList(complexType, frankElement.getCumulativeAttributes(version.getChildSelector(), version.getChildRejector()));
 		log.trace("Adding attribute className for FrankElement [{}]", () -> frankElement.getFullName());
 		addClassNameAttribute(complexType, frankElement);
@@ -763,18 +769,17 @@ public class DocWriterNew {
 		}
 	}
 
-	private XmlBuilder addConfigChildSingleReferredElement(XmlBuilder context, ObjectConfigChild child) {
+	private void addConfigChildSingleReferredElement(XmlBuilder context, ObjectConfigChild child) {
 		ElementRole role = model.findElementRole(child);
 		FrankElement elementInType = singleElementOf(role);
 		if(elementInType == null) {
 			log.trace("Omitting config child [{}] because of name conflict", () -> child.toString());
-			return null;
+			return;
 		}
 		String referredXsdElementName = elementInType.getXsdElementName(role);
 		log.trace("Config child appears as element reference to FrankElement [{}], XSD element [{}]", () -> elementInType.getFullName(), () -> referredXsdElementName);
-		XmlBuilder elementRefBuilder = addElementRef(context, referredXsdElementName, getMinOccurs(child), getMaxOccurs(child));
+		addElement(context, referredXsdElementName, getTypeName(referredXsdElementName), getMinOccurs(child), getMaxOccurs(child));
 		recursivelyDefineXsdElement(elementInType, role);
-		return elementRefBuilder;
 	}
 
 	private FrankElement singleElementOf(ElementRole elementRole) {
@@ -790,7 +795,7 @@ public class DocWriterNew {
 		if(checkNotDefined(frankElement)) {
 			log.trace("Not yet defined in XML Schema, going to define it");
 			String xsdElementName = frankElement.getXsdElementName(role);
-			XmlBuilder attributeBuilder = recursivelyDefineXsdElementUnchecked(frankElement, xsdElementName);
+			XmlBuilder attributeBuilder = recursivelyDefineXsdElementUnchecked(frankElement, getTypeName(xsdElementName));
 			log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, () -> frankElement.getFullName());
 			addAttribute(attributeBuilder, ELEMENT_ROLE, FIXED, role.getRoleName(), version.getRoleNameAttributeUse());
 			// Adding the other-namespace attribute cannot be done in recursivelyDefineXsdElementUnchecked because the anyAttribute must be last.
@@ -1024,7 +1029,7 @@ public class DocWriterNew {
 			return;
 		}
 		String referredXsdElementName = elementInType.getXsdElementName(elementRole);
-		addElementRef(context, referredXsdElementName);
+		addElement(context, referredXsdElementName, getTypeName(referredXsdElementName));
 		recursivelyDefineXsdElement(elementInType, elementRole);
 	}
 
