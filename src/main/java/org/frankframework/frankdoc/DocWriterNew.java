@@ -72,174 +72,6 @@ import org.frankframework.frankdoc.util.XmlBuilder;
  * This class writes the XML schema document (XSD) that checks the validity of a
  * Frank configuration XML file. The XML schema is written based on the information
  * in a {@link FrankDocModel} object (the model).
- * <p>
- * Below, a few implementation details are explained.
- *
- * <h1>How FrankElement is expressed in the XSD</h1>
- *
- * First, the integration specialist
- * references an element by a name that reveals both the requested Java class
- * (expressed as a {@link FrankElement} in the model) and the role it plays
- * (e.g. sender or error sender). These requirements are implemented by model
- * method {@link FrankElement#getXsdElementName}. This method takes as an
- * argument the relevant {@link ElementRole}. This applies to XSD elements that
- * are nested in some other XSD element. The root XSD element has as its name
- * the simple name of the corresponding {@link FrankElement}, which is
- * <code>nl.nn.adapterframework.configuration.Configuration</code>.
- * <p>
- * This class <code>DocWriterNew</code> can apply two different strategies to express
- * an {@link ElementRole}. The strategy is chosen based on the {@link ElementType}
- * referenced by the {@link ElementRole}. If the {@link ElementType} models a Java
- * class, then it has the {@link FrankElement} of that class as the only member.
- * In this case, an XSD element definition is added as a child of the XML schema root
- * element. The second strategy is applied when the {@link ElementType} models a
- * Java interface. In this case, the {@link FrankElement} is expressed as an XSD
- * element <em>type</em> definition under the XML schema root element. Using a type definition
- * allows definitions to be reused when the same {@link FrankElement} can play
- * different roles. We also reuse XSD definitions for {@link FrankElement} objects
- * modeling Java classes with an inheritance relation.
- * <p>
- * The XML schema type (<code>xs:complexType</code>) references a group of config children and a group
- * of attributes. Below, this is shown for the XSD type definition for {@link FrankElement}
- * <code>nl.nn.adapterframework.pipes.SenderPipe</code>:
- * 
- * <pre>
- * {@code
-<xs:complexType name="SenderPipeType">
-  <xs:group ref="SenderPipeCumulativeChildGroup" />
-  <xs:attributeGroup ref="MessageSendingPipeCumulativeAttributeGroup" />
-</xs:complexType>
-} 
- * </pre>
- *  
- * The {@link ConfigChild} instances in {@link FrankElement}
- * <code>nl.nn.adapterframework.pipes.SenderPipe</code> appear in an XSD group
- * <code>SenderPipeDeclaredChildGroup</code>, as follows:
- * <pre>
- * {@code
-<xs:group name="SenderPipeDeclaredChildGroup">
-  <xs:sequence>
-    <xs:group ref="SenderElementGroup" minOccurs="0" maxOccurs="1" />
-    <xs:group ref="ListenerElementGroup_3" minOccurs="0" maxOccurs="1" />
-  </xs:sequence>
-</xs:group>
-}
- * </pre>
- * This snippet shows <code>SenderPipeDeclaredChildGroup</code>, not
- * <code>SenderPipeCumulativeChildGroup</code>. This has to do with reusing XSD code
- * when the Java classes modeled by {@link FrankElement} objects have inheritance
- * relations. This is explained later.
- * <p>
- * A list of allowed child tags appears in an <code>ElementGroup</code>, for example:
- * <pre>
- * {@code
-  <xs:group name="SenderElementGroup">
-    <xs:choice>
-      <xs:element name="Sender">
-        <xs:complexType>
-          <xs:group ref="ISenderMemberChildGroup" minOccurs="0" maxOccurs="unbounded" />
-          <xs:attribute name="elementRole" type="xs:string" fixed="sender" use="prohibited" />
-          <xs:attribute name="className" type="xs:string" use="required" />
-          <xs:anyAttribute />
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="Afm2EdiFactSender">
-        <xs:complexType>
-          <xs:complexContent>
-            <xs:extension base="Afm2EdiFactSenderType">
-              <xs:attribute name="elementRole" type="xs:string" fixed="sender" use="prohibited" />
-              <xs:attribute name="className" type="xs:string" fixed="nl.nn.adapterframework.extensions.afm.Afm2EdiFactSender" use="prohibited" />
-            </xs:extension>
-          </xs:complexContent>
-        </xs:complexType>
-      </xs:element>
-      ...
-    </xs:choice>
-  </xs:group>
-}
- * </pre>
- * 
- * This example shows how an interface-based {@link ElementRole} is used to put
- * an entry in a <code>ChildGroup</code>. A class-based {@link ElementRole} appears just as
- * an element reference, for example:
- * <pre>
- * {@code
-<xs:group name="AbstractPipeDeclaredChildGroup">
-  <xs:sequence>
-    <xs:element ref="Param" minOccurs="0" maxOccurs="unbounded" />
-    <xs:element ref="Locker" minOccurs="0" maxOccurs="1" />
-    <xs:element ref="Forward" minOccurs="0" maxOccurs="unbounded" />
-  </xs:sequence>
-</xs:group>
-}
- * </pre>
- *
- * <h1>Inheritance of attributes and config children</h1>
- * 
- * In the model, a {@link FrankElement} only holds its declared attributes,
- * but a corresponding top-level &lt;xs:complexType&gt; should allow both the declared
- * attributes and the attributes inherited from the ancestors of the {@link FrankElement}
- * (the inherited attributes). The same holds for configuration children. This similarity
- * appears in the model through the common base class {@link ElementChild}, which is a
- * parent class of both {@link FrankAttribute} and {@link ConfigChild}. An attribute
- * defined high in the class hierarchy of the Frank!Framework can be allowed for many
- * FF! elements, but we do not want to repeat the same &lt;xs:attribute&gt; tags in all
- * these cases. We solve this by grouping the attributes, and the config children,
- * in the XSD, for example:
- * <pre>
- * {@code
-<xs:attributeGroup name="FixedResultPipeCumulativeAttributeGroup">
-  <xs:attributeGroup ref="FixedResultPipeDeclaredAttributeGroup" />
-  <xs:attributeGroup ref="FixedForwardPipeCumulativeAttributeGroup" />
-</xs:attributeGroup>
-}
- * </pre>
- * <p>
- * Another issue about groups needs explanation. Some Java classes of the Frank!Framework override
- * attributes that become then duplicate in the model. They appear as declared attributes
- * in two {@link FrankElement} objects, one modeling the Java subclass and one modeling the
- * Java ancestor class. In this situation, only the attribute (or config child) corresponding
- * to the Java subclass is needed. The attribute
- * of the ancestor class is omitted. The following example illustrates this:
- * <pre>
- {@code
-<xs:attributeGroup name="SoapValidatorCumulativeAttributeGroup">
-  <xs:attributeGroup ref="SoapValidatorDeclaredAttributeGroup" />
-  <xs:attributeGroup ref="Json2XmlValidatorDeclaredAttributeGroup" />
-  <xs:attribute name="ignoreUnknownNamespaces" type="xs:string" />
-  ...
-  <xs:attributeGroup ref="FixedForwardPipeCumulativeAttributeGroup" />
-</xs:attributeGroup>
- }
- * </pre>
- * Java class <code>SoapValidator</code> overrides a method <code>setRoot()</code> from
- * the grand-parent class <code>XmlValidator</code>. If the cumulative group of
- * the parent class <code>Json2XmlValidatorCumulativeAttributeGroup</code> would be referenced,
- * we would have attribute "<code>root</code>" twice. To avoid this, only the declared group
- * <code>Json2XmlValidatorDeclaredAttributeGroup</code> is referenced and the non-duplicate
- * attributes of <code>XmlValidator</code> are repeated. Higher up the dependency
- * hierarchy, there are no duplicate attributes. Therefore, the list of attributes
- * can end with referencing group <code>FixedForwardPipeCumulativeAttributeGroup</code>.
- * <p>
- * Please note that <code>SoapValidator</code> has a deprecated method <code>setSchema()</code>
- * that it overrdes from <code>XmlValidator</code>. The algorithm takes care to not only omit
- * attribute <code>schema</code> as a declared attribute,
- * but also as an inherited attributre of <code>SoapValidator</code>. Other descendants
- * of <code>XmlValidator</code> are not influenced by the override by <code>SoapValidator</code>.
- * This part of the algorithm is handled by package-private class
- * <code>nl.nn.adapterframework.frankdoc.model.ChildRejector</code>.
- * <p>
- * Finally, 'technical' overrides are ignored by this algorithm, which are
- * setters with an override annotation that are not deprecated and lack
- * IbisDoc or IbisDocRef annotations.
- * <p>
- * Please note that the system with DeclaredChildGroup and CumulativeChildGroup
- * is not applied whent there are <em>plural</em> config children, see
- * {@link org.frankframework.frankdoc.model}. When multiple cumulative
- * config children of a {@link org.frankframework.frankdoc.model.FrankElement}
- * share cumulative config children with a common syntax 1 name (after filtering
- * for either compatibility.xsd or strict.xsd), then a different algorithm
- * is applied to include config children.
  * 
  * <h1>Summary of XSD definitions</h1>
  *
@@ -259,7 +91,12 @@ import org.frankframework.frankdoc.util.XmlBuilder;
  *   <tr>
  *     <td><code>xs:complexType</code>
  *     <td><code>Type</code></td>
- *     <td>Expresses a {@link FrankElement} that can be used in multiple roles.</td>
+ *     <td>Expresses the allowed contents of a {@link FrankElement}, to be referenced in config child groups where the element is allowed.</td>
+ *   </tr>
+ *   <tr>
+ *     <td><code>xs:complexType</code>
+ *     <td><code>Type</code></td>
+ *     <td>Expresses the allowed contents of a {@link FrankElement} such that it can be reused for different roles.</td>
  *   </tr>
  *   <tr>
  *     <td><code>xs:attributeGroup</code></td>
@@ -432,7 +269,7 @@ public class DocWriterNew {
 	}
 
 	private void recursivelyDefineRootFrankElement(FrankElement frankElement) {
-		log.trace("Enter top FrankElement [{}]", () -> frankElement.getFullName());
+		log.trace("Enter root FrankElement [{}]", () -> frankElement.getFullName());
 		if(checkNotDefined(frankElement)) {
 			String xsdElementName = frankElement.getSimpleName();
 			XmlBuilder elementBuilder = createElement(xsdElementName, getTypeName(xsdElementName));
@@ -443,7 +280,7 @@ public class DocWriterNew {
 			log.trace("Adding any attribute in another namespace to root element [{}]", () -> frankElement.getFullName());
 			addAnyOtherNamespaceAttribute(attributeBuilder);
 		}
-		log.trace("Leave top FrankElement [{}]", () -> frankElement.getFullName());
+		log.trace("Leave root FrankElement [{}]", () -> frankElement.getFullName());
 	}
 
 	private String getTypeName(String elementName) {
@@ -455,7 +292,7 @@ public class DocWriterNew {
 	}
 
 	private XmlBuilder recursivelyDefineSimpleFrankElementTypeUnchecked(FrankElement frankElement, String xsdElementTypeName) {
-		log.trace("Defining [{}] for FrankElement [{}]", () -> xsdElementTypeName, () -> frankElement.getFullName());
+		log.trace("Defining [{}] for FrankElement [{}], no groups for attributes or config children", () -> xsdElementTypeName, () -> frankElement.getFullName());
 		XmlBuilder complexType = createComplexType(xsdElementTypeName);
 		xsdElements.add(complexType);
 		addDocumentationFrom(complexType, frankElement);
@@ -485,7 +322,7 @@ public class DocWriterNew {
 				cumulativeConfigChildren.forEach(c -> addConfigChild(childContext, c));				
 			}
 		}
-		log.trace("Adding cumulative attributes of FrankElement [{}] to XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementTypeName);
+		log.trace("Adding cumulative attributes of FrankElement [{}] to XSD element type [{}]", () -> frankElement.getFullName(), () -> xsdElementTypeName);
 		addAttributeList(complexType, frankElement.getCumulativeAttributes(version.getChildSelector(), version.getChildRejector()));
 		log.trace("Adding attribute className for FrankElement [{}]", () -> frankElement.getFullName());
 		addClassNameAttribute(complexType, frankElement);
@@ -496,7 +333,7 @@ public class DocWriterNew {
 
 	private void recursivelyDefineReusableFrankElementType(FrankElement frankElement) {
 		if(log.isTraceEnabled()) {
-			log.trace("XML Schema needs type definition (or only groups for config children or attributes) for FrankElement [{}]",
+			log.trace("XML Schema needs reusable type definition (or only groups for config children or attributes) for FrankElement [{}]",
 					() -> frankElement == null ? "null" : frankElement.getFullName());
 		}
 		if(checkNotDefined(frankElement)) {
@@ -514,12 +351,12 @@ public class DocWriterNew {
 				AttributeTypeStrategy.addAttributeActive(elementBuildingStrategy.getElementTypeBuilder());
 				addAnyOtherNamespaceAttribute(elementBuildingStrategy.getElementTypeBuilder());
 			}
-			log.trace("Creating type definitions (or only groups) for Java ancestors of FrankElement [{}]", () -> frankElement.getFullName());
+			log.trace("Creating reusable type definitions (or only groups) for Java ancestors of FrankElement [{}]", () -> frankElement.getFullName());
 			recursivelyDefineReusableFrankElementType(frankElement.getNextAncestorThatHasOrRejectsConfigChildren(version.getChildSelector(), version.getChildRejector()));
 			recursivelyDefineReusableFrankElementType(frankElement.getNextAncestorThatHasOrRejectsAttributes(version.getChildSelector(), version.getChildRejector()));
-			log.trace("Done with XSD type definition of FrankElement [{}]", () -> frankElement.getFullName());
+			log.trace("Done with reusable XSD type definitions for ancestors of FrankElement [{}]", () -> frankElement.getFullName());
 		} else {
-			log.trace("Type definition was already included");
+			log.trace("Reusable type definition was already included");
 		}
 	}
 
@@ -793,7 +630,7 @@ public class DocWriterNew {
 	private void recursivelyDefineSimpleFrankElementType(FrankElement frankElement, ElementRole role) {
 		log.trace("FrankElement [{}] is needed in XML Schema", () -> frankElement.getFullName());
 		if(checkNotDefined(frankElement)) {
-			log.trace("Not yet defined in XML Schema, going to define it");
+			log.trace("Not yet defined in XML Schema, going to define a type for it without reusable config children or attribute groups");
 			String xsdElementName = frankElement.getXsdElementName(role);
 			XmlBuilder attributeBuilder = recursivelyDefineSimpleFrankElementTypeUnchecked(frankElement, getTypeName(xsdElementName));
 			log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, () -> frankElement.getFullName());
@@ -801,7 +638,7 @@ public class DocWriterNew {
 			// Adding the other-namespace attribute cannot be done in recursivelyDefineXsdElementUnchecked because the anyAttribute must be last.
 			log.trace("Adding any attribute in another namespace to FrankElement [{}]", () -> frankElement.getFullName());
 			addAnyOtherNamespaceAttribute(attributeBuilder);
-			log.trace("Done defining FrankElement [{}], XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
+			log.trace("Done defining type for FrankElement [{}], XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
 		} else {
 			log.trace("Already defined in XML Schema");
 		}
