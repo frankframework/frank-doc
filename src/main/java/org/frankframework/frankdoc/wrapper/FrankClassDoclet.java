@@ -314,6 +314,32 @@ class FrankClassDoclet implements FrankClass {
 	}
 
 	@Override
+	public String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException {
+		String result = getJavaDocTagExcludingImplementedInterfaces(tagName);
+		if(result == null) {
+			result = getJavaDocTagFromImplementedInterfaces(tagName);
+		}
+		return result;		
+	}
+
+	private String getJavaDocTagExcludingImplementedInterfaces(String tagName) throws FrankDocException {
+		String result = getJavaDocTag(tagName);
+		if((result == null) && (getSuperclass() != null)) {
+			result = ((FrankClassDoclet) getSuperclass()).getJavaDocTagExcludingImplementedInterfaces(tagName);
+		}
+		return result;
+	}
+
+	private String getJavaDocTagFromImplementedInterfaces(String tagName) throws FrankDocException {
+		TransitiveImplementedInterfaceBrowser<String> browser = new TransitiveImplementedInterfaceBrowser<>(this);
+		String result = browser.search(c -> ((FrankClassDoclet) c).getJavaDocTag(tagName));
+		if((result == null) && (getSuperclass() != null)) {
+			result = ((FrankClassDoclet) getSuperclass()).getJavaDocTagFromImplementedInterfaces(tagName);
+		}
+		return result;
+	}
+
+	@Override
 	public FrankMethod[] getDeclaredMethodsAndMultiplyInheritedPlaceholders() {
 		List<FrankMethod> result = new ArrayList<>();
 		result.addAll(frankMethodsByDocletMethod.values());
