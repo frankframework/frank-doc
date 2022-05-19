@@ -17,22 +17,18 @@
       <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
-  <xs:element name="B">
-    <xs:complexType>
-      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild" use="prohibited" />
-      <xs:attribute ref="active" />
-      <xs:attribute name="elementRole" type="xs:string" fixed="b" use="prohibited" />
-      <xs:anyAttribute namespace="##other" processContents="skip" />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="C">
-    <xs:complexType>
-      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild2" use="prohibited" />
-      <xs:attribute ref="active" />
-      <xs:attribute name="elementRole" type="xs:string" fixed="c" use="prohibited" />
-      <xs:anyAttribute namespace="##other" processContents="skip" />
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="BType">
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:attribute name="elementRole" type="xs:string" fixed="b" use="prohibited" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
+  <xs:complexType name="CType">
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild2" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:attribute name="elementRole" type="xs:string" fixed="c" use="prohibited" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
   <xs:complexType name="MasterType">
     <xs:group ref="MasterDeclaredChildGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master" use="prohibited" />
@@ -51,8 +47,8 @@
         <xs:complexType>
           <xs:sequence>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
-              <xs:element ref="B" />
-              <xs:element ref="C" />
+              <xs:element name="B" type="BType" />
+              <xs:element name="C" type="CType" />
             </xs:choice>
           </xs:sequence>
           <xs:attribute ref="active" />
@@ -93,13 +89,13 @@
   </xs:complexType>
   <xs:group name="ChildDeclaredChildGroup">
     <xs:sequence>
-      <xs:element ref="B" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="B" minOccurs="0" maxOccurs="unbounded" type="BType" />
     </xs:sequence>
   </xs:group>
   <xs:group name="ChildCumulativeChildGroup">
     <xs:sequence>
       <xs:group ref="ChildDeclaredChildGroup" />
-      <xs:element ref="C" minOccurs="1" maxOccurs="unbounded" />
+      <xs:element name="C" minOccurs="1" maxOccurs="unbounded" type="CType" />
     </xs:sequence>
   </xs:group>
   <xs:attributeGroup name="ChildDeclaredAttributeGroup">
@@ -123,8 +119,8 @@
   </xs:complexType>
   <xs:group name="ParentDeclaredChildGroup">
     <xs:sequence>
-      <xs:element ref="B" minOccurs="1" maxOccurs="unbounded" />
-      <xs:element ref="C" minOccurs="1" maxOccurs="unbounded" />
+      <xs:element name="B" minOccurs="1" maxOccurs="unbounded" type="BType" />
+      <xs:element name="C" minOccurs="1" maxOccurs="unbounded" type="CType" />
     </xs:sequence>
   </xs:group>
   <xs:attributeGroup name="ParentDeclaredAttributeGroup">

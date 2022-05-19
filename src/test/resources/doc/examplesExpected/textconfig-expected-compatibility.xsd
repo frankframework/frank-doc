@@ -1,35 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
-  <xs:element name="Start">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-          <xs:element name="P" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
-          <xs:group ref="AElementGroup" minOccurs="0" maxOccurs="unbounded" />
-          <xs:group ref="BElementGroup" minOccurs="0" maxOccurs="unbounded" />
-        </xs:choice>
-      </xs:sequence>
-      <xs:attribute name="i" type="xs:string" />
-      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.Start" use="prohibited" />
-      <xs:attribute ref="active" />
-      <xs:anyAttribute namespace="##other" processContents="skip" />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="C">
-    <xs:complexType>
-      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.GrandChild" use="prohibited" />
-      <xs:attribute ref="active" />
-      <xs:attribute name="elementRole" type="xs:string" fixed="c" />
-      <xs:anyAttribute namespace="##other" processContents="skip" />
-    </xs:complexType>
-  </xs:element>
+  <xs:element name="Start" type="StartType" />
+  <xs:complexType name="StartType">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="P" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
+        <xs:group ref="AElementGroup" minOccurs="0" maxOccurs="unbounded" />
+        <xs:group ref="BElementGroup" minOccurs="0" maxOccurs="unbounded" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="i" type="xs:string" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.Start" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
+  <xs:complexType name="CType">
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.textconfig.GrandChild" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:attribute name="elementRole" type="xs:string" fixed="c" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
   <xs:group name="AElementGroup">
     <xs:choice>
       <xs:element name="A">
         <xs:complexType>
           <xs:sequence>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
-              <xs:element ref="C" />
+              <xs:element name="C" type="CType" />
               <xs:element name="Q" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
             </xs:choice>
           </xs:sequence>
@@ -68,7 +65,7 @@
   <xs:group name="ChildImplDeclaredChildGroup">
     <xs:sequence>
       <xs:element name="Q" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
-      <xs:element ref="C" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="C" minOccurs="0" maxOccurs="unbounded" type="CType" />
     </xs:sequence>
   </xs:group>
   <xs:group name="BElementGroup">
@@ -77,7 +74,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
-              <xs:element ref="C" />
+              <xs:element name="C" type="CType" />
               <xs:element name="Q" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
             </xs:choice>
           </xs:sequence>

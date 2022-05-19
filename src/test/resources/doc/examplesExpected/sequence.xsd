@@ -22,14 +22,12 @@
       <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
-  <xs:element name="RoleEpsilon">
-    <xs:complexType>
-      <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.sequence.Opaque" use="prohibited" />
-      <xs:attribute ref="active" />
-      <xs:attribute name="elementRole" type="xs:string" fixed="roleEpsilon" use="prohibited" />
-      <xs:anyAttribute namespace="##other" processContents="skip" />
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="RoleEpsilonType">
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.sequence.Opaque" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:attribute name="elementRole" type="xs:string" fixed="roleEpsilon" use="prohibited" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
   <xs:complexType name="MasterType">
     <xs:group ref="MasterDeclaredChildGroup" />
     <xs:attributeGroup ref="MasterDeclaredAttributeGroup" />
@@ -40,7 +38,7 @@
       <xs:element ref="Module" minOccurs="0" maxOccurs="unbounded" />
       <xs:group ref="RoleAlphaElementGroup" minOccurs="0" maxOccurs="1" />
       <xs:group ref="RoleBetaElementGroup" minOccurs="0" maxOccurs="1" />
-      <xs:element ref="RoleEpsilon" minOccurs="0" maxOccurs="1" />
+      <xs:element name="RoleEpsilon" minOccurs="0" maxOccurs="1" type="RoleEpsilonType" />
       <xs:group ref="RoleDeltaElementGroup" minOccurs="0" maxOccurs="1" />
     </xs:sequence>
   </xs:group>
