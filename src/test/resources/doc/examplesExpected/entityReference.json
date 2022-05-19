@@ -58,7 +58,7 @@
                 {
                     "name":"myAttribute",
                     "describer":"org.frankframework.frankdoc.testtarget.entity.reference.Configuration",
-                    "description":"This attribute should be allowed in in tag Configuration, but not in tag Module."
+                    "description":"This attribute should be allowed in element Configuration, but not in element Module."
                 },
                 {
                     "name":"active",
