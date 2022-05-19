@@ -18,7 +18,7 @@ package org.frankframework.frankdoc;
 
 public class Constants {
 	static final String MODULE_ELEMENT_NAME = "Module";
-	static final String MODULE_ELEMENT_DESCRIPTION = "Root element for XML files that contain multiple adapters and/or jobs scheduled for periodic execution. Such an XML file is included as entity reference in another XML file. The element does not influence the behavior of Frank configs.";
+	static final String MODULE_ELEMENT_DESCRIPTION = "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.";
 	public static final String IGNORE_COMPATIBILITY_MODE = "ignoreInCompatibilityMode";
 	public static final String JAVA_DOC_TAG_MANDATORY = "@ff.mandatory";
 }
