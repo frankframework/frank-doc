@@ -82,7 +82,7 @@
                 {
                     "multiple":true,
                     "roleName":"module",
-                    "description":"Root element for XML files that contain multiple adapters and/or jobs scheduled for periodic execution. Such an XML file is included as entity reference in another XML file. The tag does not influence the behavior of Frank configs.",
+                    "description":"Root element for XML files that contain multiple adapters and/or jobs scheduled for periodic execution. Such an XML file is included as entity reference in another XML file. The element does not influence the behavior of Frank configs.",
                     "type":"Module"
                 },
                 {
@@ -107,7 +107,7 @@
         {
             "name":"Module",
             "fullName":"Module",
-            "description":"Root element for XML files that contain multiple adapters and/or jobs scheduled for periodic execution. Such an XML file is included as entity reference in another XML file. The tag does not influence the behavior of Frank configs.",
+            "description":"Root element for XML files that contain multiple adapters and/or jobs scheduled for periodic execution. Such an XML file is included as entity reference in another XML file. The element does not influence the behavior of Frank configs.",
             "elementNames":[
                 "Module"
             ]
