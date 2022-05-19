@@ -638,9 +638,7 @@ public class FrankDocModel {
 			// We sort here to make the order deterministic.
 			Collections.sort(memberClasses, Comparator.comparing(FrankClass::getName));
 			for(FrankClass memberClass: memberClasses) {
-				FrankElement frankElement = findOrCreateFrankElement(memberClass.getName());
-				result.addMember(frankElement);
-				frankElement.addTypeMembership(result);
+				addElementIfNotProtected(memberClass, result);
 			}
 		} else {
 			log.trace("Class [{}] is not a Java interface, creating its FrankElement", () -> clazz.getName());
@@ -650,6 +648,16 @@ public class FrankDocModel {
 		}
 		log.trace("Done creating ElementType for class [{}]", () -> clazz.getName());
 		return result;
+	}
+
+	private void addElementIfNotProtected(FrankClass memberClass, final ElementType result) throws FrankDocException {
+		if(Feature.PROTECTED.isEffectivelySetOn(memberClass)) {
+			log.info("Class [{}] has feature PROTECTED, not added to type [{}]", memberClass.getName(), result.getFullName());
+		} else {
+			FrankElement frankElement = findOrCreateFrankElement(memberClass.getName());
+			result.addMember(frankElement);
+			frankElement.addTypeMembership(result);
+		}
 	}
 
 	public ElementType findElementType(String fullName) {

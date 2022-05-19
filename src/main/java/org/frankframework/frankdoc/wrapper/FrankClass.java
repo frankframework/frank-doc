@@ -50,5 +50,6 @@ public interface FrankClass extends FrankType {
 	String getJavaDoc();
 	FrankAnnotation getAnnotationIncludingInherited(String annotationFullName) throws FrankDocException;
 	String getJavaDocTag(String tagName);
+	String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException;
 	List<String> getAllJavaDocTagsOf(String tagName);
 }

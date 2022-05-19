@@ -53,6 +53,11 @@ enum Feature {
 				|| (method.getJavaDocTagIncludingInherited(javaDocTag) != null);
 	}
 
+	boolean isEffectivelySetOn(FrankClass clazz) throws FrankDocException {
+		return (clazz.getAnnotationIncludingInherited(javaAnnotation) != null)
+				|| (clazz.getJavaDocTagIncludingInherited(javaDocTag) != null);		
+	}
+
 	String valueOf(FrankMethod method) throws FrankDocException {
 		String result = method.getJavaDocTagIncludingInherited(javaDocTag);
 		if(result == null) {
