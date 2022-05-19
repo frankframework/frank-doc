@@ -13,7 +13,7 @@
   </xs:element>
   <xs:element name="Module">
     <xs:annotation>
-      <xs:documentation>Root element for XML files that contain multiple adapters and/or cron jobs and are included as entity reference in another XML file. It does not influence the behavior of your Frank config.</xs:documentation>
+      <xs:documentation>Root element for XML files that contain multiple adapters and/or jobs scheduled for periodic execution. Such an XML file is included as entity reference in another XML file. The &lt;Module&gt; tag does not influence the behavior of Frank configs.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:group ref="ConfigurationDeclaredChildGroup" />
