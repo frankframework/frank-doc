@@ -47,7 +47,7 @@
   <xs:attributeGroup name="ConfigurationDeclaredAttributeGroup">
     <xs:attribute name="myAttribute" type="xs:string">
       <xs:annotation>
-        <xs:documentation>This attribute should be allowed in &amp;lt;Configuration&amp;gt;, but not &amp;lt;Module&amp;gt;</xs:documentation>
+        <xs:documentation>This attribute should be allowed in &lt;Configuration&gt;, but not &lt;Module&gt;</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute ref="active" />

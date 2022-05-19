@@ -7,7 +7,7 @@ package org.frankframework.frankdoc.testtarget.entity.reference;
  */
 public class Configuration {
 	/**
-	 * This attribute should be allowed in &lt;Configuration&gt;, but not &lt;Module&gt;
+	 * This attribute should be allowed in <Configuration>, but not <Module>
 	 * @param value
 	 */
 	public void setMyAttribute(String value) {
