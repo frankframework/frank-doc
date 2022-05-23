@@ -64,6 +64,7 @@
       "attributes": [
         {
           "name": "firstAttribute",
+          "mandatory": true,
           "describer": "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
           "description": "First attribute of DescribedPossibleIChild.",
           "default": "this default value"

@@ -1,6 +1,7 @@
 package org.frankframework.frankdoc.testtarget.examples.simple;
 
 import nl.nn.adapterframework.doc.IbisDoc;
+import nl.nn.adapterframework.doc.Mandatory;
 
 /**
  * This is the header of the JavaDoc of "DescribedPossibleIChild".
@@ -11,6 +12,7 @@ import nl.nn.adapterframework.doc.IbisDoc;
  */
 public class DescribedPossibleIChild implements IChild {
 	@IbisDoc({"10", "First attribute of DescribedPossibleIChild.", "this default value"})
+	@Mandatory
 	public void setFirstAttribute(String value) {
 	}
 

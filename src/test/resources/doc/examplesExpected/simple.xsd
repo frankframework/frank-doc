@@ -85,7 +85,7 @@
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="DescribedPossibleIChildDeclaredAttributeGroup">
-    <xs:attribute name="firstAttribute" type="xs:string">
+    <xs:attribute name="firstAttribute" type="xs:string" use="required">
       <xs:annotation>
         <xs:documentation>First attribute of DescribedPossibleIChild. Default: this default value</xs:documentation>
       </xs:annotation>

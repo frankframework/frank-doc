@@ -58,6 +58,7 @@
             "attributes":[
                 {
                     "name":"myAttribute",
+                    "mandatory":true,
                     "describer":"org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Child",
                     "description":"This attribute is not mandatory here."
                 },
@@ -160,10 +161,12 @@
                 },
                 {
                     "name":"mandatoryAttributeThatBecomesOptional",
+                    "mandatory":true,
                     "describer":"org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Parent"
                 },
                 {
                     "name":"mandatoryAttributeThatRemainsMandatory",
+                    "mandatory":true,
                     "describer":"org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Parent"
                 },
                 {
