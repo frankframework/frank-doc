@@ -42,6 +42,7 @@
             "attributes":[
                 {
                     "name":"becomesMandatory",
+                    "mandatory":true,
                     "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Master"
                 },
                 {

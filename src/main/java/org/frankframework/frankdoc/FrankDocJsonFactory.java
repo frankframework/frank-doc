@@ -270,6 +270,9 @@ public class FrankDocJsonFactory {
 		if(frankAttribute.isDeprecated()) {
 			result.add("deprecated", frankAttribute.isDeprecated());
 		}
+		if(frankAttribute.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
+			result.add("mandatory", true);
+		}
 		result.add("describer", frankAttribute.getDescribingElement().getFullName());
 		addIfNotNull(result, "description", frankAttribute.getDescription());
 		addIfNotNull(result, "default", frankAttribute.getDefaultValue());
