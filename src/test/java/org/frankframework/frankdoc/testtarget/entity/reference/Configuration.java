@@ -6,8 +6,9 @@ package org.frankframework.frankdoc.testtarget.entity.reference;
  * @author martijn
  */
 public class Configuration {
+    // TODO: Fix writing XML tags in JavaDoc comments, issue https://github.com/ibissource/frank-doc/issues/118
 	/**
-	 * This attribute should be allowed in &lt;Configuration&gt;, but not &lt;Module&gt;
+	 * This attribute should be allowed in element Configuration, but not in element Module.
 	 * @param value
 	 */
 	public void setMyAttribute(String value) {

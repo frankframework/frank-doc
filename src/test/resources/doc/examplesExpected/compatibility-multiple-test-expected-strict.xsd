@@ -9,7 +9,7 @@
   </xs:element>
   <xs:element name="Module">
     <xs:annotation>
-      <xs:documentation>Root element for XML files that contain multiple adapters and/or cron jobs and are included as entity reference in another XML file. It does not influence the behavior of your Frank config.</xs:documentation>
+      <xs:documentation>Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:group ref="StartPluralConfigChildGroup" />
