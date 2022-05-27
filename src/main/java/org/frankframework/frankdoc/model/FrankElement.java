@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
@@ -62,11 +63,11 @@ public class FrankElement implements Comparable<FrankElement> {
 	private static final Comparator<FrankElement> COMPARATOR =
 			Comparator.comparing(FrankElement::getSimpleName).thenComparing(FrankElement::getFullName);
 
+	private static final Pattern DESCRIPTION_HEADER_SPLIT = Pattern.compile("(\\. )|(\\.\\n)|(\\.\\r\\n)");
+
 	private @Getter LinkedHashMap<FrankMethod, Integer> unusedConfigChildSetterCandidates = new LinkedHashMap<>();
 	private @Getter List<ConfigChild> configChildrenUnderConstruction = new ArrayList<>();
 	
-	private static JavadocStrategy javadocStrategy = JavadocStrategy.USE_JAVADOC;
-
 	private final @Getter String fullName;
 	private final @Getter String simpleName;
 	
@@ -109,7 +110,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
 		isDeprecated = Feature.DEPRECATED.isSetOn(clazz);
 		configChildSets = new LinkedHashMap<>();
-		javadocStrategy.completeFrankElement(this, clazz);
+		this.completeFrankElement(clazz);
 		handleConfigChildSetterCandidates(clazz);
 		if(clazz.getAnnotation(FrankDocGroupFactory.JAVADOC_GROUP_ANNOTATION) != null) {
 			explicitGroup = groupFactory.getGroup(clazz);
@@ -118,6 +119,22 @@ public class FrankElement implements Comparable<FrankElement> {
 		handlePossibleParameters(clazz);
 		handlePossibleForwards(clazz);
 		handlePossibleTags(clazz);
+	}
+
+	private void completeFrankElement(FrankClass clazz) {
+		setDescription(clazz.getJavaDoc());
+		if(getDescription() != null) {
+			setDescriptionHeader(calculateDescriptionHeader(getDescription()));
+		}
+	}
+
+	static String calculateDescriptionHeader(String description) {
+		String descriptionHeader = DESCRIPTION_HEADER_SPLIT.split(description)[0];
+		String remainder = description.substring(descriptionHeader.length());
+		if(remainder.startsWith(".")) {
+			descriptionHeader = descriptionHeader + ".";
+		}
+		return descriptionHeader;
 	}
 
 	private void handleConfigChildSetterCandidates(FrankClass clazz) {
