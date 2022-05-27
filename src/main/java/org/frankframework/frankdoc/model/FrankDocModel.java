@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ import lombok.Setter;
 public class FrankDocModel {
 	private static Logger log = LogUtil.getLogger(FrankDocModel.class);
 	private static String ENUM = "Enum";
+	private static List<String> EXPECTED_HTML_TAGS = Arrays.asList("a", "b", "br", "code", "h1", "h2", "h3", "h4", "i", "li", "ol", "pre", "strong", "table", "td", "th", "tr", "ul");
 
 	private FrankClassRepository classRepository;
 
@@ -88,6 +90,7 @@ public class FrankDocModel {
 			result.findOrCreateRootFrankElement(rootClassName);
 			result.buildDescendants();
 			result.allElements.values().forEach(f -> result.finishConfigChildrenFor(f));
+			result.checkSuspiciousHtml();
 			result.calculateTypeNameSeq();
 			result.calculateInterfaceBased();
 			result.calculateCommonInterfacesHierarchies();
@@ -844,6 +847,26 @@ public class FrankDocModel {
 
 	public List<AttributeEnum> getAllAttributeEnumInstances() {
 		return attributeEnumFactory.getAll();
+	}
+
+	public void checkSuspiciousHtml() {
+		Set<String> allSuspiciousHtmlTagsFound = new HashSet<>();
+		for(FrankElement frankElement: allElements.values()) {
+			List<String> htmlTags = FrankElement.getHtmlTags(frankElement.getDescription());
+			Set<String> suspiciousHtmlTags = new HashSet<>(htmlTags);
+			suspiciousHtmlTags.removeAll(EXPECTED_HTML_TAGS);
+			allSuspiciousHtmlTagsFound.addAll(suspiciousHtmlTags);
+			if(! suspiciousHtmlTags.isEmpty()) {
+				log.warn("FrankElement [{}] has a description with suspicious HTML tags: [{}]", frankElement.getFullName(), formatSuspiciousHtmlTags(suspiciousHtmlTags));
+			}
+		}
+		if(! allSuspiciousHtmlTagsFound.isEmpty()) {
+			log.warn("The following suspicious HTML tags appear in all FrankElements combined: [{}]", formatSuspiciousHtmlTags(allSuspiciousHtmlTagsFound));
+		}
+	}
+
+	private String formatSuspiciousHtmlTags(Set<String> suspiciousHtmlTags) {
+		return suspiciousHtmlTags.stream().map(s -> "<" + s + ">").collect(Collectors.joining(", "));
 	}
 
 	// This method handles a corner case regarding Java classes that share a simple name.

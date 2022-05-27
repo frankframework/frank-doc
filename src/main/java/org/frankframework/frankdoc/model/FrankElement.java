@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -64,6 +65,7 @@ public class FrankElement implements Comparable<FrankElement> {
 			Comparator.comparing(FrankElement::getSimpleName).thenComparing(FrankElement::getFullName);
 
 	private static final Pattern DESCRIPTION_HEADER_SPLIT = Pattern.compile("(\\. )|(\\.\\n)|(\\.\\r\\n)");
+	private static final Pattern HTML_TAGS = Pattern.compile("<\\w+");
 
 	private @Getter LinkedHashMap<FrankMethod, Integer> unusedConfigChildSetterCandidates = new LinkedHashMap<>();
 	private @Getter List<ConfigChild> configChildrenUnderConstruction = new ArrayList<>();
@@ -462,6 +464,16 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	boolean syntax2ExcludedFromType(String typeName) {
 		return syntax2ExcludedFromTypes.contains(typeName);
+	}
+
+	static List<String> getHtmlTags(String description) {
+		Matcher matcher = HTML_TAGS.matcher(description);
+		List<String> result = new ArrayList<>();
+		while(matcher.find()) {
+			String matchString = matcher.group();
+			result.add(matchString.substring(1));
+		}
+		return result;
 	}
 
 	@Override
