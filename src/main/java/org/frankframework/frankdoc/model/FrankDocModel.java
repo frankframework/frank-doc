@@ -52,7 +52,7 @@ import lombok.Setter;
 public class FrankDocModel {
 	private static Logger log = LogUtil.getLogger(FrankDocModel.class);
 	private static String ENUM = "Enum";
-	private static List<String> EXPECTED_HTML_TAGS = Arrays.asList("a", "b", "br", "code", "h1", "h2", "h3", "h4", "i", "li", "ol", "pre", "strong", "table", "td", "th", "tr", "ul");
+	private static List<String> EXPECTED_HTML_TAGS = Arrays.asList("a", "b", "br", "code", "h1", "h2", "h3", "h4", "i", "li", "ol", "p", "pre", "strong", "table", "td", "th", "tr", "ul");
 
 	private FrankClassRepository classRepository;
 
@@ -852,16 +852,23 @@ public class FrankDocModel {
 	public void checkSuspiciousHtml() {
 		Set<String> allSuspiciousHtmlTagsFound = new HashSet<>();
 		for(FrankElement frankElement: allElements.values()) {
-			List<String> htmlTags = FrankElement.getHtmlTags(frankElement.getDescription());
-			Set<String> suspiciousHtmlTags = new HashSet<>(htmlTags);
-			suspiciousHtmlTags.removeAll(EXPECTED_HTML_TAGS);
-			allSuspiciousHtmlTagsFound.addAll(suspiciousHtmlTags);
-			if(! suspiciousHtmlTags.isEmpty()) {
-				log.warn("FrankElement [{}] has a description with suspicious HTML tags: [{}]", frankElement.getFullName(), formatSuspiciousHtmlTags(suspiciousHtmlTags));
-			}
+			checkDescription(frankElement.getDescription(), "FrankElement", frankElement.getFullName(), allSuspiciousHtmlTagsFound);
+			frankElement.getConfigChildren(ElementChild.ALL).stream()
+				.filter(c -> c.getDescription() != null)
+				.forEach(c -> checkDescription(c.getDescription(), "ConfigChild", c.toString(), allSuspiciousHtmlTagsFound));
+			frankElement.getAttributes(ElementChild.ALL).stream()
+				.filter(a -> a.getDescription() != null)
+				.forEach(a -> checkDescription(a.getDescription(), "Attribute", a.toString(), allSuspiciousHtmlTagsFound));
 		}
-		if(! allSuspiciousHtmlTagsFound.isEmpty()) {
-			log.warn("The following suspicious HTML tags appear in all FrankElements combined: [{}]", formatSuspiciousHtmlTags(allSuspiciousHtmlTagsFound));
+	}
+
+	private void checkDescription(String description, String item, String itemName, Set<String> allSuspiciousHtmlTagsFound) {
+		List<String> htmlTags = Utils.getHtmlTags(description);
+		Set<String> suspiciousHtmlTags = new HashSet<>(htmlTags);
+		suspiciousHtmlTags.removeAll(EXPECTED_HTML_TAGS);
+		allSuspiciousHtmlTagsFound.addAll(suspiciousHtmlTags);
+		if(! suspiciousHtmlTags.isEmpty()) {
+			log.warn("{} [{}] has a description with suspicious HTML tags: [{}]", item, itemName, formatSuspiciousHtmlTags(suspiciousHtmlTags));
 		}
 	}
 
