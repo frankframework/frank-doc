@@ -860,6 +860,9 @@ public class FrankDocModel {
 				.filter(a -> a.getDescription() != null)
 				.forEach(a -> checkDescription(a.getDescription(), "Attribute", a.toString(), allSuspiciousHtmlTagsFound));
 		}
+		if(! allSuspiciousHtmlTagsFound.isEmpty()) {
+			log.warn("Searching over the descriptions of elements, config children and attributes, the following suspicious HTML tags were found: [{}]", formatSuspiciousHtmlTags(allSuspiciousHtmlTagsFound));
+		}
 	}
 
 	private void checkDescription(String description, String item, String itemName, Set<String> allSuspiciousHtmlTagsFound) {
