@@ -551,6 +551,7 @@ public class FrankDocModel {
 			}
 			if(configChildCandidateHasProtectedArgument(frankMethod)) {
 				log.trace("Not a config child, next");
+				continue;
 			}
 			log.trace("Have ConfigChildSetterDescriptor [{}]", () -> configChildDescriptor.toString());
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);

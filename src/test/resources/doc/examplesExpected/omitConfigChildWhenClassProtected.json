@@ -6,19 +6,12 @@
         {
             "name":"Other",
             "types":[
-                "org.frankframework.frankdoc.testtarget.examples.omit.config.childProtected.ProtectedChild",
                 "org.frankframework.frankdoc.testtarget.examples.omit.config.childProtected.Master",
                 "Module"
             ]
         }
     ],
     "types":[
-        {
-            "name":"org.frankframework.frankdoc.testtarget.examples.omit.config.childProtected.ProtectedChild",
-            "members":[
-                "org.frankframework.frankdoc.testtarget.examples.omit.config.childProtected.ProtectedChild"
-            ]
-        },
         {
             "name":"org.frankframework.frankdoc.testtarget.examples.omit.config.childProtected.Master",
             "members":[
@@ -55,11 +48,6 @@
                     "roleName":"module",
                     "description":"Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
                     "type":"Module"
-                },
-                {
-                    "multiple":true,
-                    "roleName":"a",
-                    "type":"org.frankframework.frankdoc.testtarget.examples.omit.config.childProtected.ProtectedChild"
                 }
             ]
         },
@@ -75,19 +63,6 @@
             "name":"Object",
             "fullName":"java.lang.Object",
             "elementNames":[
-            ],
-            "attributes":[
-                {
-                    "name":"active",
-                    "description":"If defined and empty or false, then this element and all its children are ignored"
-                }
-            ]
-        },
-        {
-            "name":"ProtectedChild",
-            "fullName":"org.frankframework.frankdoc.testtarget.examples.omit.config.childProtected.ProtectedChild",
-            "elementNames":[
-                "A"
             ],
             "attributes":[
                 {
