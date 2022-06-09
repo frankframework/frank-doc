@@ -243,8 +243,7 @@ It is taken from [RecordTransformer](https://github.com/ibissource/iaf/blob/mast
 
 There are a few other JavaDoc tags that are relevant for the Frank!Doc:
 
-**@Protected:** Put this Java annotation above an attribute setter or config child setter to prevent it from becoming an attribute or config child. You can also use this annotation to suppress inheritance of an attribute or config child. If you override an attribute setter or config child setter with this annotation, the derived class
-will not re-introduce the attribute or config child. In other words, this annotation is inherited.
+**@Protected:** Applies to config child setters, attribute setters or Java classes. Put this Java annotation above an attribute setter or config child setter to prevent it from becoming an attribute or config child. You can also use this annotation to suppress inheritance of an attribute or config child. If you override an attribute setter or config child setter with this annotation, the derived class will not re-introduce the attribute or config child. In other words, this annotation is inherited. When you put this annotation on a Java class, that class and its descendants will be omitted as FrankElements. If a config child setter has a non-interface Java class as its argument and if that class has or inherits this annotation, then no config child is created.
 
 **@ff.protected:** JavaDoc tag that does the same as Java annotation `@Protected`.
 
