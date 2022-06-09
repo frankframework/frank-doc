@@ -40,6 +40,7 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
+import org.frankframework.frankdoc.wrapper.FrankType;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -126,8 +127,33 @@ public class FrankElement implements Comparable<FrankElement> {
 				.filter(Utils::isConfigChildSetter)
 				.collect(Collectors.toList());
 		for(int i = 0; i < methods.size(); ++i) {
-			unusedConfigChildSetterCandidates.put(methods.get(i), i);
+			if(! configChildCandidateHasProtectedArgument(methods.get(i))) {
+				unusedConfigChildSetterCandidates.put(methods.get(i), i);
+			}
 		}
+	}
+
+	private boolean configChildCandidateHasProtectedArgument(FrankMethod frankMethod) {
+		log.trace("Checking method [{}]", () -> frankMethod.toString());
+		FrankType argumentType = frankMethod.getParameterTypes()[0];
+		if(! (argumentType instanceof FrankClass)) {
+			// Text config child, wont have feature PROTECTED
+			return false;
+		}
+		FrankClass argument = (FrankClass) argumentType;
+		if(argument.isInterface()) {
+			return false;
+		}
+		try {
+			if(Feature.PROTECTED.isEffectivelySetOn(argument)) {
+				log.trace("Method [{}] is not a config child candidate because class [{}] has feature PROTECTED", () -> frankMethod.toString(), () -> argument.toString());
+				return true;
+			}
+		} catch(FrankDocException e) {
+			log.error("Failed to check PROTECTED feature on class [{}]", argument.toString(), e);
+			return true;
+		}
+		return false;
 	}
 
 	private void handlePossibleParameters(FrankClass clazz) {

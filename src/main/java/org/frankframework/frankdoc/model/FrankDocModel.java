@@ -42,7 +42,6 @@ import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.frankframework.frankdoc.wrapper.FrankType;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -549,10 +548,6 @@ public class FrankDocModel {
 				log.trace("Not a config child, next");
 				continue;				
 			}
-			if(configChildCandidateHasProtectedArgument(frankMethod)) {
-				log.trace("Not a config child, next");
-				continue;
-			}
 			log.trace("Have ConfigChildSetterDescriptor [{}]", () -> configChildDescriptor.toString());
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);
 			configChild.setExcluded(frankMethod);
@@ -580,29 +575,6 @@ public class FrankDocModel {
 		}
 		log.trace("Done creating config children of FrankElement [{}]", () -> parent.getFullName());
 		return createdNewConfigChildren;
-	}
-
-	private boolean configChildCandidateHasProtectedArgument(FrankMethod frankMethod) {
-		log.trace("Checking method [{}]", () -> frankMethod.toString());
-		FrankType argumentType = frankMethod.getParameterTypes()[0];
-		if(! (argumentType instanceof FrankClass)) {
-			// Text config child, wont have feature PROTECTED
-			return false;
-		}
-		FrankClass argument = (FrankClass) argumentType;
-		if(argument.isInterface()) {
-			return false;
-		}
-		try {
-			if(Feature.PROTECTED.isEffectivelySetOn(argument)) {
-				log.trace("Method [{}] is not a config child because class [{}] has feature PROTECTED", () -> frankMethod.toString(), () -> argument.toString());
-				return true;
-			}
-		} catch(FrankDocException e) {
-			log.error("Failed to check PROTECTED feature on class [{}]", argument.toString(), e);
-			return true;
-		}
-		return false;
 	}
 
 	void finishConfigChildrenFor(FrankElement parent) {
