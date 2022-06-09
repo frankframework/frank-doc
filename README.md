@@ -272,7 +272,3 @@ The default value is `nl.nn.adapterframework.pipes.SenderPipe` in this example. 
 **@Optional:** Java annotation that does the same as JavaDoc tag `@ff.optional`.
 
 **@ff.tag:** Add tag to Java class that is shown in the Frank!Doc webapplication. Add the `@ff.tag` JavaDoc tag in the JavaDoc comment above a class. There are two arguments. The first argument is the tag name and the second argument is the tag value.
-
-**@ff.protected:** Put this JavaDoc tag on a method or class to keep it out of the Frank!Doc. This JavaDoc tag is inherited.
-
-**@Protected:** Java annotation that does the same as JavaDoc tag @ff.protected. This Java annotation is inherited.
