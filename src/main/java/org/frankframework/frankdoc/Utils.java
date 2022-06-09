@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -82,6 +85,8 @@ public final class Utils {
 		ALLOWED_SETTER_TYPES.addAll(primitiveToBoxed.keySet());
 		ALLOWED_SETTER_TYPES.addAll(JAVA_BOXED);
 	}
+
+	private static final Pattern HTML_TAGS = Pattern.compile("<\\w+");
 
 	private Utils() {
 	}
@@ -261,5 +266,15 @@ public final class Utils {
 				return o1.equals(o2);
 			}
 		}
+	}
+
+	public static List<String> getHtmlTags(String description) {
+		Matcher matcher = HTML_TAGS.matcher(description);
+		List<String> result = new ArrayList<>();
+		while(matcher.find()) {
+			String matchString = matcher.group();
+			result.add(matchString.substring(1));
+		}
+		return result;
 	}
 }

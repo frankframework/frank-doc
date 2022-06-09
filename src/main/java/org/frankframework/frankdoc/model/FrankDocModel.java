@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ import lombok.Setter;
 public class FrankDocModel {
 	private static Logger log = LogUtil.getLogger(FrankDocModel.class);
 	private static String ENUM = "Enum";
+	private static List<String> EXPECTED_HTML_TAGS = Arrays.asList("a", "b", "br", "code", "h1", "h2", "h3", "h4", "i", "li", "ol", "p", "pre", "strong", "table", "td", "th", "tr", "ul");
 
 	private FrankClassRepository classRepository;
 
@@ -88,6 +90,7 @@ public class FrankDocModel {
 			result.findOrCreateRootFrankElement(rootClassName);
 			result.buildDescendants();
 			result.allElements.values().forEach(f -> result.finishConfigChildrenFor(f));
+			result.checkSuspiciousHtml();
 			result.calculateTypeNameSeq();
 			result.calculateInterfaceBased();
 			result.calculateCommonInterfacesHierarchies();
@@ -844,6 +847,36 @@ public class FrankDocModel {
 
 	public List<AttributeEnum> getAllAttributeEnumInstances() {
 		return attributeEnumFactory.getAll();
+	}
+
+	public void checkSuspiciousHtml() {
+		Set<String> allSuspiciousHtmlTagsFound = new HashSet<>();
+		for(FrankElement frankElement: allElements.values()) {
+			checkDescription(frankElement.getDescription(), "FrankElement", frankElement.getFullName(), allSuspiciousHtmlTagsFound);
+			frankElement.getConfigChildren(ElementChild.ALL).stream()
+				.filter(c -> c.getDescription() != null)
+				.forEach(c -> checkDescription(c.getDescription(), "ConfigChild", c.toString(), allSuspiciousHtmlTagsFound));
+			frankElement.getAttributes(ElementChild.ALL).stream()
+				.filter(a -> a.getDescription() != null)
+				.forEach(a -> checkDescription(a.getDescription(), "Attribute", a.toString(), allSuspiciousHtmlTagsFound));
+		}
+		if(! allSuspiciousHtmlTagsFound.isEmpty()) {
+			log.warn("Searching over the descriptions of elements, config children and attributes, the following suspicious HTML tags were found: [{}]", formatSuspiciousHtmlTags(allSuspiciousHtmlTagsFound));
+		}
+	}
+
+	private void checkDescription(String description, String item, String itemName, Set<String> allSuspiciousHtmlTagsFound) {
+		List<String> htmlTags = Utils.getHtmlTags(description);
+		Set<String> suspiciousHtmlTags = new HashSet<>(htmlTags);
+		suspiciousHtmlTags.removeAll(EXPECTED_HTML_TAGS);
+		allSuspiciousHtmlTagsFound.addAll(suspiciousHtmlTags);
+		if(! suspiciousHtmlTags.isEmpty()) {
+			log.warn("{} [{}] has a description with suspicious HTML tags: [{}]", item, itemName, formatSuspiciousHtmlTags(suspiciousHtmlTags));
+		}
+	}
+
+	private String formatSuspiciousHtmlTags(Set<String> suspiciousHtmlTags) {
+		return suspiciousHtmlTags.stream().map(s -> "<" + s + ">").collect(Collectors.joining(", "));
 	}
 
 	// This method handles a corner case regarding Java classes that share a simple name.
