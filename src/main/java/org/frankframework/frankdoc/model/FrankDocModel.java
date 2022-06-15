@@ -644,6 +644,8 @@ public class FrankDocModel {
 				addElementIfNotProtected(memberClass, result);
 			}
 		} else {
+			// We do not create a config child if the argument clazz is not an interface and if it has feature PROTECTED.
+			// Therefore we can sefely proceed here.
 			log.trace("Class [{}] is not a Java interface, creating its FrankElement", () -> clazz.getName());
 			FrankElement member = findOrCreateFrankElement(clazz.getName());
 			result.addMember(member);
