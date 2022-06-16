@@ -253,6 +253,18 @@ public class FrankElement implements Comparable<FrankElement> {
 		Utils.addToSortedListUnique(xmlElementNames, elementName);
 	}
 
+	public boolean hasOnePossibleXmlElementName() {
+		return xmlElementNames.size() == 1;
+	}
+
+	public String getTheSingleXmlElementName() {
+		if(! hasOnePossibleXmlElementName()) {
+			throw new IllegalStateException(String.format("FrankElement [%s] has more then one possible XML element name: [%s]",
+					fullName, xmlElementNames.stream().collect(Collectors.joining(", "))));
+		}
+		return xmlElementNames.get(0);
+	}
+
 	public void setAttributes(List<FrankAttribute> inputAttributes) {
 		setChildrenOfKind(inputAttributes, FrankAttribute.class);
 	}

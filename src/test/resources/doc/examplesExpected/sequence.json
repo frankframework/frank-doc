@@ -118,7 +118,7 @@
       }]
     },
     {
-      "name": "Opaque",
+      "name": "RoleEpsilon",
       "fullName": "org.frankframework.frankdoc.testtarget.examples.sequence.Opaque",
       "elementNames": ["RoleEpsilon"],
       "attributes": [{

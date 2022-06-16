@@ -152,9 +152,9 @@ public class FrankDocJsonFactory {
 	}
 
 	private JsonArray getElements() throws JsonException {
-		Map<String, List<FrankElement>> elementsBySimpleName = model.getAllElements().values().stream()
-				.collect(Collectors.groupingBy(FrankElement::getSimpleName));
-		List<String> sortKeys = new ArrayList<>(elementsBySimpleName.keySet());
+		Map<String, List<FrankElement>> elementsByName = model.getAllElements().values().stream()
+				.collect(Collectors.groupingBy(f -> getElementNameForJson(f)));
+		List<String> sortKeys = new ArrayList<>(elementsByName.keySet());
 		sortKeys.add(Constants.MODULE_ELEMENT_NAME);
 		Collections.sort(sortKeys);
 		JsonArrayBuilder result = bf.createArrayBuilder();
@@ -162,12 +162,21 @@ public class FrankDocJsonFactory {
 			if(sortKey.equals(Constants.MODULE_ELEMENT_NAME)) {
 				result.add(getElementReferencedEntityRoot());
 			} else {
-				elementsBySimpleName.get(sortKey).stream()
+				elementsByName.get(sortKey).stream()
 						.map(f -> getElement(f))
 						.forEach(result::add);
 			}
 		}
 		return result.build();
+	}
+
+	private String getElementNameForJson(FrankElement f) {
+		boolean useXmlElementName = (! f.isInterfaceBased()) && f.hasOnePossibleXmlElementName();
+		if(useXmlElementName) {
+			return f.getTheSingleXmlElementName();
+		} else {
+			return f.getSimpleName();
+		}
 	}
 
 	private JsonObject getElementReferencedEntityRoot() {
@@ -183,7 +192,7 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getElement(FrankElement frankElement) throws JsonException {
 		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", frankElement.getSimpleName());
+		result.add("name", getElementNameForJson(frankElement));
 		result.add("fullName", frankElement.getFullName());
 		if(frankElement.isAbstract()) {
 			result.add("abstract", frankElement.isAbstract());

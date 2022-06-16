@@ -85,7 +85,7 @@
       		}]
         },
         {
-            "name":"TChild",
+            "name":"RoleNameTChild",
             "fullName":"org.frankframework.frankdoc.testtarget.examples.deprecated.TChild",
             "deprecated":true,
             "elementNames":[

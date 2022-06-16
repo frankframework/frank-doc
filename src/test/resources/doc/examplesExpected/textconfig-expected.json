@@ -41,6 +41,19 @@
     ],
     "elements":[
         {
+            "name":"C",
+            "fullName":"org.frankframework.frankdoc.testtarget.textconfig.GrandChild",
+            "elementNames":[
+                "C"
+            ],
+            "attributes":[
+                {
+                    "name":"active",
+                    "description":"If defined and empty or false, then this element and all its children are ignored"
+                }
+            ]
+        },
+        {
             "name":"ChildImpl",
             "fullName":"org.frankframework.frankdoc.testtarget.textconfig.ChildImpl",
             "elementNames":[
@@ -62,19 +75,6 @@
                     "multiple":true,
                     "roleName":"c",
                     "type":"org.frankframework.frankdoc.testtarget.textconfig.GrandChild"
-                }
-            ]
-        },
-        {
-            "name":"GrandChild",
-            "fullName":"org.frankframework.frankdoc.testtarget.textconfig.GrandChild",
-            "elementNames":[
-                "C"
-            ],
-            "attributes":[
-                {
-                    "name":"active",
-                    "description":"If defined and empty or false, then this element and all its children are ignored"
                 }
             ]
         },
