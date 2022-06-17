@@ -16,6 +16,7 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAttributeRef;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnyAttribute;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAnyOtherNamespaceAttribute;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAttribute;
@@ -137,7 +138,7 @@ import org.frankframework.frankdoc.util.XmlBuilder;
  * @author martijn
  *
  */
-public class DocWriterNew {
+public class DocWriterNew implements AttributeReuseManagerCallback {
 	private static Logger log = LogUtil.getLogger(DocWriterNew.class);
 
 	private static Map<XsdVersion, String> outputFileNames = new HashMap<>();
@@ -156,8 +157,10 @@ public class DocWriterNew {
 	private FrankDocModel model;
 	private String startClassName;
 	private XsdVersion version;
+	private final AttributeReuseManager attributeReuseManager = new AttributeReuseManager();
 	private List<XmlBuilder> xsdElements = new ArrayList<>();
 	private List<XmlBuilder> xsdComplexItems = new ArrayList<>();
+	private List<XmlBuilder> xsdReusedAttributes = new ArrayList<>();
 	private Set<String> namesCreatedFrankElements = new HashSet<>();
 	private Set<ElementRole.Key> idsCreatedElementGroups = new HashSet<>();
 	private ElementGroupManager elementGroupManager;
@@ -197,6 +200,7 @@ public class DocWriterNew {
 		log.trace("Have the XmlBuilder objects. Going to add them in the right order to the schema root builder");
 		xsdElements.forEach(xsdRoot::addSubElement);
 		xsdComplexItems.forEach(xsdRoot::addSubElement);
+		xsdReusedAttributes.forEach(xsdRoot::addSubElement);
 		log.trace("Populating schema root builder is done. Going to create the XML string to return");
 		return xsdRoot.toXML(true);
 	}
@@ -1056,22 +1060,44 @@ public class DocWriterNew {
 	private void addAttributeList(XmlBuilder context, List<FrankAttribute> frankAttributes) {
 		frankAttributes.forEach(version::checkForMissingDescription);
 		for(FrankAttribute frankAttribute: frankAttributes) {
-			log.trace("Adding attribute [{}]", () -> frankAttribute.getName());
-			XmlBuilder attribute = null;
-			if(frankAttribute.getAttributeEnum() == null) {
-				// The default value in the model is a *description* of the default value.
-				// Therefore, it should be added to the description in the xs:attribute.
-				// The "default" attribute of the xs:attribute should not be set.
-				attribute = attributeTypeStrategy.createAttribute(frankAttribute.getName(), frankAttribute.getAttributeType(), version.childIsMandatory(frankAttribute));
-			} else {
-				attribute = addRestrictedAttribute(frankAttribute);
-			}
-			context.addSubElement(attribute);
-			if(needsDocumentation(frankAttribute)) {
-				log.trace("Attribute has documentation");
-				addDocumentation(attribute, getDocumentationText(frankAttribute));
-			}
+			log.trace("Group has attribute [{}], will decide later whether to add it inline or to reuse it", () -> frankAttribute.getName());
+			attributeReuseManager.addAttribute(frankAttribute, context);
 		}		
+	}
+
+	@Override
+	public void addAttributeInline(FrankAttribute attribute, XmlBuilder group) {
+		log.trace("Attribute [{}] for FrankElement [{}] is inline", () -> attribute.toString(), () -> attribute.getOwningElement().toString());
+		group.addSubElement(createAttribute(attribute));
+	}
+
+	@Override
+	public void addReusableAttribute(FrankAttribute attribute) {
+		log.trace("Attribute [{}] of FrankElement [{}] is reused, creating it", attribute.toString(), attribute.getOwningElement().toString());
+		xsdReusedAttributes.add(createAttribute(attribute));
+	}
+
+	@Override
+	public void addReusedAttributeReference(FrankAttribute attribute, XmlBuilder group) {
+		log.trace("Reference reused attribute [{}] of FrankElement [{}]", () -> attribute.toString(), () -> attribute.getOwningElement().toString());
+		addAttributeRef(group, attribute.getName());
+	}
+
+	private XmlBuilder createAttribute(FrankAttribute frankAttribute) {
+		XmlBuilder attribute = null;
+		if(frankAttribute.getAttributeEnum() == null) {
+			// The default value in the model is a *description* of the default value.
+			// Therefore, it should be added to the description in the xs:attribute.
+			// The "default" attribute of the xs:attribute should not be set.
+			attribute = attributeTypeStrategy.createAttribute(frankAttribute.getName(), frankAttribute.getAttributeType(), version.childIsMandatory(frankAttribute));
+		} else {
+			attribute = addRestrictedAttribute(frankAttribute);
+		}
+		if(needsDocumentation(frankAttribute)) {
+			log.trace("Attribute has documentation");
+			addDocumentation(attribute, getDocumentationText(frankAttribute));
+		}
+		return attribute;
 	}
 
 	private XmlBuilder addRestrictedAttribute(FrankAttribute attribute) {
