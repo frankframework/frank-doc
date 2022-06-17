@@ -255,6 +255,12 @@ class DocWriterNewXmlUtils {
 		return attribute;
 	}
 
+	static XmlBuilder createAttributeWithType(String name) {
+		XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
+		attribute.addAttribute("name", name);
+		return attribute;
+	}
+
 	static void addDocumentation(XmlBuilder context, String description) {
 		description = checkedFlatten(description);
 		XmlBuilder annotation = addAnnotation(context);
