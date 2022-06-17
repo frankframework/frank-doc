@@ -68,8 +68,8 @@ public enum AttributeTypeStrategy {
 		this.delegate = delegate;
 	}
 
-	XmlBuilder addAttribute(String name, AttributeType modelAttributeType, boolean isMandatory) {
-		return delegate.addAttribute(name, modelAttributeType, isMandatory);
+	XmlBuilder createAttribute(String name, AttributeType modelAttributeType, boolean isMandatory) {
+		return delegate.createAttribute(name, modelAttributeType, isMandatory);
 	}
 
 	// A code smell - passing a Boolean argument and using it in an if-statement.
@@ -77,8 +77,8 @@ public enum AttributeTypeStrategy {
 	// duplicating logic from XsdVersion. Or XsdVersion would have to become responsible for
 	// setting the use="required" attribute. Or we would have to merge XsdVersion and
 	// AttributeTypeStrategy, which would require a lot of code modifications.
-	XmlBuilder addRestrictedAttribute(FrankAttribute attribute, boolean isMandatory) {
-		return delegate.addRestrictedAttribute(attribute, isMandatory);
+	XmlBuilder createRestrictedAttribute(FrankAttribute attribute, boolean isMandatory) {
+		return delegate.createRestrictedAttribute(attribute, isMandatory);
 	}
 
 	static void addAttributeActive(XmlBuilder context) {
@@ -98,11 +98,11 @@ public enum AttributeTypeStrategy {
 		// For example, an integer attribute can still be set like "${someIdentifier}".
 		// This method expects that methods DocWriterNewXmlUtils.createTypeFrankBoolean() and
 		// DocWriterNewXmlUtils.createTypeFrankInteger() are used to define the referenced XSD types.
-		XmlBuilder addAttribute(String name, AttributeType modelAttributeType, boolean isMandatory) {
-			return addAttribute(name, modelAttributeType, isMandatory, FRANK_BOOLEAN, FRANK_INT);
+		XmlBuilder createAttribute(String name, AttributeType modelAttributeType, boolean isMandatory) {
+			return createAttribute(name, modelAttributeType, isMandatory, FRANK_BOOLEAN, FRANK_INT);
 		}
 
-		private final XmlBuilder addAttribute(String name, AttributeType modelAttributeType, boolean isMandatory,
+		private final XmlBuilder createAttribute(String name, AttributeType modelAttributeType, boolean isMandatory,
 				String boolType, String intType) {
 			log.trace("Attribute isMandatory={}", () -> isMandatory);
 			XmlBuilder attribute = createAttributeWithType(name);
@@ -125,7 +125,7 @@ public enum AttributeTypeStrategy {
 			return attribute;						
 		}
 
-		final XmlBuilder addRestrictedAttribute(FrankAttribute attribute, boolean isMandatory) {
+		final XmlBuilder createRestrictedAttribute(FrankAttribute attribute, boolean isMandatory) {
 			log.trace("isMandatory=[{}]", () -> isMandatory);
 			AttributeEnum attributeEnum = attribute.getAttributeEnum();
 			XmlBuilder attributeBuilder = createAttributeWithType(attribute.getName());

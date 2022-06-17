@@ -1062,7 +1062,7 @@ public class DocWriterNew {
 				// The default value in the model is a *description* of the default value.
 				// Therefore, it should be added to the description in the xs:attribute.
 				// The "default" attribute of the xs:attribute should not be set.
-				attribute = attributeTypeStrategy.addAttribute(frankAttribute.getName(), frankAttribute.getAttributeType(), version.childIsMandatory(frankAttribute));
+				attribute = attributeTypeStrategy.createAttribute(frankAttribute.getName(), frankAttribute.getAttributeType(), version.childIsMandatory(frankAttribute));
 			} else {
 				attribute = addRestrictedAttribute(frankAttribute);
 			}
@@ -1075,7 +1075,7 @@ public class DocWriterNew {
 	}
 
 	private XmlBuilder addRestrictedAttribute(FrankAttribute attribute) {
-		XmlBuilder result = attributeTypeStrategy.addRestrictedAttribute(attribute, version.childIsMandatory(attribute));
+		XmlBuilder result = attributeTypeStrategy.createRestrictedAttribute(attribute, version.childIsMandatory(attribute));
 		AttributeEnum attributeEnum = attribute.getAttributeEnum();
 		if(! definedAttributeEnumInstances.contains(attributeEnum.getFullName())) {
 			definedAttributeEnumInstances.add(attributeEnum.getFullName());
