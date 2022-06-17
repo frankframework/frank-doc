@@ -49,6 +49,32 @@
     ],
     "elements":[
         {
+            "name":"B",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild",
+            "elementNames":[
+                "B"
+            ],
+            "attributes":[
+                {
+                    "name":"active",
+                    "description":"If defined and empty or false, then this element and all its children are ignored"
+                }
+            ]
+        },
+        {
+            "name":"C",
+            "fullName":"org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild2",
+            "elementNames":[
+                "C"
+            ],
+            "attributes":[
+                {
+                    "name":"active",
+                    "description":"If defined and empty or false, then this element and all its children are ignored"
+                }
+            ]
+        },
+        {
             "name":"Child",
             "fullName":"org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Child",
             "parent":"org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Parent",
@@ -72,32 +98,6 @@
                     "multiple":true,
                     "roleName":"b",
                     "type":"org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild"
-                }
-            ]
-        },
-        {
-            "name":"ConfigChild",
-            "fullName":"org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild",
-            "elementNames":[
-                "B"
-            ],
-            "attributes":[
-                {
-                    "name":"active",
-                    "description":"If defined and empty or false, then this element and all its children are ignored"
-                }
-            ]
-        },
-        {
-            "name":"ConfigChild2",
-            "fullName":"org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild2",
-            "elementNames":[
-                "C"
-            ],
-            "attributes":[
-                {
-                    "name":"active",
-                    "description":"If defined and empty or false, then this element and all its children are ignored"
                 }
             ]
         },

@@ -41,7 +41,7 @@
     ],
     "elements":[
         {
-            "name":"Child1",
+            "name":"A",
             "fullName":"org.frankframework.frankdoc.testtarget.examples.parameters.Child1",
             "elementNames":[
                 "A"
@@ -67,7 +67,7 @@
             ]
         },
         {
-            "name":"Child2",
+            "name":"B",
             "fullName":"org.frankframework.frankdoc.testtarget.examples.parameters.Child2",
             "elementNames":[
                 "B"

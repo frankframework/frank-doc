@@ -123,6 +123,16 @@
       }]
     },
     {
+      "name": "RoleNameTChild",
+      "fullName": "org.frankframework.frankdoc.testtarget.examples.simple.TChild",
+      "description": "This is the header of the JavaDoc of \\\"TChild\\\", with package name nl.nn.something.\n \n And this is remaining documentation of \\\"TChild\\\".",
+      "elementNames": ["RoleNameTChild"],
+      "attributes": [{
+        "name":"active",
+        "description":"If defined and empty or false, then this element and all its children are ignored"
+      }]
+    },
+    {
       "name": "Start",
       "fullName": "org.frankframework.frankdoc.testtarget.examples.simple.Start",
       "parent": "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart",
@@ -149,16 +159,6 @@
           "type": "org.frankframework.frankdoc.testtarget.examples.simple.TChild"
         }
       ]
-    },
-    {
-      "name": "TChild",
-      "fullName": "org.frankframework.frankdoc.testtarget.examples.simple.TChild",
-      "description": "This is the header of the JavaDoc of \\\"TChild\\\", with package name nl.nn.something.\n \n And this is remaining documentation of \\\"TChild\\\".",
-      "elementNames": ["RoleNameTChild"],
-      "attributes": [{
-        "name":"active",
-        "description":"If defined and empty or false, then this element and all its children are ignored"
-      }]
     }
   ],
   "enums": [{

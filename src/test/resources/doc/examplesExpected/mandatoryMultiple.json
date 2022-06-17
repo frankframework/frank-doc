@@ -41,7 +41,7 @@
     ],
     "elements":[
         {
-            "name":"Child",
+            "name":"C",
             "fullName":"org.frankframework.frankdoc.testtarget.examples.mandatory.multiple.Child",
             "elementNames":[
                 "C"
