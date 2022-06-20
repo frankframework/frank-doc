@@ -125,7 +125,7 @@ public class AttributeTypeStrategyTest {
 		complexType.addSubElement(attributeTypeStrategy.createAttribute("boolAttr", AttributeType.BOOL, false));
 		complexType.addSubElement(attributeTypeStrategy.createAttribute("intAttr", AttributeType.INT, false));
 		complexType.addSubElement(attributeTypeStrategy.createAttribute("stringAttr", AttributeType.STRING, false));
-		AttributeTypeStrategy.addAttributeActive(complexType);
+		complexType.addSubElement(AttributeTypeStrategy.createAttributeActive());
 		// This test does not test whether use="required" is included. It is about
 		// attribute types. Therefore we take the attribute not to be mandatory.
 		complexType.addSubElement(attributeTypeStrategy.createRestrictedAttribute(enumTypedAttribute, false));

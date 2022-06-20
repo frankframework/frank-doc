@@ -24,6 +24,16 @@ class AttributeReuseManager {
 		}
 	}
 
+	private static class AttributeToInsert {
+		XmlBuilder attributeBuilder;
+		XmlBuilder parentBuilder;
+
+		AttributeToInsert(XmlBuilder attributeBuilder, XmlBuilder parentBuilder) {
+			this.attributeBuilder = attributeBuilder;
+			this.parentBuilder = parentBuilder;
+		}
+	}
+
 	private static class AttributeToBuildGroup {
 		private List<AttributeToBuild> itemsThatShareAttribute = new ArrayList<>();
 
@@ -103,18 +113,22 @@ class AttributeReuseManager {
 		}
 	}
 
-	private List<AttributeToBuild> attributesToBuild = new ArrayList<>();
+	private List<Object> items = new ArrayList<>();
 	private Map<String, AttributeToBuildGroupGroup> groupedAttributesToBuild = new LinkedHashMap<>();
 	private Set<FrankAttribute> definedReusableAttributes = new HashSet<>();
 
 	void addAttribute(FrankAttribute attribute, XmlBuilder group) {
 		AttributeToBuild item = new AttributeToBuild(attribute, group);
-		attributesToBuild.add(item);
+		items.add(item);
 		if(groupedAttributesToBuild.containsKey(attribute.getName())) {
 			groupedAttributesToBuild.get(attribute.getName()).add(item);
 		} else {
 			groupedAttributesToBuild.put(attribute.getName(), new AttributeToBuildGroupGroup(item));
 		}
+	}
+
+	void addAttribute(XmlBuilder attributeBuilder, XmlBuilder group) {
+		items.add(new AttributeToInsert(attributeBuilder, group));
 	}
 
 	void buildAttributes(AttributeReuseManagerCallback callback) {
@@ -135,16 +149,25 @@ class AttributeReuseManager {
 	}
 
 	private void buildClassifiedAttributes(AttributeReuseManagerCallback callback) {
-		for(AttributeToBuild item: attributesToBuild) {
-			if(item.reused) {
-				if(! definedReusableAttributes.contains(item.attribute)) {
-					callback.addReusableAttribute(item.attribute);
-					definedReusableAttributes.add(item.attribute);
-				}
-				callback.addReusedAttributeReference(item.attribute, item.group);
+		for(Object item: items) {
+			if(item instanceof AttributeToBuild) {
+				buildAttribute((AttributeToBuild) item, callback);
 			} else {
-				callback.addAttributeInline(item.attribute, item.group);
+				AttributeToInsert attributeToInsert = (AttributeToInsert) item;
+				attributeToInsert.parentBuilder.addSubElement(attributeToInsert.attributeBuilder);
 			}
 		}
+	}
+
+	private void buildAttribute(AttributeToBuild attributeToBuild, AttributeReuseManagerCallback callback) {
+		if(attributeToBuild.reused) {
+			if(! definedReusableAttributes.contains(attributeToBuild.attribute)) {
+				callback.addReusableAttribute(attributeToBuild.attribute);
+				definedReusableAttributes.add(attributeToBuild.attribute);
+			}
+			callback.addReusedAttributeReference(attributeToBuild.attribute, attributeToBuild.group);
+		} else {
+			callback.addAttributeInline(attributeToBuild.attribute, attributeToBuild.group);
+		}		
 	}
 }
