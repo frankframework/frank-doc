@@ -1,4 +1,4 @@
-package org.frankframework.frankdoc.examples.reuse.attributes;
+package org.frankframework.frankdoc.testtarget.examples.reuse.attributes;
 
 public class Child extends Parent {
 	/**
