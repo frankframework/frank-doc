@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.util.XmlBuilder;
@@ -71,18 +70,12 @@ class AttributeReuseManager {
 			return itemsThatShareAttribute.get(0).attribute.getName();
 		}
 
-		Stream<AttributeToBuild> getMemberStream() {
-			return new ArrayList<>(itemsThatShareAttribute).stream();
-		}
-
 		FrankAttribute getCommonFrankAttribute() {
 			return itemsThatShareAttribute.iterator().next().attribute;
 		}
 
 		void setNoItemReuses() {
-			itemsThatShareAttribute.stream()
-				.forEach(item -> item.reused = false);
-				
+			itemsThatShareAttribute.stream().forEach(item -> item.reused = false);
 		}
 	}
 
@@ -117,14 +110,11 @@ class AttributeReuseManager {
 					.filter(g -> ! g.isAttributeHasUniqueGroup())
 					.map(AttributeToBuildGroup::getCommonFrankAttribute)
 					.distinct()
-					.collect(Collectors.counting()) == 1L;
+					.collect(Collectors.counting()) != 1L;
 		}
 
 		void setNoItemReuses() {
-			groupsSharingAttributeName.values().stream()
-				.flatMap(AttributeToBuildGroup::getMemberStream)
-				.forEach(item -> item.reused = false);
-				
+			groupsSharingAttributeName.values().forEach(AttributeToBuildGroup::setNoItemReuses);
 		}
 	}
 

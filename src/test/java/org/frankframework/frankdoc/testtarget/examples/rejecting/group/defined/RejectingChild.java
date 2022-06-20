@@ -7,6 +7,7 @@ package org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined;
  *
  */
 public abstract class RejectingChild extends Parent {
+	@Override
 	@Deprecated
 	public void setRejectedAttribute(String value) {
 	}

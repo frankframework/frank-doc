@@ -108,7 +108,7 @@
   </xs:attributeGroup>
   <xs:attributeGroup name="ChildCumulativeAttributeGroup">
     <xs:attributeGroup ref="ChildDeclaredAttributeGroup" />
-    <xs:attribute name="mandatoryAttributeThatRemainsMandatory" type="xs:string" use="required" />
+    <xs:attribute ref="mandatoryAttributeThatRemainsMandatory" use="required" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
@@ -130,10 +130,11 @@
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="mandatoryAttributeThatBecomesOptional" type="xs:string" use="required" />
-    <xs:attribute name="mandatoryAttributeThatRemainsMandatory" type="xs:string" use="required" />
+    <xs:attribute ref="mandatoryAttributeThatRemainsMandatory" use="required" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
+  <xs:attribute name="mandatoryAttributeThatRemainsMandatory" type="xs:string" />
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />

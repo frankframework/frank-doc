@@ -1091,7 +1091,11 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 	@Override
 	public void addAttributeInline(FrankAttribute attribute, XmlBuilder group) {
 		log.trace("Attribute [{}] for FrankElement [{}] is inline", () -> attribute.toString(), () -> attribute.getOwningElement().toString());
-		group.addSubElement(createAttribute(attribute));
+		XmlBuilder attributeBuilder = createAttribute(attribute);
+		if(version.childIsMandatory(attribute)) {
+			attributeBuilder.addAttribute("use", "required");
+		}
+		group.addSubElement(attributeBuilder);
 	}
 
 	@Override
@@ -1104,6 +1108,9 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 	public void addReusedAttributeReference(FrankAttribute attribute, XmlBuilder group) {
 		log.trace("Reference reused attribute [{}] of FrankElement [{}]", () -> attribute.toString(), () -> attribute.getOwningElement().toString());
 		XmlBuilder attributeBuilder = DocWriterNewXmlUtils.createAttributeRef(attribute.getName());
+		if(version.childIsMandatory(attribute)) {
+			attributeBuilder.addAttribute("use", "required");
+		}
 		group.addSubElement(attributeBuilder);
 	}
 
@@ -1113,9 +1120,9 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 			// The default value in the model is a *description* of the default value.
 			// Therefore, it should be added to the description in the xs:attribute.
 			// The "default" attribute of the xs:attribute should not be set.
-			attribute = attributeTypeStrategy.createAttribute(frankAttribute.getName(), frankAttribute.getAttributeType(), version.childIsMandatory(frankAttribute));
+			attribute = attributeTypeStrategy.createAttribute(frankAttribute.getName(), frankAttribute.getAttributeType());
 		} else {
-			attribute = addRestrictedAttribute(frankAttribute);
+			attribute = createRestrictedAttribute(frankAttribute);
 		}
 		if(needsDocumentation(frankAttribute)) {
 			log.trace("Attribute has documentation");
@@ -1124,8 +1131,8 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		return attribute;
 	}
 
-	private XmlBuilder addRestrictedAttribute(FrankAttribute attribute) {
-		XmlBuilder result = attributeTypeStrategy.createRestrictedAttribute(attribute, version.childIsMandatory(attribute));
+	private XmlBuilder createRestrictedAttribute(FrankAttribute attribute) {
+		XmlBuilder result = attributeTypeStrategy.createRestrictedAttribute(attribute);
 		AttributeEnum attributeEnum = attribute.getAttributeEnum();
 		if(! definedAttributeEnumInstances.contains(attributeEnum.getFullName())) {
 			definedAttributeEnumInstances.add(attributeEnum.getFullName());

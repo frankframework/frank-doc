@@ -79,7 +79,7 @@
   </xs:complexType>
   <xs:attributeGroup name="ChildDeclaredAttributeGroup" />
   <xs:attributeGroup name="ChildCumulativeAttributeGroup">
-    <xs:attribute name="keptParentAttribute" type="xs:string" />
+    <xs:attribute ref="keptParentAttribute" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
@@ -88,7 +88,7 @@
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.exclude.Parent" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="ParentDeclaredAttributeGroup">
-    <xs:attribute name="keptParentAttribute" type="xs:string" />
+    <xs:attribute ref="keptParentAttribute" />
     <xs:attribute name="childExcludedAttribute" type="xs:string" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
@@ -97,6 +97,7 @@
     <xs:attributeGroup ref="ChildCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.exclude.GrandChild" use="prohibited" />
   </xs:complexType>
+  <xs:attribute name="keptParentAttribute" type="xs:string" />
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />
