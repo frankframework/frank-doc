@@ -1121,18 +1121,22 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 			// Therefore, it should be added to the description in the xs:attribute.
 			// The "default" attribute of the xs:attribute should not be set.
 			attribute = attributeTypeStrategy.createAttribute(frankAttribute.getName(), frankAttribute.getAttributeType());
+			documentAttributeIfNeeded(frankAttribute, attribute);
 		} else {
-			attribute = createRestrictedAttribute(frankAttribute);
-		}
-		if(needsDocumentation(frankAttribute)) {
-			log.trace("Attribute has documentation");
-			addDocumentation(attribute, getDocumentationText(frankAttribute));
-		}
+			attribute = createRestrictedAttribute(frankAttribute, a -> documentAttributeIfNeeded(frankAttribute, a));
+		}		
 		return attribute;
 	}
 
-	private XmlBuilder createRestrictedAttribute(FrankAttribute attribute) {
-		XmlBuilder result = attributeTypeStrategy.createRestrictedAttribute(attribute);
+	private void documentAttributeIfNeeded(FrankAttribute frankAttribute, XmlBuilder attributeBuilder) {
+		if(needsDocumentation(frankAttribute)) {
+			log.trace("Attribute has documentation");
+			addDocumentation(attributeBuilder, getDocumentationText(frankAttribute));
+		}
+	}
+
+	private XmlBuilder createRestrictedAttribute(FrankAttribute attribute, Consumer<XmlBuilder> documenter) {
+		XmlBuilder result = attributeTypeStrategy.createRestrictedAttribute(attribute, documenter);
 		AttributeEnum attributeEnum = attribute.getAttributeEnum();
 		if(! definedAttributeEnumInstances.contains(attributeEnum.getFullName())) {
 			definedAttributeEnumInstances.add(attributeEnum.getFullName());

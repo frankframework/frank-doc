@@ -128,7 +128,7 @@ public class AttributeTypeStrategyTest {
 		complexType.addSubElement(AttributeTypeStrategy.createAttributeActive());
 		// This test does not test whether use="required" is included. It is about
 		// attribute types. Therefore we take the attribute not to be mandatory.
-		complexType.addSubElement(attributeTypeStrategy.createRestrictedAttribute(enumTypedAttribute));
+		complexType.addSubElement(attributeTypeStrategy.createRestrictedAttribute(enumTypedAttribute, a -> {}));
 		attributeTypeStrategy.createHelperTypes().forEach(h -> schema.addSubElement(h));
 		schema.addSubElement(attributeTypeStrategy.createAttributeEnumType(attributeEnum));
 		return schema.toXML(true);

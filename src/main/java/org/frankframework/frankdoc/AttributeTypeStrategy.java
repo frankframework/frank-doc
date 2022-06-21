@@ -31,6 +31,7 @@ import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createSimpleType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -72,8 +73,8 @@ public enum AttributeTypeStrategy {
 		return delegate.createAttribute(name, modelAttributeType);
 	}
 
-	XmlBuilder createRestrictedAttribute(FrankAttribute attribute) {
-		return delegate.createRestrictedAttribute(attribute);
+	XmlBuilder createRestrictedAttribute(FrankAttribute attribute, Consumer<XmlBuilder> documenter) {
+		return delegate.createRestrictedAttribute(attribute, documenter);
 	}
 
 	static XmlBuilder createAttributeActive() {
@@ -116,9 +117,10 @@ public enum AttributeTypeStrategy {
 			return attribute;						
 		}
 
-		final XmlBuilder createRestrictedAttribute(FrankAttribute attribute) {
+		final XmlBuilder createRestrictedAttribute(FrankAttribute attribute, Consumer<XmlBuilder> documenter) {
 			AttributeEnum attributeEnum = attribute.getAttributeEnum();
 			XmlBuilder attributeBuilder = createAttributeWithType(attribute.getName());
+			documenter.accept(attributeBuilder);
 			XmlBuilder simpleType = addSimpleType(attributeBuilder);
 			addUnion(simpleType, attributeEnum.getUniqueName(ATTRIBUTE_VALUES_TYPE), VARIABLE_REFERENCE);
 			return attributeBuilder;
