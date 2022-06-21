@@ -31,10 +31,12 @@ class AttributeReuseManager {
 		FrankAttribute attribute;
 		XmlBuilder group;
 		boolean reused = true;
+		String targetName;
 
-		AttributeToBuild(FrankAttribute attribute, XmlBuilder group) {
+		AttributeToBuild(FrankAttribute attribute, XmlBuilder group, String targetName) {
 			this.attribute = attribute;
 			this.group = group;
+			this.targetName = targetName;
 		}
 	}
 
@@ -122,8 +124,8 @@ class AttributeReuseManager {
 	private Map<String, AttributeToBuildGroupGroup> groupedAttributesToBuild = new LinkedHashMap<>();
 	private Set<FrankAttribute> definedReusableAttributes = new HashSet<>();
 
-	void addAttribute(FrankAttribute attribute, XmlBuilder group) {
-		AttributeToBuild item = new AttributeToBuild(attribute, group);
+	void addAttribute(FrankAttribute attribute, XmlBuilder group, String targetName) {
+		AttributeToBuild item = new AttributeToBuild(attribute, group, targetName);
 		items.add(item);
 		if(groupedAttributesToBuild.containsKey(attribute.getName())) {
 			groupedAttributesToBuild.get(attribute.getName()).add(item);
@@ -170,9 +172,9 @@ class AttributeReuseManager {
 				callback.addReusableAttribute(attributeToBuild.attribute);
 				definedReusableAttributes.add(attributeToBuild.attribute);
 			}
-			callback.addReusedAttributeReference(attributeToBuild.attribute, attributeToBuild.group);
+			callback.addReusedAttributeReference(attributeToBuild.attribute, attributeToBuild.group, attributeToBuild.targetName);
 		} else {
-			callback.addAttributeInline(attributeToBuild.attribute, attributeToBuild.group);
+			callback.addAttributeInline(attributeToBuild.attribute, attributeToBuild.group, attributeToBuild.targetName);
 		}		
 	}
 }

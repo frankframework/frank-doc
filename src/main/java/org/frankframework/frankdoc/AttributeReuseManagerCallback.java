@@ -19,7 +19,7 @@ import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
 interface AttributeReuseManagerCallback {
-	void addAttributeInline(FrankAttribute attribute, XmlBuilder group);
+	void addAttributeInline(FrankAttribute attribute, XmlBuilder group, String targetName);
 	void addReusableAttribute(FrankAttribute attribute);
-	void addReusedAttributeReference(FrankAttribute attribute, XmlBuilder group);
+	void addReusedAttributeReference(FrankAttribute attribute, XmlBuilder group, String targetName);
 }

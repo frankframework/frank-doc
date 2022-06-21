@@ -327,7 +327,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 			}
 		}
 		log.trace("Adding cumulative attributes of FrankElement [{}] to XSD element type [{}]", () -> frankElement.getFullName(), () -> xsdElementTypeName);
-		addAttributeList(complexType, frankElement.getCumulativeAttributes(version.getChildSelector(), version.getChildRejector()));
+		addAttributeList(complexType, frankElement.getCumulativeAttributes(version.getChildSelector(), version.getChildRejector()), xsdElementTypeName);
 		log.trace("Adding attribute className for FrankElement [{}]", () -> frankElement.getFullName());
 		XmlBuilder classNameAttribute = DocWriterNewXmlUtils.createAttribute(CLASS_NAME, FIXED, frankElement.getFullName(), version.getClassNameAttributeUse(frankElement));
 		attributeReuseManager.addAttribute(classNameAttribute, complexType);
@@ -806,6 +806,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		}
 		attributeReuseManager.addAttribute(attributeClassName, complexType);
 		// The XSD is invalid if addAnyAttribute is added before attributes elementType and className.
+		log.trace("Adding any attribute in another namespace");
 		XmlBuilder anyAttribute = DocWriterNewXmlUtils.createAnyAttribute();
 		attributeReuseManager.addAttribute(anyAttribute, complexType);
 	}
@@ -1008,7 +1009,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 			@Override
 			public void addCumulativeGroupRef(FrankElement referee) {
-				elementBuildingStrategy.addAttributeGroupRef(xsdCumulativeGroupNameForAttributes(referee));				
+				elementBuildingStrategy.addAttributeGroupRef(xsdCumulativeGroupNameForAttributes(referee));
 			}
 
 			@Override
@@ -1032,7 +1033,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 				log.trace("Creating XSD group [{}]", groupName);
 				XmlBuilder attributeGroup = createAttributeGroup(groupName);
 				xsdComplexItems.add(attributeGroup);
-				addAttributeList(attributeGroup, frankElement.getAttributes(version.getChildSelector()));
+				addAttributeList(attributeGroup, frankElement.getAttributes(version.getChildSelector()), groupName);
 				log.trace("Done creating XSD group [{}] on behalf of FrankElement [{}]", () -> groupName, () -> frankElement.getFullName());
 				return attributeGroup;
 			}
@@ -1048,7 +1049,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 			@Override
 			public void handleSelectedChildren(List<FrankAttribute> children, FrankElement owner) {
 				log.trace("Appending some of the attributes of FrankElement [{}] to XSD group [{}]", () -> owner.getFullName(), () -> cumulativeGroupName);
-				addAttributeList(cumulativeBuilder, children);
+				addAttributeList(cumulativeBuilder, children, cumulativeGroupName);
 			}
 
 			@Override
@@ -1080,17 +1081,17 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		}).run();
 	}
 
-	private void addAttributeList(XmlBuilder context, List<FrankAttribute> frankAttributes) {
+	private void addAttributeList(XmlBuilder context, List<FrankAttribute> frankAttributes, String groupName) {
 		frankAttributes.forEach(version::checkForMissingDescription);
 		for(FrankAttribute frankAttribute: frankAttributes) {
-			log.trace("Group has attribute [{}], will decide later whether to add it inline or to reuse it", () -> frankAttribute.getName());
-			attributeReuseManager.addAttribute(frankAttribute, context);
+			log.trace("Group [{}] has attribute [{}], will decide later whether to add it inline or to reuse it", () -> groupName, () -> frankAttribute.getName());
+			attributeReuseManager.addAttribute(frankAttribute, context, groupName);
 		}		
 	}
 
 	@Override
-	public void addAttributeInline(FrankAttribute attribute, XmlBuilder group) {
-		log.trace("Attribute [{}] for FrankElement [{}] is inline", () -> attribute.toString(), () -> attribute.getOwningElement().toString());
+	public void addAttributeInline(FrankAttribute attribute, XmlBuilder group, String targetName) {
+		log.trace("Attribute [{}] in FrankElement [{}] for group [{}] is inline", () -> attribute.toString(), () -> attribute.getOwningElement().toString(), () -> targetName);
 		XmlBuilder attributeBuilder = createAttribute(attribute);
 		if(version.childIsMandatory(attribute)) {
 			attributeBuilder.addAttribute("use", "required");
@@ -1105,8 +1106,8 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 	}
 
 	@Override
-	public void addReusedAttributeReference(FrankAttribute attribute, XmlBuilder group) {
-		log.trace("Reference reused attribute [{}] of FrankElement [{}]", () -> attribute.toString(), () -> attribute.getOwningElement().toString());
+	public void addReusedAttributeReference(FrankAttribute attribute, XmlBuilder group, String targetName) {
+		log.trace("Reference reused attribute [{}] of FrankElement [{}] for group [{}]", () -> attribute.toString(), () -> attribute.getOwningElement().toString(), () -> targetName);
 		XmlBuilder attributeBuilder = DocWriterNewXmlUtils.createAttributeRef(attribute.getName());
 		if(version.childIsMandatory(attribute)) {
 			attributeBuilder.addAttribute("use", "required");
