@@ -1094,6 +1094,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		log.trace("Attribute [{}] in FrankElement [{}] for group [{}] is inline", () -> attribute.toString(), () -> attribute.getOwningElement().toString(), () -> targetName);
 		XmlBuilder attributeBuilder = createAttribute(attribute);
 		if(version.childIsMandatory(attribute)) {
+			log.trace("It is mandatory, adding \"use=required\"");
 			attributeBuilder.addAttribute("use", "required");
 		}
 		group.addSubElement(attributeBuilder);
@@ -1101,7 +1102,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 	@Override
 	public void addReusableAttribute(FrankAttribute attribute) {
-		log.trace("Attribute [{}] of FrankElement [{}] is reused, creating it", attribute.toString(), attribute.getOwningElement().toString());
+		log.trace("Attribute [{}] of FrankElement [{}] is reused, creating it for reference from elsewhere", attribute.toString(), attribute.getOwningElement().toString());
 		xsdReusedAttributes.add(createAttribute(attribute));
 	}
 
@@ -1110,6 +1111,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		log.trace("Reference reused attribute [{}] of FrankElement [{}] for group [{}]", () -> attribute.toString(), () -> attribute.getOwningElement().toString(), () -> targetName);
 		XmlBuilder attributeBuilder = DocWriterNewXmlUtils.createAttributeRef(attribute.getName());
 		if(version.childIsMandatory(attribute)) {
+			log.trace("It is mandatory, adding \"use=required\" with the reference, not the referee");
 			attributeBuilder.addAttribute("use", "required");
 		}
 		group.addSubElement(attributeBuilder);
@@ -1124,6 +1126,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 			attribute = attributeTypeStrategy.createAttribute(frankAttribute.getName(), frankAttribute.getAttributeType());
 			documentAttributeIfNeeded(frankAttribute, attribute);
 		} else {
+			log.trace("Attribute is restricted by enum [{}]", frankAttribute.getAttributeEnum().getFullName());
 			attribute = createRestrictedAttribute(frankAttribute, a -> documentAttributeIfNeeded(frankAttribute, a));
 		}		
 		return attribute;
@@ -1140,6 +1143,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		XmlBuilder result = attributeTypeStrategy.createRestrictedAttribute(attribute, documenter);
 		AttributeEnum attributeEnum = attribute.getAttributeEnum();
 		if(! definedAttributeEnumInstances.contains(attributeEnum.getFullName())) {
+			log.trace("Defining type for the values of enum [{}]", attributeEnum.getFullName());
 			definedAttributeEnumInstances.add(attributeEnum.getFullName());
 			xsdComplexItems.add(attributeTypeStrategy.createAttributeEnumType(attributeEnum));
 		}
