@@ -16,8 +16,8 @@ limitations under the License.
 package org.frankframework.frankdoc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,16 +27,16 @@ import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
 class AttributeReuseManager {
-	private static class AttributeToBuild {
-		FrankAttribute attribute;
-		XmlBuilder group;
+	private static class AttributeReference {
+		FrankAttribute frankAttribute;
+		XmlBuilder xsdGroup;
+		String xsdGroupName;
 		boolean reused = true;
-		String targetName;
 
-		AttributeToBuild(FrankAttribute attribute, XmlBuilder group, String targetName) {
-			this.attribute = attribute;
-			this.group = group;
-			this.targetName = targetName;
+		AttributeReference(FrankAttribute frankAttribute, XmlBuilder xsdGroup, String xsdGroupName) {
+			this.frankAttribute = frankAttribute;
+			this.xsdGroup = xsdGroup;
+			this.xsdGroupName = xsdGroupName;
 		}
 	}
 
@@ -50,115 +50,58 @@ class AttributeReuseManager {
 		}
 	}
 
-	private static class AttributeToBuildGroup {
-		private List<AttributeToBuild> itemsThatShareAttribute = new ArrayList<>();
-
-		AttributeToBuildGroup(AttributeToBuild first) {
-			itemsThatShareAttribute.add(first);
-		}
-
-		void add(AttributeToBuild item) {
-			if(item.attribute != itemsThatShareAttribute.get(0).attribute) {
-				throw new IllegalArgumentException("Programming error, see stack trace");
-			}
-			itemsThatShareAttribute.add(item);
-		}
-
-		boolean isAttributeHasUniqueGroup() {
-			return itemsThatShareAttribute.size() == 1;
-		}
-
-		String getAttributeName() {
-			return itemsThatShareAttribute.get(0).attribute.getName();
-		}
-
-		FrankAttribute getCommonFrankAttribute() {
-			return itemsThatShareAttribute.iterator().next().attribute;
-		}
-
-		void setNoItemReuses() {
-			itemsThatShareAttribute.stream().forEach(item -> item.reused = false);
-		}
-	}
-
-	private static class AttributeToBuildGroupGroup {
-		private Map<FrankAttribute, AttributeToBuildGroup> groupsSharingAttributeName = new LinkedHashMap<>();
-
-		AttributeToBuildGroupGroup(AttributeToBuild first) {
-			AttributeToBuildGroup group = new AttributeToBuildGroup(first);
-			groupsSharingAttributeName.put(first.attribute, group);
-		}
-
-		void add(AttributeToBuild item) {
-			if(! item.attribute.getName().equals(groupsSharingAttributeName.values().iterator().next().getAttributeName())) {
-				throw new IllegalArgumentException("Programming error, see stack trace");
-			}
-			if(groupsSharingAttributeName.containsKey(item.attribute)) {
-				groupsSharingAttributeName.get(item.attribute).add(item);
-			} else {
-				AttributeToBuildGroup group = new AttributeToBuildGroup(item);
-				groupsSharingAttributeName.put(item.attribute, group);
-			}
-		}
-
-		List<AttributeToBuildGroup> getAttributeToBuildGroupsWithOneGroup() {
-			return groupsSharingAttributeName.values().stream()
-					.filter(AttributeToBuildGroup::isAttributeHasUniqueGroup)
-					.collect(Collectors.toList());
-		}
-
-		boolean hasMultipleGroupsForReuse() {
-			return groupsSharingAttributeName.values().stream()
-					.filter(g -> ! g.isAttributeHasUniqueGroup())
-					.map(AttributeToBuildGroup::getCommonFrankAttribute)
-					.distinct()
-					.collect(Collectors.counting()) != 1L;
-		}
-
-		void setNoItemReuses() {
-			groupsSharingAttributeName.values().forEach(AttributeToBuildGroup::setNoItemReuses);
-		}
-	}
-
-	private List<Object> items = new ArrayList<>();
-	private Map<String, AttributeToBuildGroupGroup> groupedAttributesToBuild = new LinkedHashMap<>();
+	private List<Object> attributeSequence = new ArrayList<>();
+	private Map<String, ReferencedFrankAttributeNameGroup> groupedAttributeReferences = new HashMap<>();
 	private Set<FrankAttribute> definedReusableAttributes = new HashSet<>();
 
-	void addAttribute(FrankAttribute attribute, XmlBuilder group, String targetName) {
-		AttributeToBuild item = new AttributeToBuild(attribute, group, targetName);
-		items.add(item);
-		if(groupedAttributesToBuild.containsKey(attribute.getName())) {
-			groupedAttributesToBuild.get(attribute.getName()).add(item);
+	/**
+	 * Call this method when a FrankAttribute is encountered that should appear in an
+	 * attribute group of the XSD. This class will determine later whether the attribute should
+	 * be added as a reference or inline.
+	 */
+	void addAttribute(FrankAttribute frankAttribute, XmlBuilder xsdGroup, String xsdGroupName) {
+		AttributeReference attributeReference = new AttributeReference(frankAttribute, xsdGroup, xsdGroupName);
+		attributeSequence.add(attributeReference);
+		if(groupedAttributeReferences.containsKey(frankAttribute.getName())) {
+			groupedAttributeReferences.get(frankAttribute.getName()).add(attributeReference);
 		} else {
-			groupedAttributesToBuild.put(attribute.getName(), new AttributeToBuildGroupGroup(item));
+			groupedAttributeReferences.put(frankAttribute.getName(), new ReferencedFrankAttributeNameGroup(attributeReference));
 		}
 	}
 
+	/**
+	 * Call this method to add any attribute that does not appear in the FrankDocModel
+	 * (e.g. "active", "roleName"). If such attributes would be added directly to the
+	 * XSD, they would always come first which is not what we want.
+	 */
 	void addAttribute(XmlBuilder attributeBuilder, XmlBuilder group) {
-		items.add(new AttributeToInsert(attributeBuilder, group));
+		attributeSequence.add(new AttributeToInsert(attributeBuilder, group));
 	}
 
+	/**
+	 * Call this method to add all the attributes to the XSD.
+	 */
 	void buildAttributes(AttributeReuseManagerCallback callback) {
 		classifyAttributesToBuild();
 		buildClassifiedAttributes(callback);
 	}
 
 	private void classifyAttributesToBuild() {
-		groupedAttributesToBuild.values().stream().forEach(this::classifyBucket);
+		groupedAttributeReferences.values().stream().forEach(this::classifyAttributesHavingNameInCommon);
 	}
 
-	private void classifyBucket(AttributeToBuildGroupGroup group) {
-		if(group.hasMultipleGroupsForReuse()) {
-			group.setNoItemReuses();
+	private void classifyAttributesHavingNameInCommon(ReferencedFrankAttributeNameGroup nameGroup) {
+		if(nameGroup.hasMultipleReusedAttributes()) {
+			nameGroup.setNoAttributeReferenceReuses();
 		} else {
-			group.getAttributeToBuildGroupsWithOneGroup().forEach(AttributeToBuildGroup::setNoItemReuses);
+			nameGroup.getAttributesReferencedOnce().forEach(ReferencedFrankAttribute::setNoAttributeReferenceReuses);
 		}
 	}
 
 	private void buildClassifiedAttributes(AttributeReuseManagerCallback callback) {
-		for(Object item: items) {
-			if(item instanceof AttributeToBuild) {
-				buildAttribute((AttributeToBuild) item, callback);
+		for(Object item: attributeSequence) {
+			if(item instanceof AttributeReference) {
+				buildAttribute((AttributeReference) item, callback);
 			} else {
 				AttributeToInsert attributeToInsert = (AttributeToInsert) item;
 				attributeToInsert.parentBuilder.addSubElement(attributeToInsert.attributeBuilder);
@@ -166,15 +109,89 @@ class AttributeReuseManager {
 		}
 	}
 
-	private void buildAttribute(AttributeToBuild attributeToBuild, AttributeReuseManagerCallback callback) {
-		if(attributeToBuild.reused) {
-			if(! definedReusableAttributes.contains(attributeToBuild.attribute)) {
-				callback.addReusableAttribute(attributeToBuild.attribute);
-				definedReusableAttributes.add(attributeToBuild.attribute);
+	private void buildAttribute(AttributeReference attributeReference, AttributeReuseManagerCallback callback) {
+		if(attributeReference.reused) {
+			if(! definedReusableAttributes.contains(attributeReference.frankAttribute)) {
+				callback.addReusableAttribute(attributeReference.frankAttribute);
+				definedReusableAttributes.add(attributeReference.frankAttribute);
 			}
-			callback.addReusedAttributeReference(attributeToBuild.attribute, attributeToBuild.group, attributeToBuild.targetName);
+			callback.addReusedAttributeReference(attributeReference.frankAttribute, attributeReference.xsdGroup, attributeReference.xsdGroupName);
 		} else {
-			callback.addAttributeInline(attributeToBuild.attribute, attributeToBuild.group, attributeToBuild.targetName);
+			callback.addAttributeInline(attributeReference.frankAttribute, attributeReference.xsdGroup, attributeReference.xsdGroupName);
 		}		
+	}
+
+	private static class ReferencedFrankAttribute {
+		private List<AttributeReference> itemsThatShareFrankAttribute = new ArrayList<>();
+
+		ReferencedFrankAttribute(AttributeReference first) {
+			itemsThatShareFrankAttribute.add(first);
+		}
+
+		void add(AttributeReference item) {
+			if(item.frankAttribute != itemsThatShareFrankAttribute.get(0).frankAttribute) {
+				throw new IllegalArgumentException("Referenced FrankAttribute does not match");
+			}
+			itemsThatShareFrankAttribute.add(item);
+		}
+
+		boolean isFrankAttributeReferencedOnce() {
+			return itemsThatShareFrankAttribute.size() == 1;
+		}
+
+		String getAttributeName() {
+			return itemsThatShareFrankAttribute.get(0).frankAttribute.getName();
+		}
+
+		FrankAttribute getFrankAttribute() {
+			return itemsThatShareFrankAttribute.get(0).frankAttribute;
+		}
+
+		void setNoAttributeReferenceReuses() {
+			itemsThatShareFrankAttribute.stream().forEach(item -> item.reused = false);
+		}
+	}
+
+	private static class ReferencedFrankAttributeNameGroup {
+		private Map<FrankAttribute, ReferencedFrankAttribute> referencedFrankAttributes = new HashMap<>();
+
+		ReferencedFrankAttributeNameGroup(AttributeReference first) {
+			ReferencedFrankAttribute referencedFrankAttribute = new ReferencedFrankAttribute(first);
+			referencedFrankAttributes.put(first.frankAttribute, referencedFrankAttribute);
+		}
+
+		private String getName() {
+			return referencedFrankAttributes.values().iterator().next().getAttributeName();
+		}
+
+		void add(AttributeReference item) {
+			if(! item.frankAttribute.getName().equals(getName())) {
+				throw new IllegalArgumentException("FrankAttribute name mismatch");
+			}
+			if(referencedFrankAttributes.containsKey(item.frankAttribute)) {
+				referencedFrankAttributes.get(item.frankAttribute).add(item);
+			} else {
+				ReferencedFrankAttribute referencedFrankAttribute = new ReferencedFrankAttribute(item);
+				referencedFrankAttributes.put(item.frankAttribute, referencedFrankAttribute);
+			}
+		}
+
+		List<ReferencedFrankAttribute> getAttributesReferencedOnce() {
+			return referencedFrankAttributes.values().stream()
+					.filter(ReferencedFrankAttribute::isFrankAttributeReferencedOnce)
+					.collect(Collectors.toList());
+		}
+
+		boolean hasMultipleReusedAttributes() {
+			return referencedFrankAttributes.values().stream()
+					.filter(g -> ! g.isFrankAttributeReferencedOnce())
+					.map(ReferencedFrankAttribute::getFrankAttribute)
+					.distinct()
+					.collect(Collectors.counting()) != 1L;
+		}
+
+		void setNoAttributeReferenceReuses() {
+			referencedFrankAttributes.values().forEach(ReferencedFrankAttribute::setNoAttributeReferenceReuses);
+		}
 	}
 }
