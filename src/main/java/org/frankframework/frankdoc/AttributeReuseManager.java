@@ -143,10 +143,6 @@ class AttributeReuseManager {
 			return itemsThatShareFrankAttribute.get(0).frankAttribute.getName();
 		}
 
-		FrankAttribute getFrankAttribute() {
-			return itemsThatShareFrankAttribute.get(0).frankAttribute;
-		}
-
 		void setNoAttributeReferenceReuses() {
 			itemsThatShareFrankAttribute.stream().forEach(item -> item.reused = false);
 		}
@@ -185,9 +181,9 @@ class AttributeReuseManager {
 		boolean hasMultipleReusedAttributes() {
 			return referencedFrankAttributes.values().stream()
 					.filter(g -> ! g.isFrankAttributeReferencedOnce())
-					.map(ReferencedFrankAttribute::getFrankAttribute)
-					.distinct()
-					.collect(Collectors.counting()) != 1L;
+					.skip(1)
+					.findAny()
+					.isPresent();
 		}
 
 		void setNoAttributeReferenceReuses() {
