@@ -113,16 +113,6 @@
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
-  <xs:simpleType name="MyEnumAttributeValuesType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="ONE" />
-      <xs:enumeration value="customLabelTwo">
-        <xs:annotation>
-          <xs:documentation>Description of TWO</xs:documentation>
-        </xs:annotation>
-      </xs:enumeration>
-    </xs:restriction>
-  </xs:simpleType>
   <xs:attributeGroup name="StartDeclaredAttributeGroup">
     <xs:attribute name="attribute" type="xs:string" />
   </xs:attributeGroup>
@@ -135,6 +125,16 @@
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
+  <xs:simpleType name="MyEnumAttributeValuesType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ONE" />
+      <xs:enumeration value="customLabelTwo">
+        <xs:annotation>
+          <xs:documentation>Description of TWO</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />

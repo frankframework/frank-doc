@@ -6,6 +6,7 @@ import nl.nn.adapterframework.doc.Protected;
 // It only has excluded attributes. We want to test that GroupCreator
 // considers it properly.
 public class Child extends Parent {
+	@Override
 	@Protected
 	public void setChildExcludedAttribute(String value) {
 	}

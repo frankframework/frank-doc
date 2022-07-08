@@ -88,7 +88,9 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Master", "dontForgetRejectingParents.xsd", null},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Master", "ignoreInCompatibilityStrict.xsd", "ignoreInCompatibility.json"},
 			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Master", "ignoreInCompatibilityCompatibility.xsd", null},
-			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.omit.config.childProtected.Master", "omitConfigChildWhenClassProtected.xsd", "omitConfigChildWhenClassProtected.json"}
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.omit.config.childProtected.Master", "omitConfigChildWhenClassProtected.xsd", "omitConfigChildWhenClassProtected.json"},
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.reuse.attributes.Master", "reuseAttributes.xsd", null},
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.no.reuse.attributes.overloaded.Master", "noReuseAttributesOverloaded.xsd", null}
 		});
 	}
 

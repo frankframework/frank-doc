@@ -17,27 +17,9 @@
       <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
-  <xs:complexType name="BType">
-    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Nested1" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:attribute name="elementRole" type="xs:string" fixed="b" use="prohibited" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:complexType>
-  <xs:complexType name="CType">
-    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Nested2" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:attribute name="elementRole" type="xs:string" fixed="c" use="prohibited" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:complexType>
-  <xs:complexType name="DType">
-    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Nested3" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:attribute name="elementRole" type="xs:string" fixed="d" use="prohibited" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:complexType>
   <xs:complexType name="MasterType">
     <xs:group ref="MasterDeclaredChildGroup" />
-    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Master" use="prohibited" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.reuse.attributes.Master" use="prohibited" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
@@ -51,13 +33,6 @@
     <xs:choice>
       <xs:element name="A">
         <xs:complexType>
-          <xs:sequence>
-            <xs:choice minOccurs="0" maxOccurs="unbounded">
-              <xs:element name="B" type="BType" />
-              <xs:element name="C" type="CType" />
-              <xs:element name="D" type="DType" />
-            </xs:choice>
-          </xs:sequence>
           <xs:attribute ref="active" />
           <xs:attribute name="elementRole" type="xs:string" fixed="a" use="prohibited" />
           <xs:attribute name="className" type="xs:string" use="required" />
@@ -69,10 +44,10 @@
   </xs:group>
   <xs:group name="AElementGroupBase">
     <xs:choice>
-      <xs:element name="GrandChildA">
+      <xs:element name="ChildA">
         <xs:complexType>
           <xs:complexContent>
-            <xs:extension base="GrandChildType">
+            <xs:extension base="ChildType">
               <xs:attribute name="elementRole" type="xs:string" fixed="a" use="prohibited" />
             </xs:extension>
           </xs:complexContent>
@@ -89,61 +64,44 @@
       </xs:element>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="GrandChildType">
-    <xs:group ref="GrandChildCumulativeChildGroup" />
-    <xs:attributeGroup ref="GrandChildCumulativeAttributeGroup" />
-    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.GrandChild" use="prohibited" />
+  <xs:complexType name="ChildType">
+    <xs:attributeGroup ref="ChildCumulativeAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.reuse.attributes.Child" use="prohibited" />
   </xs:complexType>
-  <xs:group name="GrandChildDeclaredChildGroup">
-    <xs:sequence>
-      <xs:element name="D" minOccurs="0" maxOccurs="unbounded" type="DType" />
-    </xs:sequence>
-  </xs:group>
-  <xs:group name="GrandChildCumulativeChildGroup">
-    <xs:sequence>
-      <xs:group ref="GrandChildDeclaredChildGroup" />
-      <xs:group ref="RejectingChildCumulativeChildGroup" />
-    </xs:sequence>
-  </xs:group>
-  <xs:attributeGroup name="GrandChildDeclaredAttributeGroup">
-    <xs:attribute name="newAttribute" type="xs:string" />
+  <xs:attributeGroup name="ChildDeclaredAttributeGroup">
+    <xs:attribute name="overriddenAttribute" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Documentation in Child - attribute reusedAttribute
+ does not come from parent. Therefore reusedAttribute
+ appears both in ParentDeclaredChildGroup and ChildCumulativeChildGroup.
+ We test that that attribute is reused.
+ 
+ There are two different attributes overriddenAttribute; one
+ in Parent and one in Child. These should be inline.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:attributeGroup>
-  <xs:attributeGroup name="GrandChildCumulativeAttributeGroup">
-    <xs:attributeGroup ref="GrandChildDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="RejectingChildCumulativeAttributeGroup" />
-  </xs:attributeGroup>
-  <xs:group name="RejectingChildDeclaredChildGroup">
-    <xs:sequence />
-  </xs:group>
-  <xs:group name="RejectingChildCumulativeChildGroup">
-    <xs:sequence>
-      <xs:element name="B" minOccurs="0" maxOccurs="unbounded" type="BType" />
-    </xs:sequence>
-  </xs:group>
-  <xs:attributeGroup name="RejectingChildDeclaredAttributeGroup" />
-  <xs:attributeGroup name="RejectingChildCumulativeAttributeGroup">
-    <xs:attribute ref="attribute" />
+  <xs:attributeGroup name="ChildCumulativeAttributeGroup">
+    <xs:attributeGroup ref="ChildDeclaredAttributeGroup" />
+    <xs:attribute ref="reusedAttribute" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
   <xs:complexType name="ParentType">
-    <xs:group ref="ParentDeclaredChildGroup" />
     <xs:attributeGroup ref="ParentDeclaredAttributeGroup" />
-    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.rejecting.group.defined.Parent" use="prohibited" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.reuse.attributes.Parent" use="prohibited" />
   </xs:complexType>
-  <xs:group name="ParentDeclaredChildGroup">
-    <xs:sequence>
-      <xs:element name="B" minOccurs="0" maxOccurs="unbounded" type="BType" />
-      <xs:element name="C" minOccurs="0" maxOccurs="unbounded" type="CType" />
-    </xs:sequence>
-  </xs:group>
   <xs:attributeGroup name="ParentDeclaredAttributeGroup">
-    <xs:attribute ref="attribute" />
-    <xs:attribute name="rejectedAttribute" type="xs:string" />
+    <xs:attribute ref="reusedAttribute" />
+    <xs:attribute name="overriddenAttribute" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Documentation in Parent</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
-  <xs:attribute name="attribute" type="xs:string" />
+  <xs:attribute name="reusedAttribute" type="xs:string" />
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />

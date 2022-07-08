@@ -20,11 +20,11 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
-
-import lombok.Getter;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
+
+import lombok.Getter;
 
 class DocWriterNewXmlUtils {
 	private static Logger log = LogUtil.getLogger(DocWriterNewXmlUtils.class);
@@ -168,8 +168,8 @@ class DocWriterNewXmlUtils {
 		}
 	}
 
-	static XmlBuilder addAttribute(XmlBuilder context, String name, AttributeValueStatus valueStatus, String value, AttributeUse attributeUse) {
-		XmlBuilder result = startAddingAttribute(context, name);
+	static XmlBuilder createAttribute(String name, AttributeValueStatus valueStatus, String value, AttributeUse attributeUse) {
+		XmlBuilder result = startCreatingAttribute(name);
 		try {
 			addValueToAttribute(result, valueStatus, value);
 		} catch(AttributeFormatException e) {
@@ -179,11 +179,10 @@ class DocWriterNewXmlUtils {
 		return result;
 	}
 
-	private static XmlBuilder startAddingAttribute(XmlBuilder context, String name) {
+	private static XmlBuilder startCreatingAttribute(String name) {
 		XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
 		attribute.addAttribute("name", name);
 		attribute.addAttribute("type", "xs:string");
-		context.addSubElement(attribute);
 		return attribute;
 	}
 
@@ -218,40 +217,35 @@ class DocWriterNewXmlUtils {
 		}
 	}
 
-	static XmlBuilder addAttribute(XmlBuilder context, String name, String typeName) {
+	static XmlBuilder createAttribute(String name, String typeName) {
 		XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
 		attribute.addAttribute("name", name);
 		attribute.addAttribute("type", typeName);
-		context.addSubElement(attribute);
 		return attribute;
 	}
 
-	static XmlBuilder addAttributeRef(XmlBuilder context, String name) {
+	static XmlBuilder createAttributeRef(String name) {
 		XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
 		attribute.addAttribute("ref", name);
-		context.addSubElement(attribute);
 		return attribute;
 	}
 
-	static XmlBuilder addAnyAttribute(XmlBuilder context) {
+	static XmlBuilder createAnyAttribute() {
 		XmlBuilder attribute = new XmlBuilder("anyAttribute", "xs", XML_SCHEMA_URI);
-		context.addSubElement(attribute);
 		attribute.addAttribute("processContents", "skip");
 		return attribute;
 	}
 
-	static XmlBuilder addAnyOtherNamespaceAttribute(XmlBuilder context) {
+	static XmlBuilder createAnyOtherNamespaceAttribute() {
 		XmlBuilder attribute = new XmlBuilder("anyAttribute", "xs", XML_SCHEMA_URI);
-		context.addSubElement(attribute);
 		attribute.addAttribute("namespace", "##other");
 		attribute.addAttribute("processContents", "skip");
 		return attribute;		
 	}
 
-	static XmlBuilder addAttributeWithType(XmlBuilder context, String name) {
+	static XmlBuilder createAttributeWithType(String name) {
 		XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
 		attribute.addAttribute("name", name);
-		context.addSubElement(attribute);
 		return attribute;
 	}
 
@@ -307,22 +301,14 @@ class DocWriterNewXmlUtils {
 		return group;
 	}
 
-	static XmlBuilder addAttributeGroup(XmlBuilder context, String name) {
-		XmlBuilder group = new XmlBuilder("attributeGroup", "xs", XML_SCHEMA_URI);
-		context.addSubElement(group);
-		group.addAttribute("name", name);
-		return group;
-	}
-
 	static XmlBuilder createAttributeGroup(String name) {
 		XmlBuilder group = new XmlBuilder("attributeGroup", "xs", XML_SCHEMA_URI);
 		group.addAttribute("name", name);
 		return group;
 	}
 
-	static XmlBuilder addAttributeGroupRef(XmlBuilder context, String name) {
+	static XmlBuilder createAttributeGroupRef(String name) {
 		XmlBuilder group = new XmlBuilder("attributeGroup", "xs", XML_SCHEMA_URI);
-		context.addSubElement(group);
 		group.addAttribute("ref", name);
 		return group;
 	}

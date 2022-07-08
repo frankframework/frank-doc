@@ -19,26 +19,26 @@ package org.frankframework.frankdoc;
 import static org.frankframework.frankdoc.DocWriterNew.ATTRIBUTE_VALUES_TYPE;
 import static org.frankframework.frankdoc.DocWriterNew.VARIABLE_REFERENCE;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.XML_SCHEMA_URI;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addAttributeWithType;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addDocumentation;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addEnumeration;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addPattern;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addRestriction;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addSimpleType;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addUnion;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createAttributeWithType;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createSimpleType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.logging.log4j.Logger;
-
-import org.frankframework.frankdoc.model.AttributeType;
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.AttributeEnumValue;
+import org.frankframework.frankdoc.model.AttributeType;
 import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
@@ -69,21 +69,16 @@ public enum AttributeTypeStrategy {
 		this.delegate = delegate;
 	}
 
-	XmlBuilder addAttribute(XmlBuilder context, String name, AttributeType modelAttributeType, boolean isMandatory) {
-		return delegate.addAttribute(context, name, modelAttributeType, isMandatory);
+	XmlBuilder createAttribute(String name, AttributeType modelAttributeType) {
+		return delegate.createAttribute(name, modelAttributeType);
 	}
 
-	// A code smell - passing a Boolean argument and using it in an if-statement.
-	// An alternative approach would be to determine here whether the attribute is mandatory,
-	// duplicating logic from XsdVersion. Or XsdVersion would have to become responsible for
-	// setting the use="required" attribute. Or we would have to merge XsdVersion and
-	// AttributeTypeStrategy, which would require a lot of code modifications.
-	XmlBuilder addRestrictedAttribute(XmlBuilder context, FrankAttribute attribute, boolean isMandatory) {
-		return delegate.addRestrictedAttribute(context, attribute, isMandatory);
+	XmlBuilder createRestrictedAttribute(FrankAttribute attribute, Consumer<XmlBuilder> documenter) {
+		return delegate.createRestrictedAttribute(attribute, documenter);
 	}
 
-	static void addAttributeActive(XmlBuilder context) {
-		DocWriterNewXmlUtils.addAttributeRef(context, ATTRIBUTE_ACTIVE_NAME);
+	static XmlBuilder createAttributeActive() {
+		return DocWriterNewXmlUtils.createAttributeRef(ATTRIBUTE_ACTIVE_NAME);
 	}
 
 	List<XmlBuilder> createHelperTypes() {
@@ -99,15 +94,13 @@ public enum AttributeTypeStrategy {
 		// For example, an integer attribute can still be set like "${someIdentifier}".
 		// This method expects that methods DocWriterNewXmlUtils.createTypeFrankBoolean() and
 		// DocWriterNewXmlUtils.createTypeFrankInteger() are used to define the referenced XSD types.
-		XmlBuilder addAttribute(XmlBuilder context, String name, AttributeType modelAttributeType, boolean isMandatory) {
-			return addAttribute(context, name, modelAttributeType, isMandatory, FRANK_BOOLEAN, FRANK_INT);
+		XmlBuilder createAttribute(String name, AttributeType modelAttributeType) {
+			return createAttribute(name, modelAttributeType, FRANK_BOOLEAN, FRANK_INT);
 		}
 
-		private final XmlBuilder addAttribute(XmlBuilder context, String name, AttributeType modelAttributeType, boolean isMandatory,
+		private final XmlBuilder createAttribute(String name, AttributeType modelAttributeType,
 				String boolType, String intType) {
-			log.trace("Attribute isMandatory={}", () -> isMandatory);
-			XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
-			attribute.addAttribute("name", name);
+			XmlBuilder attribute = createAttributeWithType(name);
 			String typeName = null;
 			switch(modelAttributeType) {
 			case BOOL:
@@ -121,22 +114,16 @@ public enum AttributeTypeStrategy {
 				break;
 			}
 			attribute.addAttribute("type", typeName);
-			if(isMandatory) {
-				attribute.addAttribute("use", "required");
-			}
-			context.addSubElement(attribute);
 			return attribute;						
 		}
 
-		final XmlBuilder addRestrictedAttribute(XmlBuilder context, FrankAttribute attribute, boolean isMandatory) {
-			log.trace("isMandatory=[{}]", () -> isMandatory);
+		final XmlBuilder createRestrictedAttribute(FrankAttribute attribute, Consumer<XmlBuilder> documenter) {
 			AttributeEnum attributeEnum = attribute.getAttributeEnum();
-			XmlBuilder attributeBuilder = addAttributeWithType(context, attribute.getName());
-			if(isMandatory) {
-				attributeBuilder.addAttribute("use", "required");
-			}
+			XmlBuilder attributeBuilder = createAttributeWithType(attribute.getName());
+			documenter.accept(attributeBuilder);
 			XmlBuilder simpleType = addSimpleType(attributeBuilder);
-			return addUnion(simpleType, attributeEnum.getUniqueName(ATTRIBUTE_VALUES_TYPE), VARIABLE_REFERENCE);
+			addUnion(simpleType, attributeEnum.getUniqueName(ATTRIBUTE_VALUES_TYPE), VARIABLE_REFERENCE);
+			return attributeBuilder;
 		}
 
 		final XmlBuilder createAttributeEnumType(AttributeEnum attributeEnum) {

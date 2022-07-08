@@ -122,13 +122,13 @@ public class AttributeTypeStrategyTest {
 		XmlBuilder element = addElementWithType(schema, "myElement");
 		XmlBuilder complexType = addComplexType(element);
 		// We do not test mandatory attributes here. Therefore the fourth argument is "false".
-		attributeTypeStrategy.addAttribute(complexType, "boolAttr", AttributeType.BOOL, false);
-		attributeTypeStrategy.addAttribute(complexType, "intAttr", AttributeType.INT, false);
-		attributeTypeStrategy.addAttribute(complexType, "stringAttr", AttributeType.STRING, false);
-		AttributeTypeStrategy.addAttributeActive(complexType);
+		complexType.addSubElement(attributeTypeStrategy.createAttribute("boolAttr", AttributeType.BOOL));
+		complexType.addSubElement(attributeTypeStrategy.createAttribute("intAttr", AttributeType.INT));
+		complexType.addSubElement(attributeTypeStrategy.createAttribute("stringAttr", AttributeType.STRING));
+		complexType.addSubElement(AttributeTypeStrategy.createAttributeActive());
 		// This test does not test whether use="required" is included. It is about
 		// attribute types. Therefore we take the attribute not to be mandatory.
-		attributeTypeStrategy.addRestrictedAttribute(complexType, enumTypedAttribute, false);
+		complexType.addSubElement(attributeTypeStrategy.createRestrictedAttribute(enumTypedAttribute, a -> {}));
 		attributeTypeStrategy.createHelperTypes().forEach(h -> schema.addSubElement(h));
 		schema.addSubElement(attributeTypeStrategy.createAttributeEnumType(attributeEnum));
 		return schema.toXML(true);
