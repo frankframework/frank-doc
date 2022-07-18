@@ -294,7 +294,7 @@ public class FrankDocModel {
 			}
 			attribute.setDeprecated(Feature.DEPRECATED.isSetOn(method));
 			attribute.setReintroduced(Feature.REINTRODUCE.isSetOn(method));
-			log.trace("Attribute {} deprecated={}, reintroduced={}", attributeName, attribute.isDeprecated(), attribute.isReintroduced());
+			log.trace("Attribute {} deprecated={}, reintroduced={}", () -> attributeName, () -> attribute.isDeprecated(), () -> attribute.isReintroduced());
 			documentAttribute(attribute, method, attributeOwner);
 			log.trace("Default [{}]", () -> attribute.getDefaultValue());
 			// We do not type-check the default value. The default value is actually a description of the default.
