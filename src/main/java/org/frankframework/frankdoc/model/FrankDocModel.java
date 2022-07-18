@@ -292,6 +292,9 @@ public class FrankDocModel {
 					attribute.setAttributeEnum(findOrCreateAttributeEnum((FrankClass) enumGettersByAttributeName.get(attributeName).getReturnType()));
 				}
 			}
+			attribute.setDeprecated(Feature.DEPRECATED.isSetOn(method));
+			attribute.setReintroduced(Feature.REINTRODUCE.isSetOn(method));
+			log.trace("Attribute {} deprecated={}, reintroduced={}", attributeName, attribute.isDeprecated(), attribute.isReintroduced());
 			documentAttribute(attribute, method, attributeOwner);
 			log.trace("Default [{}]", () -> attribute.getDefaultValue());
 			// We do not type-check the default value. The default value is actually a description of the default.
@@ -407,7 +410,6 @@ public class FrankDocModel {
 	}
 
 	private void documentAttribute(FrankAttribute attribute, FrankMethod method, FrankElement attributeOwner) throws FrankDocException {
-		attribute.setDeprecated(Feature.DEPRECATED.isSetOn(method));
 		attribute.setDocumented(
 				(method.getAnnotation(FrankDocletConstants.IBISDOC) != null)
 				|| (method.getAnnotation(FrankDocletConstants.IBISDOCREF) != null)

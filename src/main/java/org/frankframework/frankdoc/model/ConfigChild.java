@@ -52,8 +52,9 @@ public abstract class ConfigChild extends ElementChild {
 	ConfigChild(FrankElement owningElement, FrankMethod method) {
 		super(owningElement);
 		setDocumented(isDocumented(method));
-		setDeprecated(isDeprecated(method));
-		log.trace("ConfigChild of method {} has documented={}, deprecated={}", () -> method.toString(), () -> isDocumented(), () -> isDeprecated());
+		setDeprecated(Feature.DEPRECATED.isSetOn(method));
+		setReintroduced(Feature.REINTRODUCE.isSetOn(method));
+		log.trace("ConfigChild of method {} has documented={}, deprecated={}, reintroduced={}", () -> method.toString(), () -> isDocumented(), () -> isDeprecated(), () -> isReintroduced());
 		this.methodName = method.getName();
 		setJavaDocBasedDescriptionAndDefault(method);
 		FrankAnnotation ibisDoc = getIbisDoc(method);
@@ -70,10 +71,6 @@ public abstract class ConfigChild extends ElementChild {
 
 	private static boolean isDocumented(FrankMethod m) {
 		return (m.getAnnotation(FrankDocletConstants.IBISDOC) != null) || (m.getJavaDoc() != null);
-	}
-
-	private static boolean isDeprecated(FrankMethod m) {
-		return Feature.DEPRECATED.isSetOn(m);
 	}
 
 	private static FrankAnnotation getIbisDoc(FrankMethod method) {

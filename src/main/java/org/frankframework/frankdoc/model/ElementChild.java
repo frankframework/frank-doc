@@ -75,6 +75,8 @@ public abstract class ElementChild {
 	private @Getter @Setter boolean documented;
 	private @Getter FrankElement overriddenFrom;
 
+	private @Getter @Setter boolean reintroduced = false;
+
 	/**
 	 * This property is used to omit "technical overrides" from the XSDs. Sometimes
 	 * the Java code of the F!F overrides a method without a change of meaning of
@@ -174,7 +176,8 @@ public abstract class ElementChild {
 		// mentioned example, we have a meaningful override for FrankConfig-compatibility.xsd.
 		// We do not want to make overrideIsMeaningful() dependent on the XsdVersion, because
 		// that is not part of the model.
-		boolean result = (getMandatoryStatus() != overriddenFrom.getMandatoryStatus())
+		boolean result = reintroduced
+				|| (getMandatoryStatus() != overriddenFrom.getMandatoryStatus())
 				|| (isExcluded() != overriddenFrom.isExcluded())
 				|| (! Utils.equalsNullable(getDescription(), overriddenFrom.getDescription()))
 				|| (! Utils.equalsNullable(getDefaultValue(), overriddenFrom.getDefaultValue()));
