@@ -61,19 +61,6 @@
             "parent":"org.frankframework.frankdoc.testtarget.examples.reintroduce.Parent",
             "elementNames":[
                 "ChildA"
-            ],
-            "attributes":[
-                {
-                    "name":"attribute",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.reintroduce.Child"
-                }
-            ],
-            "children":[
-                {
-                    "multiple":true,
-                    "roleName":"b",
-                    "type":"org.frankframework.frankdoc.testtarget.examples.reintroduce.MyConfigChild"
-                }
             ]
         },
         {

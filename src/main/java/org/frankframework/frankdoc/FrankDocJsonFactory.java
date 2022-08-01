@@ -264,7 +264,7 @@ public class FrankDocJsonFactory {
 
 	private JsonArray getAttributes(FrankElement frankElement, boolean addAttributeActive) throws JsonException {
 		JsonArrayBuilder result = bf.createArrayBuilder();
-		for(FrankAttribute attribute: frankElement.getAttributes(ElementChild.IN_COMPATIBILITY_XSD)) {
+		for(FrankAttribute attribute: frankElement.getAttributes(ElementChild.IN_JSON)) {
 			result.add(getAttribute(attribute));
 		}
 		if(addAttributeActive) {
@@ -318,7 +318,7 @@ public class FrankDocJsonFactory {
 		if(frankElement.getFullName().equals(model.getRootClassName())) {
 			result.add(getConfigChildReferencedEntityRoot());
 		}
-		for(ConfigChild child: frankElement.getConfigChildren(ElementChild.IN_COMPATIBILITY_XSD)) {
+		for(ConfigChild child: frankElement.getConfigChildren(ElementChild.IN_JSON)) {
 			result.add(getConfigChild(child));
 		}
 		return result.build();

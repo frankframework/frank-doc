@@ -100,9 +100,17 @@ public abstract class ElementChild {
 	public static Predicate<ElementChild> IN_XSD = c ->
 		(! c.isExcluded())
 		&& (! c.isDeprecated())
-		&& (c.isDocumented() || (! c.isTechnicalOverride()));
+		&& (c.isReintroduced() || c.isDocumented() || (! c.isTechnicalOverride()));
 
 	public static Predicate<ElementChild> IN_COMPATIBILITY_XSD = c ->
+		(! c.isExcluded())
+		&& (c.isReintroduced() || c.isDocumented() || (! c.isTechnicalOverride()));
+
+	// Like IN_COMPATIBILITY_XSD, but do NOT take into account isReintroduced(). The isReintroduced()
+	// property was introduced to correct the order of config children in the XSD. If reintroduced
+	// config children would be mentioned in the JSON, there would be duplicates which would be confusing
+	// to the reader of the webapp.
+	public static Predicate<ElementChild> IN_JSON = c ->
 		(! c.isExcluded())
 		&& (c.isDocumented() || (! c.isTechnicalOverride()));
 
@@ -114,7 +122,7 @@ public abstract class ElementChild {
 	// A config child is also relevant for the JSON if it is excluded. The frontend has to mention it as not inherited.
 	// Technical overrides are not relevant. But isTechnicalOverride() is also true for undocumented
 	// excluded children. Of course we have to include those.
-	public static Predicate<ElementChild> JSON_RELEVANT = c -> ! (c.isTechnicalOverride() && (! c.isExcluded()));
+	public static Predicate<ElementChild> JSON_RELEVANT = IN_JSON.or(JSON_NOT_INHERITED);
 
 	/**
 	 * Base class for keys used to look up {@link FrankAttribute} objects or
@@ -176,8 +184,7 @@ public abstract class ElementChild {
 		// mentioned example, we have a meaningful override for FrankConfig-compatibility.xsd.
 		// We do not want to make overrideIsMeaningful() dependent on the XsdVersion, because
 		// that is not part of the model.
-		boolean result = reintroduced
-				|| (getMandatoryStatus() != overriddenFrom.getMandatoryStatus())
+		boolean result = (getMandatoryStatus() != overriddenFrom.getMandatoryStatus())
 				|| (isExcluded() != overriddenFrom.isExcluded())
 				|| (! Utils.equalsNullable(getDescription(), overriddenFrom.getDescription()))
 				|| (! Utils.equalsNullable(getDefaultValue(), overriddenFrom.getDefaultValue()));
