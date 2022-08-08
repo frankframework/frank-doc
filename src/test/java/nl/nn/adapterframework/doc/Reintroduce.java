@@ -25,7 +25,13 @@ import java.lang.annotation.Target;
 
 /**
  * If set on attribute setter or config child setter, forces attribute or config child to
- * be declared explicitly with the child. Useful for controlling the order of config children.
+ * be declared explicitly with the child. This annotation was introduced to modify the sort
+ * order. Setting this application is only needed if the
+ * inheriting setter does not update the attribute or config child in another way. For example
+ * if the overriding method has a JavaDoc comment to update the description, then the element
+ * child is repeated already without the need to add this annotation.
+ *
+ * JavaDoc tag <code>@ff.reintroduce</code> has the same effect as this annotation.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
