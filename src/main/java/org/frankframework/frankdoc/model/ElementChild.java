@@ -100,11 +100,11 @@ public abstract class ElementChild {
 	public static Predicate<ElementChild> IN_XSD = c ->
 		(! c.isExcluded())
 		&& (! c.isDeprecated())
-		&& (c.isReintroduced() || c.isDocumented() || (! c.isTechnicalOverride()));
+		&& (c.isDocumented() || (! c.isTechnicalOverride()));
 
 	public static Predicate<ElementChild> IN_COMPATIBILITY_XSD = c ->
 		(! c.isExcluded())
-		&& (c.isReintroduced() || c.isDocumented() || (! c.isTechnicalOverride()));
+		&& (c.isDocumented() || (! c.isTechnicalOverride()));
 
 	public static Predicate<ElementChild> REJECT_DEPRECATED = c -> c.isExcluded() || c.isDeprecated();
 	static Predicate<ElementChild> ALL = c -> true;
@@ -176,7 +176,8 @@ public abstract class ElementChild {
 		// mentioned example, we have a meaningful override for FrankConfig-compatibility.xsd.
 		// We do not want to make overrideIsMeaningful() dependent on the XsdVersion, because
 		// that is not part of the model.
-		boolean result = (getMandatoryStatus() != overriddenFrom.getMandatoryStatus())
+		boolean result = reintroduced
+				|| (getMandatoryStatus() != overriddenFrom.getMandatoryStatus())
 				|| (isExcluded() != overriddenFrom.isExcluded())
 				|| (! Utils.equalsNullable(getDescription(), overriddenFrom.getDescription()))
 				|| (! Utils.equalsNullable(getDefaultValue(), overriddenFrom.getDefaultValue()));
