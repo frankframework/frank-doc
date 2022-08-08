@@ -106,14 +106,6 @@ public abstract class ElementChild {
 		(! c.isExcluded())
 		&& (c.isReintroduced() || c.isDocumented() || (! c.isTechnicalOverride()));
 
-	// Like IN_COMPATIBILITY_XSD, but do NOT take into account isReintroduced(). The isReintroduced()
-	// property was introduced to correct the order of config children in the XSD. If reintroduced
-	// config children would be mentioned in the JSON, there would be duplicates which would be confusing
-	// to the reader of the webapp.
-	public static Predicate<ElementChild> IN_JSON = c ->
-		(! c.isExcluded())
-		&& (c.isDocumented() || (! c.isTechnicalOverride()));
-
 	public static Predicate<ElementChild> REJECT_DEPRECATED = c -> c.isExcluded() || c.isDeprecated();
 	static Predicate<ElementChild> ALL = c -> true;
 	public static Predicate<ElementChild> ALL_NOT_EXCLUDED = c -> ! c.isExcluded();
@@ -122,7 +114,7 @@ public abstract class ElementChild {
 	// A config child is also relevant for the JSON if it is excluded. The frontend has to mention it as not inherited.
 	// Technical overrides are not relevant. But isTechnicalOverride() is also true for undocumented
 	// excluded children. Of course we have to include those.
-	public static Predicate<ElementChild> JSON_RELEVANT = IN_JSON.or(JSON_NOT_INHERITED);
+	public static Predicate<ElementChild> JSON_RELEVANT = IN_COMPATIBILITY_XSD.or(JSON_NOT_INHERITED);
 
 	/**
 	 * Base class for keys used to look up {@link FrankAttribute} objects or

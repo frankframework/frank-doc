@@ -264,7 +264,7 @@ public class FrankDocJsonFactory {
 
 	private JsonArray getAttributes(FrankElement frankElement, boolean addAttributeActive) throws JsonException {
 		JsonArrayBuilder result = bf.createArrayBuilder();
-		for(FrankAttribute attribute: frankElement.getAttributes(ElementChild.IN_JSON)) {
+		for(FrankAttribute attribute: frankElement.getAttributes(ElementChild.IN_COMPATIBILITY_XSD)) {
 			result.add(getAttribute(attribute));
 		}
 		if(addAttributeActive) {
@@ -281,6 +281,9 @@ public class FrankDocJsonFactory {
 		}
 		if(frankAttribute.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
 			result.add("mandatory", true);
+		}
+		if(frankAttribute.isReintroduced()) {
+			result.add("reintroduced", true);
 		}
 		result.add("describer", frankAttribute.getDescribingElement().getFullName());
 		addIfNotNull(result, "description", frankAttribute.getDescription());
@@ -318,7 +321,7 @@ public class FrankDocJsonFactory {
 		if(frankElement.getFullName().equals(model.getRootClassName())) {
 			result.add(getConfigChildReferencedEntityRoot());
 		}
-		for(ConfigChild child: frankElement.getConfigChildren(ElementChild.IN_JSON)) {
+		for(ConfigChild child: frankElement.getConfigChildren(ElementChild.IN_COMPATIBILITY_XSD)) {
 			result.add(getConfigChild(child));
 		}
 		return result.build();
@@ -340,6 +343,9 @@ public class FrankDocJsonFactory {
 		}
 		if(child.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
 			result.add("mandatory", true);
+		}
+		if(child.isReintroduced()) {
+			result.add("reintroduced", true);
 		}
 		result.add("multiple", child.isAllowMultiple());
 		result.add("roleName", child.getRoleName());
