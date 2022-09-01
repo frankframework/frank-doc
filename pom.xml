@@ -3,7 +3,7 @@
 
 	<groupId>org.ibissource</groupId>
 	<artifactId>frank-doc</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.1</version>
 	<packaging>jar</packaging>
 
 	<name>Frank!Doc</name>
@@ -301,7 +301,7 @@
 		<url>https://github.com/ibissource/frank-doc</url>
 		<connection>scm:git:https://github.com/ibissource/frank-doc.git</connection>
 		<developerConnection>scm:git:https://github.com/ibissource/frank-doc.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>v1.1</tag>
 	</scm>
 
 	<profiles>
