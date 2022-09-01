@@ -75,6 +75,8 @@ public abstract class ElementChild {
 	private @Getter @Setter boolean documented;
 	private @Getter FrankElement overriddenFrom;
 
+	private @Getter @Setter boolean reintroduced = false;
+
 	/**
 	 * This property is used to omit "technical overrides" from the XSDs. Sometimes
 	 * the Java code of the F!F overrides a method without a change of meaning of
@@ -112,7 +114,7 @@ public abstract class ElementChild {
 	// A config child is also relevant for the JSON if it is excluded. The frontend has to mention it as not inherited.
 	// Technical overrides are not relevant. But isTechnicalOverride() is also true for undocumented
 	// excluded children. Of course we have to include those.
-	public static Predicate<ElementChild> JSON_RELEVANT = c -> ! (c.isTechnicalOverride() && (! c.isExcluded()));
+	public static Predicate<ElementChild> JSON_RELEVANT = IN_COMPATIBILITY_XSD.or(JSON_NOT_INHERITED);
 
 	/**
 	 * Base class for keys used to look up {@link FrankAttribute} objects or
@@ -174,7 +176,8 @@ public abstract class ElementChild {
 		// mentioned example, we have a meaningful override for FrankConfig-compatibility.xsd.
 		// We do not want to make overrideIsMeaningful() dependent on the XsdVersion, because
 		// that is not part of the model.
-		boolean result = (getMandatoryStatus() != overriddenFrom.getMandatoryStatus())
+		boolean result = reintroduced
+				|| (getMandatoryStatus() != overriddenFrom.getMandatoryStatus())
 				|| (isExcluded() != overriddenFrom.isExcluded())
 				|| (! Utils.equalsNullable(getDescription(), overriddenFrom.getDescription()))
 				|| (! Utils.equalsNullable(getDefaultValue(), overriddenFrom.getDefaultValue()));

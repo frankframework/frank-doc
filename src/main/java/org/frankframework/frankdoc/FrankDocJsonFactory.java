@@ -282,6 +282,9 @@ public class FrankDocJsonFactory {
 		if(frankAttribute.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
 			result.add("mandatory", true);
 		}
+		if(frankAttribute.isReintroduced()) {
+			result.add("reintroduced", true);
+		}
 		result.add("describer", frankAttribute.getDescribingElement().getFullName());
 		addIfNotNull(result, "description", frankAttribute.getDescription());
 		addIfNotNull(result, "default", frankAttribute.getDefaultValue());
@@ -340,6 +343,9 @@ public class FrankDocJsonFactory {
 		}
 		if(child.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
 			result.add("mandatory", true);
+		}
+		if(child.isReintroduced()) {
+			result.add("reintroduced", true);
 		}
 		result.add("multiple", child.isAllowMultiple());
 		result.add("roleName", child.getRoleName());

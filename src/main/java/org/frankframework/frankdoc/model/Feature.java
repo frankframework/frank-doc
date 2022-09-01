@@ -27,7 +27,8 @@ enum Feature {
 	OPTIONAL("nl.nn.adapterframework.doc.Optional", "@ff.optional"),
 	DEFAULT("nl.nn.adapterframework.doc.Default", "@ff.default"),
 	DEPRECATED("java.lang.Deprecated", "@deprecated"),
-	PROTECTED("nl.nn.adapterframework.doc.Protected", "@ff.protected");
+	PROTECTED("nl.nn.adapterframework.doc.Protected", "@ff.protected"),
+	REINTRODUCE("nl.nn.adapterframework.doc.Reintroduce", "@ff.reintroduce");
 
 	private final String javaAnnotation;
 	private final String javaDocTag;
