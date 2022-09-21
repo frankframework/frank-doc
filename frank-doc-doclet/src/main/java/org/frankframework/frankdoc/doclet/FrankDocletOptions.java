@@ -55,10 +55,10 @@ class FrankDocletOptions {
 	private static Map<String, Option> optionsByName;
 
 	private @Getter String outputBaseDir;
-	private @Getter String xsdStrictPath = "xml/xsd/FrankConfig-strict.xsd";
-	private @Getter String xsdCompatibilityPath = "xml/xsd/FrankConfig-compatibility.xsd";
-	private @Getter String jsonOutputPath = "js/frankdoc.json";
-	private @Getter String elementSummaryPath = "txt/elementSummary.txt";
+	private @Getter String xsdStrictPath = "assets/FrankConfig.xsd";
+	private @Getter String xsdCompatibilityPath = "FrankConfig-compatibility.xsd";
+	private @Getter String jsonOutputPath = "assets/frankdoc.json";
+	private @Getter String elementSummaryPath = "assets/elementSummary.txt";
 	private @Getter URL digesterRulesUrl;
 	private @Getter String rootClass;
 	private @Getter String frankFrameworkVersion;

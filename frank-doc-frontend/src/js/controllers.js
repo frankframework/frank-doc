@@ -1,13 +1,10 @@
 angular.module('iaf.frankdoc').controller("main", ['$scope', '$http', 'properties', function($scope, $http, properties) {
-	function getURI() {
-		return properties.server + "iaf/api/frankdoc/files/";
-	}
 	$scope.showDeprecatedElements = false;
 	$scope.showHideDeprecated = function() {
 		$scope.showDeprecatedElements = !$scope.showDeprecatedElements;
 	}
 	$scope.downloadXSD = function() {
-		window.open(getURI() + "FrankConfig.xsd", 'Frank!Config XSD');
+		window.open("/assets/FrankFramework-Config.xsd", 'Frank!Config XSD');
 	}
 
 	$scope.showInheritance = true;
@@ -58,7 +55,7 @@ angular.module('iaf.frankdoc').controller("main", ['$scope', '$http', 'propertie
 	$scope.elements = {};
 	$scope.enums = {};
 	$scope.search = "";
-	$http.get(getURI() + "frankdoc.json").then(function(response) {
+	$http.get("/assets/frankdoc.json").then(function(response) {
 		if(response && response.data) {
 			let data = response.data;
 			let types = data.types;
