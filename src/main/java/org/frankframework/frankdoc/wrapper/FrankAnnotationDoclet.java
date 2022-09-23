@@ -17,17 +17,38 @@ limitations under the License.
 package org.frankframework.frankdoc.wrapper;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationValue;
 
 class FrankAnnotationDoclet implements FrankAnnotation {
+	private static Logger log = LogUtil.getLogger(FrankAnnotationDoclet.class);
+	private static final Set<String> RECURSIVE_ANNOTATIONS = new HashSet<>(Arrays.asList(
+			"java.lang.annotation.Documented",
+			"java.lang.annotation.Retention",
+			"java.lang.annotation.Target"));
+	
 	private final AnnotationDesc annotation;
+	private final Map<String, FrankAnnotation> frankAnnotationsByName;
 
 	FrankAnnotationDoclet(AnnotationDesc annotation) {
+		log.trace("Creating FrankAnnotation for [{}]", annotation.annotationType().qualifiedName());
 		this.annotation = annotation;
+		AnnotationDesc[] javaDocAnnotationsOfAnnotation = Arrays.asList(annotation.annotationType().annotations()).stream()
+				.filter(a -> ! RECURSIVE_ANNOTATIONS.contains(a.annotationType().qualifiedName()))
+				.collect(Collectors.toList())
+				.toArray(new AnnotationDesc[] {});
+		log.trace("Creating annotations of annotations");
+		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(javaDocAnnotationsOfAnnotation);
+		log.trace("Done with annotations of annotations");
 	}
 
 	@Override
@@ -88,5 +109,10 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 			result[i] = valueAsStringList.get(i);
 		}
 		return result;
+	}
+
+	@Override
+	public FrankAnnotation getAnnotation(String name) {
+		return frankAnnotationsByName.get(name);
 	}
 }

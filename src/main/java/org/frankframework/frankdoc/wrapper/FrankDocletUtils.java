@@ -16,7 +16,7 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.sun.javadoc.AnnotationDesc;
@@ -26,7 +26,7 @@ final class FrankDocletUtils {
 	}
 
 	static Map<String, FrankAnnotation> getFrankAnnotationsByName(AnnotationDesc[] annotationDescs) {
-		Map<String, FrankAnnotation> annotationsByName = new HashMap<>();
+		Map<String, FrankAnnotation> annotationsByName = new LinkedHashMap<>();
 		for(AnnotationDesc annotationDesc: annotationDescs) {
 			FrankAnnotation frankAnnotation = new FrankAnnotationDoclet(annotationDesc);
 			annotationsByName.put(frankAnnotation.getName(), frankAnnotation);

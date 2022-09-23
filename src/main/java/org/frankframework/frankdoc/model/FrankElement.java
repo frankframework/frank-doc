@@ -37,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
 import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
@@ -58,6 +59,8 @@ public class FrankElement implements Comparable<FrankElement> {
 	public static final String JAVADOC_PARAMETER = "@ff.parameter";
 	public static final String JAVADOC_FORWARD = "@ff.forward";
 	public static final String JAVADOC_TAG = "@ff.tag";
+	public static final String LABEL = "nl.nn.adapterframework.doc.Label";
+	public static final String LABEL_NAME = "name";
 
 	private static Logger log = LogUtil.getLogger(FrankElement.class);
 
@@ -106,6 +109,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	private @Getter(AccessLevel.PACKAGE) FrankDocGroup explicitGroup = null;
 	private Set<String> inTypes = new HashSet<>();
 	private Set<String> syntax2ExcludedFromTypes = new HashSet<>();
+	private @Getter List<FrankLabel> labels = new ArrayList<>();
 
 	FrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
@@ -120,6 +124,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		handlePossibleParameters(clazz);
 		handlePossibleForwards(clazz);
 		handlePossibleTags(clazz);
+		handleLabels(clazz);
 	}
 
 	private void completeFrankElement(FrankClass clazz) {
@@ -208,6 +213,21 @@ public class FrankElement implements Comparable<FrankElement> {
 				log.warn("FrankElement [{}] has a [{}] tag without a value: [{}]", fullName, tagName, arguments);
 			}
 			acceptor.accept(parsed);
+		}
+	}
+
+	private void handleLabels(FrankClass clazz) {
+		List<FrankAnnotation> annotationsForLabels = Arrays.asList(clazz.getAnnotations()).stream()
+				.filter(a -> a.getAnnotation(LABEL) != null)
+				.collect(Collectors.toList());
+		for(FrankAnnotation a: annotationsForLabels) {
+			try {
+				String name = a.getAnnotation(LABEL).getValueOf(LABEL_NAME).toString();
+				String value = a.getValue().toString();
+				labels.add(new FrankLabel(name, value));
+			} catch(FrankDocException e) {
+				log.error("Could not parse label [{}] of [{}]", a.getName(), toString());
+			}
 		}
 	}
 

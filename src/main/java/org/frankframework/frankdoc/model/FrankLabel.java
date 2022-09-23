@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -14,21 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License. 
 */
 
-package org.frankframework.frankdoc.wrapper;
+package org.frankframework.frankdoc.model;
 
-/**
- * Models a Java 5 annotation. Only value types String[], String and Integer are supported.
- * @author martijn
- *
- */
-public interface FrankAnnotation extends FrankProgramElement {
-	/**
-	 * Get the "value" field of the annotation.
-	 * @throws FrankDocException
-	 */
-	Object getValue() throws FrankDocException;
+import lombok.Getter;
 
-	Object getValueOf(String fieldName) throws FrankDocException;
+public class FrankLabel {
+	private @Getter String name;
+	private @Getter String value;
 
-	FrankAnnotation getAnnotation(String name);
+	FrankLabel(String name, String value) {
+		this.name = name;
+		this.value = value;
+	}
 }

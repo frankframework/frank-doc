@@ -32,7 +32,6 @@ import javax.json.JsonObjectBuilder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
-
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.AttributeEnumValue;
 import org.frankframework.frankdoc.model.AttributeType;
@@ -43,6 +42,7 @@ import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.model.FrankDocGroup;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.model.FrankElement;
+import org.frankframework.frankdoc.model.FrankLabel;
 import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.ParsedJavaDocTag;
@@ -238,6 +238,16 @@ public class FrankDocJsonFactory {
 				b.add(tag.getName(), tag.getDescription());
 			}
 			result.add("tags", b.build());
+		}
+		if(! frankElement.getLabels().isEmpty()) {
+			JsonArrayBuilder b = bf.createArrayBuilder();
+			for(FrankLabel lab: frankElement.getLabels()) {
+				JsonObjectBuilder ob = bf.createObjectBuilder();
+				ob.add("name", lab.getName());
+				ob.add("value", lab.getValue());
+				b.add(ob.build());
+			}
+			result.add("labels", b.build());
 		}
 		return result.build();
 	}
