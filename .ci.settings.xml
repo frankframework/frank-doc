@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0"
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<servers>
+		<server>
+			<id>ibissource</id>
+		</server>
+	</servers>
+	<profiles>
+		<!-- write to releases repo -->
+		<profile>
+			<id>ibissource</id>
+			<repositories>
+				<repository>
+					<id>ibissource</id>
+					<url>https://nexus.frankframework.org/repository/releases/</url>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>ibissource</id>
+					<url>https://nexus.frankframework.org/repository/releases/</url>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+		<!-- write to proprietary repo -->
+		<profile>
+			<id>proprietary</id>
+			<repositories>
+				<repository>
+					<id>proprietary</id>
+					<url>https://nexus.frankframework.org/repository/proprietary/</url>
+				</repository>
+			</repositories>
+		</profile>
+		<!-- read all repos from Nexus -->
+		<profile>
+			<id>private</id>
+			<repositories>
+				<repository>
+					<id>ibissource</id>
+					<url>https://nexus.frankframework.org/repository/private/</url>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>ibissource</id>
+					<url>https://nexus.frankframework.org/repository/private/</url>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+	</profiles>
+	<activeProfiles>
+		<activeProfile>private</activeProfile>
+		<activeProfile>proprietary</activeProfile>
+	</activeProfiles>
+</settings>
