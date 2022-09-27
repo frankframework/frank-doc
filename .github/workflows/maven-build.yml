@@ -72,7 +72,7 @@ jobs:
       working-directory: iaf
 
     - name: Check FrankConfig-strict.xsd
-      run: java -jar frank-doc/target/frank-doc-$(cat frankDocVersion.txt).jar frank-doc/.github/workflows/validConfig.xml iaf/target/frankdoc/xml/xsd/FrankConfig-strict.xsd
+      run: java -jar frank-doc/target/frank-doc-$(cat frank-doc/.github/workflows/frankDocVersion.txt).jar frank-doc/.github/workflows/validConfig.xml iaf/target/frankdoc/xml/xsd/FrankConfig-strict.xsd
 
     - name: Check FrankConfig-compatibility.xsd
-      run: java -jar frank-doc/target/frank-doc-$(cat frankDocVersion.txt).jar frank-doc/.github/workflows/validConfig.xml iaf/target/frankdoc/xml/xsd/FrankConfig-compatibility.xsd
+      run: java -jar frank-doc/target/frank-doc-$(cat frank-doc/.github/workflows/frankDocVersion.txt).jar frank-doc/.github/workflows/validConfig.xml iaf/target/frankdoc/xml/xsd/FrankConfig-compatibility.xsd
