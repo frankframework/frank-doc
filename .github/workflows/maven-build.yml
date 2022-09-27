@@ -60,7 +60,8 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 2
-        repository: ibissource/iaf
+        repository: philipsens/iaf
+        branch: feature/add-frank-doc-frontend
         path: iaf
 
     - name: Build Frank!Framework
@@ -71,7 +72,7 @@ jobs:
       run: mvn -B -V -T1 -PattachFrankDoc -DskipTests -Dfrankdoc.version=$(cat ../frank-doc/.github/workflows/frankDocVersion.txt) process-sources
       working-directory: iaf
 
-    - name: Check FrankConfig-strict.xsd
+    - name: Check FrankConfig.xsd
       run: |
         java -jar \
           frank-doc/frank-doc-doclet/target/frank-doc-doclet-$(cat frank-doc/.github/workflows/frankDocVersion.txt).jar \
