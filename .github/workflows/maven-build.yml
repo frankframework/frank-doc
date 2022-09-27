@@ -68,7 +68,7 @@ jobs:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
         JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
-      run: mvn -B -V -T1 -PattachFrankDoc -DskipTests -Dfrankdoc.version=$(cat ../frankDocVersion.txt) process-sources
+      run: mvn -B -V -T1 -PattachFrankDoc -DskipTests -Dfrankdoc.version=$(cat ../frank-doc/.github/workflows/frankDocVersion.txt) process-sources
       working-directory: iaf
 
     - name: Check FrankConfig-strict.xsd
