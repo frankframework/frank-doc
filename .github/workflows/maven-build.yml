@@ -61,7 +61,7 @@ jobs:
       with:
         fetch-depth: 2
         repository: philipsens/iaf
-        branch: feature/add-frank-doc-frontend
+        ref: feature/add-frank-doc-frontend
         path: iaf
 
     - name: Build Frank!Framework
