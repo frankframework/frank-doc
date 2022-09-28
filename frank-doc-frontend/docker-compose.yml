@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  frank:
+    image: nexus.frankframework.org/frank-framework:latest
+    volumes:
+      - ./target/classes/:/usr/local/tomcat/webapps/ROOT/iaf/frankdoc/
+      - ./context.xml:/usr/local/tomcat/conf/Catalina/localhost/ROOT.xml
+    ports:
+      - "8080:8080"
+    environment:
+      - ldap.stage=LOC
+      - instance.name=Frank2FrankDocFrontend
+      - database.instance.name=frank2frankdocfrontend
+      - database.name=database

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html ng-app="iaf.frankdoc">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="pragma" content="no-cache">
+	<base href="">
+
+	<title page-title></title>
+	<link href="images/favicon.ico" rel="shortcut icon">
+</head>
+
+<body ng-controller="main">
+	<sidebar></sidebar>
+	<div class="element" ui-view></div>
+	<div class="loadError" ng-style="{ display: (loadError ? 'block' : '') }"><p>ERROR: {{loadError}}</p></div>
+</body>
+</html>
