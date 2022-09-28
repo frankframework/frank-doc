@@ -53,9 +53,11 @@ jobs:
       uses: codecov/codecov-action@v1
 
     - name: Read Frank!Doc version
-      env:
-        FRANKDOC_VERSION: $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-      run: echo "Frank!Doc version is $FRANKDOC_VERSION"
+      run: chmod +x getFrankDocVersion.sh && ./getFrankDocVersion.sh
+      working-directory: frank-doc/.github/workflows/
+
+    - name: Set Frank!Doc version environment variable
+      run: echo "FRANKDOC_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
       working-directory: frank-doc
 
     - name: Checkout Frank!Framework
