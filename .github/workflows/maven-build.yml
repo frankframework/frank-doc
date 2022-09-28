@@ -54,7 +54,7 @@ jobs:
 
     - name: Read Frank!Doc version
       env:
-        FRANKDOC_VERSION: $(cat mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        FRANKDOC_VERSION: $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
       run: echo "Frank!Doc version is $FRANKDOC_VERSION"
       working-directory: frank-doc
 
