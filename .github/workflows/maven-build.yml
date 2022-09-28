@@ -53,8 +53,10 @@ jobs:
       uses: codecov/codecov-action@v1
 
     - name: Read Frank!Doc version
-      run: chmod +x getFrankDocVersion.sh && ./getFrankDocVersion.sh
-      working-directory: frank-doc/.github/workflows/
+      env:
+        FRANKDOC_VERSION: $(cat mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+      run: echo "Frank!Doc version is $FRANKDOC_VERSION"
+      working-directory: frank-doc
 
     - name: Checkout Frank!Framework
       uses: actions/checkout@v2
