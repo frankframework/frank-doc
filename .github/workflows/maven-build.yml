@@ -3,8 +3,6 @@
 
 name: Java CI with Maven
 
-env:
-  PROFILES:
 on:
   push:
     branches: [master,artifacts,testValidatingValidConfig]
@@ -73,7 +71,7 @@ jobs:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
         JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
-      run: mvn -B -V -T1 -PattachFrankDoc -DskipTests -Dfrankdoc.version="$FRANKDOC_VERSION" process-sources
+      run: mvn -B -V -T1 -PattachFrankDoc -DskipTests -Dfrankdoc.version=$FRANKDOC_VERSION process-sources
       working-directory: iaf
 
     - name: Check FrankConfig.xsd
@@ -86,6 +84,6 @@ jobs:
     - name: Check FrankConfig-compatibility.xsd
       run: |
         java -jar \
-          frank-doc/frank-doc-doclet/target/frank-doc-doclet-$($FRANKDOC_VERSION).jar \
+          frank-doc/frank-doc-doclet/target/frank-doc-doclet-2$FRANKDOC_VERSION.jar \
           frank-doc/.github/workflows/validConfig.xml \
           iaf/target/frankdoc/xml/xsd/FrankConfig-compatibility.xsd
