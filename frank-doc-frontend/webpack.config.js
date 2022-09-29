@@ -4,7 +4,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-    mode: "development",
+    mode: 'production',
     entry: './src/index.js',
     output: {
         filename: 'js/main.[contenthash].js',
@@ -21,10 +21,21 @@ module.exports = {
             filename: 'index.html',
             template: './src/index.html'
         }),
-		new CleanWebpackPlugin(),
+        new CleanWebpackPlugin(),
     ],
     module: {
         rules: [
+            {
+                test: /\.m?js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env'],
+                        plugins: ['angularjs-annotate']
+                    }
+                }
+            },
             {
                 test: /\.(scss|css)$/,
                 use: [
