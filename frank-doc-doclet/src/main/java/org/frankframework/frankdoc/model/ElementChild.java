@@ -1,17 +1,17 @@
-/* 
-Copyright 2020, 2021, 2022 WeAreFrank! 
+/*
+Copyright 2020, 2021, 2022 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc.model;
@@ -48,7 +48,7 @@ public abstract class ElementChild {
 	private static Logger log = LogUtil.getLogger(ElementChild.class);
 
 	private @Getter FrankElement owningElement;
-	
+
 	/**
 	 * The value is inherited from ElementChild corresponding to superclass.
 	 */
@@ -56,7 +56,7 @@ public abstract class ElementChild {
 
 	/**
 	 * This field supports the PROTECTED feature, which causes an attribute or config child to be excluded.
-	 * Also suppresses inheritance. 
+	 * Also suppresses inheritance.
 	 */
 	private @Getter boolean excluded = false;
 
@@ -67,7 +67,7 @@ public abstract class ElementChild {
 	 * this specific ElementChild, excluding inheritance. This property is
 	 * intended to detect Java Override annotations that are only there for
 	 * technical reasons, without relevance to the Frank developer.
-	 * 
+	 *
 	 * But values inside IbisDoc or IbisDocRef annotations are inherited.
 	 * That is the case to allow documentation information to be stored more
 	 * centrally.
@@ -190,7 +190,7 @@ public abstract class ElementChild {
 	}
 
 	abstract boolean specificOverrideIsMeaningful(ElementChild overriddenFrom);
-	
+
 	void setJavaDocBasedDescriptionAndDefault(FrankMethod method) {
 		try {
 			String value = method.getJavaDocIncludingInherited();
@@ -225,10 +225,10 @@ public abstract class ElementChild {
 				description = ibisDocValues[1];
 			}
 			if (ibisDocValues.length > 2) {
-				defaultValue = ibisDocValues[2]; 
+				defaultValue = ibisDocValues[2];
 			}
 		} else {
-			description = ibisDocValues[0];	
+			description = ibisDocValues[0];
 			if (ibisDocValues.length > 1) {
 				defaultValue = ibisDocValues[1];
 			}

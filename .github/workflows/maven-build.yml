@@ -3,8 +3,6 @@
 
 name: Java CI with Maven
 
-env:
-  PROFILES:
 on:
   push:
     branches: [master,artifacts,testValidatingValidConfig]
@@ -46,14 +44,15 @@ jobs:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
         JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
-      run: mvn -B -V -T1 -Pibissource,codecoverage -Dmaven.javadoc.skip=true package install
+      run: mvn -B -V -T1 -Pibissource,codecoverage -Dmaven.javadoc.skip=true install
       working-directory: frank-doc
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
 
-    - name: Read Frank!Doc version
-      run: bash frank-doc/.github/workflows/getFrankDocVersion.sh
+    - name: Set Frank!Doc version environment variable
+      run: echo "FRANKDOC_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+      working-directory: frank-doc
 
     - name: Checkout Frank!Framework
       uses: actions/checkout@v2
@@ -67,11 +66,19 @@ jobs:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
         JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
-      run: mvn -B -V -T1 -PattachFrankDoc -DskipTests -Dfrankdoc.version=$(cat ../frankDocVersion.txt) process-sources
+      run: mvn -B -V -T1 -PattachFrankDoc -DskipTests -Dfrankdoc.version=$FRANKDOC_VERSION process-sources
       working-directory: iaf
 
-    - name: Check FrankConfig-strict.xsd
-      run: java -jar frank-doc/target/frank-doc-$(cat frankDocVersion.txt).jar frank-doc/.github/workflows/validConfig.xml iaf/target/frankdoc/xml/xsd/FrankConfig-strict.xsd
+    - name: Check FrankConfig.xsd
+      run: |
+        java -jar \
+          frank-doc/frank-doc-doclet/target/frank-doc-doclet-$FRANKDOC_VERSION.jar \
+          frank-doc/.github/workflows/validConfig.xml \
+          iaf/target/frankdoc/xml/xsd/FrankConfig.xsd
 
     - name: Check FrankConfig-compatibility.xsd
-      run: java -jar frank-doc/target/frank-doc-$(cat frankDocVersion.txt).jar frank-doc/.github/workflows/validConfig.xml iaf/target/frankdoc/xml/xsd/FrankConfig-compatibility.xsd
+      run: |
+        java -jar \
+          frank-doc/frank-doc-doclet/target/frank-doc-doclet-$FRANKDOC_VERSION.jar \
+          frank-doc/.github/workflows/validConfig.xml \
+          iaf/target/frankdoc/xml/xsd/FrankConfig-compatibility.xsd
