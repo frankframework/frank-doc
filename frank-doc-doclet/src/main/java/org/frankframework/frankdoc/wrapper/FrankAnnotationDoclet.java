@@ -29,6 +29,7 @@ import org.frankframework.frankdoc.util.LogUtil;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationValue;
+import com.sun.javadoc.FieldDoc;
 
 class FrankAnnotationDoclet implements FrankAnnotation {
 	private static Logger log = LogUtil.getLogger(FrankAnnotationDoclet.class);
@@ -88,6 +89,8 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 		// much more complicated.
 		if((raw instanceof Integer) || (raw instanceof String) || (raw instanceof Boolean)) {
 			return raw;
+		} else if(raw instanceof FieldDoc) {
+			return new FrankEnumConstantDoclet((FieldDoc) raw);
 		} else {
 			return parseAnnotationValueAsStringArray(raw);
 		}

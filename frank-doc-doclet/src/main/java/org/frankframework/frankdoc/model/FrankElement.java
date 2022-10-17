@@ -41,6 +41,7 @@ import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.FrankType;
 
@@ -111,7 +112,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	private Set<String> syntax2ExcludedFromTypes = new HashSet<>();
 	private @Getter List<FrankLabel> labels = new ArrayList<>();
 
-	FrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory) {
+	FrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory, LabelValues labelValues) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
 		isDeprecated = Feature.DEPRECATED.isSetOn(clazz);
 		configChildSets = new LinkedHashMap<>();
@@ -124,7 +125,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		handlePossibleParameters(clazz);
 		handlePossibleForwards(clazz);
 		handlePossibleTags(clazz);
-		handleLabels(clazz);
+		handleLabels(clazz, labelValues);
 	}
 
 	private void completeFrankElement(FrankClass clazz) {
@@ -216,18 +217,31 @@ public class FrankElement implements Comparable<FrankElement> {
 		}
 	}
 
-	private void handleLabels(FrankClass clazz) {
+	private void handleLabels(FrankClass clazz, LabelValues labelValues) {
 		List<FrankAnnotation> annotationsForLabels = Arrays.asList(clazz.getAnnotations()).stream()
 				.filter(a -> a.getAnnotation(LABEL) != null)
 				.collect(Collectors.toList());
 		for(FrankAnnotation a: annotationsForLabels) {
 			try {
-				String name = a.getAnnotation(LABEL).getValueOf(LABEL_NAME).toString();
-				String value = a.getValue().toString();
-				labels.add(new FrankLabel(name, value));
+				handleSpecificLabel(a, labelValues);
 			} catch(FrankDocException e) {
 				log.error("Could not parse label [{}] of [{}]", a.getName(), toString());
 			}
+		}
+	}
+
+	void handleSpecificLabel(FrankAnnotation labelAddingAnnotation, LabelValues labelValues) throws FrankDocException {
+		String label = labelAddingAnnotation.getAnnotation(LABEL).getValueOf(LABEL_NAME).toString();
+		Object rawValue = labelAddingAnnotation.getValue();
+		if(rawValue instanceof FrankEnumConstant) {
+			FrankEnumConstant enumConstant = (FrankEnumConstant) rawValue;
+			// This considers annotation @EnumLabel
+			EnumValue value = new EnumValue(enumConstant);
+			labels.add(new FrankLabel(label, value.getLabel()));
+			labelValues.addEnumValue(label, value.getLabel(), enumConstant.getPosition());
+		} else {
+			labels.add(new FrankLabel(label, rawValue.toString()));
+			labelValues.addValue(label, rawValue.toString());
 		}
 	}
 

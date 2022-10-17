@@ -54,6 +54,10 @@
                 {
                     "name":"myIntLabel",
                     "value":"3"
+                },
+                {
+                    "name":"myEnumLabel",
+                    "value":"second"
                 }
             ]
         },
@@ -79,5 +83,25 @@
         }
     ],
     "enums":[
+    ],
+    "labels":[
+        {
+            "label":"myEnumLabel",
+            "values":[
+                "second"
+            ]
+        },
+        {
+            "label":"myIntLabel",
+            "values":[
+                "3"
+            ]
+        },
+        {
+            "label":"myLabel",
+            "values":[
+                "basic"
+            ]
+        }
     ]
 }

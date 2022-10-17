@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.json.Json;
@@ -33,7 +34,7 @@ import javax.json.JsonObjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.AttributeEnum;
-import org.frankframework.frankdoc.model.AttributeEnumValue;
+import org.frankframework.frankdoc.model.EnumValue;
 import org.frankframework.frankdoc.model.AttributeType;
 import org.frankframework.frankdoc.model.ConfigChild;
 import org.frankframework.frankdoc.model.ElementChild;
@@ -76,6 +77,7 @@ public class FrankDocJsonFactory {
 			result.add("types", getTypes());
 			result.add("elements", getElements());
 			result.add("enums", getEnums());
+			getLabels().ifPresent(l -> result.add("labels", l));
 			return result.build();
 		} catch(JsonException e) {
 			log.error("Error producing JSON", e);
@@ -383,7 +385,7 @@ public class FrankDocJsonFactory {
 
 	private JsonArray getAttributeEnumValues(AttributeEnum en) {
 		JsonArrayBuilder result = bf.createArrayBuilder();
-		for(AttributeEnumValue v: en.getValues()) {
+		for(EnumValue v: en.getValues()) {
 			JsonObjectBuilder valueBuilder = bf.createObjectBuilder();
 			valueBuilder.add("label", v.getLabel());
 			if(v.getDescription() != null) {
@@ -395,5 +397,26 @@ public class FrankDocJsonFactory {
 			result.add(valueBuilder.build());
 		}
 		return result.build();	
+	}
+
+	// We omit the "labels" element if there are no labels. This
+	// makes no different in production because the F!F sources
+	// do have labels. This way, we can omit labels from unit tests.
+	private Optional<JsonArray> getLabels() {
+		if(model.getAllLabels().isEmpty()) {
+			return Optional.empty();
+		}
+		final JsonArrayBuilder result = bf.createArrayBuilder();
+		for(String label: model.getAllLabels()) {
+			JsonObjectBuilder labelObject = bf.createObjectBuilder();
+			JsonArrayBuilder labelValuesObject = bf.createArrayBuilder();
+			for(String value: model.getAllValuesOfLabel(label)) {
+				labelValuesObject.add(value);
+			}
+			labelObject.add("label", label);
+			labelObject.add("values", labelValuesObject.build());
+			result.add(labelObject.build());
+		}
+		return Optional.of(result.build());
 	}
 }

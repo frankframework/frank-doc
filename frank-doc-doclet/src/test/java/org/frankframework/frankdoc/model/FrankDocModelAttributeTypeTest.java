@@ -47,9 +47,9 @@ public class FrankDocModelAttributeTypeTest {
 		// Test the attribute with a value list, which is of type STRING.
 		AttributeEnum myEnum = model.findAttributeEnum(MY_ENUM);
 		assertEquals(MY_ENUM, myEnum.getFullName());
-		String[] actualLabels = myEnum.getValues().stream().map(AttributeEnumValue::getLabel).collect(Collectors.toList()).toArray(new String[] {});
+		String[] actualLabels = myEnum.getValues().stream().map(EnumValue::getLabel).collect(Collectors.toList()).toArray(new String[] {});
 		assertArrayEquals(new String[] {"TWO", "customLabelOne", "THREE"}, actualLabels);
-		AttributeEnumValue v = myEnum.getValues().get(0);
+		EnumValue v = myEnum.getValues().get(0);
 		// This one has no annotation and no description.
 		assertEquals("TWO", v.getLabel());
 		assertNull(v.getDescription());
@@ -81,7 +81,7 @@ public class FrankDocModelAttributeTypeTest {
 		AttributeEnum attributeEnum = childAttribute.getAttributeEnum();
 		assertEquals("MyOtherEnum", attributeEnum.getUniqueName(""));
 		assertEquals(PACKAGE + "MyOtherEnum", attributeEnum.getFullName());
-		List<AttributeEnumValue> values = attributeEnum.getValues();
+		List<EnumValue> values = attributeEnum.getValues();
 		assertEquals("OTHER_ENUM_FIRST", values.get(0).getLabel());
 		assertEquals("OTHER_ENUM_SECOND", values.get(1).getLabel());
 		assertSame(attributeEnum, model.findAttributeEnum(PACKAGE + "MyOtherEnum"));

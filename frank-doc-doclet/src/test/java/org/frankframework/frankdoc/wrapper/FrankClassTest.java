@@ -168,6 +168,10 @@ public class FrankClassTest extends TestBase {
 				.map(c -> c.getName())
 				.collect(Collectors.toList()).toArray(new String[] {});
 		assertArrayEquals(new String[] {"ONE", "TWO", "THREE"}, actualNames);
+		List<Integer> actualPositions = Arrays.asList(actual).stream()
+				.map(c -> c.getPosition())
+				.collect(Collectors.toList());
+		assertArrayEquals(new Integer[] {0, 1, 2}, actualPositions.toArray(new Integer[] {}));
 		FrankEnumConstant aConstant = actual[0];
 		assertTrue(aConstant.isPublic());
 		assertNull(aConstant.getAnnotation(JAVA_5_ANNOTATION));

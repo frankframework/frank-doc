@@ -18,18 +18,25 @@ package org.frankframework.frankdoc.wrapper;
 
 import java.util.Map;
 
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
+
 import com.sun.javadoc.AnnotationDesc;
+import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.Tag;
+import com.sun.javadoc.Type;
 
 import lombok.Getter;
 
 class FrankEnumConstantDoclet implements FrankEnumConstant {
+	private static Logger log = LogUtil.getLogger(FrankEnumConstant.class);
 	private FieldDoc fieldDoc;
 	private @Getter String name;
 	private boolean isPublic;
 	private @Getter String javaDoc;
 	private Map<String, FrankAnnotation> annotationsByName;
+	private @Getter int position = 0;
 
 	FrankEnumConstantDoclet(FieldDoc fieldDoc) {
 		this.fieldDoc = fieldDoc;
@@ -38,8 +45,25 @@ class FrankEnumConstantDoclet implements FrankEnumConstant {
 		this.javaDoc = fieldDoc.commentText();
 		AnnotationDesc[] javaDocAnnotations = fieldDoc.annotations();
 		annotationsByName = FrankDocletUtils.getFrankAnnotationsByName(javaDocAnnotations);
+		calculatePosition(fieldDoc);
 	}
-	
+
+	private void calculatePosition(FieldDoc fieldDoc) {
+		Type rawEnumType = fieldDoc.type();
+		if(! (rawEnumType instanceof ClassDoc)) {
+			log.error("Cannot calculate position of enum constant {} because it is not part of a ClassDoc", fieldDoc.name());
+			return;
+		}
+		ClassDoc enumType = (ClassDoc) rawEnumType;
+		FieldDoc[] fieldsOfType = enumType.enumConstants();
+		for(int i = 0; i < fieldsOfType.length; ++i) {
+			if(fieldsOfType[i].name().equals(fieldDoc.name())) {
+				position = i;
+			}
+		}
+		log.error("Cannot calculate position of enum constant {} because it cannot be found in the enclosing type {}", fieldDoc.name(), enumType.name());
+	}
+
 	@Override
 	public boolean isPublic() {
 		return this.isPublic;

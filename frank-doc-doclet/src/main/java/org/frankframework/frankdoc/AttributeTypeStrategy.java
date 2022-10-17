@@ -37,7 +37,7 @@ import java.util.stream.IntStream;
 
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.AttributeEnum;
-import org.frankframework.frankdoc.model.AttributeEnumValue;
+import org.frankframework.frankdoc.model.EnumValue;
 import org.frankframework.frankdoc.model.AttributeType;
 import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.util.LogUtil;
@@ -133,7 +133,7 @@ public enum AttributeTypeStrategy {
 			return simpleType;
 		}
 
-		abstract void addEnumValue(XmlBuilder restriction, AttributeEnumValue v);
+		abstract void addEnumValue(XmlBuilder restriction, EnumValue v);
 
 		final List<XmlBuilder> createHelperTypes() {
 			log.trace("Adding helper types for boolean and integer attributes, allowing ${...} references");
@@ -199,7 +199,7 @@ public enum AttributeTypeStrategy {
 
 	private static class DelegateAllowPropertyRefEnumDocumentedCaseSensitive extends Delegate {
 		@Override
-		void addEnumValue(XmlBuilder restriction, AttributeEnumValue v) {
+		void addEnumValue(XmlBuilder restriction, EnumValue v) {
 			if(! v.isDeprecated()) {
 				XmlBuilder valueBuilder = addEnumeration(restriction, v.getLabel());
 				if(v.getDescription() != null) {
@@ -211,7 +211,7 @@ public enum AttributeTypeStrategy {
 
 	private static class DelegateAllowPropertyRefEnumIgnoreCase extends Delegate {
 		@Override
-		void addEnumValue(XmlBuilder restriction, AttributeEnumValue v) {
+		void addEnumValue(XmlBuilder restriction, EnumValue v) {
 			addPattern(restriction, getCaseInsensitivePattern(v.getLabel()));
 		}
 	}

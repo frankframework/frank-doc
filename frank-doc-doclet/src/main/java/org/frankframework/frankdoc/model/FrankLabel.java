@@ -21,7 +21,7 @@ import lombok.Getter;
 public class FrankLabel {
 	private @Getter String name;
 	private @Getter String value;
-
+	
 	FrankLabel(String name, String value) {
 		this.name = name;
 		this.value = value;

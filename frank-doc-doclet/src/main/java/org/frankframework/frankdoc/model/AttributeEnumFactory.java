@@ -36,17 +36,17 @@ class AttributeEnumFactory {
 	private Map<String, Integer> lastAssignedSeq = new HashMap<>();
 
 	AttributeEnum findOrCreateAttributeEnum(FrankClass clazz) {
-		List<AttributeEnumValue> values = Arrays.asList(clazz.getEnumConstants()).stream()
-				.map(AttributeEnumValue::new)
+		List<EnumValue> values = Arrays.asList(clazz.getEnumConstants()).stream()
+				.map(EnumValue::new)
 				.collect(Collectors.toList());
-		boolean labelsForgotten = values.stream().map(AttributeEnumValue::isExplicitLabel).distinct().collect(Collectors.counting()).longValue() >= 2;
+		boolean labelsForgotten = values.stream().map(EnumValue::isExplicitLabel).distinct().collect(Collectors.counting()).longValue() >= 2;
 		if(labelsForgotten) {
 			log.warn("Some enum values of class [{}] have a label, but not all. Did you forget some?", clazz.getName());
 		}
 		return findOrCreateAttributeEnum(clazz.getName(), clazz.getSimpleName(), values);
 	}
 
-	AttributeEnum findOrCreateAttributeEnum(String fullName, String simpleName, List<AttributeEnumValue> values) {
+	AttributeEnum findOrCreateAttributeEnum(String fullName, String simpleName, List<EnumValue> values) {
 		if(allAttributeEnumInstances.containsKey(fullName)) {
 			return allAttributeEnumInstances.get(fullName);
 		}

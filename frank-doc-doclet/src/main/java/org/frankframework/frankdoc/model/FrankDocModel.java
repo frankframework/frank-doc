@@ -76,6 +76,7 @@ public class FrankDocModel {
 	private Map<Set<ElementRole.Key>, ElementRoleSet> allElementRoleSets = new HashMap<>();
 	private AttributeEnumFactory attributeEnumFactory = new AttributeEnumFactory();
 	private @Getter String rootClassName;
+	private LabelValues labelValues = new LabelValues();
 
 	FrankDocModel(FrankClassRepository classRepository, String rootClassName) {
 		this.classRepository = classRepository;
@@ -90,6 +91,7 @@ public class FrankDocModel {
 			result.findOrCreateRootFrankElement(rootClassName);
 			result.buildDescendants();
 			result.allElements.values().forEach(f -> result.finishConfigChildrenFor(f));
+			result.labelValues.finishInitialization();
 			result.checkSuspiciousHtml();
 			result.calculateTypeNameSeq();
 			result.calculateInterfaceBased();
@@ -212,7 +214,7 @@ public class FrankDocModel {
 	private class FrankElementCreationStrategyRoot extends FrankElementCreationStrategy{
 		@Override
 		FrankElement createFromClass(FrankClass clazz) {
-			return new RootFrankElement(clazz, classRepository, groupFactory);
+			return new RootFrankElement(clazz, classRepository, groupFactory, labelValues);
 		}
 
 		@Override
@@ -224,7 +226,7 @@ public class FrankDocModel {
 	private class FrankElementCreationStrategyNonRoot extends FrankElementCreationStrategy {
 		@Override
 		FrankElement createFromClass(FrankClass clazz) {
-			return new FrankElement(clazz, classRepository, groupFactory);
+			return new FrankElement(clazz, classRepository, groupFactory, labelValues);
 		}
 
 		@Override
@@ -939,5 +941,13 @@ public class FrankDocModel {
 				.filter(f -> ! f.getXmlElementNames().isEmpty())
 				.sorted()
 				.collect(Collectors.toList());
+	}
+
+	public List<String> getAllLabels() {
+		return labelValues.getAllLabels();
+	}
+
+	public List<String> getAllValuesOfLabel(String label) {
+		return labelValues.getAllValuesOfLabel(label);
 	}
 }

@@ -23,10 +23,10 @@ import lombok.Getter;
 public class AttributeEnum {
 	private @Getter String fullName;
 	private String simpleName;
-	private final @Getter List<AttributeEnumValue> values;
+	private final @Getter List<EnumValue> values;
 	private int seq;
 
-	AttributeEnum(String fullName, String simpleName, List<AttributeEnumValue> values, int seq) {
+	AttributeEnum(String fullName, String simpleName, List<EnumValue> values, int seq) {
 		this.fullName = fullName;
 		this.values = values;
 		this.simpleName = simpleName;

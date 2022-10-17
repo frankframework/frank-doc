@@ -18,5 +18,5 @@ public @interface Annotation {
 	String valueWithDefault() default "theDefault";
 	String[] stringArrayValue();
 	boolean boolValue();
-	// No enum value. We did not implement that yet.
+	MyEnum myEnumField();
 }

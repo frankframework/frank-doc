@@ -46,4 +46,11 @@ public class AnnotationsOfAnnotationTest {
 	public void testBoolValue() throws Exception {
 		assertTrue((Boolean) instance.getValueOf("boolValue"));
 	}
+
+	@Test
+	public void testEnumValue() throws Exception {
+		FrankEnumConstant enumValue = (FrankEnumConstant) instance.getValueOf("myEnumField");
+		assertEquals("SECOND", enumValue.getName());
+		assertEquals(1, enumValue.getPosition());
+	}
 }
