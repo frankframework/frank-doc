@@ -59,6 +59,7 @@ class FrankEnumConstantDoclet implements FrankEnumConstant {
 		for(int i = 0; i < fieldsOfType.length; ++i) {
 			if(fieldsOfType[i].name().equals(fieldDoc.name())) {
 				position = i;
+				return;
 			}
 		}
 		log.error("Cannot calculate position of enum constant {} because it cannot be found in the enclosing type {}", fieldDoc.name(), enumType.name());
