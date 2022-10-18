@@ -5,9 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Copied from IAF project.
- * 
- * @author Jaco de Groot
+ * Test annotation, has no meaning
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

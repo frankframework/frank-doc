@@ -245,7 +245,7 @@ public class FrankDocJsonFactory {
 			JsonArrayBuilder b = bf.createArrayBuilder();
 			for(FrankLabel lab: frankElement.getLabels()) {
 				JsonObjectBuilder ob = bf.createObjectBuilder();
-				ob.add("name", lab.getName());
+				ob.add("label", lab.getName());
 				ob.add("value", lab.getValue());
 				b.add(ob.build());
 			}

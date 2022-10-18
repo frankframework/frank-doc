@@ -48,15 +48,15 @@
             ],
             "labels":[
                 {
-                    "name":"myLabel",
+                    "label":"myLabel",
                     "value":"basic"
                 },
                 {
-                    "name":"myIntLabel",
+                    "label":"myIntLabel",
                     "value":"3"
                 },
                 {
-                    "name":"myEnumLabel",
+                    "label":"myEnumLabel",
                     "value":"second"
                 }
             ]
