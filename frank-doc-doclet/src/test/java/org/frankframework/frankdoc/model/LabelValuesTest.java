@@ -55,4 +55,12 @@ public class LabelValuesTest {
 		instance.addEnumValue("LABEL", "enum value", 0);
 		instance.finishInitialization();
 	}
+
+	@Test
+	public void labelValuesAreDedoubled() {
+		instance.addValue("LABEL", "value");
+		instance.addValue("LABEL", "value");
+		instance.finishInitialization();
+		assertArrayEquals(new String[] {"value"}, instance.getAllValuesOfLabel("LABEL").toArray(new String[] {}));
+	}
 }

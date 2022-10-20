@@ -82,11 +82,6 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 	}
 
 	private Object parseAnnotationValue(Object raw) throws FrankDocException {
-		// Annotations with an enum-typed field are not supported. To do that, we would
-		// parse the @EnumLabel annotation, but doing so is the job of the "model" package.
-		// Implementing enum-typed annotation fields generally in the wrapper API would
-		// confuse the tasks of the wrapper API and the model, making the code
-		// much more complicated.
 		if((raw instanceof Integer) || (raw instanceof String) || (raw instanceof Boolean)) {
 			return raw;
 		} else if(raw instanceof FieldDoc) {
