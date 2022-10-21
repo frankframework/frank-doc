@@ -9,7 +9,6 @@
 	</parent>
 
 	<artifactId>frank-doc-frontend</artifactId>
-	<version>${project.parent.version}</version>
 	<packaging>jar</packaging>
 
 	<name>Frank!Doc Frontend</name>
