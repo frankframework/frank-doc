@@ -8,7 +8,6 @@
 	</parent>
 
 	<artifactId>frank-doc-doclet</artifactId>
-	<version>${project.parent.version}</version>
 	<packaging>jar</packaging>
 
 	<name>Frank!Doc Doclet</name>
