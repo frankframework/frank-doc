@@ -17,17 +17,40 @@ limitations under the License.
 package org.frankframework.frankdoc.wrapper;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationValue;
+import com.sun.javadoc.FieldDoc;
 
 class FrankAnnotationDoclet implements FrankAnnotation {
+	private static Logger log = LogUtil.getLogger(FrankAnnotationDoclet.class);
+	private static final Set<String> RECURSIVE_ANNOTATIONS = new HashSet<>(Arrays.asList(
+			"java.lang.annotation.Documented",
+			"java.lang.annotation.Retention",
+			"java.lang.annotation.Target"));
+	
 	private final AnnotationDesc annotation;
+	private final Map<String, FrankAnnotation> frankAnnotationsByName;
 
 	FrankAnnotationDoclet(AnnotationDesc annotation) {
+		log.trace("Creating FrankAnnotation for [{}]", annotation.annotationType().qualifiedName());
 		this.annotation = annotation;
+		AnnotationDesc[] javaDocAnnotationsOfAnnotation = Arrays.asList(annotation.annotationType().annotations()).stream()
+				.filter(a -> ! RECURSIVE_ANNOTATIONS.contains(a.annotationType().qualifiedName()))
+				.collect(Collectors.toList())
+				.toArray(new AnnotationDesc[] {});
+		log.trace("Creating annotations of annotations");
+		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(javaDocAnnotationsOfAnnotation);
+		log.trace("Done with annotations of annotations");
 	}
 
 	@Override
@@ -42,34 +65,29 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 
 	@Override
 	public Object getValue() throws FrankDocException {
-		List<Object> candidates = getField("value");
-		return getValueFromFieldRemovingRepetition(candidates);
+		return getValueOf("value");
 	}
 
 	@Override
 	public Object getValueOf(String fieldName) throws FrankDocException {
-		List<Object> candidates = getField(fieldName);
-		return getValueFromFieldRemovingRepetition(candidates);
-	}
-
-	private List<Object> getField(String fieldName) {
-		List<Object> candidates = Arrays.asList(annotation.elementValues()).stream()
+		Optional<Object> candidate = Arrays.asList(annotation.elementValues()).stream()
 				.filter(ev -> ev.element().name().equals(fieldName))
 				.map(ev -> ev.value().value())
-				.collect(Collectors.toList());
-		return candidates;
+				.findAny();
+		if(candidate.isPresent()) {
+			return parseAnnotationValue(candidate.get());
+		} else {
+			return getDefaultValue(fieldName);			
+		}
 	}
 
-	private Object getValueFromFieldRemovingRepetition(List<Object> candidates) throws FrankDocException {
-		if(candidates.isEmpty()) {
-			return null;
+	private Object parseAnnotationValue(Object raw) throws FrankDocException {
+		if((raw instanceof Integer) || (raw instanceof String) || (raw instanceof Boolean)) {
+			return raw;
+		} else if(raw instanceof FieldDoc) {
+			return new FrankEnumConstantDoclet((FieldDoc) raw);
 		} else {
-			Object raw = candidates.get(0);
-			if((raw instanceof Integer) || (raw instanceof String) || (raw instanceof Boolean)) {
-				return raw;
-			} else {
-				return parseAnnotationValueAsStringArray(raw);
-			}
+			return parseAnnotationValueAsStringArray(raw);
 		}
 	}
 
@@ -88,5 +106,22 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 			result[i] = valueAsStringList.get(i);
 		}
 		return result;
+	}
+
+	private Object getDefaultValue(String fieldName) throws FrankDocException {
+		Optional<Object> candidate = Arrays.asList(annotation.annotationType().elements()).stream()
+			.filter(e -> e.name().equals(fieldName))
+			.map(e -> e.defaultValue().value())
+			.findAny();
+		if(candidate.isPresent()) {
+			return parseAnnotationValue(candidate.get());
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public FrankAnnotation getAnnotation(String name) {
+		return frankAnnotationsByName.get(name);
 	}
 }

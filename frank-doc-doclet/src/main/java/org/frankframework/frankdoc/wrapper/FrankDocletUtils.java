@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -16,7 +16,7 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.sun.javadoc.AnnotationDesc;
@@ -26,7 +26,7 @@ final class FrankDocletUtils {
 	}
 
 	static Map<String, FrankAnnotation> getFrankAnnotationsByName(AnnotationDesc[] annotationDescs) {
-		Map<String, FrankAnnotation> annotationsByName = new HashMap<>();
+		Map<String, FrankAnnotation> annotationsByName = new LinkedHashMap<>();
 		for(AnnotationDesc annotationDesc: annotationDescs) {
 			FrankAnnotation frankAnnotation = new FrankAnnotationDoclet(annotationDesc);
 			annotationsByName.put(frankAnnotation.getName(), frankAnnotation);

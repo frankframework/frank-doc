@@ -53,6 +53,7 @@ class FrankClassDoclet implements FrankClass {
 	private @Getter(AccessLevel.PACKAGE) List<MultiplyInheritedMethodPlaceholder> multiplyInheritedMethodPlaceholders = new ArrayList<>();
 	
 	FrankClassDoclet(ClassDoc clazz, FrankClassRepository repository) {
+		log.trace("Creating FrankClassDoclet for [{}]", clazz.name());
 		this.repository = repository;
 		this.clazz = clazz;
 		for(MethodDoc methodDoc: clazz.methods()) {

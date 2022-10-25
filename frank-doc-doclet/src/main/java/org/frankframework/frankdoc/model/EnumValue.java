@@ -25,8 +25,8 @@ import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 
 import lombok.Getter;
 
-public class AttributeEnumValue {
-	private static Logger log = LogUtil.getLogger(AttributeEnumValue.class);
+public class EnumValue {
+	private static Logger log = LogUtil.getLogger(EnumValue.class);
 
 	private static final String ENUM_LABEL = "nl.nn.adapterframework.doc.EnumLabel";
 
@@ -36,7 +36,7 @@ public class AttributeEnumValue {
 	private @Getter String description;
 	private @Getter boolean deprecated = false;
 
-	AttributeEnumValue(FrankEnumConstant c) {
+	EnumValue(FrankEnumConstant c) {
 		this.javaTag = c.getName();
 		this.label = this.javaTag;
 		FrankAnnotation annotation = c.getAnnotation(ENUM_LABEL);

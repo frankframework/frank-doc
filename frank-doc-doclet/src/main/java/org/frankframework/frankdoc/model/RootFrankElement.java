@@ -1,5 +1,5 @@
 /* 
-Copyright 2021 WeAreFrank! 
+Copyright 2021, 2022 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -24,8 +24,8 @@ import org.frankframework.frankdoc.wrapper.FrankClassRepository;
  * part of a config child, but they have a role name that matches rules in digester-rules.xml.
  */
 class RootFrankElement extends FrankElement {
-	RootFrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory) {
-		super(clazz, repository, groupFactory);
+	RootFrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory, LabelValues labelValues) {
+		super(clazz, repository, groupFactory, labelValues);
 	}
 
 	public String getRoleName() {

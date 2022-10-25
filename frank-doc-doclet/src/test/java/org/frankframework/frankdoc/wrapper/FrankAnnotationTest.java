@@ -62,5 +62,5 @@ public class FrankAnnotationTest extends TestBase{
 		Object booleanRawValue = annotation.getValueOf("myBoolean");
 		Boolean booleanValue = (Boolean) booleanRawValue;
 		assertTrue(booleanValue);
-	}	
+	}
 }
