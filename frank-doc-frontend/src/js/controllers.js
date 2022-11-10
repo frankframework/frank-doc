@@ -34,6 +34,7 @@ angular.module('iaf.frankdoc').controller("main", ['$scope', '$http', 'propertie
 
 			el.attributes = copyOf(el.attributes, parent.attributes, 'name');
 			el.children = copyOf(el.children, parent.children, 'roleName');
+			el.parameters = copyOf(el.parameters, parent.parameters, 'name');
 			el.forwards = copyOf(el.forwards, parent.forwards, 'name');
 
 			if(!el.parametersDescription && parent.parametersDescription) {
