@@ -4,7 +4,7 @@ services:
   frank:
     image: nexus.frankframework.org/frank-framework:latest
     volumes:
-      - ./target/classes/:/usr/local/tomcat/webapps/ROOT/iaf/frankdoc/
+      - ./dist/:/usr/local/tomcat/webapps/ROOT/iaf/frankdoc/
       - ./context.xml:/usr/local/tomcat/conf/Catalina/localhost/ROOT.xml
     ports:
       - "8080:8080"
