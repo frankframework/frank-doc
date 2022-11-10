@@ -254,14 +254,3 @@ function getGroupMembers(allTypes, typesToFilterOn) {
 	typesToFilterOn.forEach(t => memberNames = memberNames.concat(allTypes[t])); //Find all members in the supplied type(s)
 	return memberNames.filter((x, i, a) => a.indexOf(x) == i); //get distinct array results
 }
-
-// Exclude group All.
-function getGroupsOfType(type, groups) {
-	for(i = 1; i < groups.length; ++i) {
-		let group = groups[i];
-		if(group.types.indexOf(type) >= 0) {
-			return group.name;
-		}
-	}
-	return null;
-}

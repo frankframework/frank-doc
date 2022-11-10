@@ -158,6 +158,7 @@ angular.module('iaf.frankdoc').controller("main", ['$scope', '$http', 'propertie
 		}
 	}
 }]);
+
 function copyOf(attr1, attr2, fieldName) {
 	if(attr1 && !attr2) {
 		return attr1;
@@ -181,4 +182,19 @@ function copyOf(attr1, attr2, fieldName) {
 		}
 		return newAttr;
 	}
+}
+
+// Exclude group All.
+function getGroupsOfType(type, groups) {
+    for(i = 1; i < groups.length; ++i) {
+        let group = groups[i];
+        if(group.types.indexOf(type) >= 0) {
+            return group.name;
+        }
+    }
+    return null;
+}
+
+function fullNameToSimpleName(fullName) {
+    return fullName.substr(fullName.lastIndexOf(".")+1)
 }
