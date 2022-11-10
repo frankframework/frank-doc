@@ -115,7 +115,7 @@ angular.module('iaf.frankdoc').config(['$stateProvider', '$urlRouterProvider', '
 				} else { // search in parent (accessing children is an expensive operation)
 					let elementParent = elements[element].parent;
 					while(elementParent) {
-						parentStack.push(elementParent); // keep list of unmatched parents 
+						parentStack.push(elementParent); // keep list of unmatched parents
 						if(matchedParents[elementParent]) { // if parent matched already leave the loop
 							r[element] = obj;
 							break;
@@ -195,7 +195,7 @@ angular.module('iaf.frankdoc').config(['$stateProvider', '$urlRouterProvider', '
 			let hash = captureGroup.indexOf("#");
 			if(hash > -1) {
 				referencedElement = captureGroup.split("#")[0];
-	
+
 				if(referencedElement == '') { //if there is no element ref then it's a method
 					let method = captureGroup.substring(hash);
 					let nameOrAlias = method.split(") ");
@@ -215,6 +215,14 @@ angular.module('iaf.frankdoc').config(['$stateProvider', '$urlRouterProvider', '
 		});
 		return input;
 	};
+}).filter("toArray", function() {
+    return function (object) {
+        const result = [];
+        angular.forEach(object, function (value) {
+            result.push(value);
+        });
+        return result;
+    };
 });
 
 function findElement(allElements, simpleName) {
@@ -245,15 +253,4 @@ function getGroupMembers(allTypes, typesToFilterOn) {
 	let memberNames = [];
 	typesToFilterOn.forEach(t => memberNames = memberNames.concat(allTypes[t])); //Find all members in the supplied type(s)
 	return memberNames.filter((x, i, a) => a.indexOf(x) == i); //get distinct array results
-}
-
-// Exclude group All.
-function getGroupsOfType(type, groups) {
-	for(i = 1; i < groups.length; ++i) {
-		let group = groups[i];
-		if(group.types.indexOf(type) >= 0) {
-			return group.name;
-		}
-	}
-	return null;
 }

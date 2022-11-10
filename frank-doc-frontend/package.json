@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "webpack",
+    "build:prod": "webpack --mode production",
+    "watch": "webpack --watch"
   },
   "dependencies": {
     "angular": "1.7.9",

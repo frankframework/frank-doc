@@ -62,7 +62,7 @@
 							<goal>yarn</goal>
 						</goals>
 						<configuration>
-							<arguments>build</arguments>
+							<arguments>build:prod</arguments>
 							<workingDirectory>.</workingDirectory>
 						</configuration>
 					</execution>
