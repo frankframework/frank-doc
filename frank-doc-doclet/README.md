@@ -195,6 +195,9 @@ The default value is also shown in the Frank!Doc web application:
 
 ![webappPostTypeDefault](./picturesForReadme/webappPostTypeDefault.jpg)
 
+## Referring another method for description and default value
+
+With the JavaDoc of attributes setters you can reference another method to get the default value and the description from that method. You do this by putting an `@ff.ref` JavaDoc tag on the referring method. The argument represents the referred method. The reference can be the class name of the class that has the method. It can also be the class name and the method name separated by a dot. Always use the full class name.
 ## Parameters
 
 Some XML elements in a Frank config can have nested element `<Param>`. The meaning of this element depends on the context: parameters can be query parameters of a database query, HTTP request parameters or something else. You can document this meaning in the JavaDoc comment above a Java class declaration. You use JavaDoc tag `@ff.parameters`. An example is Java class [HttpSender](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/http/HttpSender.java):
