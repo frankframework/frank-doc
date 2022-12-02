@@ -13,17 +13,19 @@ import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AncestorAttributeSetterBrowserTest {
+public class AncestorMethodBrowserTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.browse.ancestor.methods.";
 	private static final String CLASS_NAME = PACKAGE + "Child";
 	private FrankClass clazz;
-	private AncestorAttributeSetterBrowser instance;
+	private AncestorMethodBrowser instanceWithRef;
+	private AncestorMethodBrowser instanceNoRef;
 	private List<String> ancestorMethodClasses = new ArrayList<>();
 
 	@Before
 	public void setUp() throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
-		instance = new AncestorAttributeSetterBrowser(repository);
+		instanceWithRef = new AncestorMethodBrowser(repository, AncestorMethodBrowser.References.WITH_REFERENCES);
+		instanceNoRef = new AncestorMethodBrowser(repository, AncestorMethodBrowser.References.WITHOUT_REFERENCES);
 		clazz = repository.findClass(CLASS_NAME);
 	}
 
@@ -40,13 +42,25 @@ public class AncestorAttributeSetterBrowserTest {
 
 	@Test
 	public void whenReferenceThenReferredMethodIsNextAncestor() {
-		instance.browse(findMethod("setAttributeWithReference"), this::keepClassOfMethod);
+		instanceWithRef.browse(findMethod("setAttributeWithReference"), this::keepClassOfMethod);
 		assertArrayEquals(new String[] {"Child", "ReferenceTarget", "ReferenceTargetParent"}, ancestorMethodClasses.toArray(new String[] {}));
 	}
 
 	@Test
-	public void whenNoReferenceThenClassHierarchyBrowsed() {
-		instance.browse(findMethod("setAttributeNoReference"), this::keepClassOfMethod);
+	public void whenNoReferenceThenClassHierarchyBrowsed_refsChecked() {
+		instanceWithRef.browse(findMethod("setAttributeNoReference"), this::keepClassOfMethod);
 		assertArrayEquals(new String[] {"Child", "Parent", "GrandParent"}, ancestorMethodClasses.toArray(new String[] {}));
+	}
+
+	@Test
+	public void whenNoReferenceThenClassHierarchyBrowsed_refsNotChecked() {
+		instanceNoRef.browse(findMethod("setAttributeNoReference"), this::keepClassOfMethod);
+		assertArrayEquals(new String[] {"Child", "Parent", "GrandParent"}, ancestorMethodClasses.toArray(new String[] {}));
+	}
+
+	@Test
+	public void whenReferencesNotCheckedThenHierarchyBrowsed() {
+		instanceNoRef.browse(findMethod("setAttributeWithReference"), this::keepClassOfMethod);
+		assertArrayEquals(new String[] {"Child", "Parent"}, ancestorMethodClasses.toArray(new String[] {}));
 	}
 }

@@ -32,12 +32,19 @@ import org.frankframework.frankdoc.wrapper.FrankMethod;
  * @author M66C303
  *
  */
-class AncestorAttributeSetterBrowser {
-	private static Logger log = LogUtil.getLogger(AncestorAttributeSetterBrowser.class);
-	private final Reference referenceFeature;
+class AncestorMethodBrowser {
+	enum References {
+		WITH_REFERENCES,
+		WITHOUT_REFERENCES;
+	}
 
-	AncestorAttributeSetterBrowser(FrankClassRepository repository) {
+	private static Logger log = LogUtil.getLogger(AncestorMethodBrowser.class);
+	private final Reference referenceFeature;
+	private final References referenceHandling;
+
+	AncestorMethodBrowser(FrankClassRepository repository, References referenceHandling) {
 		referenceFeature = new Reference(repository);
+		this.referenceHandling = referenceHandling;
 	}
 
 	void browse(FrankMethod attributeSetter, Consumer<FrankMethod> handler) {
@@ -54,6 +61,10 @@ class AncestorAttributeSetterBrowser {
 		if(referenced == null) {
 			return false;
 		} else {
+			if(referenceHandling.equals(References.WITHOUT_REFERENCES)) {
+				log.error("No reference allowed on method [{}]", ancestorMethod.toString());
+				return false;
+			}
 			browse(referenced, handler);
 			return true;			
 		}
