@@ -271,26 +271,31 @@ class FrankClassDoclet implements FrankClass {
 
 	@Override
 	public FrankAnnotation getAnnotationIncludingInherited(String annotationFullName) throws FrankDocException {
-		FrankAnnotation result = getAnnotationExcludingImplementedInterfaces(annotationFullName);
+		Function<FrankClassDoclet, FrankAnnotation> getter = c -> c.getAnnotation(annotationFullName);
+		return getIncludingInherited(getter);
+	}
+
+	private <T> T getIncludingInherited(Function<FrankClassDoclet, T> getter) throws FrankDocException {
+		T result = getExcludingImplementedInterfaces(getter);
 		if(result == null) {
-			result = getAnnotationFromImplementedInterfaces(annotationFullName);
+			result = getFromImplementedInterfaces(getter);
 		}
 		return result;
 	}
 
-	private FrankAnnotation getAnnotationExcludingImplementedInterfaces(String annotationFullName) throws FrankDocException {
-		FrankAnnotation result = getAnnotation(annotationFullName);
+	private <T> T getExcludingImplementedInterfaces(Function<FrankClassDoclet, T> getter) throws FrankDocException {
+		T result = getter.apply(this);
 		if((result == null) && (getSuperclass() != null)) {
-			result = ((FrankClassDoclet) getSuperclass()).getAnnotationExcludingImplementedInterfaces(annotationFullName);
+			result = ((FrankClassDoclet) getSuperclass()).getExcludingImplementedInterfaces(getter);
 		}
 		return result;
 	}
 
-	private FrankAnnotation getAnnotationFromImplementedInterfaces(String annotationFullName) throws FrankDocException {
-		TransitiveImplementedInterfaceBrowser<FrankAnnotation> browser = new TransitiveImplementedInterfaceBrowser<>(this);
-		FrankAnnotation result = browser.search(c -> ((FrankClassDoclet) c).getAnnotation(annotationFullName));
+	private <T> T getFromImplementedInterfaces(Function<FrankClassDoclet, T> getter) throws FrankDocException {
+		TransitiveImplementedInterfaceBrowser<T> browser = new TransitiveImplementedInterfaceBrowser<>(this);
+		T result = browser.search(c -> getter.apply((FrankClassDoclet) c));
 		if((result == null) && (getSuperclass() != null)) {
-			result = ((FrankClassDoclet) getSuperclass()).getAnnotationFromImplementedInterfaces(annotationFullName);
+			result = ((FrankClassDoclet) getSuperclass()).getFromImplementedInterfaces(getter);
 		}
 		return result;
 	}
@@ -316,28 +321,8 @@ class FrankClassDoclet implements FrankClass {
 
 	@Override
 	public String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException {
-		String result = getJavaDocTagExcludingImplementedInterfaces(tagName);
-		if(result == null) {
-			result = getJavaDocTagFromImplementedInterfaces(tagName);
-		}
-		return result;		
-	}
-
-	private String getJavaDocTagExcludingImplementedInterfaces(String tagName) throws FrankDocException {
-		String result = getJavaDocTag(tagName);
-		if((result == null) && (getSuperclass() != null)) {
-			result = ((FrankClassDoclet) getSuperclass()).getJavaDocTagExcludingImplementedInterfaces(tagName);
-		}
-		return result;
-	}
-
-	private String getJavaDocTagFromImplementedInterfaces(String tagName) throws FrankDocException {
-		TransitiveImplementedInterfaceBrowser<String> browser = new TransitiveImplementedInterfaceBrowser<>(this);
-		String result = browser.search(c -> ((FrankClassDoclet) c).getJavaDocTag(tagName));
-		if((result == null) && (getSuperclass() != null)) {
-			result = ((FrankClassDoclet) getSuperclass()).getJavaDocTagFromImplementedInterfaces(tagName);
-		}
-		return result;
+		Function<FrankClassDoclet, String> getter = c -> c.getJavaDocTag(tagName);
+		return getIncludingInherited(getter);
 	}
 
 	@Override
