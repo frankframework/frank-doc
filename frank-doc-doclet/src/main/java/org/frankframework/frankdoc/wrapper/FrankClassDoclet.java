@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -300,6 +301,17 @@ class FrankClassDoclet implements FrankClass {
 		return result;
 	}
 
+	@Override
+	public void browseAncestors(Consumer<FrankClass> handler) throws FrankDocException {
+		Function<FrankClassDoclet, Boolean> getter = c -> adapt(c, handler);
+		getIncludingInherited(getter);
+	}
+
+	private Boolean adapt(FrankClassDoclet c, Consumer<FrankClass> handler) {
+		handler.accept(c);
+		return null;
+	}
+	
 	@Override
 	public String getJavaDocTag(String tagName) {
 		Tag[] tags = clazz.tags(tagName);

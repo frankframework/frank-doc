@@ -17,6 +17,7 @@ limitations under the License.
 package org.frankframework.frankdoc.wrapper;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface FrankClass extends FrankType {
 	@Override
@@ -51,5 +52,6 @@ public interface FrankClass extends FrankType {
 	FrankAnnotation getAnnotationIncludingInherited(String annotationFullName) throws FrankDocException;
 	String getJavaDocTag(String tagName);
 	String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException;
+	void browseAncestors(Consumer<FrankClass> handler) throws FrankDocException;
 	List<String> getAllJavaDocTagsOf(String tagName);
 }
