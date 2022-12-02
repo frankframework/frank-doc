@@ -44,8 +44,7 @@ class AncestorAttributeSetterBrowser {
 		try {
 			attributeSetter.browseAncestorsUntilTrue(m -> browseUntilReferenceAndThenBrowseReference(m, handler));
 		} catch(FrankDocException e) {
-			log.error("Error browsing ancestor methods of [{}]",
-					String.format("%s.%s", attributeSetter.getDeclaringClass().getName(), attributeSetter.getName()), e);
+			log.error("Error browsing ancestor methods of [{}]", attributeSetter.toString(), e);
 		}
 	}
 
