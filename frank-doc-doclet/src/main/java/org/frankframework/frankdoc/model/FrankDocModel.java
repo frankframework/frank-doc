@@ -277,11 +277,6 @@ public class FrankDocModel {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
 			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
-			try {
-				attribute.setMandatoryStatus(MandatoryStatus.fromMethod(method));
-			} catch(FrankDocException e) {
-				log.error("Could not calculate mandatoryStatus for attribute [{}]", attribute.getName(), e);
-			}
 			if(method.getParameterTypes()[0].isEnum()) {
 				log.trace("Attribute [{}] has setter that takes enum: [{}]", () -> attribute.getName(), () -> method.getParameterTypes()[0].toString());
 				attribute.setAttributeType(AttributeType.STRING);
@@ -294,19 +289,28 @@ public class FrankDocModel {
 					attribute.setAttributeEnum(findOrCreateAttributeEnum((FrankClass) enumGettersByAttributeName.get(attributeName).getReturnType()));
 				}
 			}
-			attribute.setDeprecated(Feature.DEPRECATED.isSetOn(method));
-			attribute.setReintroduced(Feature.REINTRODUCE.isSetOn(method));
-			log.trace("Attribute {} deprecated={}, reintroduced={}", () -> attributeName, () -> attribute.isDeprecated(), () -> attribute.isReintroduced());
-			documentAttribute(attribute, method, attributeOwner);
-			log.trace("Default [{}]", () -> attribute.getDefaultValue());
-			// We do not type-check the default value. The default value is actually a description of the default.
-			// It may not be the literal default value.
-			attribute.setExcluded(method);
+			setAttributeFeatures(attribute, method);
 			result.add(attribute);
 			log.trace("Attribute [{}] done", () -> attributeName);
 		}
 		log.trace("Done creating attributes for {}", attributeOwner.getFullName());
 		return result;
+	}
+
+	private void setAttributeFeatures(FrankAttribute attribute, FrankMethod method) throws FrankDocException {
+		try {
+			attribute.setMandatoryStatus(MandatoryStatus.fromMethod(method));
+		} catch(FrankDocException e) {
+			log.error("Could not calculate mandatoryStatus for attribute [{}]", attribute.getName(), e);
+		}
+		attribute.setDeprecated(Feature.DEPRECATED.isSetOn(method));
+		attribute.setReintroduced(Feature.REINTRODUCE.isSetOn(method));
+		log.trace("Attribute {} deprecated={}, reintroduced={}", () -> attribute.getName(), () -> attribute.isDeprecated(), () -> attribute.isReintroduced());
+		documentAttribute(attribute, method, attribute.getOwningElement());
+		log.trace("Default [{}]", () -> attribute.getDefaultValue());
+		// We do not type-check the default value. The default value is actually a description of the default.
+		// It may not be the literal default value.
+		attribute.setExcluded(method);
 	}
 
 	private void checkForAttributeSetterOverloads(FrankClass clazz) {

@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.feature.Description;
 import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
@@ -129,7 +130,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	private void completeFrankElement(FrankClass clazz) {
-		setDescription(clazz.getJavaDoc());
+		setDescription(Description.getInstance().valueOf(clazz));
 		if(getDescription() != null) {
 			setDescriptionHeader(calculateDescriptionHeader(getDescription()));
 		}
