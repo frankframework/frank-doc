@@ -1,15 +1,15 @@
 package org.frankframework.frankdoc.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.frankframework.frankdoc.feature.Mandatory;
+import org.frankframework.frankdoc.feature.Optional;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Test;
@@ -31,8 +31,6 @@ public class MandatoryStatusTest {
 			{"setSimplyMandatoryByAnnotation", MandatoryStatus.MANDATORY},
 			{"setSimplyMandatoryByTag", MandatoryStatus.MANDATORY},
 			{"setOptional", MandatoryStatus.OPTIONAL},
-			// We test that we get an exception
-			{"setInvalid", null}
 		});
 	}
 
@@ -50,16 +48,7 @@ public class MandatoryStatusTest {
 				.filter(m -> m.getName().equals(methodName))
 				.collect(Collectors.toList()).get(0);
 		MandatoryStatus actualMandatoryStatus = null;
-		boolean haveException = false;
-		try {
-			actualMandatoryStatus = MandatoryStatus.fromMethod(testMethod);
-		} catch(FrankDocException e) {
-			haveException = true;
-		}
-		if(expectedMandatoryStatus == null) {
-			assertTrue(haveException);
-		} else {
-			assertEquals(expectedMandatoryStatus, actualMandatoryStatus);
-		}
+		actualMandatoryStatus = MandatoryStatus.of(Mandatory.getInstance().valueOf(testMethod), Optional.getInstance().isSetOn(testMethod));
+		assertEquals(expectedMandatoryStatus, actualMandatoryStatus);
 	}
 }

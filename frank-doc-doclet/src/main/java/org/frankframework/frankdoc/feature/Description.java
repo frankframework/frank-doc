@@ -19,17 +19,18 @@ public class Description {
 	}
 
 	public String valueOf(FrankMethod method) {
-		String result = method.getJavaDoc();
-		if(result == null) {
-			FrankAnnotation annotation = method.getAnnotation(ParsedIbisDocAnnotation.IBISDOC);
-			if(annotation != null) {
-				try {
-					ParsedIbisDocAnnotation ibisDoc = new ParsedIbisDocAnnotation(annotation);
-					result = ibisDoc.getDescription();
-				} catch(FrankDocException e) {
-					log.error("Could not parse annotation [{}] on method [{}]", ParsedIbisDocAnnotation.IBISDOC, method.toString());
-				}
+		String result = null;
+		FrankAnnotation annotation = method.getAnnotation(ParsedIbisDocAnnotation.IBISDOC);
+		if(annotation != null) {
+			try {
+				ParsedIbisDocAnnotation ibisDoc = new ParsedIbisDocAnnotation(annotation);
+				result = ibisDoc.getDescription();
+			} catch(FrankDocException e) {
+				log.error("Could not parse annotation [{}] on method [{}]", ParsedIbisDocAnnotation.IBISDOC, method.toString());
 			}
+		}
+		if(result == null) {
+			result = method.getJavaDoc();
 		}
 		return result;
 	}

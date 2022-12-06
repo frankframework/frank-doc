@@ -68,8 +68,7 @@
             ],
             "attributes":[
                 {
-                    "name":"myOtherAttribute",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Member"
+                    "name":"myOtherAttribute"
                 }
             ]
         },
@@ -81,8 +80,7 @@
             ],
             "attributes":[
                 {
-                    "name":"myAttribute",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second.Member"
+                    "name":"myAttribute"
                 },
                 {
                     "name":"active",

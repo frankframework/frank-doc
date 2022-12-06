@@ -65,8 +65,7 @@
             "attributes":[
                 {
                     "name":"attribute",
-                    "reintroduced":true,
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.reintroduce.Child"
+                    "reintroduced":true
                 }
             ],
             "children":[
@@ -132,8 +131,7 @@
             ],
             "attributes":[
                 {
-                    "name":"attribute",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.reintroduce.Parent"
+                    "name":"attribute"
                 },
                 {
                     "name":"active",

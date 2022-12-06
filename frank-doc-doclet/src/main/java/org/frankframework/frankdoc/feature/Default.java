@@ -21,12 +21,12 @@ public class Default {
 	}
 
 	public String valueOf(FrankMethod method) {
-		String result = method.getJavaDocTag(TAG_DEFAULT);
+		String result = fromIbisDocAnnotation(method);
 		if(result == null) {
 			result = fromDefaultAnnotation(method);
 		}
 		if(result == null) {
-			result = fromIbisDocAnnotation(method);
+			result = method.getJavaDocTag(TAG_DEFAULT);
 		}
 		return result;
 	}

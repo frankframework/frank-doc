@@ -22,9 +22,6 @@ import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.DocWriterNew;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.wrapper.FrankAnnotation;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -58,7 +55,7 @@ public abstract class ElementChild {
 	 * This field supports the PROTECTED feature, which causes an attribute or config child to be excluded.
 	 * Also suppresses inheritance.
 	 */
-	private @Getter boolean excluded = false;
+	private @Getter @Setter boolean excluded = false;
 
 	private @Getter @Setter(AccessLevel.PACKAGE) MandatoryStatus mandatoryStatus = MandatoryStatus.OPTIONAL;
 
@@ -94,8 +91,8 @@ public abstract class ElementChild {
 	 * Different {@link ElementChild} of the same FrankElement are allowed to have the same order.
 	 */
 	private @Getter(AccessLevel.PACKAGE) @Setter(AccessLevel.PACKAGE) int order = Integer.MAX_VALUE;
-	private @Getter String description;
-	private @Getter String defaultValue;
+	private @Getter @Setter String description;
+	private @Getter @Setter String defaultValue;
 
 	public static Predicate<ElementChild> IN_XSD = c ->
 		(! c.isExcluded())
@@ -125,17 +122,6 @@ public abstract class ElementChild {
 
 	ElementChild(final FrankElement owningElement) {
 		this.owningElement = owningElement;
-	}
-
-	void setExcluded(FrankMethod method) {
-		try {
-			if(Feature.PROTECTED.isEffectivelySetOn(method)) {
-				log.trace("Attribute or config child [{}] has feature PROTECTED, marking as excluded", () -> toString());
-				excluded = true;
-			}
-		} catch(FrankDocException e) {
-			log.error("Error checking PROTECTED feature on [{}]", () -> toString(), () -> e);
-		}
 	}
 
 	void clearDefaultValue() {
@@ -190,50 +176,6 @@ public abstract class ElementChild {
 	}
 
 	abstract boolean specificOverrideIsMeaningful(ElementChild overriddenFrom);
-
-	void setJavaDocBasedDescriptionAndDefault(FrankMethod method) {
-		try {
-			String value = method.getJavaDocIncludingInherited();
-			if(value != null) {
-				description = value;
-			}
-			value = Feature.DEFAULT.valueOf(method);
-			if(value != null) {
-				defaultValue = value;
-			}
-		} catch(FrankDocException e) {
-			log.error("A FrankDocException occurred when searching the (inherited) javadoc of {}", method.toString(), e);
-		}
-	}
-
-	void parseIbisDocAnnotation(FrankAnnotation ibisDoc) throws FrankDocException {
-		String[] ibisDocValues = null;
-		try {
-			ibisDocValues = (String[]) ibisDoc.getValue();
-		} catch(FrankDocException e) {
-			throw new FrankDocException("Could not parse FrankAnnotation of @IbisDoc", e);
-		}
-		boolean isIbisDocHasOrder = false;
-		try {
-			Integer.parseInt(ibisDocValues[0]);
-			isIbisDocHasOrder = true;
-		} catch (NumberFormatException e) {
-			isIbisDocHasOrder = false;
-		}
-		if (isIbisDocHasOrder) {
-			if(ibisDocValues.length > 1) {
-				description = ibisDocValues[1];
-			}
-			if (ibisDocValues.length > 2) {
-				defaultValue = ibisDocValues[2];
-			}
-		} else {
-			description = ibisDocValues[0];
-			if (ibisDocValues.length > 1) {
-				defaultValue = ibisDocValues[1];
-			}
-		}
-	}
 
 	@Override
 	public String toString() {

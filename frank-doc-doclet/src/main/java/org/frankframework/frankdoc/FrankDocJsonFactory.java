@@ -297,7 +297,6 @@ public class FrankDocJsonFactory {
 		if(frankAttribute.isReintroduced()) {
 			result.add("reintroduced", true);
 		}
-		result.add("describer", frankAttribute.getDescribingElement().getFullName());
 		addIfNotNull(result, "description", frankAttribute.getDescription());
 		addIfNotNull(result, "default", frankAttribute.getDefaultValue());
 		if(! frankAttribute.getAttributeType().equals(AttributeType.STRING)) {

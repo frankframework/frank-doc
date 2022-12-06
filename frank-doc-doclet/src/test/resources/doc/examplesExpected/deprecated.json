@@ -43,8 +43,7 @@
             "attributes":[
                 {
                     "name":"value",
-                    "deprecated":true,
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.deprecated.Master"
+                    "deprecated":true
                 },
                 {
         			"name":"active",

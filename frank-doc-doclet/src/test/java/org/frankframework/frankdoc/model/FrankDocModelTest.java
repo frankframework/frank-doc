@@ -161,7 +161,6 @@ public class FrankDocModelTest {
 		assertEquals(3, actualParent.getAttributes(ALL_NOT_EXCLUDED).size());
 		FrankAttribute actualParentAttribute = findAttribute(actualParent, "parentAttribute");
 		assertEquals("parentAttribute", actualParentAttribute.getName());
-		assertSame(actualParent, actualParentAttribute.getDescribingElement());
 		assertSame(actualParent, actualParentAttribute.getOwningElement());
 		assertNull(actualParentAttribute.getOverriddenFrom());
 		assertFalse(actualParentAttribute.isTechnicalOverride());
@@ -177,7 +176,6 @@ public class FrankDocModelTest {
 		actualChildAttribute = findAttribute(actualChild, "childAttribute");
 		assertEquals("childAttribute", actualChildAttribute.getName());
 		assertSame(actualChild, actualChildAttribute.getOwningElement());
-		assertSame(actualChild, actualChildAttribute.getDescribingElement());
 		assertNull(actualChildAttribute.getOverriddenFrom());
 		actualInheritedAttribute = findAttribute(actualChild, "inheritedAttribute");
 		assertEquals("inheritedAttribute", actualInheritedAttribute.getName());
@@ -229,7 +227,7 @@ public class FrankDocModelTest {
 	 */
 	private Map<String, FrankAttribute> getAttributesOfClass(final String className) throws FrankDocException {
 		attributeOwner = instance.findOrCreateFrankElement(className);
-		final List<FrankAttribute> attributes = instance.createAttributes(classRepository.findClass(className), attributeOwner);
+		final List<FrankAttribute> attributes = instance.createAttributes(classRepository.findClass(className), attributeOwner, classRepository);
 		return attributes.stream().collect(Collectors.toMap(att -> att.getName(), att -> att));		
 	}
 
@@ -343,7 +341,7 @@ public class FrankDocModelTest {
 	public void testSequenceOfAttributesMatchesSequenceOfSetterMethods() throws Exception {
 		String className = "org.frankframework.frankdoc.testtarget.reflect.FrankAttributeTarget";
 		attributeOwner = instance.findOrCreateFrankElement(className);
-		List<String> actualAttributeNames = instance.createAttributes(classRepository.findClass(className), attributeOwner).stream()
+		List<String> actualAttributeNames = instance.createAttributes(classRepository.findClass(className), attributeOwner, classRepository).stream()
 				.map(FrankAttribute::getName)
 				.collect(Collectors.toList());
 		String[] expectedAttributeNames = new String[] {"attributeSetterGetter", "attributeSetterIs", "attributeOnlySetter", "attributeOnlySetterInt",
@@ -454,10 +452,8 @@ public class FrankDocModelTest {
 	@Test
 	public void testIbisDocRefAddsFrankElementsForReferredClassHierarchy() throws FrankDocException {
 		checkIbisdocrefInvestigatedFrankAttribute("ibisDocRefClassNoOrderRefersIbisDocOrderDescriptionDefault");
-		assertEquals(4, instance.getAllElements().size());
+		assertEquals(2, instance.getAllElements().size());
 		assertTrue(instance.getAllElements().containsKey(REFERRER));
-		assertTrue(instance.getAllElements().containsKey(REFERRED_CHILD));
-		assertTrue(instance.getAllElements().containsKey(REFERRED_PARENT));
 		assertTrue(instance.getAllElements().containsKey("java.lang.Object"));
 	}
 
@@ -504,7 +500,6 @@ public class FrankDocModelTest {
 	public void whenIbisDocRefThenDescribingElementAdjusted() throws FrankDocException {
 		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("ibisDocRefClassWithOrderRefersIbisDocOrderDescriptionDefaultInherited");
 		assertTrue(actual.isDocumented());
-		assertSame(instance.getAllElements().get(REFERRED_PARENT), actual.getDescribingElement());
 		assertSame(attributeOwner, actual.getOwningElement());
 	}
 
@@ -513,7 +508,6 @@ public class FrankDocModelTest {
 		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("ffReferInheritedDescription");
 		assertTrue(actual.isDocumented());
 		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());
-		assertSame(instance.getAllElements().get(REFERRED_PARENT), actual.getDescribingElement());
 		assertSame(attributeOwner, actual.getOwningElement());
 		assertEquals("Description of setFfReferInheritedDescription", actual.getDescription());
 		assertEquals("Value of setFfReferInheritedDescription", actual.getDefaultValue());

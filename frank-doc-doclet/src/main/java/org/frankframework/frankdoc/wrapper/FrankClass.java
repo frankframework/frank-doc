@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public interface FrankClass extends FrankType {
+	// Martijn was tempted to add method getRepository() here to make the FrankClassDoclet.repository
+	// member variable available. This is not a good idea because a repository does not make sense
+	// when reflection is used. We should not become dependent on using a doclet instead of reflection.
 	@Override
 	default boolean isPrimitive() {
 		return false;
