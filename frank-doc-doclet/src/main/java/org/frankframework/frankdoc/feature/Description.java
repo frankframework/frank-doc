@@ -3,6 +3,7 @@ package org.frankframework.frankdoc.feature;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
+import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
@@ -31,5 +32,9 @@ public class Description {
 			}
 		}
 		return result;
+	}
+
+	public String valueOf(FrankClass clazz) {
+		return clazz.getJavaDoc();
 	}
 }
