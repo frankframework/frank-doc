@@ -22,8 +22,6 @@ import org.frankframework.frankdoc.wrapper.FrankDocException;
 import lombok.Getter;
 
 class ParsedIbisDocAnnotation {
-	static final String IBISDOC = "nl.nn.adapterframework.doc.IbisDoc";
-
 	private @Getter String description;
 	private @Getter String defaultValue;
 

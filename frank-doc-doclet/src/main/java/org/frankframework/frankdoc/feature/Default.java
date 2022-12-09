@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 public class Default {
@@ -61,7 +62,7 @@ public class Default {
 	}
 
 	private String fromIbisDocAnnotation(FrankMethod method) {
-		FrankAnnotation ibisDocAnnotation = method.getAnnotation(ParsedIbisDocAnnotation.IBISDOC);
+		FrankAnnotation ibisDocAnnotation = method.getAnnotation(FrankDocletConstants.IBISDOC);
 		if(ibisDocAnnotation == null) {
 			return null;
 		}
@@ -70,7 +71,7 @@ public class Default {
 			ibisDoc = new ParsedIbisDocAnnotation(ibisDocAnnotation);
 			return ibisDoc.getDefaultValue();
 		} catch(FrankDocException e) {
-			log.error("Failed to parse annotation [{}] on method [{}]", ParsedIbisDocAnnotation.IBISDOC, method.toString());
+			log.error("Failed to parse annotation [{}] on method [{}]", FrankDocletConstants.IBISDOC, method.toString());
 			return null;
 		}
 	}

@@ -23,11 +23,11 @@ import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 public class Reference {
 	private static Logger log = LogUtil.getLogger(Reference.class);
-	private static final String IBISDOCREF = "nl.nn.adapterframework.doc.IbisDocRef";
 	private static final String JAVADOC_ATTRIBUTE_REF = "@ff.ref";
 
 	private final FrankClassRepository classRepository;
@@ -50,7 +50,7 @@ public class Reference {
 				}
 			}
 		}
-		FrankAnnotation ibisDocRef = method.getAnnotation(IBISDOCREF);
+		FrankAnnotation ibisDocRef = method.getAnnotation(FrankDocletConstants.IBISDOCREF);
 		if(ibisDocRef != null) {
 			ParsedIbisDocRef parsedIbisDocRef = parseIbisDocRef(ibisDocRef, method);
 			return parsedIbisDocRef.getReferredMethod();

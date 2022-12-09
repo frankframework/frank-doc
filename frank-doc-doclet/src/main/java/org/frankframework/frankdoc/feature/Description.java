@@ -21,6 +21,7 @@ import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 public class Description {
@@ -36,13 +37,13 @@ public class Description {
 
 	public String valueOf(FrankMethod method) {
 		String result = null;
-		FrankAnnotation annotation = method.getAnnotation(ParsedIbisDocAnnotation.IBISDOC);
+		FrankAnnotation annotation = method.getAnnotation(FrankDocletConstants.IBISDOC);
 		if(annotation != null) {
 			try {
 				ParsedIbisDocAnnotation ibisDoc = new ParsedIbisDocAnnotation(annotation);
 				result = ibisDoc.getDescription();
 			} catch(FrankDocException e) {
-				log.error("Could not parse annotation [{}] on method [{}]", ParsedIbisDocAnnotation.IBISDOC, method.toString());
+				log.error("Could not parse annotation [{}] on method [{}]", FrankDocletConstants.IBISDOC, method.toString());
 			}
 		}
 		if(result == null) {
