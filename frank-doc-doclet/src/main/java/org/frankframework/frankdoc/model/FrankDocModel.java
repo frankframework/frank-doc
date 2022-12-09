@@ -37,11 +37,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Default;
+import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.feature.Description;
 import org.frankframework.frankdoc.feature.Mandatory;
 import org.frankframework.frankdoc.feature.Optional;
 import org.frankframework.frankdoc.feature.Protected;
 import org.frankframework.frankdoc.feature.Reference;
+import org.frankframework.frankdoc.feature.Reintroduce;
 import org.frankframework.frankdoc.model.AncestorMethodBrowser.References;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClass;
@@ -309,8 +311,8 @@ public class FrankDocModel {
 				|| (Default.getInstance().valueOf(method) != null)
 				|| (Mandatory.getInstance().valueOf(method) != null)
 				|| Optional.getInstance().isSetOn(method));
-		attribute.setDeprecated(Feature.DEPRECATED.isSetOn(method));
-		attribute.setReintroduced(Feature.REINTRODUCE.isSetOn(method));
+		attribute.setDeprecated(Deprecated.getInstance().isSetOn(method));
+		attribute.setReintroduced(Reintroduce.getInstance().isSetOn(method));
 		log.trace("Attribute: deprecated = [{}], documented = [{}, reintroduced = {}]",
 				() -> attribute.isDeprecated(), () -> attribute.isDocumented(), () -> attribute.isReintroduced());
 		AttributeCreationContext context = new AttributeCreationContext();
@@ -582,7 +584,7 @@ public class FrankDocModel {
 	}
 
 	private void addElementIfNotProtected(FrankClass memberClass, final ElementType result) throws FrankDocException {
-		if(Feature.PROTECTED.isEffectivelySetOn(memberClass)) {
+		if(FrankElement.classIsProtected(memberClass)) {
 			log.info("Class [{}] has feature PROTECTED, not added to type [{}]", memberClass.getName(), result.getFullName());
 		} else {
 			FrankElement frankElement = findOrCreateFrankElement(memberClass.getName());

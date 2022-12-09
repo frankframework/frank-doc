@@ -48,8 +48,6 @@ public class FrankDocModelTest {
 	private static final String FOR_XSD_ELEMENT_NAME_TEST = SIMPLE + ".ParentListener";
 
 	private static final String IBISDOCREF = "org.frankframework.frankdoc.testtarget.ibisdocref";
-	private static final String REFERRED_CHILD = IBISDOCREF + ".ChildTarget";
-	private static final String REFERRED_PARENT = IBISDOCREF + ".ParentTarget";
 	private static final String REFERRER = "org.frankframework.frankdoc.testtarget.ibisdocref.Referrer";
 	private static final String REFERRER_CHILD = "org.frankframework.frankdoc.testtarget.ibisdocref.ReferrerChild";
 

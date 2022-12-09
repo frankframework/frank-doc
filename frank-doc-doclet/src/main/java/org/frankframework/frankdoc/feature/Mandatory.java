@@ -18,7 +18,6 @@ package org.frankframework.frankdoc.feature;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.Constants;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
@@ -30,7 +29,7 @@ public class Mandatory {
 		DONT_IGNORE_COMPATIBILITY;
 	}
 
-	private static final String TAG_NAME = Constants.JAVA_DOC_TAG_MANDATORY;
+	private static final String TAG_NAME = "@ff.mandatory";
 	private static final String ANNOTATION_NAME = "nl.nn.adapterframework.doc.Mandatory";
 
 	private static final String IGNORE_COMPATIBILITY_MODE = "ignoreInCompatibilityMode";
