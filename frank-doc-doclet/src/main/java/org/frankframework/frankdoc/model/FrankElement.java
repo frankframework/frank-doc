@@ -192,12 +192,14 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private static class IsProtectedContext {
 		boolean isProtected = false;
-		FrankClass cause;
+		FrankClass cause = null;
 
 		void handleAncestorMethod(FrankClass ancestorClass) {
 			if(Protected.getInstance().isSetOn(ancestorClass)) {
 				isProtected = true;
-				cause = ancestorClass;
+				if(cause == null) {
+					cause = ancestorClass;
+				}
 			}
 		}
 	}
