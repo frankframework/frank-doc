@@ -184,15 +184,20 @@ public class FrankElement implements Comparable<FrankElement> {
 		} catch(FrankDocException e) {
 			log.error("Could not browse ancestor classes of class [{}]", clazz.getName(), e);
 		}
+		if(ctx.isProtected) {
+			log.trace("Class [{}] inherits feature Protected from class [{}]", () -> clazz.getName(), () -> ctx.cause.getName());
+		}
 		return ctx.isProtected;
 	}
 
 	private static class IsProtectedContext {
 		boolean isProtected = false;
+		FrankClass cause;
 
 		void handleAncestorMethod(FrankClass ancestorClass) {
 			if(Protected.getInstance().isSetOn(ancestorClass)) {
 				isProtected = true;
+				cause = ancestorClass;
 			}
 		}
 	}

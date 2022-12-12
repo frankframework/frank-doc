@@ -289,9 +289,9 @@ public class FrankDocModel {
 				attribute.setAttributeEnum(findOrCreateAttributeEnum((FrankClass) method.getParameterTypes()[0]));
 			} else {
 				attribute.setAttributeType(AttributeType.fromJavaType(method.getParameterTypes()[0].getName()));
-				log.trace("Attribute {} has type {}", () -> attributeName, () -> attribute.getAttributeType().toString());
+				log.trace("Attribute [{}] has type [{}]", () -> attributeName, () -> attribute.getAttributeType().toString());
 				if(enumGettersByAttributeName.containsKey(attributeName)) {
-					log.trace("Attribute {} has enum values", () -> attributeName);
+					log.trace("Attribute [{}] has enum values", () -> attributeName);
 					attribute.setAttributeEnum(findOrCreateAttributeEnum((FrankClass) enumGettersByAttributeName.get(attributeName).getReturnType()));
 				}
 			}
@@ -313,44 +313,58 @@ public class FrankDocModel {
 				|| Optional.getInstance().isSetOn(method));
 		attribute.setDeprecated(Deprecated.getInstance().isSetOn(method));
 		attribute.setReintroduced(Reintroduce.getInstance().isSetOn(method));
-		log.trace("Attribute: deprecated = [{}], documented = [{}, reintroduced = {}]",
+		log.trace("Attribute: deprecated = [{}], documented = [{}], reintroduced = [{}]",
 				() -> attribute.isDeprecated(), () -> attribute.isDocumented(), () -> attribute.isReintroduced());
-		AttributeCreationContext context = new AttributeCreationContext();
+		CreationContext context = new CreationContext();
 		(new AncestorMethodBrowser(classRepository, AncestorMethodBrowser.References.WITH_REFERENCES)).browse(method,
 				ancestorMethod -> handleAttributeSetterAncestor(attribute, ancestorMethod, context));
 		attribute.setMandatoryStatus(MandatoryStatus.of(context.mandatoryValue, context.optionalValue));
-		log.trace("Mandatory status [{}]", attribute.getMandatoryStatus().toString());
+		log.trace("Mandatory status [{}]", () -> attribute.getMandatoryStatus().toString());
 		attribute.handleDefaultExplicitNull(method.getParameterTypes()[0]);
 		log.trace("Default [{}]", () -> attribute.getDefaultValue());
 	}
 
-	private class AttributeCreationContext {
+	private class CreationContext {
 		Mandatory.Value mandatoryValue;
 		boolean optionalValue = false;
 	}
 
-	private void handleAttributeSetterAncestor(FrankAttribute attribute, FrankMethod ancestorMethod, AttributeCreationContext context) {
+	private void handleAttributeSetterAncestor(FrankAttribute attribute, FrankMethod ancestorMethod, CreationContext context) {
 		updateOptionalMandatoryContextFromAncestorMethod(ancestorMethod, context);
 		if(attribute.getDescription() == null) {
 			attribute.setDescription(Description.getInstance().valueOf(ancestorMethod));
+			if(attribute.getDescription() != null) {
+				log.trace("Description comes from (ancestor) method [{}]", () -> ancestorMethod.toString());
+			}
 		}
 		if(attribute.getDefaultValue() == null) {
 			// We do not type-check the default value. The default value is actually a description of the default.
 			// It may not be the literal default value.
 			attribute.setDefaultValue(Default.getInstance().valueOf(ancestorMethod));
+			if(attribute.getDefaultValue() != null) {
+				log.trace("Default value comes from (ancestor) method [{}]", () -> ancestorMethod.toString());
+			}
 		}
 		if(Protected.getInstance().isSetOn(ancestorMethod)) {
 			attribute.setExcluded(true);
+			if(attribute.isExcluded()) {
+				log.trace("Attribute is excluded because of method [{}]", () -> ancestorMethod.toString());
+			}
 		}
 	}
 
-	private void updateOptionalMandatoryContextFromAncestorMethod(FrankMethod ancestorMethod,
-			AttributeCreationContext context) {
+	private void updateOptionalMandatoryContextFromAncestorMethod(FrankMethod ancestorMethod, CreationContext context) {
 		if(Optional.getInstance().isSetOn(ancestorMethod)) {
 			context.optionalValue = true;
+			if(context.optionalValue) {
+				log.trace("(Ancestor) method [{}] sets Optional", () -> ancestorMethod.toString());
+			}
 		}
 		if(context.mandatoryValue == null) {
 			context.mandatoryValue = Mandatory.getInstance().valueOf(ancestorMethod);
+			if(context.mandatoryValue != null) {
+				log.trace("(Ancestor) method [{}] sets Mandatory to value [{}]", () -> ancestorMethod.toString(), () -> context.mandatoryValue.toString());
+			}
 		}
 	}
 
@@ -473,7 +487,8 @@ public class FrankDocModel {
 			log.trace("Have ConfigChildSetterDescriptor [{}]", () -> configChildDescriptor.toString());
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);
 			configChild.setAllowMultiple(configChildDescriptor.isAllowMultiple());
-			AttributeCreationContext context = new AttributeCreationContext();
+			log.trace("Allow multiple = [{}]", () -> Boolean.valueOf(configChild.isAllowMultiple()).toString());
+			CreationContext context = new CreationContext();
 			(new AncestorMethodBrowser(classRepository, References.WITHOUT_REFERENCES)).browse(frankMethod,
 					ancestorMethod -> handleConfigChildSetterAncestor(configChild, ancestorMethod, context));
 			configChild.setMandatoryStatus(MandatoryStatus.of(context.mandatoryValue, context.optionalValue));
@@ -492,19 +507,25 @@ public class FrankDocModel {
 			if(log.isTraceEnabled() && frankMethod.isMultiplyInheritedPlaceholder()) {
 				log.trace("Config child [{}] is not based on a declared method, but was added because of possible multiple inheritance", configChild.toString());
 			}
-			log.trace("Done creating config child {}, the order is {}", () -> configChild.toString(), () -> configChild.getOrder());
+			log.trace("Done creating config child [{}], the order is [{}]", () -> configChild.toString(), () -> configChild.getOrder());
 		}
 		log.trace("Done creating config children of FrankElement [{}]", () -> parent.getFullName());
 		return createdNewConfigChildren;
 	}
 
-	void handleConfigChildSetterAncestor(ConfigChild configChild, FrankMethod ancestorMethod, AttributeCreationContext context) {
+	void handleConfigChildSetterAncestor(ConfigChild configChild, FrankMethod ancestorMethod, CreationContext context) {
 		updateOptionalMandatoryContextFromAncestorMethod(ancestorMethod, context);
 		if(! configChild.isExcluded()) {
-			configChild.setExcluded(Protected.getInstance().isSetOn(ancestorMethod));	
+			configChild.setExcluded(Protected.getInstance().isSetOn(ancestorMethod));
+			if(configChild.isExcluded()) {
+				log.trace("Set excluded because of method [{}]", () -> ancestorMethod.toString());
+			}
 		}
 		if(configChild.getDescription() == null) {
 			configChild.setDescription(Description.getInstance().valueOf(ancestorMethod));
+			if(configChild.getDescription() != null) {
+				log.trace("Set description from method [{}]", () -> ancestorMethod.toString());
+			}
 		}
 	}
 

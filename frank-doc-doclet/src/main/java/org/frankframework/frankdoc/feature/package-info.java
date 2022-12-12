@@ -25,8 +25,9 @@ limitations under the License.
  * has <code>@ff.default</code> and if the method of <code>Parent</code> uses <code>@Default</code>,
  * then the <code>@ff.default</code> should be taken.
  * 
- * There is one exception: annotation <code>FrankDocGroup</code> is not wrapped in a feature
- * because there is no alternative annotation or JavaDoc tag to manage groups. Another reason
- * for this exception is that a group has an optional order number.
+ * There is two exception: annotations <code>FrankDocGroup</code> and <code>EnumLabel</code>
+ * are not wrapped in a feature
+ * because there is no alternative annotation or JavaDoc tag that could cause conflicts.
+ * Another reason for this exception is that a group has an optional order number.
  */
 package org.frankframework.frankdoc.feature;
