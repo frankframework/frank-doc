@@ -17,10 +17,10 @@ limitations under the License.
 package org.frankframework.frankdoc.feature;
 
 public class Deprecated extends AbstractNonValuedFeature {
-	private static final Deprecated INSTNCE = new Deprecated();
+	private static final Deprecated INSTANCE = new Deprecated();
 
 	public static Deprecated getInstance() {
-		return INSTNCE;
+		return INSTANCE;
 	}
 
 	private Deprecated() {
