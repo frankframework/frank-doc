@@ -17,8 +17,12 @@ limitations under the License.
 package org.frankframework.frankdoc.wrapper;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface FrankClass extends FrankType {
+	// Martijn was tempted to add method getRepository() here to make the FrankClassDoclet.repository
+	// member variable available. This is not a good idea because a repository does not make sense
+	// when reflection is used. We should not become dependent on using a doclet instead of reflection.
 	@Override
 	default boolean isPrimitive() {
 		return false;
@@ -51,5 +55,6 @@ public interface FrankClass extends FrankType {
 	FrankAnnotation getAnnotationIncludingInherited(String annotationFullName) throws FrankDocException;
 	String getJavaDocTag(String tagName);
 	String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException;
+	void browseAncestors(Consumer<FrankClass> handler) throws FrankDocException;
 	List<String> getAllJavaDocTagsOf(String tagName);
 }

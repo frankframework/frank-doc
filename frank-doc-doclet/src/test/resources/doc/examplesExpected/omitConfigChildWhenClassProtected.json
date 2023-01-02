@@ -34,8 +34,7 @@
             ],
             "attributes":[
                 {
-                    "name":"myAttribute",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.omit.config.childProtected.Master"
+                    "name":"myAttribute"
                 },
                 {
                     "name":"active",

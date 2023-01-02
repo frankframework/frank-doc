@@ -48,7 +48,6 @@ public class FrankAttribute extends ElementChild {
 	}
 
 	private @Getter String name;
-	private @Getter @Setter FrankElement describingElement;
 
 	private @Getter @Setter AttributeType attributeType;
 
@@ -60,7 +59,6 @@ public class FrankAttribute extends ElementChild {
 	public FrankAttribute(String name, FrankElement attributeOwner) {
 		super(attributeOwner);
 		this.name = name;
-		this.describingElement = attributeOwner;
 	}
 
 	@Override
@@ -70,7 +68,6 @@ public class FrankAttribute extends ElementChild {
 
 	@Override
 	boolean specificOverrideIsMeaningful(ElementChild overriddenFrom) {
-		// We do not have to check here for describingElement, because we are checking on the description already.
 		return (! Utils.equalsNullable(getAttributeEnum(), ((FrankAttribute) overriddenFrom).getAttributeEnum()));
 	}
 

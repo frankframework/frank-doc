@@ -35,7 +35,6 @@
             "attributes":[
                 {
                     "name":"myAttribute",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.deprecated.enumValue.Master",
                     "enum":"org.frankframework.frankdoc.testtarget.examples.deprecated.enumValue.Master.MyEnum"
                 },
                 {

@@ -47,8 +47,7 @@
       "elementNames": [],
       "attributes": [
       	{
-          "name": "abstractParentOfStartAttribute",
-          "describer": "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart"
+          "name": "abstractParentOfStartAttribute"
         },
         {
           "name":"active",
@@ -65,13 +64,11 @@
         {
           "name": "firstAttribute",
           "mandatory": true,
-          "describer": "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
           "description": "First attribute of DescribedPossibleIChild.",
           "default": "this default value"
         },
         {
           "name": "secondAttribute",
-          "describer": "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
           "description": "Second attribute of DescribedPossibleIChild"
         },
         {
@@ -95,16 +92,13 @@
       "attributes": [
         {
           "name": "firstAttribute",
-          "describer": "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild",
           "enum": "org.frankframework.frankdoc.testtarget.examples.simple.MyEnum"
         },
         {
-          "name": "secondAttribute",
-          "describer": "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild"
+          "name": "secondAttribute"
         },
         {
           "name": "thirdAttribute",
-          "describer": "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild",
           "type": "int"
         },
         {
@@ -138,8 +132,7 @@
       "parent": "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart",
       "elementNames": ["Start"],
       "attributes": [{
-        "name": "attribute",
-        "describer": "org.frankframework.frankdoc.testtarget.examples.simple.Start"
+        "name": "attribute"
       }],
       "children": [
         {

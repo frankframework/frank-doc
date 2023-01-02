@@ -106,8 +106,7 @@
             ],
             "attributes":[
                 {
-                    "name":"i",
-                    "describer":"org.frankframework.frankdoc.testtarget.textconfig.Start"
+                    "name":"i"
                 },
                 {
                     "name":"active",

@@ -1,4 +1,4 @@
-package org.frankframework.frankdoc.testtarget.feature;
+package org.frankframework.frankdoc.testtarget.featurepackage;
 
 /**
  * @deprecated

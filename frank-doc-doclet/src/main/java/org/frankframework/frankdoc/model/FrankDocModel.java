@@ -36,18 +36,24 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.feature.Default;
+import org.frankframework.frankdoc.feature.Deprecated;
+import org.frankframework.frankdoc.feature.Description;
+import org.frankframework.frankdoc.feature.Mandatory;
+import org.frankframework.frankdoc.feature.Optional;
+import org.frankframework.frankdoc.feature.Protected;
+import org.frankframework.frankdoc.feature.Reference;
+import org.frankframework.frankdoc.feature.Reintroduce;
+import org.frankframework.frankdoc.model.AncestorMethodBrowser.References;
 import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import lombok.Getter;
-import lombok.Setter;
 
 public class FrankDocModel {
 	private static Logger log = LogUtil.getLogger(FrankDocModel.class);
@@ -249,7 +255,7 @@ public class FrankDocModel {
 		FrankClass superClass = clazz.getSuperclass();
 		FrankElement parent = superClass == null ? null : creator.recursiveFindOrCreate(superClass.getName());
 		current.setParent(parent);
-		current.setAttributes(createAttributes(clazz, current));
+		current.setAttributes(createAttributes(clazz, current, classRepository));
 		log.trace("Done creating FrankElement for class name [{}]", () -> clazz.getName());
 		return current;
 	}
@@ -258,7 +264,7 @@ public class FrankDocModel {
 		return allElements.get(fullName);
 	}
 
-	List<FrankAttribute> createAttributes(FrankClass clazz, FrankElement attributeOwner) throws FrankDocException {
+	List<FrankAttribute> createAttributes(FrankClass clazz, FrankElement attributeOwner, FrankClassRepository classRepository) throws FrankDocException {
 		log.trace("Creating attributes for FrankElement [{}]", () -> attributeOwner.getFullName());
 		checkForAttributeSetterOverloads(clazz);
 		FrankMethod[] methods = clazz.getDeclaredMethodsAndMultiplyInheritedPlaceholders();
@@ -277,36 +283,89 @@ public class FrankDocModel {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
 			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
-			try {
-				attribute.setMandatoryStatus(MandatoryStatus.fromMethod(method));
-			} catch(FrankDocException e) {
-				log.error("Could not calculate mandatoryStatus for attribute [{}]", attribute.getName(), e);
-			}
 			if(method.getParameterTypes()[0].isEnum()) {
 				log.trace("Attribute [{}] has setter that takes enum: [{}]", () -> attribute.getName(), () -> method.getParameterTypes()[0].toString());
 				attribute.setAttributeType(AttributeType.STRING);
 				attribute.setAttributeEnum(findOrCreateAttributeEnum((FrankClass) method.getParameterTypes()[0]));
 			} else {
 				attribute.setAttributeType(AttributeType.fromJavaType(method.getParameterTypes()[0].getName()));
-				log.trace("Attribute {} has type {}", () -> attributeName, () -> attribute.getAttributeType().toString());
+				log.trace("Attribute [{}] has type [{}]", () -> attributeName, () -> attribute.getAttributeType().toString());
 				if(enumGettersByAttributeName.containsKey(attributeName)) {
-					log.trace("Attribute {} has enum values", () -> attributeName);
+					log.trace("Attribute [{}] has enum values", () -> attributeName);
 					attribute.setAttributeEnum(findOrCreateAttributeEnum((FrankClass) enumGettersByAttributeName.get(attributeName).getReturnType()));
 				}
 			}
-			attribute.setDeprecated(Feature.DEPRECATED.isSetOn(method));
-			attribute.setReintroduced(Feature.REINTRODUCE.isSetOn(method));
-			log.trace("Attribute {} deprecated={}, reintroduced={}", () -> attributeName, () -> attribute.isDeprecated(), () -> attribute.isReintroduced());
-			documentAttribute(attribute, method, attributeOwner);
-			log.trace("Default [{}]", () -> attribute.getDefaultValue());
-			// We do not type-check the default value. The default value is actually a description of the default.
-			// It may not be the literal default value.
-			attribute.setExcluded(method);
+			setAttributeFeatures(attribute, method, classRepository);
 			result.add(attribute);
 			log.trace("Attribute [{}] done", () -> attributeName);
 		}
 		log.trace("Done creating attributes for {}", attributeOwner.getFullName());
 		return result;
+	}
+
+	private void setAttributeFeatures(FrankAttribute attribute, FrankMethod method, FrankClassRepository classRepository) throws FrankDocException {
+		Reference featureReference = new Reference(classRepository);
+		attribute.setDocumented(
+				(Description.getInstance().valueOf(method) != null)
+				|| (featureReference.valueOf(method) != null)
+				|| (Default.getInstance().valueOf(method) != null)
+				|| (Mandatory.getInstance().valueOf(method) != null)
+				|| Optional.getInstance().isSetOn(method));
+		attribute.setDeprecated(Deprecated.getInstance().isSetOn(method));
+		attribute.setReintroduced(Reintroduce.getInstance().isSetOn(method));
+		log.trace("Attribute: deprecated = [{}], documented = [{}], reintroduced = [{}]",
+				() -> attribute.isDeprecated(), () -> attribute.isDocumented(), () -> attribute.isReintroduced());
+		CreationContext context = new CreationContext();
+		(new AncestorMethodBrowser(classRepository, AncestorMethodBrowser.References.WITH_REFERENCES)).browse(method,
+				ancestorMethod -> handleAttributeSetterAncestor(attribute, ancestorMethod, context));
+		attribute.setMandatoryStatus(MandatoryStatus.of(context.mandatoryValue, context.optionalValue));
+		log.trace("Mandatory status [{}]", () -> attribute.getMandatoryStatus().toString());
+		attribute.handleDefaultExplicitNull(method.getParameterTypes()[0]);
+		log.trace("Default [{}]", () -> attribute.getDefaultValue());
+	}
+
+	private class CreationContext {
+		Mandatory.Value mandatoryValue;
+		boolean optionalValue = false;
+	}
+
+	private void handleAttributeSetterAncestor(FrankAttribute attribute, FrankMethod ancestorMethod, CreationContext context) {
+		updateOptionalMandatoryContextFromAncestorMethod(ancestorMethod, context);
+		if(attribute.getDescription() == null) {
+			attribute.setDescription(Description.getInstance().valueOf(ancestorMethod));
+			if(attribute.getDescription() != null) {
+				log.trace("Description comes from (ancestor) method [{}]", () -> ancestorMethod.toString());
+			}
+		}
+		if(attribute.getDefaultValue() == null) {
+			// We do not type-check the default value. The default value is actually a description of the default.
+			// It may not be the literal default value.
+			attribute.setDefaultValue(Default.getInstance().valueOf(ancestorMethod));
+			if(attribute.getDefaultValue() != null) {
+				log.trace("Default value comes from (ancestor) method [{}]", () -> ancestorMethod.toString());
+			}
+		}
+		if(Protected.getInstance().isSetOn(ancestorMethod)) {
+			attribute.setExcluded(true);
+			if(attribute.isExcluded()) {
+				log.trace("Attribute is excluded because of method [{}]", () -> ancestorMethod.toString());
+			}
+		}
+	}
+
+	private void updateOptionalMandatoryContextFromAncestorMethod(FrankMethod ancestorMethod, CreationContext context) {
+		if(Optional.getInstance().isSetOn(ancestorMethod)) {
+			context.optionalValue = true;
+			if(context.optionalValue) {
+				log.trace("(Ancestor) method [{}] sets Optional", () -> ancestorMethod.toString());
+			}
+		}
+		if(context.mandatoryValue == null) {
+			context.mandatoryValue = Mandatory.getInstance().valueOf(ancestorMethod);
+			if(context.mandatoryValue != null) {
+				log.trace("(Ancestor) method [{}] sets Mandatory to value [{}]", () -> ancestorMethod.toString(), () -> context.mandatoryValue.toString());
+			}
+		}
 	}
 
 	private void checkForAttributeSetterOverloads(FrankClass clazz) {
@@ -411,136 +470,6 @@ public class FrankDocModel {
 		}
 	}
 
-	private void documentAttribute(FrankAttribute attribute, FrankMethod method, FrankElement attributeOwner) throws FrankDocException {
-		attribute.setDocumented(
-				(method.getAnnotation(FrankDocletConstants.IBISDOC) != null)
-				|| (method.getAnnotation(FrankDocletConstants.IBISDOCREF) != null)
-				|| (method.getJavaDoc() != null)
-				|| Feature.DEFAULT.isSetOn(method)
-				|| Feature.MANDATORY.isSetOn(method)
-				|| Feature.OPTIONAL.isSetOn(method)
-				|| (method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REF) != null));
-		log.trace("Attribute: deprecated = [{}], documented = [{}]", () -> attribute.isDeprecated(), () -> attribute.isDocumented());
-		String ffRefReference = method.getJavaDocTag(FrankAttribute.JAVADOC_ATTRIBUTE_REF);
-		if(ffRefReference != null) {
-			if(StringUtils.isBlank(ffRefReference)) {
-				log.error("JavaDoc tag {} should have a full class name or full method name as argument", FrankAttribute.JAVADOC_ATTRIBUTE_REF);
-			} else {
-				FrankMethod referred = getReferredMethod(ffRefReference, method);
-				if(referred == null) {
-					log.error("Referred method [{}] does not exist", ffRefReference);
-				} else {
-					attribute.setDescribingElement(findOrCreateFrankElement(referred.getDeclaringClass().getName()));
-					attribute.setJavaDocBasedDescriptionAndDefault(referred);
-				}
-			}
-		}
-		attribute.setJavaDocBasedDescriptionAndDefault(method);
-		FrankAnnotation ibisDocRef = method.getAnnotationIncludingInherited(FrankDocletConstants.IBISDOCREF);
-		if(ibisDocRef != null) {
-			log.trace("Found @IbisDocRef annotation");
-			ParsedIbisDocRef parsed = parseIbisDocRef(ibisDocRef, method);
-			FrankAnnotation ibisDoc = null;
-			if((parsed != null) && (parsed.getReferredMethod() != null)) {
-				attribute.setJavaDocBasedDescriptionAndDefault(parsed.getReferredMethod());
-				ibisDoc = parsed.getReferredMethod().getAnnotationIncludingInherited(FrankDocletConstants.IBISDOC);
-				if(ibisDoc != null) {
-					attribute.setDescribingElement(findOrCreateFrankElement(parsed.getReferredMethod().getDeclaringClass().getName()));
-					log.trace("Describing element of attribute [{}].[{}] is [{}]",
-							() -> attributeOwner.getFullName(), () -> attribute.getName(), () -> attribute.getDescribingElement().getFullName());
-					attribute.parseIbisDocAnnotation(ibisDoc);
-					log.trace("Done documenting attribute [{}]", () -> attribute.getName());
-					return;
-				}				
-			} else {
-				log.error("@IbisDocRef of Frank elelement [{}] attribute [{}] points to non-existent method", () -> attributeOwner.getSimpleName(), () -> attribute.getName());
-			}
-		}
-		FrankAnnotation ibisDoc = method.getAnnotationIncludingInherited(FrankDocletConstants.IBISDOC);
-		if(ibisDoc != null) {
-			log.trace("For attribute [{}], have @IbisDoc without @IbisDocRef", attribute);
-			attribute.parseIbisDocAnnotation(ibisDoc);
-		}
-		attribute.handleDefaultExplicitNull(method.getParameterTypes()[0]);
-		log.trace("Done documenting attribute [{}]", () -> attribute.getName());
-	}
-
-	private class ParsedIbisDocRef {
-		private @Getter @Setter boolean hasOrder;
-		private @Getter @Setter int order;
-		private @Getter @Setter FrankMethod referredMethod;
-	}
-
-	private ParsedIbisDocRef parseIbisDocRef(FrankAnnotation ibisDocRef, FrankMethod originalMethod) {
-		ParsedIbisDocRef result = new ParsedIbisDocRef();
-		result.setHasOrder(false);
-		String[] values = null;
-		try {
-			values = (String[]) ibisDocRef.getValue();
-		} catch(FrankDocException e) {
-			log.error("IbisDocRef annotation did not have a value", e);
-			return result;
-		}
-		String methodString = null;
-		if (values.length == 1) {
-			methodString = values[0];
-		} else if (values.length == 2) {
-			methodString = values[1];
-			try {
-				result.setOrder(Integer.parseInt(values[0]));
-				result.setHasOrder(true);
-			} catch (Throwable t) {
-				final String[] finalValues = values;
-				log.error("Could not parse order in @IbisDocRef annotation: [{}]", () -> finalValues[0]);
-			}
-		}
-		else {
-			log.error("Too many or zero parameters in @IbisDocRef annotation on method: [{}].[{}]", () -> originalMethod.getDeclaringClass().getName(), () -> originalMethod.getName());
-			return null;
-		}
-		try {
-			result.setReferredMethod(getReferredMethod(methodString, originalMethod));
-		} catch(Exception e) {
-			log.error("@IbisDocRef on [{}].[{}] annotation references invalid method [{}], ignoring @IbisDocRef annotation",
-					originalMethod.getDeclaringClass().getName(), originalMethod.getName(), methodString);
-			return null;
-		}
-		return result;
-	}
-
-	private FrankMethod getReferredMethod(String methodString, FrankMethod originalMethod) {
-		String lastNameComponent = methodString.substring(methodString.lastIndexOf(".") + 1).trim();
-		char firstLetter = lastNameComponent.toCharArray()[0];
-		String fullClassName = methodString;
-		String methodName = lastNameComponent;
-		if (Character.isLowerCase(firstLetter)) {
-			int index = methodString.lastIndexOf(".");
-			fullClassName = methodString.substring(0, index);
-		} else {
-			methodName = originalMethod.getName();
-		}
-		return getParentMethod(fullClassName, methodName);
-	}
-
-	private FrankMethod getParentMethod(String className, String methodName) {
-		try {
-			FrankClass parentClass = classRepository.findClass(className);
-			if(parentClass == null) {
-				log.error("Class {} is unknown", className);
-				return null;
-			}
-			for (FrankMethod parentMethod : parentClass.getDeclaredAndInheritedMethods()) {
-				if (parentMethod.getName().equals(methodName)) {
-					return parentMethod;
-				}
-			}
-			return null;
-		} catch (FrankDocException e) {
-			log.error("Super class [{}] was not found!", className, e);
-			return null;
-		}
-	}
-
 	private boolean createConfigChildren(FrankElement parent) throws FrankDocException {
 		log.trace("Creating config children of FrankElement [{}]", () -> parent.getFullName());
 		boolean createdNewConfigChildren = false;
@@ -557,13 +486,13 @@ public class FrankDocModel {
 			}
 			log.trace("Have ConfigChildSetterDescriptor [{}]", () -> configChildDescriptor.toString());
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);
-			configChild.setExcluded(frankMethod);
 			configChild.setAllowMultiple(configChildDescriptor.isAllowMultiple());
-			try {
-				configChild.setMandatoryStatus(MandatoryStatus.fromMethod(frankMethod));
-			} catch(FrankDocException e) {
-				log.error("Could not calculate mandatoryStatus for config child [{}]", configChild.toString(), e);
-			}
+			log.trace("Allow multiple = [{}]", () -> Boolean.valueOf(configChild.isAllowMultiple()).toString());
+			CreationContext context = new CreationContext();
+			(new AncestorMethodBrowser(classRepository, References.WITHOUT_REFERENCES)).browse(frankMethod,
+					ancestorMethod -> handleConfigChildSetterAncestor(configChild, ancestorMethod, context));
+			configChild.setMandatoryStatus(MandatoryStatus.of(context.mandatoryValue, context.optionalValue));
+			log.trace("Mandatory status [{}]", configChild.getMandatoryStatus().toString());
 			if(configChildDescriptor.isForObject()) {
 				log.trace("For FrankElement [{}] method [{}], going to search element role", () -> parent.getFullName(), () -> frankMethod.getName());
 				FrankClass elementTypeClass = (FrankClass) frankMethod.getParameterTypes()[0];
@@ -578,10 +507,26 @@ public class FrankDocModel {
 			if(log.isTraceEnabled() && frankMethod.isMultiplyInheritedPlaceholder()) {
 				log.trace("Config child [{}] is not based on a declared method, but was added because of possible multiple inheritance", configChild.toString());
 			}
-			log.trace("Done creating config child {}, the order is {}", () -> configChild.toString(), () -> configChild.getOrder());
+			log.trace("Done creating config child [{}], the order is [{}]", () -> configChild.toString(), () -> configChild.getOrder());
 		}
 		log.trace("Done creating config children of FrankElement [{}]", () -> parent.getFullName());
 		return createdNewConfigChildren;
+	}
+
+	void handleConfigChildSetterAncestor(ConfigChild configChild, FrankMethod ancestorMethod, CreationContext context) {
+		updateOptionalMandatoryContextFromAncestorMethod(ancestorMethod, context);
+		if(! configChild.isExcluded()) {
+			configChild.setExcluded(Protected.getInstance().isSetOn(ancestorMethod));
+			if(configChild.isExcluded()) {
+				log.trace("Set excluded because of method [{}]", () -> ancestorMethod.toString());
+			}
+		}
+		if(configChild.getDescription() == null) {
+			configChild.setDescription(Description.getInstance().valueOf(ancestorMethod));
+			if(configChild.getDescription() != null) {
+				log.trace("Set description from method [{}]", () -> ancestorMethod.toString());
+			}
+		}
 	}
 
 	void finishConfigChildrenFor(FrankElement parent) {
@@ -660,7 +605,7 @@ public class FrankDocModel {
 	}
 
 	private void addElementIfNotProtected(FrankClass memberClass, final ElementType result) throws FrankDocException {
-		if(Feature.PROTECTED.isEffectivelySetOn(memberClass)) {
+		if(FrankElement.classIsProtected(memberClass)) {
 			log.info("Class [{}] has feature PROTECTED, not added to type [{}]", memberClass.getName(), result.getFullName());
 		} else {
 			FrankElement frankElement = findOrCreateFrankElement(memberClass.getName());

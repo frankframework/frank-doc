@@ -26,16 +26,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.XsdVersion;
+import org.frankframework.frankdoc.feature.Deprecated;
+import org.frankframework.frankdoc.feature.Description;
+import org.frankframework.frankdoc.feature.Reintroduce;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.frankframework.frankdoc.XsdVersion;
-import org.frankframework.frankdoc.wrapper.FrankAnnotation;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.frankframework.frankdoc.util.LogUtil;
 
 public abstract class ConfigChild extends ElementChild {
 	private static Logger log = LogUtil.getLogger(ConfigChild.class);
@@ -51,37 +51,14 @@ public abstract class ConfigChild extends ElementChild {
 
 	ConfigChild(FrankElement owningElement, FrankMethod method) {
 		super(owningElement);
-		setDocumented(isDocumented(method));
-		setDeprecated(Feature.DEPRECATED.isSetOn(method));
-		setReintroduced(Feature.REINTRODUCE.isSetOn(method));
+		setDocumented(Description.getInstance().valueOf(method) != null);
+		setDeprecated(Deprecated.getInstance().isSetOn(method));
+		setReintroduced(Reintroduce.getInstance().isSetOn(method));
 		log.trace("ConfigChild of method {} has documented={}, deprecated={}, reintroduced={}", () -> method.toString(), () -> isDocumented(), () -> isDeprecated(), () -> isReintroduced());
 		this.methodName = method.getName();
-		setJavaDocBasedDescriptionAndDefault(method);
-		FrankAnnotation ibisDoc = getIbisDoc(method);
-		if(ibisDoc != null) {
-			try {
-				parseIbisDocAnnotation(ibisDoc);
-			} catch(FrankDocException e) {
-				log.error("Could not parse IbisDoc annotation of method {}", method.toString(), e);
-			}
-		}
 	}
 
 	public abstract String getRoleName();
-
-	private static boolean isDocumented(FrankMethod m) {
-		return (m.getAnnotation(FrankDocletConstants.IBISDOC) != null) || (m.getJavaDoc() != null);
-	}
-
-	private static FrankAnnotation getIbisDoc(FrankMethod method) {
-		FrankAnnotation result = null;
-		try {
-			result = method.getAnnotationIncludingInherited(FrankDocletConstants.IBISDOC);
-		} catch(FrankDocException e) {
-			log.error("Error getting @IbisDoc annotation for method {}", method, e);
-		}
-		return result;
-	}
 
 	@Override
 	abstract ConfigChildKey getKey();

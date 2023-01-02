@@ -86,7 +86,8 @@ public class FrankDocModelConfigChildrenTest {
 		assertEquals("roleNameChild", actual.getRoleName());
 		assertEquals("Container", actual.getOwningElement().getSimpleName());
 		assertEquals("Child", actual.getElementType().getSimpleName());
-		assertTrue(actual.isDocumented());
+		// The method has an @IbisDoc annotation with only the order. That one is ignored.
+		assertFalse(actual.isDocumented());
 		assertFalse(actual.isAllowMultiple());
 		assertFalse(actual.isDeprecated());
 		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());
@@ -110,7 +111,8 @@ public class FrankDocModelConfigChildrenTest {
 		assertEquals("roleNameDeprecatedChild", actual.getRoleName());
 		assertEquals("Container", actual.getOwningElement().getSimpleName());
 		assertEquals("Child", actual.getElementType().getSimpleName());
-		assertTrue(actual.isDocumented());
+		// The method has an @IbisDoc annotation with only the order. That one is ignored.
+		assertFalse(actual.isDocumented());
 		assertFalse(actual.isAllowMultiple());
 		assertTrue(actual.isDeprecated());
 		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());

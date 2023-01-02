@@ -16,13 +16,7 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.frankframework.frankdoc.Constants;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
+import org.frankframework.frankdoc.feature.Mandatory;
 
 public enum MandatoryStatus {
 	/**
@@ -42,30 +36,14 @@ public enum MandatoryStatus {
 	 */
 	OPTIONAL;
 
-	private static final Set<String> IGNORE_COMPATIBILITY = new HashSet<>(Arrays.asList("true", Constants.IGNORE_COMPATIBILITY_MODE));
-	private static final Set<String> DONT_IGNORE_COMPATIBILITY = new HashSet<>(Arrays.asList("", "false"));
-
-	static MandatoryStatus fromMethod(FrankMethod method) throws FrankDocException {
-		if(Feature.MANDATORY.isEffectivelySetOn(method)) {
-			return fromMethodProperties(Feature.OPTIONAL.isEffectivelySetOn(method), Feature.MANDATORY.isEffectivelySetOn(method), Feature.MANDATORY.valueOf(method));
-		} else {
-			return fromMethodProperties(Feature.OPTIONAL.isEffectivelySetOn(method), Feature.MANDATORY.isEffectivelySetOn(method), null);
-		}
-	}
-
-	private static MandatoryStatus fromMethodProperties(boolean isOptional, boolean isMandatory, String valueOfMandatory) throws FrankDocException {
-		if(isOptional) {
+	static MandatoryStatus of(Mandatory.Value mandatoryValue, boolean optionalValue) {
+		if(optionalValue || (mandatoryValue == null)) {
 			return MandatoryStatus.OPTIONAL;
 		}
-		if(isMandatory) {
-			if((valueOfMandatory == null) || DONT_IGNORE_COMPATIBILITY.contains(valueOfMandatory)) {
-				return MandatoryStatus.MANDATORY;
-			} else if(IGNORE_COMPATIBILITY.contains(valueOfMandatory)) {
-				return MandatoryStatus.BECOMES_MANDATORY;
-			} else {
-				throw new FrankDocException(String.format("Unknown value of JavaDoc tag %s: [%s]", Constants.JAVA_DOC_TAG_MANDATORY, valueOfMandatory), null);
-			}
+		if(mandatoryValue == Mandatory.Value.IGNORE_COMPATIBILITY) {
+			return MandatoryStatus.BECOMES_MANDATORY;
+		} else {
+			return MandatoryStatus.MANDATORY;
 		}
-		return MandatoryStatus.OPTIONAL;
 	}
 }

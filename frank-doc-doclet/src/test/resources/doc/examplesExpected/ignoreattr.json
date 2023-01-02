@@ -63,7 +63,6 @@
             "attributes":[
                 {
                     "name":"suppressedAttribute2",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.GrandChild",
                     "description":"Documented, so re-introduced as attribute"
                 }
             ]
@@ -117,7 +116,6 @@
             "attributes":[
                 {
                     "name":"childAttribute",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.NotSuppressingChild",
                     "description":"Documented child attribute"
                 }
             ]
@@ -142,16 +140,13 @@
             ],
             "attributes":[
                 {
-                    "name":"suppressedAttribute",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Parent"
+                    "name":"suppressedAttribute"
                 },
                 {
-                    "name":"suppressedAttribute2",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Parent"
+                    "name":"suppressedAttribute2"
                 },
                 {
-                    "name":"notSuppressedAttribute",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Parent"
+                    "name":"notSuppressedAttribute"
                 },
                 {
                     "name":"active",
@@ -169,8 +164,7 @@
             ],
             "attributes":[
                 {
-                    "name":"childAttribute",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.ignore.attributes.SuppressingChild"
+                    "name":"childAttribute"
                 }
             ]
         }

@@ -108,12 +108,10 @@
             ],
             "attributes":[
                 {
-                    "name":"keptParentAttribute",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.exclude.Parent"
+                    "name":"keptParentAttribute"
                 },
                 {
-                    "name":"childExcludedAttribute",
-                    "describer":"org.frankframework.frankdoc.testtarget.examples.exclude.Parent"
+                    "name":"childExcludedAttribute"
                 },
                 {
                     "name":"active",

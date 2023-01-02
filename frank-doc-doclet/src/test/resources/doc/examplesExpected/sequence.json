@@ -51,20 +51,16 @@
       "elementNames": ["Master"],
       "attributes": [
         {
-          "name": "clemens",
-          "describer": "org.frankframework.frankdoc.testtarget.examples.sequence.Master"
+          "name": "clemens"
         },
         {
-          "name": "arnold",
-          "describer": "org.frankframework.frankdoc.testtarget.examples.sequence.Master"
+          "name": "arnold"
         },
         {
-          "name": "dennis",
-          "describer": "org.frankframework.frankdoc.testtarget.examples.sequence.Master"
+          "name": "dennis"
         },
         {
-          "name": "bernhard",
-          "describer": "org.frankframework.frankdoc.testtarget.examples.sequence.Master"
+          "name": "bernhard"
         },
         {
           "name":"active",

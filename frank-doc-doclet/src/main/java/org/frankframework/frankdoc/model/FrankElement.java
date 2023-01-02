@@ -35,6 +35,9 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.feature.Deprecated;
+import org.frankframework.frankdoc.feature.Description;
+import org.frankframework.frankdoc.feature.Protected;
 import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
@@ -114,7 +117,7 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	FrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory, LabelValues labelValues) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
-		isDeprecated = Feature.DEPRECATED.isSetOn(clazz);
+		isDeprecated = Deprecated.getInstance().isSetOn(clazz);
 		configChildSets = new LinkedHashMap<>();
 		this.completeFrankElement(clazz);
 		handleConfigChildSetterCandidates(clazz);
@@ -129,7 +132,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	private void completeFrankElement(FrankClass clazz) {
-		setDescription(clazz.getJavaDoc());
+		setDescription(Description.getInstance().valueOf(clazz));
 		if(getDescription() != null) {
 			setDescriptionHeader(calculateDescriptionHeader(getDescription()));
 		}
@@ -167,16 +170,38 @@ public class FrankElement implements Comparable<FrankElement> {
 		if(argument.isInterface()) {
 			return false;
 		}
-		try {
-			if(Feature.PROTECTED.isEffectivelySetOn(argument)) {
-				log.trace("Method [{}] is not a config child candidate because class [{}] has feature PROTECTED", () -> frankMethod.toString(), () -> argument.toString());
-				return true;
-			}
-		} catch(FrankDocException e) {
-			log.error("Failed to check PROTECTED feature on class [{}]", argument.toString(), e);
+		if(classIsProtected(argument)) {
+			log.trace("Method [{}] is not a config child candidate because class [{}] has feature PROTECTED", () -> frankMethod.toString(), () -> argument.toString());
 			return true;
 		}
 		return false;
+	}
+
+	static boolean classIsProtected(FrankClass clazz) {
+		IsProtectedContext ctx = new IsProtectedContext();
+		try {
+			clazz.browseAncestors(ctx::handleAncestorMethod);
+		} catch(FrankDocException e) {
+			log.error("Could not browse ancestor classes of class [{}]", clazz.getName(), e);
+		}
+		if(ctx.isProtected) {
+			log.trace("Class [{}] inherits feature Protected from class [{}]", () -> clazz.getName(), () -> ctx.cause.getName());
+		}
+		return ctx.isProtected;
+	}
+
+	private static class IsProtectedContext {
+		boolean isProtected = false;
+		FrankClass cause = null;
+
+		void handleAncestorMethod(FrankClass ancestorClass) {
+			if(Protected.getInstance().isSetOn(ancestorClass)) {
+				isProtected = true;
+				if(cause == null) {
+					cause = ancestorClass;
+				}
+			}
+		}
 	}
 
 	private void handlePossibleParameters(FrankClass clazz) {

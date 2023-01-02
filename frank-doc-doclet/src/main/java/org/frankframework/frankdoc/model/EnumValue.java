@@ -18,6 +18,7 @@ package org.frankframework.frankdoc.model;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
@@ -57,7 +58,7 @@ public class EnumValue {
 			this.description = javaDoc;
 		}
 		try {
-			if(Feature.DEPRECATED.isSetOn(c)) {
+			if(Deprecated.getInstance().isSetOn(c)) {
 				this.deprecated = true;
 			}
 		} catch(FrankDocException e) {

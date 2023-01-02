@@ -53,6 +53,21 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 	}
 
 	@Override
+	public void browseAncestorsUntilTrue(Function<FrankMethod, Boolean> handler) throws FrankDocException {
+		Function<FrankMethodDocletBase, Boolean> getter = m -> foundTrue(m, handler);
+		searchIncludingInherited(getter);
+	}
+
+	private Boolean foundTrue(FrankMethodDocletBase m, Function<FrankMethod, Boolean> handler) {
+		Boolean handlerResult = handler.apply(m);
+		if(handlerResult.equals(Boolean.TRUE)) {
+			return true;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
 	public String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException {
 		Function<FrankMethodDocletBase, String> getter = m -> m.getJavaDocTag(tagName);
 		return searchIncludingInherited(getter);		
