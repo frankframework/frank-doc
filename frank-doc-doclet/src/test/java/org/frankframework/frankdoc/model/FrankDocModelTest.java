@@ -512,6 +512,15 @@ public class FrankDocModelTest {
 	}
 
 	@Test
+	public void testReferTo() throws Exception {
+		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("referToInheritedDescription");
+		assertTrue(actual.isDocumented());
+		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());
+		assertSame(attributeOwner, actual.getOwningElement());
+		assertEquals("setReferToInheritedDescription description", actual.getDescription());
+	}
+
+	@Test
 	public void whenMethodOverriddenWithoutDocThenDocumentedFalseButIbisDocRefInfoInherited() throws FrankDocException {
 		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("ibisDocRefClassNoOrderRefersIbisDocOrderDescriptionDefault", REFERRER_CHILD);
 		assertFalse(actual.isDocumented());
