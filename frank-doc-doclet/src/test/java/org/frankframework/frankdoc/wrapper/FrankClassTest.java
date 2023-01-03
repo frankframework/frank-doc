@@ -135,7 +135,7 @@ public class FrankClassTest extends TestBase {
 			.map(FrankMethod::getName)
 			.filter(name -> ! name.contains("jacoco"))
 			.forEach(name -> methodNames.add(name));
-		assertArrayEquals(new String[] {"equals", "getClass", "getInherited", "getMyInnerEnum", "hashCode", "methodWithoutAnnotations", "myAnnotatedMethod", "myMethod", "notify", "notifyAll", "setInherited", "setVarargMethod", "toString", "wait"}, new ArrayList<>(methodNames).toArray());
+		assertArrayEquals(new String[] {"equals", "getClass", "getInherited", "getMyInnerEnum", "hashCode", "methodWithoutAnnotations", "myAnnotatedMethod", "myMethod", "notify", "notifyAll", "setInherited", "setVarargMethod", "toString", "wait", "withClassValuedAnnotation"}, new ArrayList<>(methodNames).toArray());
 		// Test we have no duplicates
 		Map<String, List<FrankMethod>> methodsByName = Arrays.asList(methods).stream()
 				.filter(m -> methodNames.contains(m.getName()))

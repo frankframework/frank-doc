@@ -1,5 +1,5 @@
 /* 
-Copyright 2022 WeAreFrank! 
+Copyright 2022, 2023 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -29,6 +29,7 @@ import org.frankframework.frankdoc.wrapper.FrankMethod;
 public class Reference {
 	private static Logger log = LogUtil.getLogger(Reference.class);
 	private static final String JAVADOC_ATTRIBUTE_REF = "@ff.ref";
+	private static final String REFER_TO = "nl.nn.adapterframework.doc.ReferTo";
 
 	private final FrankClassRepository classRepository;
 
@@ -38,6 +39,9 @@ public class Reference {
 
 	public FrankMethod valueOf(FrankMethod method) {
 		String resultAsString = method.getJavaDocTag(JAVADOC_ATTRIBUTE_REF);
+		if(resultAsString == null) {
+			resultAsString = getReferToAnnotation(method);
+		}
 		if(resultAsString != null) {
 			if(StringUtils.isBlank(resultAsString)) {
 				log.error("JavaDoc tag {} should have a full class name or full method name as argument", JAVADOC_ATTRIBUTE_REF);
@@ -54,6 +58,18 @@ public class Reference {
 		if(ibisDocRef != null) {
 			ParsedIbisDocRef parsedIbisDocRef = parseIbisDocRef(ibisDocRef, method);
 			return parsedIbisDocRef.getReferredMethod();
+		}
+		return null;
+	}
+
+	private String getReferToAnnotation(FrankMethod method) {
+		FrankAnnotation referTo = method.getAnnotation(REFER_TO);
+		if(referTo != null) {
+			try {
+				return (String) referTo.getValue();
+			} catch(FrankDocException e) {
+				log.error("Could not get value of annotation [{}] on method [{}]", method.toString(), e);
+			}
 		}
 		return null;
 	}

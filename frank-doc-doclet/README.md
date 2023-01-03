@@ -197,7 +197,9 @@ The default value is also shown in the Frank!Doc web application:
 
 ## Referring another method for description and default value
 
-With the JavaDoc of attributes setters you can reference another method to get the default value and the description from that method. You do this by putting an `@ff.ref` JavaDoc tag on the referring method. The argument represents the referred method. The reference can be the class name of the class that has the method. It can also be the class name and the method name separated by a dot. Always use the full class name.
+With the JavaDoc tags and the annotations of an attribute setter, you can reference another method to get the default value and the description from that method. You can do this by putting a `@ReferTo` annotation. The argument is a Java class, so when you rename it in Eclipse the reference is not broken. The referenced Java class is expected to have a method with the same name as the annotated attribute setter. The description and the default from this referred method are taken.
+
+Alternatively, you can use an `@ff.ref` JavaDoc tag. This way, you can refer to a method with a name different from the attribute setter's name. The value can be the referred class name and the referred method name separated by a dot. The value can also be the class name of the class that has the referred method, like the argument of `@ReferTo`. Always use the full class name. A drawback of using the JavaDoc tag is that the reference is broken when the referred class is renamed.
 ## Parameters
 
 Some XML elements in a Frank config can have nested element `<Param>`. The meaning of this element depends on the context: parameters can be query parameters of a database query, HTTP request parameters or something else. You can document this meaning in the JavaDoc comment above a Java class declaration. You use JavaDoc tag `@ff.parameters`. An example is Java class [HttpSender](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/http/HttpSender.java):

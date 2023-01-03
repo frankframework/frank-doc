@@ -38,4 +38,10 @@ public class ChildTarget extends ParentTarget {
 	 */
 	public void setIbisDocRefRefersJavaDocDefault(String value) {
 	}
+
+	/**
+	 * setReferToInheritedDescription description
+	 */
+	public void setReferToInheritedDescription(String value) {
+	}
 }

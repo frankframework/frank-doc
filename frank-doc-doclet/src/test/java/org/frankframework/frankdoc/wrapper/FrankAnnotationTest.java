@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.frankframework.frankdoc.testtarget.doclet.ClassValuedAnnotation;
 import org.frankframework.frankdoc.testtarget.doclet.Java5Annotation;
 import org.junit.Test;
 
@@ -62,5 +63,20 @@ public class FrankAnnotationTest extends TestBase{
 		Object booleanRawValue = annotation.getValueOf("myBoolean");
 		Boolean booleanValue = (Boolean) booleanRawValue;
 		assertTrue(booleanValue);
+	}
+
+	@Test
+	public void whenClassValuedAnnotationOnClassThenValueObtainedAsString() throws Exception {
+		FrankClass clazz = classRepository.findClass(PACKAGE + "Parent");
+		FrankAnnotation classAnnotation = clazz.getAnnotation(ClassValuedAnnotation.class.getName());
+		assertEquals("org.frankframework.frankdoc.testtarget.doclet.Parent", classAnnotation.getValue());
+	}
+
+	@Test
+	public void whenClassValuedAnnotationOnMethodThenValueObtainedAsString() throws Exception {
+		FrankClass clazz = classRepository.findClass(PACKAGE + "Parent");
+		FrankMethod method = TestUtil.getDeclaredMethodOf(clazz, "withClassValuedAnnotation");
+		FrankAnnotation classAnnotation = method.getAnnotation(ClassValuedAnnotation.class.getName());
+		assertEquals("org.frankframework.frankdoc.testtarget.doclet.Parent", classAnnotation.getValue());
 	}
 }

@@ -1,5 +1,5 @@
 /* 
-Copyright 2021, 2022 WeAreFrank! 
+Copyright 2021 - 2023 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -29,6 +29,7 @@ import org.frankframework.frankdoc.util.LogUtil;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationValue;
+import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.FieldDoc;
 
 class FrankAnnotationDoclet implements FrankAnnotation {
@@ -84,6 +85,8 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 	private Object parseAnnotationValue(Object raw) throws FrankDocException {
 		if((raw instanceof Integer) || (raw instanceof String) || (raw instanceof Boolean)) {
 			return raw;
+		} else if(raw instanceof ClassDoc) {
+			return ((ClassDoc) raw).qualifiedTypeName();
 		} else if(raw instanceof FieldDoc) {
 			return new FrankEnumConstantDoclet((FieldDoc) raw);
 		} else {
