@@ -607,6 +607,8 @@ public class FrankDocModel {
 	private void addElementIfNotProtected(FrankClass memberClass, final ElementType result) throws FrankDocException {
 		if(FrankElement.classIsProtected(memberClass)) {
 			log.info("Class [{}] has feature PROTECTED, not added to type [{}]", memberClass.getName(), result.getFullName());
+		} else if(! memberClass.isPublic()) {
+			log.info("Class [{}] is not public, not added to type [{}]", memberClass.getName(), result.getFullName());
 		} else {
 			FrankElement frankElement = findOrCreateFrankElement(memberClass.getName());
 			result.addMember(frankElement);
