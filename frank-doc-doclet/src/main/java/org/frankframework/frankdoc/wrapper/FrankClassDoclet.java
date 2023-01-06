@@ -70,7 +70,10 @@ class FrankClassDoclet implements FrankClass {
 
 	private void initializeVariables() {
 		for(FieldDoc fieldDoc: clazz.fields()) {
-			variables.put(fieldDoc.name(), fieldDoc.constantValue().toString());
+			Object value = fieldDoc.constantValue();
+			if(value != null) {
+				variables.put(fieldDoc.name(), value.toString());
+			}
 		}
 		for(FieldDoc fieldDoc: clazz.enumConstants()) {
 			variables.put(fieldDoc.name(), fieldDoc.name());
