@@ -1,5 +1,5 @@
 /* 
-Copyright 2021, 2022 WeAreFrank! 
+Copyright 2021 - 2023 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -57,4 +57,7 @@ public interface FrankClass extends FrankType {
 	String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException;
 	void browseAncestors(Consumer<FrankClass> handler) throws FrankDocException;
 	List<String> getAllJavaDocTagsOf(String tagName);
+
+	String resolveValue(String variable);
+	FrankClass findClass(String name);
 }

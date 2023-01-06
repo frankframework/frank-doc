@@ -1,5 +1,5 @@
 /* 
-Copyright 2021, 2022 WeAreFrank! 
+Copyright 2021 -  2023 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -52,7 +52,8 @@ class FrankClassDoclet implements FrankClass {
 	private final Map<String, FrankMethodDoclet> methodsBySignature = new HashMap<>();
 	private final Map<String, FrankAnnotation> frankAnnotationsByName;
 	private @Getter(AccessLevel.PACKAGE) List<MultiplyInheritedMethodPlaceholder> multiplyInheritedMethodPlaceholders = new ArrayList<>();
-	
+	private Map<String, String> variables = new HashMap<>();
+
 	FrankClassDoclet(ClassDoc clazz, FrankClassRepository repository) {
 		log.trace("Creating FrankClassDoclet for [{}]", clazz.name());
 		this.repository = repository;
@@ -64,6 +65,16 @@ class FrankClassDoclet implements FrankClass {
 		}
 		AnnotationDesc[] annotationDescs = clazz.annotations();
 		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(annotationDescs);
+		initializeVariables();
+	}
+
+	private void initializeVariables() {
+		for(FieldDoc fieldDoc: clazz.fields()) {
+			variables.put(fieldDoc.name(), fieldDoc.constantValue().toString());
+		}
+		for(FieldDoc fieldDoc: clazz.enumConstants()) {
+			variables.put(fieldDoc.name(), fieldDoc.name());
+		}
 	}
 
 	void addChild(String className) {
@@ -385,5 +396,24 @@ class FrankClassDoclet implements FrankClass {
 
 	private static Stream<String> methodSignaturesOf(FrankClass intf) {
 		return Arrays.asList(intf.getDeclaredMethods()).stream().map(FrankMethod::getSignature);
+	}
+
+	@Override
+	public String resolveValue(String variable) {
+		return variables.get(variable);
+	}
+
+	@Override
+	public FrankClass findClass(String name) {
+		ClassDoc foundClassDoc = clazz.findClass(name);
+		if(foundClassDoc != null) {
+			try {
+				// Should return null if not found
+				return repository.findClass(foundClassDoc.qualifiedName());
+			} catch(FrankDocException e) {
+				log.error("Error searching for class [{}]", foundClassDoc.qualifiedName());
+			}
+		}
+		return null;
 	}
 }
