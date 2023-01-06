@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -222,22 +223,26 @@ public final class Utils {
 	}
 
 	public static String flattenJavaDocLinksToLastWords(String text) throws FrankDocException {
+		return replacePattern(text, s -> getLinkReplacement(s));
+	}
+
+	private static String replacePattern(String text, Function<String, String> substitution) throws FrankDocException {
 		StringBuilder result = new StringBuilder();
 		int currentIndex = 0;
-		int nextToFlatten = text.indexOf(JAVADOC_TOFLATTEN_START, currentIndex);
-		while(nextToFlatten >= 0) {
-			result.append(text.substring(currentIndex, nextToFlatten));
-			int toFlattenEnd = text.indexOf(JAVADOC_TOFLATTEN_STOP, nextToFlatten);
-			if(toFlattenEnd < 0) {
-				throw new FrankDocException(String.format("Unfinished JavaDoc link in text [%s] at index [%d]", text, nextToFlatten), null);
+		int nextStartIdx = text.indexOf(JAVADOC_TOFLATTEN_START, currentIndex);
+		while(nextStartIdx >= 0) {
+			result.append(text.substring(currentIndex, nextStartIdx));
+			int endIdx = text.indexOf(JAVADOC_TOFLATTEN_STOP, nextStartIdx);
+			if(endIdx < 0) {
+				throw new FrankDocException(String.format("Unfinished JavaDoc {@ ...} pattern text [%s] at index [%d]", text, nextStartIdx), null);
 			}
-			String bodyToFlatten = text.substring(nextToFlatten + JAVADOC_TOFLATTEN_START.length(), toFlattenEnd);
-			result.append(getLinkReplacement(bodyToFlatten));
-			currentIndex = toFlattenEnd + 1;
+			String replacedText = text.substring(nextStartIdx + JAVADOC_TOFLATTEN_START.length(), endIdx);
+			result.append(substitution.apply(replacedText));
+			currentIndex = endIdx + 1;
 			if(currentIndex >= text.length()) {
 				return result.toString();
 			}
-			nextToFlatten = text.indexOf(JAVADOC_TOFLATTEN_START, currentIndex);
+			nextStartIdx = text.indexOf(JAVADOC_TOFLATTEN_START, currentIndex);
 		}
 		result.append(text.substring(currentIndex));
 		return result.toString();
