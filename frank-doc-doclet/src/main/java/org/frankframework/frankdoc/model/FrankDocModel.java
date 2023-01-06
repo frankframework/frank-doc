@@ -286,7 +286,11 @@ public class FrankDocModel {
 			if(method.getParameterTypes()[0].isEnum()) {
 				log.trace("Attribute [{}] has setter that takes enum: [{}]", () -> attribute.getName(), () -> method.getParameterTypes()[0].toString());
 				attribute.setAttributeType(AttributeType.STRING);
-				attribute.setAttributeEnum(findOrCreateAttributeEnum((FrankClass) method.getParameterTypes()[0]));
+				FrankClass enumClass = (FrankClass) method.getParameterTypes()[0];
+				if(! enumClass.isPublic()) {
+					log.warn("Attribute [{}] has a setter that takes an enum that is private: [{}]", attribute, enumClass.getName());
+				}
+				attribute.setAttributeEnum(findOrCreateAttributeEnum(enumClass));
 			} else {
 				attribute.setAttributeType(AttributeType.fromJavaType(method.getParameterTypes()[0].getName()));
 				log.trace("Attribute [{}] has type [{}]", () -> attributeName, () -> attribute.getAttributeType().toString());
