@@ -403,7 +403,14 @@ class FrankClassDoclet implements FrankClass {
 
 	@Override
 	public String resolveValue(String variable) {
-		return variables.get(variable);
+		Function<FrankClassDoclet, String> getter = c -> c.variables.get(variable);
+		try {
+			return getIncludingInherited(getter);
+		}
+		catch(FrankDocException e) {
+			log.error("Error resolving variable [{}]", variable);
+			return null;
+		}
 	}
 
 	@Override

@@ -30,6 +30,12 @@ public class VariablesTest {
 	}
 
 	@Test
+	public void findInheritedValue() throws Exception {
+		instance = repository.findClass(PACKAGE + "Constants");
+		assertEquals("parent value", instance.resolveValue("PARENT_CONSTANT"));
+	}
+
+	@Test
 	public void findClassSamePackage() throws Exception {
 		instance = repository.findClass(PACKAGE + "Constants");
 		FrankClass result = instance.findClass("OtherClass");
