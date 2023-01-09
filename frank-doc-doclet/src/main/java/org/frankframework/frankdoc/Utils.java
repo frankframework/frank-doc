@@ -43,6 +43,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.FrankType;
@@ -59,6 +62,8 @@ import org.xml.sax.ext.LexicalHandler;
  *
  */
 public final class Utils {
+	private static Logger log = LogUtil.getLogger(Utils.class);
+
 	private static final String JAVA_STRING = "java.lang.String";
 	private static final String JAVA_INTEGER = "java.lang.Integer";
 	private static final String JAVA_BOOLEAN = "java.lang.Boolean";
@@ -229,6 +234,9 @@ public final class Utils {
 	}
 
 	private static String replacePattern(String text, String patternStart, Function<String, String> substitution) throws FrankDocException {
+		if(text == null) {
+			return null;
+		}
 		StringBuilder result = new StringBuilder();
 		int currentIndex = 0;
 		int nextStartIdx = text.indexOf(patternStart, currentIndex);
@@ -256,6 +264,36 @@ public final class Utils {
 		}
 		String[] words = linkBody.trim().split("[ \\t]");
 		return words[words.length - 1];
+	}
+
+	public static String replaceClassFieldValue(String text, FrankClass context) throws FrankDocException {
+		return replacePattern(text, JAVADOC_VALUE_START, s -> getClassFieldValueReplacement(s, context));
+	}
+
+	private static String getClassFieldValueReplacement(String ref, FrankClass context) {
+		String[] refComponents = ref.trim().split("#");
+		if(refComponents.length != 2) {
+			logValueSubstitutionError(ref, "wrong syntax");
+			return ref;
+		}
+		FrankClass fieldOwner = context;
+		if(! StringUtils.isBlank(refComponents[0])) {
+			fieldOwner = context.findClass(refComponents[0]);
+			if(fieldOwner == null) {
+				logValueSubstitutionError(ref, "Cannot find referenced class");
+				return ref;
+			}
+		}
+		String result = fieldOwner.resolveValue(refComponents[1]);
+		if(result == null) {
+			logValueSubstitutionError(ref, "Found class, but not the referenced field or enum constant");
+			return ref;
+		}
+		return result;
+	}
+
+	private static void logValueSubstitutionError(String ref, String specificError) {
+		log.error("Error replacing text [{}]: {}", JAVADOC_VALUE_START + ref + JAVADOC_SUBSTITUTION_PATTERN_STOP, specificError);
 	}
 
 	public static boolean equalsNullable(Object o1, Object o2) {

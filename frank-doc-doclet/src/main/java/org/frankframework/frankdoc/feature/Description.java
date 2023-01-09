@@ -17,6 +17,7 @@ limitations under the License.
 package org.frankframework.frankdoc.feature;
 
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
@@ -49,10 +50,21 @@ public class Description {
 		if(result == null) {
 			result = method.getJavaDoc();
 		}
-		return result;
+		try {
+			return Utils.replaceClassFieldValue(result, method.getDeclaringClass());
+		} catch(FrankDocException e) {
+			log.error("Could not replace {@value ...} in [{}]", result);
+			return result;
+		}
 	}
 
 	public String valueOf(FrankClass clazz) {
-		return clazz.getJavaDoc();
+		String result = clazz.getJavaDoc();
+		try {
+			return Utils.replaceClassFieldValue(result, clazz);
+		} catch(FrankDocException e) {
+			log.error("Could not replace {@value ...} in [{}]", result);
+			return result;			
+		}
 	}
 }

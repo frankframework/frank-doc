@@ -29,7 +29,8 @@ public class DefaultAndDescriptionTest {
 			{"withFullIbisDoc", "My description", "default value"},
 			{"withIbisDocNoOrder", "My description", "default value"},
 			{"withIbisDocNoDefault", "My description", null},
-			{"withIbisDocNoDefaultNoOrder", "My description", null}
+			{"withIbisDocNoDefaultNoOrder", "My description", null},
+			{"withReferencedValue", "Description with my value", "my value"}
 		});
 	}
 
