@@ -42,6 +42,7 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.FrankType;
@@ -65,8 +66,9 @@ public final class Utils {
 	private static final String JAVA_BYTE = "java.lang.Byte";
 	private static final String JAVA_SHORT = "java.lang.Short";
 
-	private static final String JAVADOC_TOFLATTEN_START = "{@";
-	private static final String JAVADOC_TOFLATTEN_STOP = "}";
+	private static final String JAVADOC_LINK_START = "{@link";
+	private static final String JAVADOC_VALUE_START = "{@value";
+	private static final String JAVADOC_SUBSTITUTION_PATTERN_STOP = "}";
 
 	private static Map<String, String> primitiveToBoxed = new HashMap<>();
 	static {
@@ -223,37 +225,36 @@ public final class Utils {
 	}
 
 	public static String flattenJavaDocLinksToLastWords(String text) throws FrankDocException {
-		return replacePattern(text, s -> getLinkReplacement(s));
+		return replacePattern(text, JAVADOC_LINK_START, s -> getLinkReplacement(s));
 	}
 
-	private static String replacePattern(String text, Function<String, String> substitution) throws FrankDocException {
+	private static String replacePattern(String text, String patternStart, Function<String, String> substitution) throws FrankDocException {
 		StringBuilder result = new StringBuilder();
 		int currentIndex = 0;
-		int nextStartIdx = text.indexOf(JAVADOC_TOFLATTEN_START, currentIndex);
+		int nextStartIdx = text.indexOf(patternStart, currentIndex);
 		while(nextStartIdx >= 0) {
 			result.append(text.substring(currentIndex, nextStartIdx));
-			int endIdx = text.indexOf(JAVADOC_TOFLATTEN_STOP, nextStartIdx);
+			int endIdx = text.indexOf(JAVADOC_SUBSTITUTION_PATTERN_STOP, nextStartIdx);
 			if(endIdx < 0) {
 				throw new FrankDocException(String.format("Unfinished JavaDoc {@ ...} pattern text [%s] at index [%d]", text, nextStartIdx), null);
 			}
-			String replacedText = text.substring(nextStartIdx + JAVADOC_TOFLATTEN_START.length(), endIdx);
+			String replacedText = text.substring(nextStartIdx + patternStart.length(), endIdx);
 			result.append(substitution.apply(replacedText));
 			currentIndex = endIdx + 1;
 			if(currentIndex >= text.length()) {
 				return result.toString();
 			}
-			nextStartIdx = text.indexOf(JAVADOC_TOFLATTEN_START, currentIndex);
+			nextStartIdx = text.indexOf(patternStart, currentIndex);
 		}
 		result.append(text.substring(currentIndex));
 		return result.toString();
 	}
 
 	private static String getLinkReplacement(String linkBody) {
-		String[] words = linkBody.split("[ \\t]");
-		// {@link} should be replaced by the empty string.
-		if((words.length == 0) || (words.length == 1)) {
+		if(StringUtils.isBlank(linkBody)) {
 			return "";
 		}
+		String[] words = linkBody.trim().split("[ \\t]");
 		return words[words.length - 1];
 	}
 

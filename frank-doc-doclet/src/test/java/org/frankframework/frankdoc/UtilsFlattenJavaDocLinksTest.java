@@ -23,7 +23,7 @@ public class UtilsFlattenJavaDocLinksTest {
 			{"{@link Receiver} and {@link Adapter}", "Receiver and Adapter"},
 			{"Some {@link Receiver} and {@link Adapter} here", "Some Receiver and Adapter here"},
 			// There is a tab between "Receiver" and "Receivers".
-			{"Some {@code Receiver	Receivers} here", "Some Receivers here"}
+			{"Some {@link Receiver	Receivers} here", "Some Receivers here"}
 		});
 	}
 
