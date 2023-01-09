@@ -286,7 +286,7 @@ public final class Utils {
 		}
 		String result = fieldOwner.resolveValue(refComponents[1]);
 		if(result == null) {
-			logValueSubstitutionError(ref, "Found class, but not the referenced field or enum constant");
+			logValueSubstitutionError(ref, String.format("Found field owner class [{}], but not the referenced field or enum constant", fieldOwner.toString()));
 			return ref;
 		}
 		return result;
