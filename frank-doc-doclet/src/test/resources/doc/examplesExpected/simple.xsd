@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.2.3-SNAPSHOT">
   <xs:element name="Start">
     <xs:annotation>
-      <xs:documentation>Description of Start. Value of VARIABLE is variable value.</xs:documentation>
+      <xs:documentation>Description of Start. Value of VARIABLE is variable value. Value of TheEnum.ENUM_CONSTANT is enum constant.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>

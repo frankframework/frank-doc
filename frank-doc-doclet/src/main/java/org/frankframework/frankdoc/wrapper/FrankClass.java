@@ -18,6 +18,7 @@ package org.frankframework.frankdoc.wrapper;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public interface FrankClass extends FrankType {
 	// Martijn was tempted to add method getRepository() here to make the FrankClassDoclet.repository
@@ -58,6 +59,6 @@ public interface FrankClass extends FrankType {
 	void browseAncestors(Consumer<FrankClass> handler) throws FrankDocException;
 	List<String> getAllJavaDocTagsOf(String tagName);
 
-	String resolveValue(String variable);
+	String resolveValue(String variable, Function<FrankEnumConstant, String> enumHandler);
 	FrankClass findClass(String name);
 }

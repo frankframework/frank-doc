@@ -44,6 +44,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.model.EnumValue;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
@@ -284,7 +285,7 @@ public final class Utils {
 				return ref;
 			}
 		}
-		String result = fieldOwner.resolveValue(refComponents[1]);
+		String result = fieldOwner.resolveValue(refComponents[1], e -> new EnumValue(e).getLabel());
 		if(result == null) {
 			logValueSubstitutionError(ref, String.format("Found field owner class [{}], but not the referenced field or enum constant", fieldOwner.toString()));
 			return ref;

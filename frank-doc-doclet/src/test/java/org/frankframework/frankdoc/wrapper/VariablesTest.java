@@ -20,19 +20,19 @@ public class VariablesTest {
 	@Test
 	public void findValueInPublicStaticFinalIntField() throws Exception {
 		instance = repository.findClass(PACKAGE + "Constants");
-		assertEquals("7", instance.resolveValue("INT_CONSTANT"));
+		assertEquals("7", instance.resolveValue("INT_CONSTANT", e -> e.getName()));
 	}
 
 	@Test
 	public void findValueEnumConstant() throws Exception {
 		instance = repository.findClass(PACKAGE + "Constants.MyEnum");
-		assertEquals("ENUM_CONSTANT", instance.resolveValue("ENUM_CONSTANT"));
+		assertEquals("ENUM_CONSTANT", instance.resolveValue("ENUM_CONSTANT", e -> e.getName()));
 	}
 
 	@Test
 	public void findInheritedValue() throws Exception {
 		instance = repository.findClass(PACKAGE + "Constants");
-		assertEquals("parent value", instance.resolveValue("PARENT_CONSTANT"));
+		assertEquals("parent value", instance.resolveValue("PARENT_CONSTANT", e -> e.getName()));
 	}
 
 	@Test

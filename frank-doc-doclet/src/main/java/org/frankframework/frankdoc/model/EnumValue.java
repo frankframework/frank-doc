@@ -1,5 +1,5 @@
 /* 
-Copyright 2021, 2022 WeAreFrank! 
+Copyright 2021 - 2023 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -37,7 +37,7 @@ public class EnumValue {
 	private @Getter String description;
 	private @Getter boolean deprecated = false;
 
-	EnumValue(FrankEnumConstant c) {
+	public EnumValue(FrankEnumConstant c) {
 		this.javaTag = c.getName();
 		this.label = this.javaTag;
 		FrankAnnotation annotation = c.getAnnotation(ENUM_LABEL);

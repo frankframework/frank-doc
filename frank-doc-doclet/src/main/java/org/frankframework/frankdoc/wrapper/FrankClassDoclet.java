@@ -52,7 +52,8 @@ class FrankClassDoclet implements FrankClass {
 	private final Map<String, FrankMethodDoclet> methodsBySignature = new HashMap<>();
 	private final Map<String, FrankAnnotation> frankAnnotationsByName;
 	private @Getter(AccessLevel.PACKAGE) List<MultiplyInheritedMethodPlaceholder> multiplyInheritedMethodPlaceholders = new ArrayList<>();
-	private Map<String, String> variables = new HashMap<>();
+	private Map<String, String> fields = new HashMap<>();
+	private Map<String, FrankEnumConstant> enumFields = new HashMap<>();
 
 	FrankClassDoclet(ClassDoc clazz, FrankClassRepository repository) {
 		log.trace("Creating FrankClassDoclet for [{}]", clazz.name());
@@ -65,19 +66,23 @@ class FrankClassDoclet implements FrankClass {
 		}
 		AnnotationDesc[] annotationDescs = clazz.annotations();
 		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(annotationDescs);
-		initializeVariables();
+		initializeFields();
+		initializeEnumFields();
 	}
 
-	private void initializeVariables() {
+	private void initializeFields() {
 		for(FieldDoc fieldDoc: clazz.fields()) {
 			Object value = fieldDoc.constantValue();
 			if(value != null) {
-				variables.put(fieldDoc.name(), value.toString());
+				fields.put(fieldDoc.name(), value.toString());
 			}
 		}
+	}
+
+	private void initializeEnumFields() {
 		for(FieldDoc fieldDoc: clazz.enumConstants()) {
-			variables.put(fieldDoc.name(), fieldDoc.name());
-		}
+			enumFields.put(fieldDoc.name(), new FrankEnumConstantDoclet(fieldDoc));
+		}		
 	}
 
 	void addChild(String className) {
@@ -402,8 +407,8 @@ class FrankClassDoclet implements FrankClass {
 	}
 
 	@Override
-	public String resolveValue(String variable) {
-		Function<FrankClassDoclet, String> getter = c -> c.variables.get(variable);
+	public String resolveValue(String variable, Function<FrankEnumConstant, String> enumHandler) {
+		Function<FrankClassDoclet, String> getter =  c -> resolveValueImpl(c, variable, enumHandler);
 		try {
 			return getIncludingInherited(getter);
 		}
@@ -411,6 +416,18 @@ class FrankClassDoclet implements FrankClass {
 			log.error("Error resolving variable [{}]", variable);
 			return null;
 		}
+	}
+
+	private String resolveValueImpl(FrankClassDoclet owner, String variable, Function<FrankEnumConstant, String> enumHandler) {
+		String value = owner.fields.get(variable);
+		if(value != null) {
+			return value;
+		}
+		FrankEnumConstant valueEnumConstant = owner.enumFields.get(variable);
+		if(valueEnumConstant != null) {
+			return enumHandler.apply(valueEnumConstant);
+		}
+		return null;
 	}
 
 	@Override
