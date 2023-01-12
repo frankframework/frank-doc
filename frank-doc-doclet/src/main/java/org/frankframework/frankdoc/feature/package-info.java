@@ -15,7 +15,7 @@ limitations under the License.
 */
 /**
  * This package avoids conflicts when a feature can be represented in multiple ways.
- * For example, feature {@link Default}, the default value of an attribute, can be
+ * For example, feature {@link org.frankframework.frankdoc.feature.Default}, the default value of an attribute, can be
  * set using annotation <code>@Default</code>, JavaDoc tag <code>@ff.default</code>
  * or using annotation <code>@IbisDoc</code>. For the sake of the argument, assume
  * that there is a class <code>Child</code> with attribute setter <code>setX()</code>
