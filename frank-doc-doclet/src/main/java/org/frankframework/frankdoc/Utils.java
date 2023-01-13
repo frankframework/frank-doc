@@ -72,9 +72,9 @@ public final class Utils {
 	private static final String JAVA_BYTE = "java.lang.Byte";
 	private static final String JAVA_SHORT = "java.lang.Short";
 
-	private static final String JAVADOC_LINK_START = "{@link";
-	private static final String JAVADOC_VALUE_START = "{@value";
-	private static final String JAVADOC_SUBSTITUTION_PATTERN_STOP = "}";
+	private static final String JAVADOC_LINK_START_DELIMITER = "{@link";
+	private static final String JAVADOC_VALUE_START_DELIMITER = "{@value";
+	private static final String JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER = "}";
 
 	private static Map<String, String> primitiveToBoxed = new HashMap<>();
 	static {
@@ -231,10 +231,10 @@ public final class Utils {
 	}
 
 	public static String flattenJavaDocLinksToLastWords(String text) throws FrankDocException {
-		return replacePattern(text, JAVADOC_LINK_START, s -> getLinkReplacement(s));
+		return replacePattern(text, JAVADOC_LINK_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, s -> getLinkReplacement(s));
 	}
 
-	private static String replacePattern(String text, String patternStart, Function<String, String> substitution) throws FrankDocException {
+	private static String replacePattern(String text, String patternStart, String patternStop, Function<String, String> substitution) throws FrankDocException {
 		if(text == null) {
 			return null;
 		}
@@ -243,7 +243,7 @@ public final class Utils {
 		int nextStartIdx = text.indexOf(patternStart, currentIndex);
 		while(nextStartIdx >= 0) {
 			result.append(text.substring(currentIndex, nextStartIdx));
-			int endIdx = text.indexOf(JAVADOC_SUBSTITUTION_PATTERN_STOP, nextStartIdx);
+			int endIdx = text.indexOf(patternStop, nextStartIdx);
 			if(endIdx < 0) {
 				throw new FrankDocException(String.format("Unfinished JavaDoc {@ ...} pattern text [%s] at index [%d]", text, nextStartIdx), null);
 			}
@@ -268,7 +268,7 @@ public final class Utils {
 	}
 
 	public static String replaceClassFieldValue(String text, FrankClass context) throws FrankDocException {
-		return replacePattern(text, JAVADOC_VALUE_START, s -> getClassFieldValueReplacement(s, context));
+		return replacePattern(text, JAVADOC_VALUE_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, s -> getClassFieldValueReplacement(s, context));
 	}
 
 	private static String getClassFieldValueReplacement(String ref, FrankClass context) {
@@ -294,7 +294,7 @@ public final class Utils {
 	}
 
 	private static void logValueSubstitutionError(String ref, String specificError) {
-		log.error("Error replacing text [{}]: {}", JAVADOC_VALUE_START + ref + JAVADOC_SUBSTITUTION_PATTERN_STOP, specificError);
+		log.error("Error replacing text [{}]: {}", JAVADOC_VALUE_START_DELIMITER + ref + JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, specificError);
 	}
 
 	public static boolean equalsNullable(Object o1, Object o2) {
