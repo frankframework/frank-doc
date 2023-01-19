@@ -1,5 +1,5 @@
 /* 
-Copyright 2021, 2022 WeAreFrank! 
+Copyright 2021 - 2023 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -18,6 +18,7 @@ package org.frankframework.frankdoc.wrapper;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public interface FrankClass extends FrankType {
 	// Martijn was tempted to add method getRepository() here to make the FrankClassDoclet.repository
@@ -57,4 +58,7 @@ public interface FrankClass extends FrankType {
 	String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException;
 	void browseAncestors(Consumer<FrankClass> handler) throws FrankDocException;
 	List<String> getAllJavaDocTagsOf(String tagName);
+
+	String resolveValue(String variable, Function<FrankEnumConstant, String> enumHandler);
+	FrankClass findClass(String name);
 }

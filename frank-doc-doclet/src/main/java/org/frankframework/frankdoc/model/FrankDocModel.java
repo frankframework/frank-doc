@@ -1,5 +1,5 @@
 /* 
-Copyright 2020, 2021, 2022 WeAreFrank! 
+Copyright 2020 - 2023 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -286,7 +286,8 @@ public class FrankDocModel {
 			if(method.getParameterTypes()[0].isEnum()) {
 				log.trace("Attribute [{}] has setter that takes enum: [{}]", () -> attribute.getName(), () -> method.getParameterTypes()[0].toString());
 				attribute.setAttributeType(AttributeType.STRING);
-				attribute.setAttributeEnum(findOrCreateAttributeEnum((FrankClass) method.getParameterTypes()[0]));
+				FrankClass enumClass = (FrankClass) method.getParameterTypes()[0];
+				attribute.setAttributeEnum(findOrCreateAttributeEnum(enumClass));
 			} else {
 				attribute.setAttributeType(AttributeType.fromJavaType(method.getParameterTypes()[0].getName()));
 				log.trace("Attribute [{}] has type [{}]", () -> attributeName, () -> attribute.getAttributeType().toString());
@@ -607,6 +608,8 @@ public class FrankDocModel {
 	private void addElementIfNotProtected(FrankClass memberClass, final ElementType result) throws FrankDocException {
 		if(FrankElement.classIsProtected(memberClass)) {
 			log.info("Class [{}] has feature PROTECTED, not added to type [{}]", memberClass.getName(), result.getFullName());
+		} else if(! memberClass.isPublic()) {
+			log.info("Class [{}] is not public, not added to type [{}]", memberClass.getName(), result.getFullName());
 		} else {
 			FrankElement frankElement = findOrCreateFrankElement(memberClass.getName());
 			result.addMember(frankElement);

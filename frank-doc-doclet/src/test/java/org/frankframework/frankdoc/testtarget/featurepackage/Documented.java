@@ -4,6 +4,7 @@ import nl.nn.adapterframework.doc.Default;
 import nl.nn.adapterframework.doc.IbisDoc;
 
 public class Documented {
+	public static final String VARIABLE = "my value";
 	public void notDocumented() {
 	}
 
@@ -37,5 +38,12 @@ public class Documented {
 
 	@IbisDoc("My description")
 	public void withIbisDocNoDefaultNoOrder() {
+	}
+
+	/**
+	 * Description with {@value #VARIABLE}
+	 * @ff.default {@value Documented#VARIABLE}
+	 */
+	public void withReferencedValue() {
 	}
 }

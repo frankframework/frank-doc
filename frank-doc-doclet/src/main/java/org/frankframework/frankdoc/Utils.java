@@ -1,5 +1,5 @@
 /* 
-Copyright 2020, 2021, 2022 WeAreFrank! 
+Copyright 2020 - 2023 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +42,11 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.model.EnumValue;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.FrankType;
@@ -57,6 +63,8 @@ import org.xml.sax.ext.LexicalHandler;
  *
  */
 public final class Utils {
+	private static Logger log = LogUtil.getLogger(Utils.class);
+
 	private static final String JAVA_STRING = "java.lang.String";
 	private static final String JAVA_INTEGER = "java.lang.Integer";
 	private static final String JAVA_BOOLEAN = "java.lang.Boolean";
@@ -64,8 +72,9 @@ public final class Utils {
 	private static final String JAVA_BYTE = "java.lang.Byte";
 	private static final String JAVA_SHORT = "java.lang.Short";
 
-	private static final String JAVADOC_TOFLATTEN_START = "{@";
-	private static final String JAVADOC_TOFLATTEN_STOP = "}";
+	private static final String JAVADOC_LINK_START_DELIMITER = "{@link";
+	private static final String JAVADOC_VALUE_START_DELIMITER = "{@value";
+	private static final String JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER = "}";
 
 	private static Map<String, String> primitiveToBoxed = new HashMap<>();
 	static {
@@ -222,34 +231,70 @@ public final class Utils {
 	}
 
 	public static String flattenJavaDocLinksToLastWords(String text) throws FrankDocException {
+		return replacePattern(text, JAVADOC_LINK_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, s -> getLinkReplacement(s));
+	}
+
+	private static String replacePattern(String text, String patternStart, String patternStop, Function<String, String> substitution) throws FrankDocException {
+		if(text == null) {
+			return null;
+		}
 		StringBuilder result = new StringBuilder();
 		int currentIndex = 0;
-		int nextToFlatten = text.indexOf(JAVADOC_TOFLATTEN_START, currentIndex);
-		while(nextToFlatten >= 0) {
-			result.append(text.substring(currentIndex, nextToFlatten));
-			int toFlattenEnd = text.indexOf(JAVADOC_TOFLATTEN_STOP, nextToFlatten);
-			if(toFlattenEnd < 0) {
-				throw new FrankDocException(String.format("Unfinished JavaDoc link in text [%s] at index [%d]", text, nextToFlatten), null);
+		int nextStartIdx = text.indexOf(patternStart, currentIndex);
+		while(nextStartIdx >= 0) {
+			result.append(text.substring(currentIndex, nextStartIdx));
+			int endIdx = text.indexOf(patternStop, nextStartIdx);
+			if(endIdx < 0) {
+				throw new FrankDocException(String.format("Unfinished JavaDoc {@ ...} pattern text [%s] at index [%d]", text, nextStartIdx), null);
 			}
-			String bodyToFlatten = text.substring(nextToFlatten + JAVADOC_TOFLATTEN_START.length(), toFlattenEnd);
-			result.append(getLinkReplacement(bodyToFlatten));
-			currentIndex = toFlattenEnd + 1;
+			String replacedText = text.substring(nextStartIdx + patternStart.length(), endIdx);
+			result.append(substitution.apply(replacedText));
+			currentIndex = endIdx + 1;
 			if(currentIndex >= text.length()) {
 				return result.toString();
 			}
-			nextToFlatten = text.indexOf(JAVADOC_TOFLATTEN_START, currentIndex);
+			nextStartIdx = text.indexOf(patternStart, currentIndex);
 		}
 		result.append(text.substring(currentIndex));
 		return result.toString();
 	}
 
 	private static String getLinkReplacement(String linkBody) {
-		String[] words = linkBody.split("[ \\t]");
-		// {@link} should be replaced by the empty string.
-		if((words.length == 0) || (words.length == 1)) {
+		if(StringUtils.isBlank(linkBody)) {
 			return "";
 		}
+		String[] words = linkBody.trim().split("[ \\t]");
 		return words[words.length - 1];
+	}
+
+	public static String replaceClassFieldValue(String text, FrankClass context) throws FrankDocException {
+		return replacePattern(text, JAVADOC_VALUE_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, s -> getClassFieldValueReplacement(s, context));
+	}
+
+	private static String getClassFieldValueReplacement(String ref, FrankClass context) {
+		String[] refComponents = ref.trim().split("#");
+		if(refComponents.length != 2) {
+			logValueSubstitutionError(ref, "wrong syntax");
+			return ref;
+		}
+		FrankClass fieldOwner = context;
+		if(! StringUtils.isBlank(refComponents[0])) {
+			fieldOwner = context.findClass(refComponents[0]);
+			if(fieldOwner == null) {
+				logValueSubstitutionError(ref, "Cannot find referenced class");
+				return ref;
+			}
+		}
+		String result = fieldOwner.resolveValue(refComponents[1], e -> new EnumValue(e).getLabel());
+		if(result == null) {
+			logValueSubstitutionError(ref, String.format("Found field owner class [{}], but not the referenced field or enum constant", fieldOwner.toString()));
+			return ref;
+		}
+		return result;
+	}
+
+	private static void logValueSubstitutionError(String ref, String specificError) {
+		log.error("Error replacing text [{}]: {}", JAVADOC_VALUE_START_DELIMITER + ref + JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, specificError);
 	}
 
 	public static boolean equalsNullable(Object o1, Object o2) {

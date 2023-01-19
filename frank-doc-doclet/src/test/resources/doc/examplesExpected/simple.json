@@ -129,6 +129,7 @@
     {
       "name": "Start",
       "fullName": "org.frankframework.frankdoc.testtarget.examples.simple.Start",
+      "description":"Description of Start. Value of VARIABLE is variable value. Value of TheEnum.ENUM_CONSTANT is enum constant.",
       "parent": "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart",
       "elementNames": ["Start"],
       "attributes": [{

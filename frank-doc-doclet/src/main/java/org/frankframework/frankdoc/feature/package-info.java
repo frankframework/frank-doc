@@ -1,5 +1,5 @@
 /* 
-Copyright 2022 WeAreFrank! 
+Copyright 2022, 2023 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -15,7 +15,7 @@ limitations under the License.
 */
 /**
  * This package avoids conflicts when a feature can be represented in multiple ways.
- * For example, feature {@link Default}, the default value of an attribute, can be
+ * For example, feature {@link org.frankframework.frankdoc.feature.Default}, the default value of an attribute, can be
  * set using annotation <code>@Default</code>, JavaDoc tag <code>@ff.default</code>
  * or using annotation <code>@IbisDoc</code>. For the sake of the argument, assume
  * that there is a class <code>Child</code> with attribute setter <code>setX()</code>
