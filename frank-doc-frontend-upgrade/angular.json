@@ -27,7 +27,9 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/js",
+              "src/xml/xsd"
             ],
             "styles": [
               "src/styles.scss"
@@ -68,7 +70,8 @@
               "browserTarget": "frank-doc-frontend:build:production"
             },
             "development": {
-              "browserTarget": "frank-doc-frontend:build:development"
+              "browserTarget": "frank-doc-frontend:build:development",
+              "proxyConfig": "src/proxy.conf.mjs"
             }
           },
           "defaultConfiguration": "development"
@@ -90,7 +93,9 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/js",
+              "src/xml/xsd"
             ],
             "styles": [
               "src/styles.scss"
