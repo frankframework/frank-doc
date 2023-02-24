@@ -1,12 +1,19 @@
 import { Group, Element, Value } from "./frankdoc.types";
 
-export interface AppState {
+export interface FrankDocState {
     groups: Group[];
     types: Types;
     elements: Elements;
     enums: Enums;
+}
+
+export interface AppState extends FrankDocState {
     version: string | null;
-    loadError ?: string;
+    loadError?: string;
+    showDeprecatedElements: boolean;
+    showInheritance: boolean;
+    group?: Group;
+    element?: Element;
 }
 
 export interface Types {

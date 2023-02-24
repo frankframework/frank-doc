@@ -1,10 +1,13 @@
 <div class="sub-menu">
     <ul>
         <!-- TODO "let element in elements | matchElement:this:search | toArray | orderBy: 'name'" -->
-        <li *ngFor="let element of elements | keyvalue"
-            ng-class="{ 'deprecated': element.value.deprecated }" ng-if="!element.value.deprecated || showDeprecatedElements">
-            <a ui-sref="element({group: group.name, element:element.name})" ui-sref-active="active"><span
-                    class="nav-label">{{element.value.name}}</span></a>
-        </li>
+        <ng-template ngFor let-element [ngForOf]="elements | keyvalue">
+            <li [ngClass]="{ 'deprecated': element.value.deprecated }" *ngIf="!element.value.deprecated || showDeprecatedElements">
+                <a
+                  [routerLink]="[groupName, element.value.name]"
+                  routerLinkActive="active"
+                ><span class="nav-label">{{element.value.name}}</span></a>
+            </li>
+        </ng-template>
     </ul>
 </div>

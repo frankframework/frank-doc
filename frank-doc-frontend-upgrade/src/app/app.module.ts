@@ -8,13 +8,15 @@ import { AppComponent } from './app.component';
 import { OverviewComponent } from './views/overview/overview.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { SidebarElementsComponent } from './components/sidebar-elements/sidebar-elements.component';
+import { ElementComponent } from './views/element/element.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     OverviewComponent,
     SidebarComponent,
-    SidebarElementsComponent
+    SidebarElementsComponent,
+    ElementComponent
   ],
   imports: [
     BrowserModule,

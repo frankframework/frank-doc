@@ -1,5 +1,8 @@
-import { ChangeDetectionStrategy, Component, Directive, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { combineLatest, Subscription } from 'rxjs';
 import { AppService } from 'src/app/app.service';
+import { Group } from 'src/app/frankdoc.types';
 
 @Component({
   selector: 'app-overview',
@@ -7,15 +10,31 @@ import { AppService } from 'src/app/app.service';
   styleUrls: ['./overview.component.scss'],
   // changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverviewComponent implements OnInit {
+export class OverviewComponent implements OnInit, OnDestroy {
 
+  private subs?: Subscription;
   version = "";
 
-  constructor(private frankdoc: AppService) { }
+  constructor(private appService: AppService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.frankdoc.appState$.subscribe(state => {
+    this.subs = combineLatest(
+      [this.appService.frankDoc$, this.route.paramMap]
+    ).subscribe(([state, paramMap]) => {
       this.version = state.version || "";
+      const groups = state.groups,
+        stateGroup = state.group,
+        groupParam = paramMap.get('group');
+
+      if (groupParam && groups.length > 0) {
+        const group = groups.find((group: Group) => group.name === groupParam);
+        if (group && groupParam !== stateGroup?.name)
+          this.appService.setGroupAndElement(group);
+      }
     });
+  }
+
+  ngOnDestroy() {
+    this.subs?.unsubscribe();
   }
 }

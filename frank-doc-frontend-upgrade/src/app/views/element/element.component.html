@@ -1,0 +1,31 @@
+<ng-template #errorBlock>
+  <div class="version">{{version}}</div>
+  <h1>Error loading Frank!Element</h1>
+</ng-template>
+<div *ngIf="element; else errorBlock">
+  <div class="version">{{version}}</div>
+  <h1 class="element__name">{{element.name}}<span *ngIf="element.deprecated"
+      class="label label-warning">Deprecated</span></h1>
+  <h4 class="element__fullname">
+    <a *ngIf="element.name != 'Module'" href="{{javaDocUrlOf(element.fullName)}}" target="_blank"
+      rel="noreferrer">{{element.fullName}}</a>
+  </h4>
+  <p class="element__tags">Elements: <span *ngFor="let tag of element.elementNames; let last = last"><a
+        href="https://github.com/ibissource/iaf/wiki/{{tag}}" target="_blank"
+        rel="noreferrer"><code>{{tag}}</code></a><span ng-if="!$last">, </span></span></p>
+
+  <div *ngIf="element.description" class="block">
+    <h4>JavaDoc</h4>
+    <p [innerHtml]="element.description"></p> <!--  | javadoc:this -->
+  </div>
+
+  <!-- <div *ngIf="element.children" element-children></div> -->
+
+  <!-- <div *ngIf="element.parameters || element.parametersDescription" parameters></div> -->
+
+  <!-- <div *ngIf="element.forwards" element-forwards></div> -->
+
+  <!-- <div *ngIf="element.attributes || element.nonInheritedAttributes" element-attributes></div> -->
+
+  <!-- <parent-element *ngIf="element.parent" parent="element.parent"></parent-element> -->
+</div>
