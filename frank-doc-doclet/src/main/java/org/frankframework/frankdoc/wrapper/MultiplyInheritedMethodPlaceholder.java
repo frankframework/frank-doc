@@ -120,4 +120,9 @@ public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 	MethodDoc getOverriddenMethodDoc() {
 		return classAncestorMethod.method;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%s(placeholder of [%s] in [%s])", this.getClass().getSimpleName(), classAncestorMethod.toString(), getDeclaringClass().toString());
+	}
 }
