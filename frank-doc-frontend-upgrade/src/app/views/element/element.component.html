@@ -19,13 +19,26 @@
     <p [innerHtml]="element.description"></p> <!--  | javadoc:this -->
   </div>
 
-  <!-- <div *ngIf="element.children" element-children></div> -->
+  <element-children *ngIf="element.children"
+    [children]="element.children"
+    [groups]="groups"
+    [elements]="elements"
+    [types]="types"
+    [showDeprecatedElements]="showDeprecatedElements"
+  ></element-children>
 
-  <!-- <div *ngIf="element.parameters || element.parametersDescription" parameters></div> -->
+  <element-parameters *ngIf="element.parameters || element.parametersDescription"
+    [parameters]="element.parameters"
+    [parametersDescription]="element.parametersDescription"
+  ></element-parameters>
 
-  <!-- <div *ngIf="element.forwards" element-forwards></div> -->
+  <element-forwards *ngIf="element.forwards" element-forwards
+    [forwards]="element.forwards"
+  ></element-forwards>
 
-  <!-- <div *ngIf="element.attributes || element.nonInheritedAttributes" element-attributes></div> -->
+  <!-- <element-attributes *ngIf="element.attributes || element.nonInheritedAttributes"
+
+  ></element-attributes> -->
 
   <!-- <parent-element *ngIf="element.parent" parent="element.parent"></parent-element> -->
 </div>

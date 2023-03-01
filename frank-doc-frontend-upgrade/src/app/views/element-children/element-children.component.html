@@ -1,0 +1,24 @@
+<div class="block">
+  <h4>Nested elements</h4>
+  <table class="table table-sm table-striped">
+    <thead>
+      <tr>
+        <th class="tbl-15">Name</th>
+        <th class="tbl-75">Description</th>
+        <th class="tbl-10">Cardinality</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-template ngFor let-child [ngForOf]="children">
+        <tr *ngIf="!child.deprecated || showDeprecatedElements" [title]="getTitle(child)">
+          <td
+            [ngClass]="{ 'deprecated': child.deprecated, 'mandatory': child.mandatory }"
+            title="{{child.mandatory ? 'Mandatory element' : ''}}"
+          >{{child.roleName}}</td>
+          <td [innerHtml]="child.description"></td> <!--  | javadoc:this -->
+          <td>{{child.mandatory?'1':'0'}} .. {{child.multiple?'n':'1'}}</td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+</div>

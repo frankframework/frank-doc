@@ -46,7 +46,6 @@ export class AppService {
   }
 
   setGroupAndElement(group: Group, element?: Element) {
-    console.log("update", group, element)
     if(element) {
       this.frankDocStateSource.next({ ...this.frankDocStateSource.value, group, element });
       return;
@@ -104,5 +103,9 @@ export class AppService {
       // exception we handle here is <Module>.
       return null;
     }
+  }
+
+  fullNameToSimpleName(fullName: string) {
+    return fullName.substring(fullName.lastIndexOf(".") + 1)
   }
 }

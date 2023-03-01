@@ -14,7 +14,8 @@ Get frankdoc.json from [Frank!Doc website](https://frankdoc.frankframework.org/)
 * Manage frankdoc data in a singleton service with util functions
 * Convert filters to pipes
 * {{::var}} is used for one-time binding, use `changeDetection: ChangeDetectionStrategy.OnPush` in component annotation to set it to `CheckOnce` for the whole component, check if this is actually wanted
-* ng-bind-html from AngularJS isn't in Angular anymore, use [innerHtml] instead
+* ng-bind-html from AngularJS isn't in Angular anymore, use `[innerHtml]=""` instead
+* ng-attr-* has also been changed to `[attr]=""`
  
 ## Upgrade steps
 * Start new angular frontend project

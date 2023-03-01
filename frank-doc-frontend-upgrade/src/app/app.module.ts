@@ -9,6 +9,9 @@ import { OverviewComponent } from './views/overview/overview.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { SidebarElementsComponent } from './components/sidebar-elements/sidebar-elements.component';
 import { ElementComponent } from './views/element/element.component';
+import { ElementChildrenComponent } from './views/element-children/element-children.component';
+import { ElementParametersComponent } from './views/element-parameters/element-parameters.component';
+import { ElementForwardsComponent } from './views/element-forwards/element-forwards.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +19,10 @@ import { ElementComponent } from './views/element/element.component';
     OverviewComponent,
     SidebarComponent,
     SidebarElementsComponent,
-    ElementComponent
+    ElementComponent,
+    ElementChildrenComponent,
+    ElementParametersComponent,
+    ElementForwardsComponent
   ],
   imports: [
     BrowserModule,

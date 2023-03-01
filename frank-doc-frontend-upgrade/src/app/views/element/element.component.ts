@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Subscription } from 'rxjs';
 import { AppService } from 'src/app/app.service';
+import { Elements, Types } from 'src/app/app.types';
 import { Group, Element } from 'src/app/frankdoc.types';
 
 @Component({
@@ -11,7 +12,12 @@ import { Group, Element } from 'src/app/frankdoc.types';
 })
 export class ElementComponent implements OnInit, OnDestroy {
   version = "";
-  element!: Element;
+  groups: Group[] = [];
+  elements: Elements = {};
+  types: Types = {};
+  showDeprecatedElements = false;
+  showInheritance = false;
+  element?: Element | null;
 
   private subs?: Subscription;
 
@@ -25,11 +31,16 @@ export class ElementComponent implements OnInit, OnDestroy {
     ).subscribe(([state, paramMap]) => {
       this.version = state.version || "";
       const groups = state.groups,
-        // stateGroup = state.group,
         elements = state.elements,
         stateElement = state.element,
         groupParam = paramMap.get('group'),
         elementParam = paramMap.get('element');
+
+      this.groups = groups;
+      this.elements = elements;
+      this.types = state.types;
+      this.showDeprecatedElements = state.showDeprecatedElements;
+      this.showInheritance = state.showInheritance;
 
       if (groupParam && groups.length > 0) {
         const group = groups.find((group: Group) => group.name === groupParam);
@@ -39,8 +50,13 @@ export class ElementComponent implements OnInit, OnDestroy {
             element = (elementName && elements[elementName]) || undefined;
           if(element){
             this.element = element;
-            this.appService.setGroupAndElement(group, element);
+            console.log('element', element)
+            setTimeout(() => {
+              this.appService.setGroupAndElement(group, element);
+            })
+            return;
           }
+          this.element = null;
         }
       }
     });
