@@ -61,6 +61,9 @@ jobs:
         repository: ibissource/iaf
         path: iaf
 
+    - name: Build credentialsprovider
+      run: mvn clean install
+      working-directory: iaf/credentialsprovider
     - name: Build Frank!Framework
       env:
         CI_SERVICE: GITHUB
