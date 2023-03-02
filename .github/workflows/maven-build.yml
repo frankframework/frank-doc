@@ -66,7 +66,8 @@ jobs:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
         JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
-      run: mvn -B -V -T1 -Pibissource,attachFrankDoc -DskipTests -Dfrankdoc.version=$FRANKDOC_VERSION process-sources
+        VERSION: "7.9-SNAPSHOT"
+      run: mvn process-sources -Dproject.version=${VERSION} -Drevision=${VERSION} -Diaf.version=${VERSION} -Pibissource,attachFrankDoc -DskipTests
       working-directory: iaf
 
     - name: Check FrankConfig.xsd
