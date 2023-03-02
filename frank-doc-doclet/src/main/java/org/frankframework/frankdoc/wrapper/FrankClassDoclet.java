@@ -410,20 +410,13 @@ class FrankClassDoclet implements FrankClass {
 		}
 
 		private FrankMethodDoclet getParentMethod(String signature, FrankMethod interfaceMethod) {
-			FrankMethodDoclet parentMethodFromClass = getParentMethod(signature);
+			// We will not get declared methods here because declared methods have been filtered by the constructor of this inner class.
+			FrankMethodDoclet parentMethodFromClass = recursivelyGetMethodFromSignature(signature);
 			if(parentMethodFromClass == null) {
 				return (FrankMethodDoclet) interfaceMethod;
 			} else {
 				return parentMethodFromClass;
 			}
-		}
-
-		private FrankMethodDoclet getParentMethod(String signature) {
-			FrankClass superClass = FrankClassDoclet.this.getSuperclass();
-			if(superClass == null) {
-				return null;
-			}
-			return ((FrankClassDoclet) superClass).recursivelyGetMethodFromSignature(signature);
 		}
 	}
 
