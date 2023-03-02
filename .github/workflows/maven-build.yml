@@ -61,16 +61,16 @@ jobs:
         repository: ibissource/iaf
         path: iaf
 
-    - name: Build credentialsprovider
-      run: mvn clean install
-      working-directory: iaf/credentialProvider
+    # If you try to create the Frank!Doc immediately, the parent build is first but it fails because the sub projects have not been build yet
+    - name: Build all subprojects to have them in the next step
+      run: mvn -DskipTests clean install
+      working-directory: iaf
     - name: Build Frank!Framework
       env:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
         JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
-        VERSION: "7.9-SNAPSHOT"
-      run: mvn process-sources -Dproject.version=${VERSION} -Drevision=${VERSION} -Diaf.version=${VERSION} -Pibissource,attachFrankDoc -DskipTests
+      run: mvn process-sources -Pibissource,attachFrankDoc -DskipTests
       working-directory: iaf
 
     - name: Check FrankConfig.xsd
