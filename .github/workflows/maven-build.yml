@@ -63,7 +63,7 @@ jobs:
 
     - name: Build credentialsprovider
       run: mvn clean install
-      working-directory: iaf/credentialsprovider
+      working-directory: iaf/credentialProvider
     - name: Build Frank!Framework
       env:
         CI_SERVICE: GITHUB
