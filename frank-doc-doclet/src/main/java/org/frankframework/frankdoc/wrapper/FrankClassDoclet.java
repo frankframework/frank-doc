@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
@@ -418,33 +417,6 @@ class FrankClassDoclet implements FrankClass {
 				return parentMethodFromClass;
 			}
 		}
-	}
-
-	List<FrankMethod> getReinheritedMethods(List<FrankClass> interfaces) {
-		List<FrankMethod> result = new ArrayList<>();
-		Set<String> declaredMethodSignatures = Arrays.asList(getDeclaredMethods()).stream()
-				.map(FrankMethod::getSignature)
-				.collect(Collectors.toSet());
-		Set<String> methodSignaturesFromImplementedInterfaces = interfaces.stream()
-				.flatMap(FrankClassDoclet::methodSignaturesOf)
-				.collect(Collectors.toSet());
-		if(log.isTraceEnabled()) {
-			log.trace("Class [{}] has the following declared and inherited methods:", getName());
-			Arrays.asList(getDeclaredAndInheritedMethods()).forEach(m -> log.trace("  [{}]", m.toString()));
-		}
-		for(FrankMethod candidate: getDeclaredAndInheritedMethods()) {
-			String candidateSignature = candidate.getSignature();
-			boolean notDeclared = ! declaredMethodSignatures.contains(candidateSignature);
-			boolean reinherited = methodSignaturesFromImplementedInterfaces.contains(candidateSignature);
-			if(notDeclared && reinherited) {
-				result.add(candidate);
-			}
-		}
-		return result;
-	}
-
-	private static Stream<String> methodSignaturesOf(FrankClass intf) {
-		return Arrays.asList(intf.getDeclaredMethods()).stream().map(FrankMethod::getSignature);
 	}
 
 	@Override
