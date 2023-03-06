@@ -5,7 +5,7 @@ import { OverviewComponent } from './views/overview/overview.component';
 
 const routes: Routes = [
   { path: ':group', component: OverviewComponent, pathMatch: 'full' },
-  { path: ':group/:element', component: ElementComponent, pathMatch: 'full' }, // TODO element view component
+  { path: ':group/:element', component: ElementComponent, pathMatch: 'full' },
   { path: '**', redirectTo: '/All' }
 ];
 

@@ -12,6 +12,8 @@ import { ElementComponent } from './views/element/element.component';
 import { ElementChildrenComponent } from './views/element-children/element-children.component';
 import { ElementParametersComponent } from './views/element-parameters/element-parameters.component';
 import { ElementForwardsComponent } from './views/element-forwards/element-forwards.component';
+import { ElementAttributesComponent } from './views/element-attributes/element-attributes.component';
+import { AttributeDescriptionComponent } from './views/attribute-description/attribute-description.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { ElementForwardsComponent } from './views/element-forwards/element-forwa
     ElementComponent,
     ElementChildrenComponent,
     ElementParametersComponent,
-    ElementForwardsComponent
+    ElementForwardsComponent,
+    ElementAttributesComponent,
+    AttributeDescriptionComponent
   ],
   imports: [
     BrowserModule,

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, isDevMode } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, ObservableInput, Subject, throwError } from 'rxjs';
-import { AppState, FrankDocState, Types } from './app.types';
-import { Element, FrankDoc, Group } from './frankdoc.types';
+import { BehaviorSubject, catchError, throwError } from 'rxjs';
+import { AppState, Attribute, Element, FrankDocState } from './app.types';
+import { FrankDoc, Group } from './frankdoc.types';
 
 @Injectable({
   providedIn: 'root'
@@ -107,5 +107,49 @@ export class AppService {
 
   fullNameToSimpleName(fullName: string) {
     return fullName.substring(fullName.lastIndexOf(".") + 1)
+  }
+
+  flattenElements(element: Element): Element {
+    if (element.parent) {
+      const allElements = this.frankDocStateSource.value.elements;
+      const el: Element = {...element}
+      const parent = allElements[element.parent];
+
+      //Add separator where attributes inherit from
+      if (parent.attributes && parent.attributes.length > 0) {
+        if (!el.attributes) { el.attributes = []; } //Make sure an array exists
+
+        el.attributes.push({ name: "", from: parent });
+      }
+
+      el.attributes = this.copyOf(el.attributes, parent.attributes, 'name') || [];
+      el.children = this.copyOf(el.children, parent.children, 'roleName') || [];
+      el.parameters = this.copyOf(el.parameters, parent.parameters, 'name') || [];
+      el.forwards = this.copyOf(el.forwards, parent.forwards, 'name') || [];
+
+      if (!el.parametersDescription && parent.parametersDescription) {
+        el.parametersDescription = parent.parametersDescription;
+      }
+      if (parent.parent) {
+        el.parent = parent.parent;
+      } else {
+        el.parent = undefined;
+      }
+      return this.flattenElements(el);
+    }
+
+    return element;
+  }
+
+  copyOf<T>(baseAttrs: T[] | undefined, mergeAttrs: T[] | undefined, fieldName: keyof T) {
+    if (baseAttrs && !mergeAttrs)
+      return baseAttrs;
+    else if (mergeAttrs && !baseAttrs)
+      return mergeAttrs;
+    else if (!baseAttrs && !mergeAttrs)
+      return null;
+
+    const filteredMergeAttrs = mergeAttrs!.filter(attr => !baseAttrs!.find(ba => ba[fieldName] === attr[fieldName]));
+    return [...baseAttrs!, ...filteredMergeAttrs];
   }
 }

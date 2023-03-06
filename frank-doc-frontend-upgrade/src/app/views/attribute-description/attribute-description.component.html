@@ -1,0 +1,18 @@
+<table *ngIf="hasDiscriptionEnum">
+  <thead>
+    <tr>
+      <th class="tbl-15">Value</th>
+      <th class="tbl-85">Description</th>
+    </tr>
+  </thead>
+  <ng-template *ngFor="let enumField of enumFields">
+    <tr *ngIf="!enumField.deprecated || showDeprecatedElements">
+      <td [ngClass]="{ 'deprecated': enumField.deprecated }">{{enumField.label}}</td>
+      <td [innerHtml]="enumField.description"></td> <!-- | javadoc:this" -->
+    </tr>
+  </ng-template>
+</table>
+
+<span *ngIf="!hasDiscriptionEnum">Possible values: <ng-template *ngFor="let enumValue of enumFields; last as isLast"
+><span *ngIf="!enumValue.deprecated || showDeprecatedElements"><code [ngClass]="{ 'deprecated': enumValue.deprecated }">{{enumValue.label}}</code><span *ngIf="!isLast">, </span></span></ng-template
+></span>

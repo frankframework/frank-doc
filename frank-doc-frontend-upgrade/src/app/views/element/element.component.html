@@ -32,13 +32,14 @@
     [parametersDescription]="element.parametersDescription"
   ></element-parameters>
 
-  <element-forwards *ngIf="element.forwards" element-forwards
+  <element-forwards *ngIf="element.forwards"
     [forwards]="element.forwards"
   ></element-forwards>
 
-  <!-- <element-attributes *ngIf="element.attributes || element.nonInheritedAttributes"
-
-  ></element-attributes> -->
+  <element-attributes *ngIf="element.attributes"
+    [attributes]="element.attributes"
+    [showDeprecatedElements]="showDeprecatedElements"
+  ></element-attributes> <!-- || element.nonInheritedAttributes -->
 
   <!-- <parent-element *ngIf="element.parent" parent="element.parent"></parent-element> -->
 </div>
