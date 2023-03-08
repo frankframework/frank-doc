@@ -1,7 +1,7 @@
 <div class="sub-menu">
     <ul>
         <!-- TODO "let element in elements | matchElement:this:search | toArray | orderBy: 'name'" -->
-        <ng-template ngFor let-element [ngForOf]="elements | keyvalue">
+        <ng-template ngFor let-element [ngForOf]="elements | keyvalue:orderBy('name')">
             <li [ngClass]="{ 'deprecated': element.value.deprecated }" *ngIf="!element.value.deprecated || showDeprecatedElements">
                 <a
                   [routerLink]="[groupName, element.value.name]"

@@ -14,6 +14,8 @@ import { ElementParametersComponent } from './views/element-parameters/element-p
 import { ElementForwardsComponent } from './views/element-forwards/element-forwards.component';
 import { ElementAttributesComponent } from './views/element-attributes/element-attributes.component';
 import { AttributeDescriptionComponent } from './views/attribute-description/attribute-description.component';
+import { AsTextPipe } from './pipes/as-text.pipe';
+import { JavadocPipe } from './pipes/javadoc.pipe';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { AttributeDescriptionComponent } from './views/attribute-description/att
     ElementParametersComponent,
     ElementForwardsComponent,
     ElementAttributesComponent,
-    AttributeDescriptionComponent
+    AttributeDescriptionComponent,
+    AsTextPipe,
+    JavadocPipe
   ],
   imports: [
     BrowserModule,

@@ -35,5 +35,3 @@ Get frankdoc.json from [Frank!Doc website](https://frankdoc.frankframework.org/)
 * > Error: src/app/views/element-attributes/element-attributes.component.html:3:21 - error TS2339: Property 'nonInheritedAttributes' does not exist on type 'Element'.
   Is `nonInheritedAttributes` still a thing in the frankdoc?
   * Is going to be figured out in the future
-* parent-element is almost identical to element, maybe make a container component for both?` (if recursion is possible)
-  * Merge element & parent-element into one recursive component

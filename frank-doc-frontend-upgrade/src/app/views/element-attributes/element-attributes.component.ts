@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { AppService } from 'src/app/app.service';
-import { Attribute } from 'src/app/app.types';
+import { Attribute, Elements } from 'src/app/app.types';
 
 @Component({
   selector: 'element-attributes',
@@ -9,14 +9,11 @@ import { Attribute } from 'src/app/app.types';
 })
 export class ElementAttributesComponent {
 
+  @Input() elements!: Elements;
   @Input() attributes!: Attribute[];
   @Input() showDeprecatedElements!: boolean;
 
-  constructor(private appService: AppService) {
-    if(!this.attributes[0].from){
-      
-    }
-  }
+  constructor(private appService: AppService) { }
 
   javaDocUrlOf = (fullName: string) => this.appService.javaDocUrlOf(fullName);
 

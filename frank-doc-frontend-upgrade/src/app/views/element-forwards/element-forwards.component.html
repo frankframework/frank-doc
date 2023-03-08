@@ -10,7 +10,7 @@
     <tbody>
       <tr *ngFor="let forward of forwards">
         <td [innerHtml]="forward.name"></td>
-        <td [innerHtml]="forward.description"></td> <!--  | javadoc:this -->
+        <td [innerHtml]="forward.description | javadoc:elements"></td>
       </tr>
     </tbody>
   </table>

@@ -22,10 +22,6 @@
 
     <ul class="sidebar__categories">
         <li *ngFor="let group of groups">
-            <!-- <a
-              [routerLink]="[group.name]"
-              routerLinkActive="active"
-            ><span class="nav-label">{{group.name}}</span></a> -->
             <span
               (click)="selectGroup(group.name)"
               [ngClass]="selectedGroup?.name == group.name ? 'nav-label active' : 'nav-label'"

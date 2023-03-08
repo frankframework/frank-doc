@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { AppService } from 'src/app/app.service';
 import { Elements } from 'src/app/app.types';
 import { Group, Element } from 'src/app/frankdoc.types';
 
@@ -23,4 +24,8 @@ export class SidebarElementsComponent {
 
   groupName = "All";
   elementName = "";
+
+  constructor(private appService: AppService) { }
+
+  orderBy = <K, V>(fieldName: keyof V) => this.appService.orderBy<K, V>(fieldName);
 }

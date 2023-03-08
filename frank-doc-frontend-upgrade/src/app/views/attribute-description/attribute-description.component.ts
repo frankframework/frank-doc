@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AppService } from 'src/app/app.service';
+import { Elements } from 'src/app/app.types';
 import { Value } from 'src/app/frankdoc.types';
 
 @Component({
@@ -9,6 +10,7 @@ import { Value } from 'src/app/frankdoc.types';
 })
 export class AttributeDescriptionComponent implements OnInit{
 
+  @Input() elements!: Elements;
   @Input() enum!: string;
   @Input() showDeprecatedElements!: boolean;
 
@@ -22,6 +24,9 @@ export class AttributeDescriptionComponent implements OnInit{
     this.appService.frankDoc$.subscribe(state => {
       this.enumFields = state.enums[this.enum];
       this.hasDiscriptionEnum = this.enumFields.some(field => field.description != undefined);
+
+      console.log("enumFields", this.enumFields)
+      console.log("hasDiscriptionEnum", this.hasDiscriptionEnum)
     });
   }
 

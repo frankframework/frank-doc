@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, isDevMode } from '@angular/core';
 import { BehaviorSubject, catchError, throwError } from 'rxjs';
@@ -34,23 +35,24 @@ export class AppService {
   }
 
   showHideInheritance() {
-    this.frankDocStateSource.next({ ...this.frankDocStateSource.value, showInheritance: !this.frankDocStateSource.value.showInheritance });
+    const state = this.frankDocStateSource.value;
+    const updatedElement = this.elementInheritance(!state.showInheritance, state.element);
 
-    /* if ($scope.element) {
-      if ($scope.showInheritance) {
-        $scope.element = $scope.flattenElements($scope.element); // Merge inherited elements
-      } else {
-        $scope.element = $scope.elements[$scope.element.fullName]; // Update the element to it's original state
-      }
-    } */
+    this.frankDocStateSource.next({ ...state, element: updatedElement, showInheritance: !state.showInheritance });
   }
 
   setGroupAndElement(group: Group, element?: Element) {
+    const state = this.frankDocStateSource.value;
     if(element) {
-      this.frankDocStateSource.next({ ...this.frankDocStateSource.value, group, element });
+      if (state.showInheritance){
+        const updatedElement = this.elementInheritance(!state.showInheritance, element);
+        this.frankDocStateSource.next({ ...state, group, element: updatedElement });
+        return;
+      }
+      this.frankDocStateSource.next({ ...state, group, element: element });
       return;
     }
-    this.frankDocStateSource.next({ ...this.frankDocStateSource.value, group });
+    this.frankDocStateSource.next({ ...state, group });
   }
 
   init() {
@@ -109,6 +111,17 @@ export class AppService {
     return fullName.substring(fullName.lastIndexOf(".") + 1)
   }
 
+  elementInheritance(showInheritance: boolean, element?: Element){
+    const state = this.frankDocStateSource.value;
+    if (element) {
+      if (showInheritance) {
+        return this.flattenElements(element); // Merge inherited elements
+      }
+      return state.elements[element.fullName]; // Update the element to it's original state
+    }
+    return element;
+  }
+
   flattenElements(element: Element): Element {
     if (element.parent) {
       const allElements = this.frankDocStateSource.value.elements;
@@ -130,11 +143,14 @@ export class AppService {
       if (!el.parametersDescription && parent.parametersDescription) {
         el.parametersDescription = parent.parametersDescription;
       }
-      if (parent.parent) {
+
+      /* if (parent.parent) {
         el.parent = parent.parent;
       } else {
         el.parent = undefined;
-      }
+      } */
+      el.parent = parent.parent || undefined;
+
       return this.flattenElements(el);
     }
 
@@ -151,5 +167,34 @@ export class AppService {
 
     const filteredMergeAttrs = mergeAttrs!.filter(attr => !baseAttrs!.find(ba => ba[fieldName] === attr[fieldName]));
     return [...baseAttrs!, ...filteredMergeAttrs];
+  }
+
+  orderBy<K, V>(fieldName: keyof V) {
+    // function modified from https://github.com/angular/angular/blob/main/packages/common/src/pipes/keyvalue_pipe.ts#L115
+    return function(keyValueA: KeyValue<K, V>, keyValueB: KeyValue<K, V>) {
+      const a = keyValueA.value[fieldName];
+      const b = keyValueB.value[fieldName];
+      // if same exit with 0;
+      if (a === b) return 0;
+      // make sure that undefined are at the end of the sort.
+      if (a === undefined) return 1;
+      if (b === undefined) return -1;
+      // make sure that nulls are at the end of the sort.
+      if (a === null) return 1;
+      if (b === null) return -1;
+      if (typeof a == 'string' && typeof b == 'string') {
+        return a < b ? -1 : 1;
+      }
+      if (typeof a == 'number' && typeof b == 'number') {
+        return a - b;
+      }
+      if (typeof a == 'boolean' && typeof b == 'boolean') {
+        return a < b ? -1 : 1;
+      }
+      // `a` and `b` are of different types. Compare their string values.
+      const aString = String(a);
+      const bString = String(b);
+      return aString == bString ? 0 : aString < bString ? -1 : 1;
+    }
   }
 }

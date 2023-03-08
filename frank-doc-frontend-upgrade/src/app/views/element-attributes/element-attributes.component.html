@@ -15,10 +15,9 @@
         <tr *ngIf="!attr.deprecated || showDeprecatedElements">
           <td
             *ngIf="attr.from" class="attribute__from"
-            [title]="attr.from.description"
+            [title]="attr.from.description | asText"
             colspan="4"
-          > <!-- [title]="attr.from.description | asText" -->
-            From <a href="{{javaDocUrlOf(attr.from.fullName)}}" target="_blank">{{attr.from.name}}</a>:</td>
+          > From <a href="{{javaDocUrlOf(attr.from.fullName)}}" target="_blank">{{attr.from.name}}</a>:</td>
           <ng-template [ngIf]="!attr.from">
             <td
               [ngClass]="{ 'deprecated': attr.deprecated, 'mandatory': attr.mandatory}"
@@ -26,9 +25,13 @@
             >{{attr.name}}</td>
             <td>
               <div>
-                <div *ngIf="attr.description" [innerHtml]="attr.description"></div> <!-- | javadoc:this -->
+                <div *ngIf="attr.description" [innerHtml]="attr.description | javadoc:elements"></div>
                 <div *ngIf="attr.enum">
-                  <attribute-description></attribute-description>
+                  <attribute-description
+                    [elements]="elements"
+                    [enum]="attr.enum"
+                    [showDeprecatedElements]="showDeprecatedElements"
+                  ></attribute-description>
                 </div>
               </div>
             </td>

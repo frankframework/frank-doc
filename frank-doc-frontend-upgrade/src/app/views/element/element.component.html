@@ -16,7 +16,7 @@
 
   <div *ngIf="element.description" class="block">
     <h4>JavaDoc</h4>
-    <p [innerHtml]="element.description"></p> <!--  | javadoc:this -->
+    <p [innerHtml]="element.description | javadoc:elements"></p>
   </div>
 
   <element-children *ngIf="element.children"
@@ -28,15 +28,18 @@
   ></element-children>
 
   <element-parameters *ngIf="element.parameters || element.parametersDescription"
+    [elements]="elements"
     [parameters]="element.parameters"
     [parametersDescription]="element.parametersDescription"
   ></element-parameters>
 
   <element-forwards *ngIf="element.forwards"
+    [elements]="elements"
     [forwards]="element.forwards"
   ></element-forwards>
 
   <element-attributes *ngIf="element.attributes"
+    [elements]="elements"
     [attributes]="element.attributes"
     [showDeprecatedElements]="showDeprecatedElements"
   ></element-attributes> <!-- || element.nonInheritedAttributes -->
