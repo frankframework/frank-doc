@@ -61,9 +61,13 @@ jobs:
         repository: ibissource/iaf
         path: iaf
 
-    # If you try to create the Frank!Doc immediately, the parent build is first but it fails because the sub projects have not been build yet
+    # If you try to create the Frank!Doc immediately, the parent build is first but it fails because the sub projects have not been built yet
     - name: Build all subprojects to have them in the next step
-      run: mvn -DskipTests clean install
+      env:
+        CI_SERVICE: GITHUB
+        TZ: Europe/Amsterdam
+        JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
+      run: mvn -B -V -T1 -DskipTests -Dfrankdoc.version=$FRANKDOC_VERSION clean install
       working-directory: iaf
     - name: Build Frank!Framework
       env:
