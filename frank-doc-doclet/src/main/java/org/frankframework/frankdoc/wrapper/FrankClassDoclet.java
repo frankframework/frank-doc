@@ -272,12 +272,8 @@ class FrankClassDoclet implements FrankClass {
 
 	private FrankMethodDoclet recursivelyGetMethodFromSignature(String signature) {
 		FrankMethodDoclet result = getMethodFromSignature(signature);
-		if(result == null) {
-			if(getSuperclass() == null) {
-				result = null;
-			} else {
-				result = ((FrankClassDoclet) getSuperclass()).recursivelyGetMethodFromSignature(signature);				
-			}
+		if(result == null && getSuperclass() != null) {
+			return ((FrankClassDoclet) getSuperclass()).recursivelyGetMethodFromSignature(signature);				
 		}
 		return result;
 	}
