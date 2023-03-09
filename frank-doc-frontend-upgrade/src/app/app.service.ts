@@ -45,7 +45,7 @@ export class AppService {
     const state = this.frankDocStateSource.value;
     if(element) {
       if (state.showInheritance){
-        const updatedElement = this.elementInheritance(!state.showInheritance, element);
+        const updatedElement = this.elementInheritance(state.showInheritance, element);
         this.frankDocStateSource.next({ ...state, group, element: updatedElement });
         return;
       }
@@ -126,12 +126,16 @@ export class AppService {
     if (element.parent) {
       const allElements = this.frankDocStateSource.value.elements;
       const el: Element = {...element}
-      const parent = allElements[element.parent];
+      const parent = allElements[el.parent!];
+
+      console.log(el.attributes)
+      console.log(element.attributes)
 
       //Add separator where attributes inherit from
       if (parent.attributes && parent.attributes.length > 0) {
         if (!el.attributes) { el.attributes = []; } //Make sure an array exists
 
+        el.attributes = [...el.attributes]; // attributes was shallowcopied, so we need to spread it in order to use push properly
         el.attributes.push({ name: "", from: parent });
       }
 
@@ -144,16 +148,10 @@ export class AppService {
         el.parametersDescription = parent.parametersDescription;
       }
 
-      /* if (parent.parent) {
-        el.parent = parent.parent;
-      } else {
-        el.parent = undefined;
-      } */
       el.parent = parent.parent || undefined;
 
       return this.flattenElements(el);
     }
-
     return element;
   }
 

@@ -24,9 +24,6 @@ export class AttributeDescriptionComponent implements OnInit{
     this.appService.frankDoc$.subscribe(state => {
       this.enumFields = state.enums[this.enum];
       this.hasDiscriptionEnum = this.enumFields.some(field => field.description != undefined);
-
-      console.log("enumFields", this.enumFields)
-      console.log("hasDiscriptionEnum", this.hasDiscriptionEnum)
     });
   }
 

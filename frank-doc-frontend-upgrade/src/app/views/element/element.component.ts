@@ -42,6 +42,10 @@ export class ElementComponent implements OnInit, OnDestroy {
       this.showDeprecatedElements = state.showDeprecatedElements;
       this.showInheritance = state.showInheritance;
 
+      if(stateElement){
+        this.element = stateElement;
+      }
+
       if (groupParam && groups.length > 0) {
         const group = groups.find((group: Group) => group.name === groupParam);
         if (group && elementParam !== stateElement?.name) {
@@ -49,9 +53,9 @@ export class ElementComponent implements OnInit, OnDestroy {
             elementName = groupElementsNames.find(fullname => elements[fullname].name === elementParam),
             element = (elementName && elements[elementName]) || undefined;
           if(element){
-            this.element = element;
             console.log('element', element)
             setTimeout(() => {
+              // pushes the element to the state, which will trigger this subscription to update again
               this.appService.setGroupAndElement(group, element);
             })
             return;
