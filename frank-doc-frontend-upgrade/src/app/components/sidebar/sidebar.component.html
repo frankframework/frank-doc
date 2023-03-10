@@ -1,7 +1,7 @@
 <div class="sidebar">
     <div class="sidebar__search">
         <input type="text" placeholder="Search.." [(ngModel)]="search" />
-        <i [hidden]="!search.length" (click)="search = '';" class="fa fa-times closeSearch" aria-hidden="true">X</i>
+        <i *ngIf="search.length < 1" (click)="search = '';" class="fa fa-times closeSearch" aria-hidden="true"></i>
 
         <button
             (click)="showHideDeprecated()"

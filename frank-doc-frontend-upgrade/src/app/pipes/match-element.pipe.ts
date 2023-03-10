@@ -11,19 +11,17 @@ export class MatchElementPipe implements PipeTransform {
   constructor(private appService: AppService) { }
 
   transform(elements: Elements, searchText?: string, group?: Group) {
-    let searchTextLC = null;
-    if (searchText && searchText != "") {
-      searchTextLC = searchText.toLowerCase();
-    }
-    if (!elements || !group) return {}; //Cannot filter elements if no group has been selected
-    const r: Elements = {};
-    const matchedParents: { [index: string]: boolean } = {}; // cache matched parents
-    const noMatchParents: { [index: string]: boolean } = {}; // cache no match parents
-    const groupMembers = this.appService.getGroupElements( group.types);
-    for (const i in groupMembers) {
-      let element = groupMembers[i];
-      let obj = elements[element];
-      let parentStack = [];
+    if (!elements || !group)
+      return {}; //Cannot filter elements if no group has been selected
+
+    const r: Elements = {},
+      matchedParents: { [index: string]: boolean } = {}, // cache matched parents
+      noMatchParents: { [index: string]: boolean } = {}, // cache no match parents
+      groupMembers = this.appService.getGroupElements( group.types);
+    let searchTextLC = searchText && searchText != "" ? searchText.toLowerCase() : null;
+    for (const element of groupMembers) {
+      const obj = elements[element];
+      const parentStack = [];
       if (searchTextLC) {
         if (JSON.stringify(obj).replace(/"/g, '').toLowerCase().indexOf(searchTextLC) > -1) {
           r[element] = obj;
@@ -37,14 +35,14 @@ export class MatchElementPipe implements PipeTransform {
             } else if (noMatchParents[elementParent]) { // if parent has no match leave the loop
               break;
             }
-            let parentObj = elements[elementParent];
+            const parentObj = elements[elementParent];
             if (JSON.stringify(parentObj).replace(/"/g, '').toLowerCase().indexOf(searchTextLC) > -1) {
               r[element] = obj;
               matchedParents[elementParent] = true;
               break;
             }
             if (!elements[elementParent].parent) {
-              for (let t of parentStack) {
+              for (const t of parentStack) {
                 noMatchParents[t] = true;
               }
               break;
