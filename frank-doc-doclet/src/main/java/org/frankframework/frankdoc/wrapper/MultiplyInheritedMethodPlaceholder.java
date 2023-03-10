@@ -1,5 +1,5 @@
 /* 
-Copyright 2022 WeAreFrank! 
+Copyright 2022, 2023 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -119,5 +119,10 @@ public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 	@Override
 	MethodDoc getOverriddenMethodDoc() {
 		return classAncestorMethod.method;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s(placeholder of [%s] in [%s])", this.getClass().getSimpleName(), classAncestorMethod.toString(), getDeclaringClass().toString());
 	}
 }

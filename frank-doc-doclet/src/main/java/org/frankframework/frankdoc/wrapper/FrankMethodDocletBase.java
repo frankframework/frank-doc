@@ -1,5 +1,5 @@
 /* 
-Copyright 2022 WeAreFrank! 
+Copyright 2022, 2023 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -87,7 +87,9 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 			return result;
 		}
 		MethodDoc overriddenMethodDoc = getOverriddenMethodDoc();
-		if(overriddenMethodDoc != null) {
+		// The overriddenMethodDoc can be in a Java interface instead of an ancestor class.
+		// This is because in Java 8 a Java interface can have default method implementations.
+		if((overriddenMethodDoc != null) && (! overriddenMethodDoc.containingClass().isInterface())) {
 			FrankMethodDocletBase overriddenMethod = (FrankMethodDocletBase) declaringClass.recursivelyFindFrankMethod(overriddenMethodDoc);
 			if(overriddenMethod != null) {
 				return overriddenMethod.searchExcludingImplementedInterfaces(getter);

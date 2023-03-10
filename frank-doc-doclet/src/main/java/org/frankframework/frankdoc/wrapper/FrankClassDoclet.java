@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
@@ -59,6 +58,10 @@ class FrankClassDoclet implements FrankClass {
 		log.trace("Creating FrankClassDoclet for [{}]", clazz.name());
 		this.repository = repository;
 		this.clazz = clazz;
+		if(log.isTraceEnabled()) {
+			log.trace("Class [{}] has the following methods:", clazz.qualifiedName());
+			Arrays.asList(clazz.methods()).forEach(m -> log.trace("  [{}], public: [{}]", m.name(), m.isPublic()));
+		}
 		for(MethodDoc methodDoc: clazz.methods()) {
 			FrankMethodDoclet frankMethod = new FrankMethodDoclet(methodDoc, this);
 			frankMethodsByDocletMethod.put(methodDoc, frankMethod);
@@ -267,6 +270,14 @@ class FrankClassDoclet implements FrankClass {
 		return methodsBySignature.get(signature);
 	}
 
+	private FrankMethodDoclet recursivelyGetMethodFromSignature(String signature) {
+		FrankMethodDoclet result = getMethodFromSignature(signature);
+		if(result == null && getSuperclass() != null) {
+			return ((FrankClassDoclet) getSuperclass()).recursivelyGetMethodFromSignature(signature);				
+		}
+		return result;
+	}
+
 	<T> T getMethodItemFromSignature(String methodSignature, Function<FrankMethodDocletBase, T> getter) {
 		FrankMethodDoclet frankMethod = getMethodFromSignature(methodSignature);
 		if(frankMethod != null) {
@@ -365,45 +376,43 @@ class FrankClassDoclet implements FrankClass {
 	}
 
 	void addMultiplyInheritedMethodPlaceholders() {
+		MultiplyInheritedMethodBrowser handler = new MultiplyInheritedMethodBrowser();
 		try {
-			List<FrankClass> interfaces = new TransitiveImplementedInterfaceBrowser<Object>(this).getInterfacesAndTheirAncestors();
-			if(! interfaces.isEmpty()) {
-				multiplyInheritedMethodPlaceholders = getReinheritedMethods(interfaces).stream()
-						.map(m -> (FrankMethodDoclet) m)
-						.map(m -> new MultiplyInheritedMethodPlaceholder(m, this))
-						.collect(Collectors.toList());
-				if(log.isTraceEnabled()) {
-					String placeholderMethodNames = multiplyInheritedMethodPlaceholders.stream()
-							.map(FrankMethod::getName).collect(Collectors.joining(", "));
-					log.trace("Class [{}] has multiply inherited methods: [{}]", getName(), placeholderMethodNames);
+			TransitiveImplementedInterfaceBrowser<Object> browser = new TransitiveImplementedInterfaceBrowser<>(this);
+			browser.search(c -> {handler.acceptTransitivelyInheritedInterface(c); return null;});
+		} catch(FrankDocException e) {
+			log.error("Failed to create MultiplyInheritedMethodPlaceholder objects", e);
+		}
+	}
+
+	private class MultiplyInheritedMethodBrowser {
+		private final Set<String> doNotAddAgain = new HashSet<>();
+
+		MultiplyInheritedMethodBrowser() {
+			List<String> declaredMethodSignatures = Arrays.asList(FrankClassDoclet.this.getDeclaredMethods()).stream().map(FrankMethod::getSignature).collect(Collectors.toList());
+			doNotAddAgain.addAll(declaredMethodSignatures);
+		}
+
+		void acceptTransitivelyInheritedInterface(FrankClass interfaze) {
+			List<FrankMethod> methods = Arrays.asList(interfaze.getDeclaredMethods());
+			for(FrankMethod method: methods) {
+				String signature = method.getSignature();
+				if(! doNotAddAgain.contains(signature)) {
+					multiplyInheritedMethodPlaceholders.add(new MultiplyInheritedMethodPlaceholder(getParentMethod(signature, method), FrankClassDoclet.this));
+					doNotAddAgain.add(signature);
 				}
 			}
-		} catch(FrankDocException e) {
-			log.error("Failed to add multiply inherited method placeholders for FrankClass [{}]", getName(), e);
 		}
-	}
 
-	List<FrankMethod> getReinheritedMethods(List<FrankClass> interfaces) {
-		List<FrankMethod> result = new ArrayList<>();
-		Set<String> declaredMethodSignatures = Arrays.asList(getDeclaredMethods()).stream()
-				.map(FrankMethod::getSignature)
-				.collect(Collectors.toSet());
-		Set<String> methodSignaturesFromImplementedInterfaces = interfaces.stream()
-				.flatMap(FrankClassDoclet::methodSignaturesOf)
-				.collect(Collectors.toSet());
-		for(FrankMethod candidate: getDeclaredAndInheritedMethods()) {
-			String candidateSignature = candidate.getSignature();
-			boolean notDeclared = ! declaredMethodSignatures.contains(candidateSignature);
-			boolean reinherited = methodSignaturesFromImplementedInterfaces.contains(candidateSignature);
-			if(notDeclared && reinherited) {
-				result.add(candidate);
+		private FrankMethodDoclet getParentMethod(String signature, FrankMethod interfaceMethod) {
+			// We will not get declared methods here because declared methods have been filtered by the constructor of this inner class.
+			FrankMethodDoclet parentMethodFromClass = recursivelyGetMethodFromSignature(signature);
+			if(parentMethodFromClass == null) {
+				return (FrankMethodDoclet) interfaceMethod;
+			} else {
+				return parentMethodFromClass;
 			}
 		}
-		return result;
-	}
-
-	private static Stream<String> methodSignaturesOf(FrankClass intf) {
-		return Arrays.asList(intf.getDeclaredMethods()).stream().map(FrankMethod::getSignature);
 	}
 
 	@Override
