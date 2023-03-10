@@ -16,6 +16,7 @@ import { ElementAttributesComponent } from './views/element-attributes/element-a
 import { AttributeDescriptionComponent } from './views/attribute-description/attribute-description.component';
 import { AsTextPipe } from './pipes/as-text.pipe';
 import { JavadocPipe } from './pipes/javadoc.pipe';
+import { MatchElementPipe } from './pipes/match-element.pipe';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { JavadocPipe } from './pipes/javadoc.pipe';
     ElementAttributesComponent,
     AttributeDescriptionComponent,
     AsTextPipe,
-    JavadocPipe
+    JavadocPipe,
+    MatchElementPipe
   ],
   imports: [
     BrowserModule,

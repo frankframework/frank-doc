@@ -128,9 +128,6 @@ export class AppService {
       const el: Element = {...element}
       const parent = allElements[el.parent!];
 
-      console.log(el.attributes)
-      console.log(element.attributes)
-
       //Add separator where attributes inherit from
       if (parent.attributes && parent.attributes.length > 0) {
         if (!el.attributes) { el.attributes = []; } //Make sure an array exists

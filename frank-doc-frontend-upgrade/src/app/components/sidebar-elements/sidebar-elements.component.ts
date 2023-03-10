@@ -13,17 +13,9 @@ export class SidebarElementsComponent {
   @Input() elements!: Elements;
   @Input() showDeprecatedElements!: boolean;
   @Input() showInheritance!: boolean;
-  @Input()
-  set group(group: Group | undefined){
-    this.groupName = group?.name || "All";
-  }
-  @Input()
-  set element(element: Element | undefined){
-    this.elementName = element?.name || "";
-  }
-
-  groupName = "All";
-  elementName = "";
+  @Input() search!: string;
+  @Input() group?: Group;
+  @Input() element?: Element;
 
   constructor(private appService: AppService) { }
 

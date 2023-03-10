@@ -53,7 +53,6 @@ export class ElementComponent implements OnInit, OnDestroy {
             elementName = groupElementsNames.find(fullname => elements[fullname].name === elementParam),
             element = (elementName && elements[elementName]) || undefined;
           if(element){
-            console.log('element', element)
             setTimeout(() => {
               // pushes the element to the state, which will trigger this subscription to update again
               this.appService.setGroupAndElement(group, element);

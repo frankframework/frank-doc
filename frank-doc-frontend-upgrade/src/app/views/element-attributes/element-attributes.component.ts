@@ -17,8 +17,4 @@ export class ElementAttributesComponent {
 
   javaDocUrlOf = (fullName: string) => this.appService.javaDocUrlOf(fullName);
 
-  ngOnChanges(){
-    console.log('attributes', this.attributes)
-  }
-
 }
