@@ -11,11 +11,23 @@ html {
   height: 100%;
 }
 
-body {
+/* body {
   font-size: 13px;
   font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #676a6c;
   overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+} */
+body {
+  font-size: 13px;
+  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #676a6c;
+  height: 100%;
+  overflow: hidden;
+}
+app-root {
   display: flex;
   flex-direction: row;
   height: 100%;
@@ -73,7 +85,7 @@ table.table thead th.tbl-85 {
   margin-bottom: 0;
 }
 
-.sidebar a {
+.sidebar a, .sidebar__categories span {
   display: block;
   color: #a7b1c2;
   text-decoration: none !important;
@@ -81,11 +93,11 @@ table.table thead th.tbl-85 {
   line-height: 1;
 }
 
-.sidebar a:hover {
+.sidebar a:hover, .sidebar__categories span:hover {
   background-color: #293846;
 }
 
-.sidebar a.active {
+.sidebar a.active, .sidebar__categories span.active {
   color: #fff;
   border-left: 4px solid #19aa8d;
   border-top: 1px solid #19aa8d;
@@ -141,6 +153,7 @@ table.table thead th.tbl-85 {
 
 .element {
   width: 100%;
+  max-height: 100%;
   padding: 0px 20px;
   background-color: white;
   overflow-y: scroll;

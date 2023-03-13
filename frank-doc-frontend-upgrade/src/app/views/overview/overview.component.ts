@@ -8,6 +8,7 @@ import { Group } from 'src/app/frankdoc.types';
   selector: 'app-overview',
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss'],
+  host: { class: 'element' }
   // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverviewComponent implements OnInit, OnDestroy {

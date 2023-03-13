@@ -8,7 +8,8 @@ import { Group, Element } from 'src/app/frankdoc.types';
 @Component({
   selector: 'app-element',
   templateUrl: './element.component.html',
-  styleUrls: ['./element.component.scss']
+  styleUrls: ['./element.component.scss'],
+  host: { class: 'element' }
 })
 export class ElementComponent implements OnInit, OnDestroy {
   version = "";
