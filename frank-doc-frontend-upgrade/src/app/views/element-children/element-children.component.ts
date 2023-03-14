@@ -45,6 +45,8 @@ export class ElementChildrenComponent {
     if (this.showDeprecatedElements) {
       return fullNames.map(fullName => this.appService.fullNameToSimpleName(fullName));
     }
+    if(!fullNames)
+      debugger;
     return fullNames.reduce<string[]>((acc, fullName) => {
       if (this.elements && !this.elements[fullName].deprecated) {
         acc.push(this.appService.fullNameToSimpleName(fullName))
