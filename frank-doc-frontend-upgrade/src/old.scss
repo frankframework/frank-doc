@@ -92,6 +92,9 @@ table.table thead th.tbl-85 {
   padding: 5px 10px;
   line-height: 1;
 }
+.sidebar__categories span {
+  cursor: pointer;
+}
 
 .sidebar a:hover, .sidebar__categories span:hover {
   background-color: #293846;
@@ -151,7 +154,7 @@ table.table thead th.tbl-85 {
   padding: 10px 0;
 }
 
-.element {
+app-root > .element {
   width: 100%;
   max-height: 100%;
   padding: 0px 20px;
@@ -185,6 +188,7 @@ code.deprecated {
 }
 
 .sub__element {
+  display: block;
   padding-top: 2rem;
 }
 
@@ -269,7 +273,6 @@ td.attribute__from {
 }
 
 .loadError {
-  display: none;
   position: absolute;
   top: 150px;
   left: 50%;

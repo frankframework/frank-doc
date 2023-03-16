@@ -30,8 +30,3 @@ Get frankdoc.json from [Frank!Doc website](https://frankdoc.frankframework.org/)
   * put other components in `src/app/components` folder
   * components that need app state & route info subscriptions which rely on each other's values, use [combineLatest](https://rxjs.dev/api/index/function/combineLatest) to get the result of lastest values of both subscriptions
 * convert filters to pipes
-
-## questions
-* > Error: src/app/views/element-attributes/element-attributes.component.html:3:21 - error TS2339: Property 'nonInheritedAttributes' does not exist on type 'Element'.
-  Is `nonInheritedAttributes` still a thing in the frankdoc?
-  * Is going to be figured out in the future

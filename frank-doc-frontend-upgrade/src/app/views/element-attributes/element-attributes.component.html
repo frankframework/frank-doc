@@ -22,7 +22,9 @@
             <td
               [ngClass]="{ 'deprecated': attr.deprecated, 'mandatory': attr.mandatory}"
               [title]="attr.mandatory ? 'Mandatory attribute' : ''"
-            >{{attr.name}}</td>
+            >
+              {{attr.name}}
+            </td>
             <td>
               <div>
                 <div *ngIf="attr.description" [innerHtml]="attr.description | javadoc:elements"></div>

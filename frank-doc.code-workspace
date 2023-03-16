@@ -7,5 +7,7 @@
 			"path": "frank-doc-frontend"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "frank-doc-frontend"
+	}
 }

@@ -5,7 +5,7 @@
 <div *ngIf="element; else errorBlock">
   <ng-template [ngIf]="!parentName" [ngIfElse]="parentInfo">
     <div class="version">{{version}}</div>
-    <h1 class="element__name">{{element.name}}<span *ngIf="element.deprecated"
+    <h1 class="element__name">{{element.name}} <span *ngIf="element.deprecated"
       class="label label-warning"
     >Deprecated</span></h1>
     <h4 class="element__fullname">
@@ -64,6 +64,5 @@
     [showDeprecatedElements]="showDeprecatedElements"
   ></element-attributes> <!-- || element.nonInheritedAttributes -->
 
-  <!-- <parent-element *ngIf="element.parent" parent="element.parent"></parent-element> -->
-  <app-element *ngIf="element.parent" [parentName]="element.parent"></app-element>
+  <app-element class="sub__element" *ngIf="element.parent" [parentName]="element.parent"></app-element>
 </div>
