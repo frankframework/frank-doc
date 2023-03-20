@@ -42,8 +42,7 @@ export class JavadocPipe implements PipeTransform {
       if (!element) {
         return name;
       }
-
-      return '<a href="/All/' + element.name + '">' + name + '</a>';
+      return `<a href="/All/${element.name}">${name}</a>`;
     });
 
     return this.domSanatizer.bypassSecurityTrustHtml(value);

@@ -1,6 +1,6 @@
 <div class="sidebar__search">
   <input type="text" placeholder="Search.." [(ngModel)]="search" />
-  <i *ngIf="search != ''" (click)="search = '';" class="fa fa-times closeSearch" aria-hidden="true"></i>
+  <b *ngIf="search != ''" (click)="search = '';" class="closeSearch" aria-hidden="true">&times;</b>
 
   <button
     (click)="showHideDeprecated()"
@@ -10,7 +10,7 @@
   <button
     (click)="showHideInheritance()"
     title="{{showInheritance ? 'Hide' : 'Show' }} Inheritance"
-    class="btn btn-primary btn-xs pull-right half"
+    class="btn btn-{{ !showInheritance ? 'warning' : 'primary' }} btn-xs pull-right half"
     type="button">{{showInheritance ? 'Hide' : 'Show' }} Inheritance</button>
   <button
     (click)="downloadXSD()"

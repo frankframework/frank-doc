@@ -1,6 +1,19 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 
 import { SidebarComponent } from './sidebar.component';
+
+@Component({ selector: 'sidebar-elements', template: '' })
+class SidebarElementsStubComponent {
+  @Input() elements: any;
+  @Input() showDeprecatedElements: any;
+  @Input() showInheritance: any;
+  @Input() search: any;
+  @Input() group?: any;
+  @Input() element?: any;
+}
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -8,7 +21,8 @@ describe('SidebarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SidebarComponent ]
+      imports: [HttpClientTestingModule, FormsModule],
+      declarations: [SidebarComponent, SidebarElementsStubComponent ]
     })
     .compileComponents();
 

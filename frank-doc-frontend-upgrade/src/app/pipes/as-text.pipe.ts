@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class AsTextPipe implements PipeTransform {
 
-  transform(value: string | undefined) {
+  transform(value?: string) {
     if (!value) return "";
     value = value.replaceAll('\\"', '"');
     value = value.replace(/<[^>]*>?/gm, '');
