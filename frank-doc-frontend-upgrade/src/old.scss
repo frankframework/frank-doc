@@ -1,5 +1,4 @@
 @import '~bootstrap/dist/css/bootstrap.min.css';
-@import '~font-awesome/css/font-awesome.min.css';
 
 * {
   margin: 0;
@@ -121,13 +120,14 @@ table.table thead th.tbl-85 {
   width: 115px;
 }
 
-.sidebar__search i.closeSearch {
+.sidebar__search .closeSearch {
   position: absolute;
-  top: 12px;
+  top: 10px;
   right: 14px;
   z-index: 1800;
-  font-size: 14px;
+  font-size: 20px;
   cursor: pointer;
+  line-height: 1;
 }
 
 .sidebar__search input {
