@@ -34,4 +34,28 @@ describe('SidebarComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should start with empty searchbar', () => {
+    const searchBar: HTMLElement = fixture.nativeElement.querySelector('.sidebar__search > input');
+    expect(searchBar.textContent).toBe('');
+  });
+
+  it('should update search property when search bar is updated', () => {
+    const searchBar: HTMLInputElement = fixture.nativeElement.querySelector('.sidebar__search > input');
+    searchBar.value = 'test';
+    searchBar.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(component.search).toBe('test');
+  });
+
+  it('should display groups', () => {
+    component.groups = [
+      { name: 'group1', types: [] },
+      { name: 'group2', types: [] }
+    ];
+    fixture.detectChanges();
+    const groupElements = fixture.nativeElement.querySelectorAll('ul > li > span');
+    const groupNames = [...groupElements].map((e: HTMLElement) => e.textContent);
+    expect(groupNames).toEqual(['group1', 'group2']);
+  });
 });

@@ -56,6 +56,6 @@ describe('JavadocPipe', () => {
       }
     }
     expect(pipe.transform('A javadoc {@link Json2XmlValidator}', elements))
-      .toEqual('A javadoc <a href="/All/Json2XmlValidator">Json2XmlValidator</a>');
+      .toEqual('A javadoc <a href="/#/All/Json2XmlValidator">Json2XmlValidator</a>');
   });
 });
