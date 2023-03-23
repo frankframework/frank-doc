@@ -1,37 +1,39 @@
 {
   "name": "frank-doc-frontend",
-  "version": "1.0.0",
-  "private": "true",
-  "author": "Sergi Philipsen <philipsen.sergi@gmail.com>",
-  "license": "MIT",
+  "version": "0.0.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "build:prod": "webpack --mode production",
-    "watch": "webpack --watch"
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
   },
+  "private": true,
   "dependencies": {
-    "angular": "1.7.9",
-    "angular-sanitize": "1.7.9",
-    "angular-ui-bootstrap": "2.5.0",
-    "angular-ui-router": "1.0.24",
+    "@angular/animations": "^15.2.4",
+    "@angular/common": "^15.2.4",
+    "@angular/compiler": "^15.2.4",
+    "@angular/core": "^15.2.4",
+    "@angular/forms": "^15.2.4",
+    "@angular/platform-browser": "^15.2.4",
+    "@angular/platform-browser-dynamic": "^15.2.4",
+    "@angular/router": "^15.2.4",
     "bootstrap": "3.4.1",
-    "font-awesome": "4.6.3"
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.12.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3",
-    "@babel/preset-env": "^7.19.3",
-    "babel-loader": "^8.2.5",
-    "babel-plugin-angularjs-annotate": "^0.10.0",
-    "clean-webpack-plugin": "^4.0.0",
-    "copy-webpack-plugin": "^10.2.1",
-    "css-loader": "^6.5.1",
-    "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.5.0",
-    "sass": "^1.49.0",
-    "sass-loader": "^12.4.0",
-    "style-loader": "^3.3.1",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.9.2"
+    "@angular-devkit/build-angular": "^15.2.4",
+    "@angular/cli": "~15.2.4",
+    "@angular/compiler-cli": "^15.2.4",
+    "@types/jasmine": "~4.3.0",
+    "jasmine-core": "~4.5.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.0.0",
+    "typescript": "~4.9.4"
   }
 }
