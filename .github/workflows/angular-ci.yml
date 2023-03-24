@@ -1,5 +1,8 @@
 name: Angular CI
 on: [push]
+defaults:
+  run:
+    working-directory: ./frank-doc-frontend
 jobs:
   build:
     runs-on: ubuntu-latest
