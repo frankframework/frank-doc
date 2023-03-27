@@ -51,8 +51,11 @@
 						<phase>generate-resources</phase>
 						<id>Download node modules</id>
 						<goals>
-							<goal>npm ci</goal>
+							<goal>npm</goal>
 						</goals>
+						<configuration>
+							<arguments>ci</arguments>
+						</configuration>
 					</execution>
 
 					<execution>
@@ -63,7 +66,6 @@
 						</goals>
 						<configuration>
 							<arguments>build</arguments>
-							<workingDirectory>.</workingDirectory>
 						</configuration>
 					</execution>
 				</executions>
