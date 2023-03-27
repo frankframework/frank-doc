@@ -11,7 +11,7 @@
 	<packaging>jar</packaging>
 
 	<name>Frank!Doc Doclet</name>
-	<url>https://ibissource.org</url>
+	<url>https://frankframework.org</url>
 	<description>Doclet for the Frank!Doc</description>
 
 	<properties>
