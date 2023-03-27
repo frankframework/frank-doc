@@ -37,9 +37,9 @@
 				<executions>
 					<execution>
 						<phase>generate-resources</phase>
-						<id>Install node and yarn</id>
+						<id>Install node and npm</id>
 						<goals>
-							<goal>install-node-and-yarn</goal>
+							<goal>install-node-and-npm</goal>
 						</goals>
 						<configuration>
 							<nodeVersion>v18.15.0</nodeVersion>
