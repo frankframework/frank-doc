@@ -9,7 +9,7 @@
       class="label label-warning"
     >Deprecated</span></h1>
     <h4 class="element__fullname">
-      <a *ngIf="element.name != 'Module'"
+      <a *ngIf="element.name !== 'Module'"
         href="{{javaDocUrlOf(element.fullName)}}"
         target="_blank"
         rel="noreferrer"
@@ -26,7 +26,7 @@
       class="label label-warning"
     >Deprecated</span></h3>
     <h5 class="element__fullname">
-      <a *ngIf="element.name != 'Module'"
+      <a *ngIf="element.name !== 'Module'"
         href="{{javaDocUrlOf(element.fullName)}}"
         target="_blank"
         rel="noreferrer"

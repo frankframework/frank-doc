@@ -17,7 +17,7 @@ export class SidebarElementsComponent {
   @Input() group?: Group;
   @Input() element?: Element;
 
-  constructor(private appService: AppService) { }
+  constructor(private appService: AppService) {}
 
   orderBy = <K, V>(fieldName: keyof V) => this.appService.orderBy<K, V>(fieldName);
 }

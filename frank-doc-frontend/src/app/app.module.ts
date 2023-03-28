@@ -43,4 +43,4 @@ import { MatchElementPipe } from './pipes/match-element.pipe';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

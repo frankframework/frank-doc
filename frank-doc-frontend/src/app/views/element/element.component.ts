@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Subscription } from 'rxjs';
 import { AppService } from 'src/app/app.service';
@@ -8,28 +8,40 @@ import { Group, Element } from 'src/app/frankdoc.types';
 @Component({
   selector: 'app-element',
   templateUrl: './element.component.html',
-  styleUrls: ['./element.component.scss'],
-  host: { class: 'element' }
+  styleUrls: ['./element.component.scss']
 })
 export class ElementComponent implements OnInit, OnDestroy {
+  @HostBinding('class') class = 'element'
+
   version = "";
   groups: Group[] = [];
   elements: Elements = {};
   types: Types = {};
   showDeprecatedElements = false;
   showInheritance = false;
-  element?: Element | null;
+  element?: Element;
 
   @Input() parentName?: string;
 
   private subs?: Subscription;
 
-  constructor(private appService: AppService, private route: ActivatedRoute) { }
+  constructor(private appService: AppService, private route: ActivatedRoute) {}
 
   javaDocUrlOf = (fullName: string) => this.appService.javaDocUrlOf(fullName);
 
   ngOnInit() {
-    if (!this.parentName){
+    if (this.parentName){
+      this.subs = this.appService.frankDoc$.subscribe(state => {
+        this.groups = state.groups;
+        this.elements = state.elements;
+        this.types = state.types;
+        this.showDeprecatedElements = state.showDeprecatedElements;
+        this.showInheritance = state.showInheritance;
+
+        if (this.parentName)
+          this.element = state.elements[this.parentName];
+      });
+    } else {
       this.subs = combineLatest(
         [this.appService.frankDoc$, this.route.paramMap]
       ).subscribe(([state, paramMap]) => {
@@ -63,20 +75,9 @@ export class ElementComponent implements OnInit, OnDestroy {
               })
               return;
             }
-            this.element = null;
+            this.element = undefined;
           }
         }
-      });
-    } else {
-      this.subs = this.appService.frankDoc$.subscribe(state => {
-        this.groups = state.groups;
-        this.elements = state.elements;
-        this.types = state.types;
-        this.showDeprecatedElements = state.showDeprecatedElements;
-        this.showInheritance = state.showInheritance;
-
-        if (this.parentName)
-          this.element = state.elements[this.parentName];
       });
     }
   }

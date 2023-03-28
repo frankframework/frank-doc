@@ -8,53 +8,53 @@ import { Group } from '../frankdoc.types';
 })
 export class MatchElementPipe implements PipeTransform {
 
-  constructor(private appService: AppService) { }
+  constructor(private appService: AppService) {}
 
   transform(elements: Elements, searchText?: string, group?: Group) {
     if (!elements || !group)
       return {}; //Cannot filter elements if no group has been selected
 
-    const r: Elements = {},
+    const returnELements: Elements = {},
       matchedParents: { [index: string]: boolean } = {}, // cache matched parents
       noMatchParents: { [index: string]: boolean } = {}, // cache no match parents
       groupMembers = this.appService.getGroupElements( group.types);
-    let searchTextLC = searchText && searchText != "" ? searchText.toLowerCase() : null;
-    for (const element of groupMembers) {
-      const obj = elements[element];
+    const searchTextLC = searchText && searchText != "" ? searchText.toLowerCase() : undefined;
+    for (const elementName of groupMembers) {
+      const element = elements[elementName];
       const parentStack = [];
       if (searchTextLC) {
-        if (JSON.stringify(obj).replace(/"/g, '').toLowerCase().indexOf(searchTextLC) > -1) {
-          r[element] = obj;
+        if (JSON.stringify(element).replace(/"/g, '').toLowerCase().includes(searchTextLC)) {
+          returnELements[elementName] = element;
         } else { // search in parent (accessing children is an expensive operation)
-          let elementParent = elements[element].parent;
-          while (elementParent) {
-            parentStack.push(elementParent); // keep list of unmatched parents
-            if (matchedParents[elementParent]) { // if parent matched already leave the loop
-              r[element] = obj;
+          let elementParentName = elements[elementName].parent;
+          while (elementParentName) {
+            parentStack.push(elementParentName); // keep list of unmatched parents
+            if (matchedParents[elementParentName]) { // if parent matched already leave the loop
+              returnELements[elementName] = element;
               break;
-            } else if (noMatchParents[elementParent]) { // if parent has no match leave the loop
-              break;
-            }
-            const parentObj = elements[elementParent];
-            if (JSON.stringify(parentObj).replace(/"/g, '').toLowerCase().indexOf(searchTextLC) > -1) {
-              r[element] = obj;
-              matchedParents[elementParent] = true;
+            } else if (noMatchParents[elementParentName]) { // if parent has no match leave the loop
               break;
             }
-            if (!elements[elementParent].parent) {
+            const parentElement = elements[elementParentName];
+            if (JSON.stringify(parentElement).replace(/"/g, '').toLowerCase().includes(searchTextLC)) {
+              returnELements[elementName] = element;
+              matchedParents[elementParentName] = true;
+              break;
+            }
+            if (!elements[elementParentName].parent) {
               for (const t of parentStack) {
                 noMatchParents[t] = true;
               }
               break;
             }
-            elementParent = elements[elementParent].parent;
+            elementParentName = elements[elementParentName].parent;
           }
         }
       } else {
-        r[element] = obj;
+        returnELements[elementName] = element;
       }
     }
-    return r;
+    return returnELements;
   }
 
 }

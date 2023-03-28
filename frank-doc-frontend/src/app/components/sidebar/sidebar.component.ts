@@ -19,7 +19,7 @@ export class SidebarComponent {
 
   search = "";
 
-  constructor(private appService: AppService, private router: Router) { }
+  constructor(private appService: AppService, private router: Router) {}
 
   showHideDeprecated = () => this.appService.showHideDeprecated();
   showHideInheritance = () => this.appService.showHideInheritance();
@@ -31,7 +31,7 @@ export class SidebarComponent {
     link.setAttribute('target', '_blank');
     link.setAttribute('href', downloadUrl);
     link.setAttribute('download', "");
-    document.body.appendChild(link);
+    document.body.append(link);
     link.click();
     link.remove();
   }

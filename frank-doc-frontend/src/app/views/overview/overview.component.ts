@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Directive, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Subscription } from 'rxjs';
 import { AppService } from 'src/app/app.service';
@@ -7,16 +7,15 @@ import { Group } from 'src/app/frankdoc.types';
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.scss'],
-  host: { class: 'element' }
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./overview.component.scss']
 })
 export class OverviewComponent implements OnInit, OnDestroy {
+  @HostBinding('class') class = 'element'
 
   private subs?: Subscription;
   version = "";
 
-  constructor(private appService: AppService, private route: ActivatedRoute) { }
+  constructor(private appService: AppService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.subs = combineLatest(

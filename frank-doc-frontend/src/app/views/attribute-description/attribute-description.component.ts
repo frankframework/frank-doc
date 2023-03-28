@@ -18,7 +18,7 @@ export class AttributeDescriptionComponent implements OnInit{
   //has at least 1 enum field with a description
   hasDiscriptionEnum = false;
 
-  constructor(private appService: AppService) { }
+  constructor(private appService: AppService) {}
 
   ngOnInit() {
     this.appService.frankDoc$.subscribe(state => {

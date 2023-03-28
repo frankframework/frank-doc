@@ -17,7 +17,7 @@ export class ElementChildrenComponent {
   @Input() types!: Types;
   @Input() showDeprecatedElements!: boolean;
 
-  constructor(private appService: AppService) { }
+  constructor(private appService: AppService) {}
 
   getTitle(child: Child) {
     let title = 'No child elements, only text';
@@ -31,8 +31,8 @@ export class ElementChildrenComponent {
 
   // Exclude group All.
   getGroupsOfType(type: string, groups: Group[]) {
-    for (let i = 1; i < groups.length; ++i) {
-      const group = groups[i];
+    for (let index = 1; index < groups.length; ++index) {
+      const group = groups[index];
       if (group.types.includes(type)) {
         return group.name;
       }

@@ -24,7 +24,7 @@ export class AppService {
 
   frankDoc$ = this.frankDocStateSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   private getFrankDoc() {
     return this.http.get<FrankDoc>(this.frankDocUrl);
@@ -57,11 +57,8 @@ export class AppService {
 
   init() {
     this.getFrankDoc().pipe(catchError(errorResp => {
-      let loadError: string | undefined;
-      if (errorResp.data && errorResp.data.error)
-        loadError = errorResp.data.error;
-      else
-        loadError = "Unable to load Frank!Doc.json file.";
+      const loadError = (errorResp.data && errorResp.data.error) ? errorResp.data.error : "Unable to load Frank!Doc.json file.";
+
       this.frankDocStateSource.next({ ...this.emptyState, loadError });
       return throwError(() => new Error(loadError));
     })).subscribe(data => {
@@ -108,7 +105,7 @@ export class AppService {
   }
 
   fullNameToSimpleName(fullName: string) {
-    return fullName.substring(fullName.lastIndexOf(".") + 1)
+    return fullName.slice(fullName.lastIndexOf(".") + 1)
   }
 
   elementInheritance(showInheritance: boolean, element?: Element){
@@ -160,7 +157,7 @@ export class AppService {
     else if (!baseAttrs && !mergeAttrs)
       return null;
 
-    const filteredMergeAttrs = mergeAttrs!.filter(attr => !baseAttrs!.find(ba => ba[fieldName] === attr[fieldName]));
+    const filteredMergeAttrs = mergeAttrs!.filter(attr => !baseAttrs!.some(ba => ba[fieldName] === attr[fieldName]));
     return [...baseAttrs!, ...filteredMergeAttrs];
   }
 
@@ -189,7 +186,7 @@ export class AppService {
       // `a` and `b` are of different types. Compare their string values.
       const aString = String(a);
       const bString = String(b);
-      return aString == bString ? 0 : aString < bString ? -1 : 1;
+      return aString == bString ? 0 : (aString < bString ? -1 : 1);
     }
   }
 }

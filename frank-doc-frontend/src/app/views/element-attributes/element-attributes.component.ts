@@ -13,7 +13,7 @@ export class ElementAttributesComponent {
   @Input() attributes!: Attribute[];
   @Input() showDeprecatedElements!: boolean;
 
-  constructor(private appService: AppService) { }
+  constructor(private appService: AppService) {}
 
   javaDocUrlOf = (fullName: string) => this.appService.javaDocUrlOf(fullName);
 

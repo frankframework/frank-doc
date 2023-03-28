@@ -1,6 +1,6 @@
 <div class="sidebar__search">
   <input type="text" placeholder="Search.." [(ngModel)]="search" />
-  <b *ngIf="search != ''" (click)="search = '';" class="closeSearch" aria-hidden="true">&times;</b>
+  <b *ngIf="search !== ''" (click)="search = '';" class="closeSearch" aria-hidden="true">&times;</b>
 
   <button
     (click)="showHideDeprecated()"
@@ -23,7 +23,7 @@
   <li *ngFor="let group of groups">
     <span
       (click)="selectGroup(group.name)"
-      [ngClass]="selectedGroup?.name == group.name ? 'nav-label active' : 'nav-label'"
+      [ngClass]="selectedGroup?.name === group.name ? 'nav-label active' : 'nav-label'"
       class="nav-label"
     >{{group.name}}</span>
   </li>

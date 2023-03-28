@@ -55,7 +55,7 @@ describe('SidebarComponent', () => {
     ];
     fixture.detectChanges();
     const groupElements = fixture.nativeElement.querySelectorAll('ul > li > span');
-    const groupNames = [...groupElements].map((e: HTMLElement) => e.textContent);
+    const groupNames = [...groupElements].map((element: HTMLElement) => element.textContent);
     expect(groupNames).toEqual(['group1', 'group2']);
   });
 });
