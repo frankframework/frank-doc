@@ -1,5 +1,9 @@
 name: Angular CI
-on: [push]
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
 defaults:
   run:
     working-directory: ./frank-doc-frontend

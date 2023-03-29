@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Elements } from 'src/app/app.types';
-import { Forward } from 'src/app/frankdoc.types';
+import { ParsedTag } from 'src/app/frankdoc.types';
 
 @Component({
   selector: 'element-forwards',
@@ -10,6 +10,6 @@ import { Forward } from 'src/app/frankdoc.types';
 export class ElementForwardsComponent {
 
   @Input() elements!: Elements;
-  @Input() forwards?: Forward[];
+  @Input() forwards?: ParsedTag[];
 
 }

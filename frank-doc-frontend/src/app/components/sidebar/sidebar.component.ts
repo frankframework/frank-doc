@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppService } from 'src/app/app.service';
 import { Group, Element } from 'src/app/frankdoc.types';
 import { Elements } from 'src/app/app.types';
-import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'sidebar',
@@ -19,13 +20,13 @@ export class SidebarComponent {
 
   search = "";
 
-  constructor(private appService: AppService, private router: Router) {}
+  constructor(private appService: AppService, private router: Router) { }
 
   showHideDeprecated = () => this.appService.showHideDeprecated();
   showHideInheritance = () => this.appService.showHideInheritance();
 
-  downloadXSD(){
-    const downloadUrl = '/xml/xsd/FrankConfig.xsd';
+  downloadXSD() {
+    const downloadUrl = environment.xsdUrl;
 
     const link = document.createElement('a');
     link.setAttribute('target', '_blank');
@@ -36,17 +37,16 @@ export class SidebarComponent {
     link.remove();
   }
 
-  selectGroup(groupName: string){
+  selectGroup(groupName: string) {
     if (this.selectedGroup?.name === groupName)
       return;
-    if (!this.element){
+    if (!this.element) {
       this.router.navigate([groupName]);
       return;
     }
 
     const newGroup = this.groups.find(group => group.name === groupName);
-    if (newGroup)
-      this.selectedGroup = newGroup;
+    if (newGroup) this.selectedGroup = newGroup;
   }
 
 }

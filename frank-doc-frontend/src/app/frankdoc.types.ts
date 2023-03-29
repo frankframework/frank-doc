@@ -15,9 +15,9 @@ export interface Element {
   elementNames: string[];
   attributes?: Attribute[];
   children?: Child[];
-  forwards?: Forward[];
+  forwards?: ParsedTag[];
   deprecated?: boolean;
-  parameters?: Forward[];
+  parameters?: ParsedTag[];
   parametersDescription?: string;
 }
 
@@ -26,13 +26,13 @@ export interface Attribute {
   mandatory?: boolean;
   describer?: string;
   description?: string;
-  type?: TypeEnum;
+  type?: DataType;
   default?: string;
   deprecated?: boolean;
   enum?: string;
 }
 
-export enum TypeEnum {
+export enum DataType {
   Bool = 'bool',
   Int = 'int',
 }
@@ -46,7 +46,7 @@ export interface Child {
   mandatory?: boolean;
 }
 
-export interface Forward {
+export interface ParsedTag {
   name: string;
   description?: string;
 }

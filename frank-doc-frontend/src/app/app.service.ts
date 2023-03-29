@@ -1,6 +1,7 @@
 import { KeyValue } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, isDevMode } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { BehaviorSubject, catchError, throwError } from 'rxjs';
 import { AppState, Attribute, Element, FrankDocState } from './app.types';
 import { FrankDoc, Group } from './frankdoc.types';
@@ -16,8 +17,8 @@ export class AppService {
     elements: {},
     enums: {},
     version: null,
-    showDeprecatedElements: false,
-    showInheritance: true
+    showDeprecatedElements: environment.showDeprecatedElements,
+    showInheritance: environment.showInheritance
   }
   private frankDocStateSource = new BehaviorSubject<AppState>(this.emptyState);
   private frankDocUrl = "/js/frankdoc.json";
