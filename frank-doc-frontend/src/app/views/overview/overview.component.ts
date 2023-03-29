@@ -12,13 +12,13 @@ import { Group } from 'src/app/frankdoc.types';
 export class OverviewComponent implements OnInit, OnDestroy {
   @HostBinding('class') class = 'element'
 
-  private subs?: Subscription;
+  private subscriptions?: Subscription;
   version = "";
 
   constructor(private appService: AppService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.subs = combineLatest(
+    this.subscriptions = combineLatest(
       [this.appService.frankDoc$, this.route.paramMap]
     ).subscribe(([state, paramMap]) => {
       this.version = state.version || "";
@@ -35,6 +35,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subs?.unsubscribe();
+    this.subscriptions?.unsubscribe();
   }
 }
