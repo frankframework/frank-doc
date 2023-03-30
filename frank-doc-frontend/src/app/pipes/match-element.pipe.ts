@@ -13,58 +13,65 @@ export class MatchElementPipe implements PipeTransform {
   transform(elements: Elements, searchText?: string, group?: Group){
     if (!elements || !group) return {}; //Cannot filter elements if no group has been selected
 
-    const returnELements: Elements = {},
-      matchedParents: { [index: string]: boolean } = {}, // cache matched parents
-      noMatchParents: { [index: string]: boolean } = {}, // cache no match parents
+    const matchedParentsCache: Record<string, boolean> = {}, // cache matched parents
+      unmatchedParentsCache: Record<string, boolean> = {}, // cache no match parents
       groupMembers = this.appService.getGroupElements(group.types),
-      searchTextLC = searchText && searchText != "" ? searchText.toLowerCase() : undefined;
+      searchTerm = searchText && searchText != "" ? searchText.toLowerCase() : undefined;
+    let matchedElements: Elements = {}
 
     for (const elementName of groupMembers){
       const element = elements[elementName];
 
-      if (!searchTextLC) {
-        returnELements[elementName] = element;
+      if (!searchTerm) {
+        matchedElements[elementName] = element;
         continue;
       }
-      if (this.elementToJSON(element).includes(searchTextLC)) {
-        returnELements[elementName] = element;
+      if (this.elementToJSON(element).includes(searchTerm)) {
+        matchedElements[elementName] = element;
         continue;
       }
 
       // search in parent (accessing children is an expensive operation)
-      const parentStack = [];
-      let elementParentName = elements[elementName].parent;
-      while (elementParentName) {
-        parentStack.push(elementParentName); // keep list of unmatched parents
-
-        if (noMatchParents[elementParentName]) break;
-        if (matchedParents[elementParentName]) {
-          returnELements[elementName] = element;
-          break;
-        }
-
-        const parentElement = elements[elementParentName];
-
-        if (this.elementToJSON(parentElement).includes(searchTextLC)) {
-          returnELements[elementName] = element;
-          matchedParents[elementParentName] = true;
-          break;
-        }
-        if (!parentElement.parent) {
-          for (const parentName of parentStack) {
-            noMatchParents[parentName] = true;
-          }
-          break;
-        }
-        elementParentName = parentElement.parent;
-      }
+      const matchedParents = this.processParents(elements, unmatchedParentsCache, matchedParentsCache, elementName, element, searchTerm);
+      matchedElements = { ...matchedElements, ...matchedParents};
     }
 
-    return returnELements;
+    return matchedElements;
   }
 
-  elementToJSON(element: Element) {
+  elementToJSON(element: Element, ) {
     return JSON.stringify(element).replace(/"/g, '').toLowerCase();
+  }
+
+  processParents(elements: Elements, unmatchedParentsCache: Record<string, boolean>, matchedParentsCache: Record<string, boolean>, elementName: string, element: Element, searchTerm?: string){
+    const processedParents = [],
+      matchedElements: Elements = {};
+    let elementParentName = elements[elementName].parent;
+    while (elementParentName) {
+      processedParents.push(elementParentName);
+
+      if (unmatchedParentsCache[elementParentName]) break;
+      if (matchedParentsCache[elementParentName]) {
+        matchedElements[elementName] = element;
+        break;
+      }
+
+      const parentElement = elements[elementParentName];
+
+      if (this.elementToJSON(parentElement).includes(searchTerm)) {
+        matchedElements[elementName] = element;
+        matchedParentsCache[elementParentName] = true;
+        break;
+      }
+      if (!parentElement.parent) {
+        for (const parentName of processedParents) {
+          unmatchedParentsCache[parentName] = true;
+        }
+        break;
+      }
+      elementParentName = parentElement.parent;
+    }
+    return matchedElements;
   }
 
 }
