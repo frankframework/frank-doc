@@ -51,8 +51,8 @@ export class MatchElementPipe implements PipeTransform {
           break;
         }
         if (!parentElement.parent) {
-          for (const t of parentStack) {
-            noMatchParents[t] = true;
+          for (const parentName of parentStack) {
+            noMatchParents[parentName] = true;
           }
           break;
         }
