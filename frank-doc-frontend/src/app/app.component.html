@@ -1,0 +1,13 @@
+<sidebar
+  [groups]="groups"
+  [elements]="elements"
+  [showDeprecatedElements]="showDeprecatedElements"
+  [showInheritance]="showInheritance"
+  [selectedGroup]="group"
+  [element]="element"
+  class="sidebar"
+></sidebar>
+<router-outlet></router-outlet>
+<div *ngIf="loadError" class="loadError">
+  <p>ERROR: {{loadError}}</p>
+</div>
