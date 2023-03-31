@@ -31,19 +31,19 @@ export class MatchElementPipe implements PipeTransform {
         continue;
       }
 
-      // search in parent (accessing children is an expensive operation)
-      const matchedParents = this.processParents(elements, unmatchedParentsCache, matchedParentsCache, elementName, element, searchTerm);
-      matchedElements = { ...matchedElements, ...matchedParents};
+      // caches will be updated inside function since they use the same reference
+      const matchedParents = this.processParents(elements, unmatchedParentsCache, matchedParentsCache, searchTerm, elementName, element);
+      matchedElements = {...matchedElements, ...matchedParents};
     }
 
     return matchedElements;
   }
 
-  elementToJSON(element: Element, ) {
+  elementToJSON(element: Element) {
     return JSON.stringify(element).replace(/"/g, '').toLowerCase();
   }
 
-  processParents(elements: Elements, unmatchedParentsCache: Record<string, boolean>, matchedParentsCache: Record<string, boolean>, elementName: string, element: Element, searchTerm?: string){
+  processParents(elements: Elements, unmatchedParentsCache: Record<string, boolean>, matchedParentsCache: Record<string, boolean>, searchTerm: string, elementName: string, element: Element){
     const processedParents = [],
       matchedElements: Elements = {};
     let elementParentName = elements[elementName].parent;
@@ -63,6 +63,7 @@ export class MatchElementPipe implements PipeTransform {
         matchedParentsCache[elementParentName] = true;
         break;
       }
+
       if (!parentElement.parent) {
         for (const parentName of processedParents) {
           unmatchedParentsCache[parentName] = true;
