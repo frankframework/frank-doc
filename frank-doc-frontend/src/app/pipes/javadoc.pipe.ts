@@ -24,7 +24,7 @@ export class JavadocPipe implements PipeTransform {
 
       if (elementString == '') { //if there is no element ref then it's a method
         const methodName = captureGroup.slice(hashPos),
-          methodLabelSplit = methodName.split(") ");
+          methodLabelSplit = methodName.split(" ");
 
         if (methodLabelSplit.length == 2) return methodLabelSplit[1]; //return method label
         return methodName.slice(1, methodName.indexOf("("));
@@ -35,7 +35,7 @@ export class JavadocPipe implements PipeTransform {
       if (isMethod) {
         const method = captureGroup.split("#")[1],
           methodNameOrLabel = (method.slice(method.indexOf(") ") + 1)).trim();
-        name = `${name}.${methodNameOrLabel}`;
+        name = methodNameOrLabel.includes(" ") ? method.split(" ")[1] : `${name}.${methodNameOrLabel}`;
       }
 
       const element = this.findElement(elements, elementParts[0]);

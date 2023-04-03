@@ -47,7 +47,7 @@ describe('JavadocPipe', () => {
       .toEqual('A javadoc link to an example website');
   });
 
-  it('transforms javadoc valid link to html link', () => {
+  it('transforms basic javadoc valid link to html link', () => {
     const elements: Elements = {
       'nl.nn.adapterframework.pipes.Json2XmlValidator': {
         "name": "Json2XmlValidator",
@@ -57,5 +57,47 @@ describe('JavadocPipe', () => {
     }
     expect(pipe.transform('A javadoc {@link Json2XmlValidator}', elements))
       .toEqual('A javadoc <a href="/#/All/Json2XmlValidator">Json2XmlValidator</a>');
+  });
+
+  it('transforms javadoc link to class with label to html link', () => {
+    const elements: Elements = {
+      'nl.nn.adapterframework.pipes.PipeLineSession': {
+        "name": "PipeLineSession",
+        "fullName": "nl.nn.adapterframework.pipes.PipeLineSession",
+        elementNames: []
+      }
+    }
+    expect(pipe.transform('{@link PipeLineSession pipeLineSession}', elements))
+      .toEqual('<a href="/#/All/PipeLineSession">pipeLineSession</a>');
+  });
+
+  it('transforms invalid javadoc link to class with method to html link', () => {
+    const elements: Elements = {}
+    expect(pipe.transform('{@link IPipe#configure()}', elements))
+      .toEqual('IPipe.configure()');
+  });
+
+  it('transforms valid javadoc link to class with method to html link', () => {
+    const elements: Elements = {
+      'nl.nn.adapterframework.pipes.IPipe': {
+        "name": "IPipe",
+        "fullName": "nl.nn.adapterframework.pipes.IPipe",
+        elementNames: []
+      }
+    }
+    expect(pipe.transform('{@link IPipe#configure()}', elements))
+      .toEqual('<a href="/#/All/IPipe">IPipe.configure()</a>');
+  });
+
+  it('transforms javadoc link to same class method to html link', () => {
+    const elements: Elements = {}
+    expect(pipe.transform('{@link #doPipe(Message, PipeLineSession) doPipe}', elements))
+      .toEqual('doPipe');
+  });
+
+  it('transforms javadoc links without parentheses', () => {
+    const elements: Elements = {}
+    expect(pipe.transform('{@link #setDestinationType destinationType} = {@link DestinationType#TOPIC TOPIC}', elements))
+      .toEqual('destinationType = TOPIC');
   });
 });
