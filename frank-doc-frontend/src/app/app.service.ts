@@ -37,7 +37,7 @@ export class AppService {
 
   showHideInheritance() {
     const state = this.frankDocStateSource.value;
-    const updatedElement = this.elementInheritance(!state.showInheritance, state.element);
+    const updatedElement = state.element ? this.elementInheritance(!state.showInheritance, state.element) : undefined;
 
     this.frankDocStateSource.next({ ...state, element: updatedElement, showInheritance: !state.showInheritance });
   }
@@ -96,58 +96,48 @@ export class AppService {
   }
 
   javaDocUrlOf(fullName: string) {
-    if (fullName.includes(".")) {
-      return 'https://javadoc.frankframework.org/' + fullName.replaceAll(".", "/") + '.html';
-    } else {
+    return fullName.includes(".") ? `https://javadoc.frankframework.org/${fullName.replaceAll(".", "/")}.html`
       // We only have a JavaDoc URL if we have an element with a Java class. The
       // exception we handle here is <Module>.
-      return null;
-    }
+      : null;
   }
 
   fullNameToSimpleName(fullName: string) {
     return fullName.slice(fullName.lastIndexOf(".") + 1)
   }
 
-  elementInheritance(showInheritance: boolean, element?: Element){
+  elementInheritance(showInheritance: boolean, element: Element){
     const state = this.frankDocStateSource.value;
-    if (element) {
-      if (showInheritance) {
-        return this.flattenElements(element); // Merge inherited elements
-      }
-      return state.elements[element.fullName]; // Update the element to it's original state
-    }
-    return element;
+    if (showInheritance)  return this.flattenElements(element); // Merge inherited elements
+    return state.elements[element.fullName]; // Update the element to it's original state
   }
 
   flattenElements(element: Element): Element {
-    if (element.parent) {
+      if(!element.parent) return element;
+
       const allElements = this.frankDocStateSource.value.elements;
-      const el: Element = {...element}
-      const parent = allElements[el.parent!];
+      const flatElement: Element = {...element};
+      const parent = allElements[flatElement.parent!];
 
       //Add separator where attributes inherit from
       if (parent.attributes && parent.attributes.length > 0) {
-        if (!el.attributes) { el.attributes = []; } //Make sure an array exists
-
-        el.attributes = [...el.attributes]; // attributes was shallowcopied, so we need to spread it in order to use push properly
-        el.attributes.push({ name: "", from: parent });
+        if (!flatElement.attributes) { flatElement.attributes = []; } //Make sure an array exists
+        flatElement.attributes = [...flatElement.attributes]; // attributes was shallowcopied, so we need to spread it in order to use push properly
+        flatElement.attributes.push({ name: "", from: parent });
       }
 
-      el.attributes = this.copyOf(el.attributes, parent.attributes, 'name') || [];
-      el.children = this.copyOf(el.children, parent.children, 'roleName') || [];
-      el.parameters = this.copyOf(el.parameters, parent.parameters, 'name') || [];
-      el.forwards = this.copyOf(el.forwards, parent.forwards, 'name') || [];
+      flatElement.attributes = this.copyOf(flatElement.attributes, parent.attributes, 'name') || [];
+      flatElement.children = this.copyOf(flatElement.children, parent.children, 'roleName') || [];
+      flatElement.parameters = this.copyOf(flatElement.parameters, parent.parameters, 'name') || [];
+      flatElement.forwards = this.copyOf(flatElement.forwards, parent.forwards, 'name') || [];
 
-      if (!el.parametersDescription && parent.parametersDescription) {
-        el.parametersDescription = parent.parametersDescription;
+      if (!flatElement.parametersDescription && parent.parametersDescription) {
+        flatElement.parametersDescription = parent.parametersDescription;
       }
 
-      el.parent = parent.parent || undefined;
+      flatElement.parent = parent.parent || undefined;
 
-      return this.flattenElements(el);
-    }
-    return element;
+      return this.flattenElements(flatElement);
   }
 
   copyOf<T>(baseAttrs: T[] | undefined, mergeAttrs: T[] | undefined, fieldName: keyof T) {

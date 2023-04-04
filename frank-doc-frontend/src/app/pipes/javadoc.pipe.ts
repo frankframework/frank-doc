@@ -22,21 +22,12 @@ export class JavadocPipe implements PipeTransform {
         isMethod = hashPos > -1,
         elementString = isMethod ? captureGroup.split("#")[0] : captureGroup;
 
-      if (elementString == '') { //if there is no element ref then it's a method
-        const methodName = captureGroup.slice(hashPos),
-          methodLabelSplit = methodName.split(" ");
-
-        if (methodLabelSplit.length == 2) return methodLabelSplit[1]; //return method label
-        return methodName.slice(1, methodName.indexOf("("));
+      if (elementString == '') { //if there is no element ref then it's an internal method
+        return this.transformInternalMethod(captureGroup, hashPos);
       }
 
       const elementParts = elementString.split(" "); //first part is the class name, 2nd part the written name
-      let name = elementParts[elementParts.length - 1];
-      if (isMethod) {
-        const method = captureGroup.split("#")[1],
-          methodNameOrLabel = (method.slice(method.indexOf(") ") + 1)).trim();
-        name = methodNameOrLabel.includes(" ") ? method.split(" ")[1] : `${name}.${methodNameOrLabel}`;
-      }
+      const name = this.parseLinkName(elementParts, isMethod, captureGroup);
 
       const element = this.findElement(elements, elementParts[0]);
       if (!element) return name;
@@ -44,6 +35,24 @@ export class JavadocPipe implements PipeTransform {
     });
 
     return this.domSanatizer.bypassSecurityTrustHtml(value);
+  }
+
+  transformInternalMethod(captureGroup: string, hashPos: number){
+    const methodName = captureGroup.slice(hashPos),
+      methodLabelSplit = methodName.split(" ");
+
+    if (methodLabelSplit.length == 2) return methodLabelSplit[1]; //return method label
+    return methodName.slice(1, methodName.indexOf("("));
+  }
+
+  parseLinkName(elementParts: string[], isMethod: boolean, captureGroup: string){
+    const elementName = elementParts[elementParts.length - 1]; // element name/label
+    if (isMethod) {
+      const method = captureGroup.split("#")[1],
+        methodNameOrLabel = (method.slice(method.indexOf(") ") + 1)).trim();
+      return methodNameOrLabel.includes(" ") ? method.split(" ")[1] : `${elementName}.${methodNameOrLabel}`;
+    }
+    return elementName;
   }
 
   findElement(allElements: Elements, simpleName: string) {
