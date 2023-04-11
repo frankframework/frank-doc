@@ -68,7 +68,7 @@ public class Reference {
 			try {
 				return (String) referTo.getValue();
 			} catch(FrankDocException e) {
-				log.error("Could not get value of annotation [{}] on method [{}]", method.toString(), e);
+				log.error("Could not get value of annotation [{}] on method [{}]", referTo.getName(), method.toString(), e);
 			}
 		}
 		return null;

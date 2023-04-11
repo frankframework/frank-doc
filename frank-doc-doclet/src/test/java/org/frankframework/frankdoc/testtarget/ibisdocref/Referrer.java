@@ -42,4 +42,8 @@ public class Referrer {
 	@ReferTo(ChildTarget.class)
 	public void setReferToInheritedDescription(String value) {
 	}
+
+	@ReferTo(ChildTargetParameterized.class)
+	public void setReferToParameterizedType(String value) {
+	}
 }
