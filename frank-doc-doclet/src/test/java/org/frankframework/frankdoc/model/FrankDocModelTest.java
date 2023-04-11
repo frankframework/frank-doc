@@ -521,6 +521,15 @@ public class FrankDocModelTest {
 	}
 
 	@Test
+	public void testReferToWithParameterizedTargetClass() throws Exception {
+		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("referToParameterizedType");
+		assertTrue(actual.isDocumented());
+		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());
+		assertSame(attributeOwner, actual.getOwningElement());
+		assertEquals("Description testing reference to parameterized class.", actual.getDescription());		
+	}
+
+	@Test
 	public void whenMethodOverriddenWithoutDocThenDocumentedFalseButIbisDocRefInfoInherited() throws FrankDocException {
 		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("ibisDocRefClassNoOrderRefersIbisDocOrderDescriptionDefault", REFERRER_CHILD);
 		assertFalse(actual.isDocumented());

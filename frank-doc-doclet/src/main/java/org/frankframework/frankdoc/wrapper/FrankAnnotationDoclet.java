@@ -31,6 +31,7 @@ import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationValue;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.FieldDoc;
+import com.sun.javadoc.ParameterizedType;
 
 class FrankAnnotationDoclet implements FrankAnnotation {
 	private static Logger log = LogUtil.getLogger(FrankAnnotationDoclet.class);
@@ -87,6 +88,8 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 			return raw;
 		} else if(raw instanceof ClassDoc) {
 			return ((ClassDoc) raw).qualifiedTypeName();
+		} else if(raw instanceof ParameterizedType) {
+			return ((ParameterizedType) raw).asClassDoc().qualifiedName();
 		} else if(raw instanceof FieldDoc) {
 			return new FrankEnumConstantDoclet((FieldDoc) raw);
 		} else {
