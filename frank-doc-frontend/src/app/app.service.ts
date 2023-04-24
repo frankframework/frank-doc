@@ -37,7 +37,7 @@ export class AppService {
 
   showHideInheritance() {
     const state = this.frankDocStateSource.value;
-    const updatedElement = state.element ? this.elementInheritance(!state.showInheritance, state.element) : undefined;
+    const updatedElement = state.element ? this.getOriginalOrInheritedElement(!state.showInheritance, state.element) : undefined;
 
     this.frankDocStateSource.next({ ...state, element: updatedElement, showInheritance: !state.showInheritance });
   }
@@ -46,7 +46,7 @@ export class AppService {
     const state = this.frankDocStateSource.value;
     if(element) {
       if (state.showInheritance){
-        const updatedElement = this.elementInheritance(state.showInheritance, element);
+        const updatedElement = this.getOriginalOrInheritedElement(state.showInheritance, element);
         this.frankDocStateSource.next({ ...state, group, element: updatedElement });
         return;
       }
@@ -95,8 +95,9 @@ export class AppService {
     return [...new Set(elementNames)]; // Get distinct element names
   }
 
-  javaDocUrlOf(fullName: string) {
-    return fullName.includes(".") ? `https://javadoc.frankframework.org/${fullName.replaceAll(".", "/")}.html`
+  javaDocUrlOf(fullName: string): string | null {
+    return fullName.includes(".")
+      ? `${environment.javadocBaseUrl}/${fullName.replaceAll(".", "/")}.html`
       // We only have a JavaDoc URL if we have an element with a Java class. The
       // exception we handle here is <Module>.
       : null;
@@ -106,10 +107,11 @@ export class AppService {
     return fullName.slice(fullName.lastIndexOf(".") + 1)
   }
 
-  elementInheritance(showInheritance: boolean, element: Element){
+  getOriginalOrInheritedElement(showInheritance: boolean, element: Element){
     const state = this.frankDocStateSource.value;
-    if (showInheritance)  return this.flattenElements(element); // Merge inherited elements
-    return state.elements[element.fullName]; // Update the element to it's original state
+    return showInheritance
+      ? this.flattenElements(element) // Merge inherited elements
+      : state.elements[element.fullName]; // Update the element to it's original state
   }
 
   flattenElements(element: Element): Element {
@@ -121,8 +123,7 @@ export class AppService {
 
       //Add separator where attributes inherit from
       if (parent.attributes && parent.attributes.length > 0) {
-        if (!flatElement.attributes) { flatElement.attributes = []; } //Make sure an array exists
-        flatElement.attributes = [...flatElement.attributes]; // attributes was shallowcopied, so we need to spread it in order to use push properly
+        flatElement.attributes = [...(flatElement.attributes || [])]; // attributes was shallowcopied, so we need to spread it in order to use push properly
         flatElement.attributes.push({ name: "", from: parent });
       }
 
@@ -131,25 +132,24 @@ export class AppService {
       flatElement.parameters = this.copyOf(flatElement.parameters, parent.parameters, 'name') || [];
       flatElement.forwards = this.copyOf(flatElement.forwards, parent.forwards, 'name') || [];
 
-      if (!flatElement.parametersDescription && parent.parametersDescription) {
-        flatElement.parametersDescription = parent.parametersDescription;
-      }
-
+      flatElement.parametersDescription ??= parent.parametersDescription;
       flatElement.parent = parent.parent || undefined;
 
       return this.flattenElements(flatElement);
   }
 
-  copyOf<T>(baseAttrs: T[] | undefined, mergeAttrs: T[] | undefined, fieldName: keyof T) {
-    if (baseAttrs && !mergeAttrs)
-      return baseAttrs;
-    else if (mergeAttrs && !baseAttrs)
-      return mergeAttrs;
-    else if (!baseAttrs && !mergeAttrs)
+  copyOf<T>(baseAttributes: T[] | undefined, mergeAttributes: T[] | undefined, fieldName: keyof T) {
+    if (baseAttributes && !mergeAttributes)
+      return baseAttributes;
+    else if (mergeAttributes && !baseAttributes)
+      return mergeAttributes;
+    else if (!baseAttributes && !mergeAttributes)
       return null;
 
-    const filteredMergeAttrs = mergeAttrs!.filter(attr => !baseAttrs!.some(ba => ba[fieldName] === attr[fieldName]));
-    return [...baseAttrs!, ...filteredMergeAttrs];
+    const filteredMergeAttributes = mergeAttributes!.filter(
+      attribute => !baseAttributes!.some(ba => ba[fieldName] === attribute[fieldName])
+    );
+    return [...baseAttributes!, ...filteredMergeAttributes];
   }
 
   orderBy<K, V>(fieldName: keyof V) {

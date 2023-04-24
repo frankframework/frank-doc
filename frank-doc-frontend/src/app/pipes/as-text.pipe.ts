@@ -5,37 +5,40 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class AsTextPipe implements PipeTransform {
 
-  transform(value?: string) {
-    if (!value) return "";
+  transform(value: string) {
+    const tagsRegex = /<[^>]*>?/gm;
+    const linkRegex = /(?:{@link\s(.*?)})/g;
     value = value.replaceAll('\\"', '"');
-    value = value.replace(/<[^>]*>?/gm, '');
-    value = value.replace(/(?:{@link\s(.*?)})/g, (match, captureGroup: string) => {
-      // {@link PipeLineSession pipeLineSession} -> 'PipeLineSession pipeLineSession'
-      // {@link IPipe#configure()} -> 'IPipe#configure()'
-      // {@link #doPipe(Message, PipeLineSession) doPipe} -> '#doPipe(Message, PipeLineSession) doPipe'
-      const hashPos = captureGroup.indexOf("#"),
-        isMethod = hashPos > -1,
-        element = isMethod ? captureGroup.split("#")[0] : captureGroup;
-
-      if (element == '') { //if there is no element ref then it's a method
-        return this.transformInternalMethod(captureGroup, hashPos);
-      }
-
-      const elementParts = element.split(" "); //first part is the class name, 2nd part the written name
-      return this.name(elementParts, isMethod, captureGroup);
-    });
+    value = value.replace(tagsRegex, '');
+    value = value.replace(linkRegex, this.transformLink);
     return value;
   }
 
-  transformInternalMethod(captureGroup: string, hashPos: number) {
-    const methodName = captureGroup.slice(hashPos),
-      methodLabelSplit = methodName.split(" ");
+  transformLink(_: string, captureGroup: string){
+    // {@link PipeLineSession pipeLineSession} -> 'PipeLineSession pipeLineSession'
+    // {@link IPipe#configure()} -> 'IPipe#configure()'
+    // {@link #doPipe(Message, PipeLineSession) doPipe} -> '#doPipe(Message, PipeLineSession) doPipe'
+    const hashPosition = captureGroup.indexOf("#"),
+      isMethod = hashPosition > -1,
+      element = isMethod ? captureGroup.split("#")[0] : captureGroup;
 
-    if (methodLabelSplit.length == 2) return methodLabelSplit[1]; //return method label
-    return methodName.slice(1, methodName.indexOf("("));
+    if (element === '') { //if there is no element ref then it's a method
+      return this.getInternalMethodReference(captureGroup, hashPosition);
+    }
+
+    const elementParts = element.split(" "); //first part is the class name, 2nd part the written name
+    return this.getDisplayName(elementParts, isMethod, captureGroup);
   }
 
-  name(elementParts: string[], isMethod: boolean, captureGroup: string) {
+  getInternalMethodReference(captureGroup: string, hashPosition: number) {
+    const method = captureGroup.slice(hashPosition),
+      methodParts = method.split(" ");
+    return methodParts.length === 2
+      ? methodParts[1] // 'methodName label' -> 'label'
+      : method.slice(1, method.indexOf("("));
+  }
+
+  getDisplayName(elementParts: string[], isMethod: boolean, captureGroup: string) {
     const elementName = elementParts[elementParts.length - 1]; // element name/label
     if (isMethod) {
       const method = captureGroup.split("#")[1],
