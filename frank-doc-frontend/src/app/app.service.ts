@@ -220,7 +220,7 @@ export class AppService {
       // `a` and `b` are of different types. Compare their string values.
       const aString = String(a);
       const bString = String(b);
-      return aString == bString ? 0 : aString < bString ? -1 : 1;
+      return aString == bString ? 0 : (aString < bString ? -1 : 1);
     };
   }
 }
