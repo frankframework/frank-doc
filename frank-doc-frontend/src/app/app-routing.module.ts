@@ -6,11 +6,11 @@ import { OverviewComponent } from './views/overview/overview.component';
 const routes: Routes = [
   { path: ':group', component: OverviewComponent, pathMatch: 'full' },
   { path: ':group/:element', component: ElementComponent, pathMatch: 'full' },
-  { path: '**', redirectTo: '/All' }
+  { path: '**', redirectTo: '/All' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true })],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

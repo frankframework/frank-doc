@@ -11,9 +11,8 @@ describe('SidebarElementsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      declarations: [ SidebarElementsComponent, MatchElementPipe ]
-    })
-    .compileComponents();
+      declarations: [SidebarElementsComponent, MatchElementPipe],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SidebarElementsComponent);
     component = fixture.componentInstance;

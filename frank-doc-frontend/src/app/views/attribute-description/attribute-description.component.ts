@@ -6,10 +6,9 @@ import { Value } from 'src/app/frankdoc.types';
 @Component({
   selector: 'attribute-description',
   templateUrl: './attribute-description.component.html',
-  styleUrls: ['./attribute-description.component.scss']
+  styleUrls: ['./attribute-description.component.scss'],
 })
-export class AttributeDescriptionComponent implements OnInit{
-
+export class AttributeDescriptionComponent implements OnInit {
   @Input() elements!: Elements;
   @Input() enum!: string;
   @Input() showDeprecatedElements!: boolean;
@@ -21,10 +20,11 @@ export class AttributeDescriptionComponent implements OnInit{
   constructor(private appService: AppService) {}
 
   ngOnInit(): void {
-    this.appService.frankDoc$.subscribe(state => {
+    this.appService.frankDoc$.subscribe((state) => {
       this.enumFields = state.enums[this.enum];
-      this.hasDiscriptionEnum = this.enumFields.some(field => field.description != undefined);
+      this.hasDiscriptionEnum = this.enumFields.some(
+        (field) => field.description != undefined
+      );
     });
   }
-
 }

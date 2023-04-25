@@ -7,10 +7,9 @@ import { NavigationStart, Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-
   groups: Group[] = [];
   elements: Elements = {};
   loadError?: string;
@@ -22,16 +21,19 @@ export class AppComponent implements OnInit {
   constructor(private appService: AppService, private router: Router) {}
 
   ngOnInit(): void {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart && event.url && /^\/!/.test(event.url)){
+    this.router.events.subscribe((event) => {
+      if (
+        event instanceof NavigationStart &&
+        event.url &&
+        /^\/!/.test(event.url)
+      ) {
         this.router.navigate([event.url.replace('/!', '')]);
       }
     });
 
     this.appService.init();
-    this.appService.frankDoc$.subscribe(state => {
-      if (isDevMode())
-        console.log(state);
+    this.appService.frankDoc$.subscribe((state) => {
+      if (isDevMode()) console.log(state);
 
       this.groups = state.groups;
       this.elements = state.elements;

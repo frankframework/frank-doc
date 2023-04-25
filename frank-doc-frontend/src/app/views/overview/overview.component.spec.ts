@@ -15,9 +15,8 @@ describe('OverviewComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
       providers: [AppService],
-      declarations: [OverviewComponent]
-    })
-      .compileComponents();
+      declarations: [OverviewComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OverviewComponent);
     component = fixture.componentInstance;

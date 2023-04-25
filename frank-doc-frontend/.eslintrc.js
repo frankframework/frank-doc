@@ -5,10 +5,7 @@ module.exports = {
     {
       files: ['*.ts'],
       parserOptions: {
-        project: [
-          'tsconfig.app.json',
-          'tsconfig.spec.json'
-        ],
+        project: ['tsconfig.app.json', 'tsconfig.spec.json'],
         tsconfigRootDir: __dirname,
         createDefaultProgram: true,
         sourceType: 'module',
@@ -19,19 +16,17 @@ module.exports = {
         'plugin:unicorn/recommended',
       ],
       rules: {
-        "unicorn/prevent-abbreviations": 'warn',
-        "unicorn/empty-brace-spaces": 'off',
-        "unicorn/no-array-reduce": 'off',
-        "unicorn/prefer-ternary": 'warn',
-        "unicorn/no-null": 'warn',
-        "@typescript-eslint/explicit-function-return-type": "error"
+        'unicorn/prevent-abbreviations': 'warn',
+        'unicorn/empty-brace-spaces': 'off',
+        'unicorn/no-array-reduce': 'off',
+        'unicorn/prefer-ternary': 'warn',
+        'unicorn/no-null': 'warn',
+        '@typescript-eslint/explicit-function-return-type': 'error',
       },
     },
     {
       files: ['*.html'],
-      extends: [
-        'plugin:@angular-eslint/template/recommended',
-      ],
+      extends: ['plugin:@angular-eslint/template/recommended'],
       rules: {},
     },
   ],

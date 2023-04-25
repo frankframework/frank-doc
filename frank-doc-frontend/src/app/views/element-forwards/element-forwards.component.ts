@@ -5,11 +5,9 @@ import { ParsedTag } from 'src/app/frankdoc.types';
 @Component({
   selector: 'element-forwards',
   templateUrl: './element-forwards.component.html',
-  styleUrls: ['./element-forwards.component.scss']
+  styleUrls: ['./element-forwards.component.scss'],
 })
 export class ElementForwardsComponent {
-
   @Input() elements!: Elements;
   @Input() forwards?: ParsedTag[];
-
 }

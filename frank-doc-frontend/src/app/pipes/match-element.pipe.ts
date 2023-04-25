@@ -4,10 +4,9 @@ import { Elements, Element } from '../app.types';
 import { Group } from '../frankdoc.types';
 
 @Pipe({
-  name: 'matchElement'
+  name: 'matchElement',
 })
 export class MatchElementPipe implements PipeTransform {
-
   constructor(private appService: AppService) {}
 
   transform(elements: Elements, searchText?: string, group?: Group): Elements {
@@ -16,10 +15,11 @@ export class MatchElementPipe implements PipeTransform {
     const matchedParentsCache: Record<string, boolean> = {}, // cache matched parents
       unmatchedParentsCache: Record<string, boolean> = {}, // cache no match parents
       groupMembers = this.appService.getGroupElements(group.types),
-      searchTerm = searchText && searchText != "" ? searchText.toLowerCase() : undefined;
-    let matchedElements: Elements = {}
+      searchTerm =
+        searchText && searchText != '' ? searchText.toLowerCase() : undefined;
+    let matchedElements: Elements = {};
 
-    for (const elementName of groupMembers){
+    for (const elementName of groupMembers) {
       const element = elements[elementName];
 
       if (!searchTerm) {
@@ -32,8 +32,15 @@ export class MatchElementPipe implements PipeTransform {
       }
 
       // caches will be updated inside function since they use the same reference
-      const matchedParents = this.processParents(elements, unmatchedParentsCache, matchedParentsCache, searchTerm, elementName, element);
-      matchedElements = {...matchedElements, ...matchedParents};
+      const matchedParents = this.processParents(
+        elements,
+        unmatchedParentsCache,
+        matchedParentsCache,
+        searchTerm,
+        elementName,
+        element
+      );
+      matchedElements = { ...matchedElements, ...matchedParents };
     }
 
     return matchedElements;
@@ -43,7 +50,14 @@ export class MatchElementPipe implements PipeTransform {
     return JSON.stringify(element).replace(/"/g, '').toLowerCase();
   }
 
-  processParents(elements: Elements, unmatchedParentsCache: Record<string, boolean>, matchedParentsCache: Record<string, boolean>, searchTerm: string, elementName: string, element: Element): Elements {
+  processParents(
+    elements: Elements,
+    unmatchedParentsCache: Record<string, boolean>,
+    matchedParentsCache: Record<string, boolean>,
+    searchTerm: string,
+    elementName: string,
+    element: Element
+  ): Elements {
     const processedParents = [],
       matchedElements: Elements = {};
     let elementParentName = elements[elementName].parent;
@@ -74,5 +88,4 @@ export class MatchElementPipe implements PipeTransform {
     }
     return matchedElements;
   }
-
 }

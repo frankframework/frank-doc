@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
   @Input() groups!: Group[];
@@ -18,9 +18,9 @@ export class SidebarComponent {
   @Input() selectedGroup?: Group;
   @Input() element?: Element;
 
-  search = "";
+  search = '';
 
-  constructor(private appService: AppService, private router: Router) { }
+  constructor(private appService: AppService, private router: Router) {}
 
   showHideDeprecated = (): void => this.appService.showHideDeprecated();
   showHideInheritance = (): void => this.appService.showHideInheritance();
@@ -31,22 +31,20 @@ export class SidebarComponent {
     const link = document.createElement('a');
     link.setAttribute('target', '_blank');
     link.setAttribute('href', downloadUrl);
-    link.setAttribute('download', "");
+    link.setAttribute('download', '');
     document.body.append(link);
     link.click();
     link.remove();
   }
 
   selectGroup(groupName: string): void {
-    if (this.selectedGroup?.name === groupName)
-      return;
+    if (this.selectedGroup?.name === groupName) return;
     if (!this.element) {
       this.router.navigate([groupName]);
       return;
     }
 
-    const newGroup = this.groups.find(group => group.name === groupName);
+    const newGroup = this.groups.find((group) => group.name === groupName);
     if (newGroup) this.selectedGroup = newGroup;
   }
-
 }
