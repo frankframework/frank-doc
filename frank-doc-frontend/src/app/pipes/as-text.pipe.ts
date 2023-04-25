@@ -5,7 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class AsTextPipe implements PipeTransform {
 
-  transform(value: string) {
+  transform(value: string): string {
+    if (value === '') return value;
     const tagsRegex = /<[^>]*>?/gm;
     const linkRegex = /(?:{@link\s(.*?)})/g;
     value = value.replaceAll('\\"', '"');
@@ -14,7 +15,7 @@ export class AsTextPipe implements PipeTransform {
     return value;
   }
 
-  transformLink(_: string, captureGroup: string){
+  transformLink(_: string, captureGroup: string): string{
     // {@link PipeLineSession pipeLineSession} -> 'PipeLineSession pipeLineSession'
     // {@link IPipe#configure()} -> 'IPipe#configure()'
     // {@link #doPipe(Message, PipeLineSession) doPipe} -> '#doPipe(Message, PipeLineSession) doPipe'
@@ -30,7 +31,7 @@ export class AsTextPipe implements PipeTransform {
     return this.getDisplayName(elementParts, isMethod, captureGroup);
   }
 
-  getInternalMethodReference(captureGroup: string, hashPosition: number) {
+  getInternalMethodReference(captureGroup: string, hashPosition: number): string {
     const method = captureGroup.slice(hashPosition),
       methodParts = method.split(" ");
     return methodParts.length === 2
@@ -38,12 +39,12 @@ export class AsTextPipe implements PipeTransform {
       : method.slice(1, method.indexOf("("));
   }
 
-  getDisplayName(elementParts: string[], isMethod: boolean, captureGroup: string) {
+  getDisplayName(elementParts: string[], isMethod: boolean, captureGroup: string): string {
     const elementName = elementParts[elementParts.length - 1]; // element name/label
     if (isMethod) {
       const method = captureGroup.split("#")[1],
-        methodNameOrLabel = (method.slice(method.indexOf(") ") + 1)).trim();
-      return methodNameOrLabel.includes(" ") ? method.split(" ")[1] : `${elementName}.${methodNameOrLabel}`;
+        labelOrMethodName = (method.slice(method.indexOf(") ") + 1)).trim();
+      return labelOrMethodName.includes(" ") ? method.split(" ")[1] : `${elementName}.${labelOrMethodName}`;
     }
     return elementName;
   }

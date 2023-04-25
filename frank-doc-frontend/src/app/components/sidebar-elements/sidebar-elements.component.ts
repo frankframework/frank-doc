@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { AppService } from 'src/app/app.service';
 import { Elements } from 'src/app/app.types';
@@ -19,5 +20,5 @@ export class SidebarElementsComponent {
 
   constructor(private appService: AppService) {}
 
-  orderBy = <K, V>(fieldName: keyof V) => this.appService.orderBy<K, V>(fieldName);
+  orderBy = <K, V>(fieldName: keyof V): ((keyValueA: KeyValue<K, V>, keyValueB: KeyValue<K, V>) => number) => this.appService.orderBy<K, V>(fieldName);
 }

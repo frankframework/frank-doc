@@ -17,11 +17,11 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
   constructor(private appService: AppService, private route: ActivatedRoute) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscriptions = combineLatest(
       [this.appService.frankDoc$, this.route.paramMap]
     ).subscribe(([state, paramMap]) => {
-      this.version = state.version || "";
+      this.version = state.version ?? "";
       const groups = state.groups,
         stateGroup = state.group,
         groupParam = paramMap.get('group');
@@ -34,7 +34,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscriptions?.unsubscribe();
   }
 }

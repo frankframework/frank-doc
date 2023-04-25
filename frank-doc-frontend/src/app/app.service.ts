@@ -2,7 +2,7 @@ import { KeyValue } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, isDevMode } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, catchError, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { AppState, Attribute, Element, FrankDocState } from './app.types';
 import { FrankDoc, Group } from './frankdoc.types';
 
@@ -27,22 +27,22 @@ export class AppService {
 
   constructor(private http: HttpClient) {}
 
-  private getFrankDoc() {
+  private getFrankDoc(): Observable<FrankDoc> {
     return this.http.get<FrankDoc>(this.frankDocUrl);
   }
 
-  showHideDeprecated(){
+  showHideDeprecated(): void {
     this.frankDocStateSource.next({ ...this.frankDocStateSource.value, showDeprecatedElements: !this.frankDocStateSource.value.showDeprecatedElements });
   }
 
-  showHideInheritance() {
+  showHideInheritance(): void {
     const state = this.frankDocStateSource.value;
     const updatedElement = state.element ? this.getOriginalOrInheritedElement(!state.showInheritance, state.element) : undefined;
 
     this.frankDocStateSource.next({ ...state, element: updatedElement, showInheritance: !state.showInheritance });
   }
 
-  setGroupAndElement(group: Group, element?: Element) {
+  setGroupAndElement(group: Group, element?: Element): void {
     const state = this.frankDocStateSource.value;
     if(element) {
       if (state.showInheritance){
@@ -56,7 +56,7 @@ export class AppService {
     this.frankDocStateSource.next({ ...state, group });
   }
 
-  init() {
+  init(): void {
     this.getFrankDoc().pipe(catchError(errorResp => {
       const loadError = (errorResp.data && errorResp.data.error) ? errorResp.data.error : "Unable to load Frank!Doc.json file.";
 
@@ -89,7 +89,7 @@ export class AppService {
     });
   }
 
-  getGroupElements(groupTypes: string[]) {
+  getGroupElements(groupTypes: string[]): string[] {
     const allTypes = this.frankDocStateSource.value.types;
     const elementNames = groupTypes.flatMap(type => allTypes[type]);
     return [...new Set(elementNames)]; // Get distinct element names
@@ -103,11 +103,11 @@ export class AppService {
       : null;
   }
 
-  fullNameToSimpleName(fullName: string) {
+  fullNameToSimpleName(fullName: string): string {
     return fullName.slice(fullName.lastIndexOf(".") + 1)
   }
 
-  getOriginalOrInheritedElement(showInheritance: boolean, element: Element){
+  getOriginalOrInheritedElement(showInheritance: boolean, element: Element): Element {
     const state = this.frankDocStateSource.value;
     return showInheritance
       ? this.flattenElements(element) // Merge inherited elements
@@ -123,22 +123,22 @@ export class AppService {
 
       //Add separator where attributes inherit from
       if (parent.attributes && parent.attributes.length > 0) {
-        flatElement.attributes = [...(flatElement.attributes || [])]; // attributes was shallowcopied, so we need to spread it in order to use push properly
+        flatElement.attributes = [...(flatElement.attributes ?? [])]; // attributes was shallowcopied, so we need to spread it in order to use push properly
         flatElement.attributes.push({ name: "", from: parent });
       }
 
-      flatElement.attributes = this.copyOf(flatElement.attributes, parent.attributes, 'name') || [];
-      flatElement.children = this.copyOf(flatElement.children, parent.children, 'roleName') || [];
-      flatElement.parameters = this.copyOf(flatElement.parameters, parent.parameters, 'name') || [];
-      flatElement.forwards = this.copyOf(flatElement.forwards, parent.forwards, 'name') || [];
+      flatElement.attributes = this.copyOf(flatElement.attributes, parent.attributes, 'name') ?? [];
+      flatElement.children = this.copyOf(flatElement.children, parent.children, 'roleName') ?? [];
+      flatElement.parameters = this.copyOf(flatElement.parameters, parent.parameters, 'name') ?? [];
+      flatElement.forwards = this.copyOf(flatElement.forwards, parent.forwards, 'name') ?? [];
 
       flatElement.parametersDescription ??= parent.parametersDescription;
-      flatElement.parent = parent.parent || undefined;
+      flatElement.parent = parent.parent;
 
       return this.flattenElements(flatElement);
   }
 
-  copyOf<T>(baseAttributes: T[] | undefined, mergeAttributes: T[] | undefined, fieldName: keyof T) {
+  copyOf<T>(baseAttributes: T[] | undefined, mergeAttributes: T[] | undefined, fieldName: keyof T): T[] | null {
     if (baseAttributes && !mergeAttributes)
       return baseAttributes;
     else if (mergeAttributes && !baseAttributes)
@@ -154,7 +154,7 @@ export class AppService {
 
   orderBy<K, V>(fieldName: keyof V) {
     // function modified from https://github.com/angular/angular/blob/main/packages/common/src/pipes/keyvalue_pipe.ts#L115
-    return function(keyValueA: KeyValue<K, V>, keyValueB: KeyValue<K, V>) {
+    return function(keyValueA: KeyValue<K, V>, keyValueB: KeyValue<K, V>): number {
       const a = keyValueA.value[fieldName];
       const b = keyValueB.value[fieldName];
       // if same exit with 0;

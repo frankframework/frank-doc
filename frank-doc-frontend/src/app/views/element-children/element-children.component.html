@@ -17,7 +17,7 @@
           >
             {{child.roleName}}
           </td>
-          <td [innerHtml]="child.description | javadoc:elements"></td>
+          <td [innerHtml]="(child.description || '') | javadoc:elements"></td>
           <td>{{child.mandatory?'1':'0'}} .. {{child.multiple?'n':'1'}}</td>
         </tr>
       </ng-template>

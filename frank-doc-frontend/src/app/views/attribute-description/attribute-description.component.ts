@@ -20,7 +20,7 @@ export class AttributeDescriptionComponent implements OnInit{
 
   constructor(private appService: AppService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.appService.frankDoc$.subscribe(state => {
       this.enumFields = state.enums[this.enum];
       this.hasDiscriptionEnum = this.enumFields.some(field => field.description != undefined);

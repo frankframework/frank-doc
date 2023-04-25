@@ -22,10 +22,10 @@ export class SidebarComponent {
 
   constructor(private appService: AppService, private router: Router) { }
 
-  showHideDeprecated = () => this.appService.showHideDeprecated();
-  showHideInheritance = () => this.appService.showHideInheritance();
+  showHideDeprecated = (): void => this.appService.showHideDeprecated();
+  showHideInheritance = (): void => this.appService.showHideInheritance();
 
-  downloadXSD() {
+  downloadXSD(): void {
     const downloadUrl = environment.xsdUrl;
 
     const link = document.createElement('a');
@@ -37,7 +37,7 @@ export class SidebarComponent {
     link.remove();
   }
 
-  selectGroup(groupName: string) {
+  selectGroup(groupName: string): void {
     if (this.selectedGroup?.name === groupName)
       return;
     if (!this.element) {

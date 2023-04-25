@@ -18,7 +18,7 @@ describe('JavadocPipe', () => {
         {
           provide: DomSanitizer,
           useValue: {
-            bypassSecurityTrustHtml: (html: string) => html
+            bypassSecurityTrustHtml: (html: string): string => html
           }
         }
       ]

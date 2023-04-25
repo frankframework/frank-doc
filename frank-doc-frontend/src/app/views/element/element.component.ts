@@ -27,9 +27,9 @@ export class ElementComponent implements OnInit, OnDestroy {
 
   constructor(private appService: AppService, private route: ActivatedRoute) {}
 
-  javaDocUrlOf = (fullName: string) => this.appService.javaDocUrlOf(fullName);
+  javaDocUrlOf = (fullName: string): string | null => this.appService.javaDocUrlOf(fullName);
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.parentName){
       this.initParentElement();
       return;
@@ -37,7 +37,7 @@ export class ElementComponent implements OnInit, OnDestroy {
     this.initElement();
   }
 
-  initParentElement() {
+  initParentElement(): void {
     this.subscriptions = this.appService.frankDoc$.subscribe(state => {
       this.groups = state.groups;
       this.elements = state.elements;
@@ -50,11 +50,11 @@ export class ElementComponent implements OnInit, OnDestroy {
     });
   }
 
-  initElement(){
+  initElement(): void {
     this.subscriptions = combineLatest(
       [this.appService.frankDoc$, this.route.paramMap]
     ).subscribe(([state, paramMap]) => {
-      this.version = state.version || "";
+      this.version = state.version ?? "";
       const groups = state.groups,
         elements = state.elements,
         stateElement = state.element,
@@ -76,7 +76,7 @@ export class ElementComponent implements OnInit, OnDestroy {
         if (group && elementParam !== stateElement?.name) {
           const groupElementsNames = this.appService.getGroupElements(group.types),
             elementName = groupElementsNames.find(fullname => elements[fullname].name === elementParam),
-            element = (elementName && elements[elementName]) || undefined;
+            element = (elementName && elements[elementName]) ?? undefined;
           if (element) {
             setTimeout(() => {
               // pushes the element to the state, which will trigger this subscription to update again
@@ -90,7 +90,7 @@ export class ElementComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscriptions?.unsubscribe();
   }
 

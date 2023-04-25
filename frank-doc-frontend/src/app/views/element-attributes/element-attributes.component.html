@@ -15,7 +15,7 @@
         <tr *ngIf="!attr.deprecated || showDeprecatedElements">
           <td
             *ngIf="attr.from" class="attribute__from"
-            [title]="attr.from.description | asText"
+            [title]="(attr.from.description || '') | asText"
             colspan="4"
           > From <a href="{{javaDocUrlOf(attr.from.fullName)}}" target="_blank">{{attr.from.name}}</a>:</td>
           <ng-template [ngIf]="!attr.from">

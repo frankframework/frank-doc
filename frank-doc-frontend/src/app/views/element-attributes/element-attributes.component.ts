@@ -15,6 +15,6 @@ export class ElementAttributesComponent {
 
   constructor(private appService: AppService) {}
 
-  javaDocUrlOf = (fullName: string) => this.appService.javaDocUrlOf(fullName);
+  javaDocUrlOf = (fullName: string): string | null => this.appService.javaDocUrlOf(fullName);
 
 }

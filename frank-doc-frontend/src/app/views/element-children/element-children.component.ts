@@ -19,7 +19,7 @@ export class ElementChildrenComponent {
 
   constructor(private appService: AppService) {}
 
-  getTitle(child: Child) {
+  getTitle(child: Child): string {
     let title = 'No child elements, only text';
     if (child.type) {
       const groups = this.getGroupsOfType(child.type, this.groups);
@@ -30,7 +30,7 @@ export class ElementChildrenComponent {
   }
 
   // Exclude group All.
-  getGroupsOfType(type: string, groups: Group[]) {
+  getGroupsOfType(type: string, groups: Group[]): string | null {
     for (let index = 1; index < groups.length; ++index) {
       const group = groups[index];
       if (group.types.includes(type)) {
@@ -40,7 +40,7 @@ export class ElementChildrenComponent {
     return null;
   }
 
-  getElementsOfType(type: string) {
+  getElementsOfType(type: string): string[] {
     const fullNames = this.types[type];
     if (this.showDeprecatedElements) {
       return fullNames.map(fullName => this.appService.fullNameToSimpleName(fullName));

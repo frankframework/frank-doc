@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
 
   constructor(private appService: AppService, private router: Router) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart && event.url && /^\/!/.test(event.url)){
         this.router.navigate([event.url.replace('/!', '')]);

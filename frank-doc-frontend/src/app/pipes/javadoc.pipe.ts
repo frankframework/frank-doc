@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AppService } from '../app.service';
-import { Elements } from '../app.types';
+import { Elements, Element } from '../app.types';
 
 @Pipe({
   name: 'javadoc'
@@ -10,8 +10,8 @@ export class JavadocPipe implements PipeTransform {
 
   constructor(private appService: AppService, private domSanatizer: DomSanitizer) {}
 
-  transform(value: string, elements: Elements) {
-    if (!value || !elements) return "";
+  transform(value: string, elements: Elements): SafeHtml | string {
+    if (value === '') return value;
     const markdownLinkRegex = /\[(.*?)]\((.+?)\)/g;
     const linkRegex = /(?:{@link\s(.*?)})/g;
     value = value.replace(markdownLinkRegex, '<a target="_blank" href="$2" alt="$1">$1</a>'); // old regex: /\[(.*?)\]\((.+?)\)/g
@@ -20,7 +20,7 @@ export class JavadocPipe implements PipeTransform {
     return this.domSanatizer.bypassSecurityTrustHtml(value);
   }
 
-  transformLink(captureGroup: string, elements: Elements){
+  transformLink(captureGroup: string, elements: Elements): string {
     // {@link PipeLineSession pipeLineSession} -> 'PipeLineSession pipeLineSession'
     // {@link IPipe#configure()} -> 'IPipe#configure()'
     // {@link #doPipe(Message, PipeLineSession) doPipe} -> '#doPipe(Message, PipeLineSession) doPipe'
@@ -40,7 +40,7 @@ export class JavadocPipe implements PipeTransform {
     return `<a href="/#/All/${element.name}">${name}</a>`;
   }
 
-  getInternalMethodReference(captureGroup: string, hashPosition: number) {
+  getInternalMethodReference(captureGroup: string, hashPosition: number): string {
     const method = captureGroup.slice(hashPosition),
       methodParts = method.split(" ");
     return methodParts.length === 2
@@ -48,7 +48,7 @@ export class JavadocPipe implements PipeTransform {
       : method.slice(1, method.indexOf("("));
   }
 
-  parseLinkName(elementParts: string[], isMethod: boolean, captureGroup: string){
+  parseLinkName(elementParts: string[], isMethod: boolean, captureGroup: string): string {
     const elementName = elementParts[elementParts.length - 1]; // element name/label
     if (isMethod) {
       const method = captureGroup.split("#")[1],
@@ -58,7 +58,7 @@ export class JavadocPipe implements PipeTransform {
     return elementName;
   }
 
-  findElement(allElements: Elements, simpleName: string) {
+  findElement(allElements: Elements, simpleName: string): Element | null {
     if (!allElements || Object.keys(allElements).length === 0) return null; //Cannot find anything if we have nothing to search in
     for (const element in allElements) {
       if (this.appService.fullNameToSimpleName(element) === simpleName) {

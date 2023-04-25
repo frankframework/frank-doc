@@ -10,8 +10,8 @@ export class MatchElementPipe implements PipeTransform {
 
   constructor(private appService: AppService) {}
 
-  transform(elements: Elements, searchText?: string, group?: Group){
-    if (!elements || !group) return {}; //Cannot filter elements if no group has been selected
+  transform(elements: Elements, searchText?: string, group?: Group): Elements {
+    if (!group) return {}; //Cannot filter elements if no group has been selected
 
     const matchedParentsCache: Record<string, boolean> = {}, // cache matched parents
       unmatchedParentsCache: Record<string, boolean> = {}, // cache no match parents
@@ -39,11 +39,11 @@ export class MatchElementPipe implements PipeTransform {
     return matchedElements;
   }
 
-  elementToJSON(element: Element) {
+  elementToJSON(element: Element): string {
     return JSON.stringify(element).replace(/"/g, '').toLowerCase();
   }
 
-  processParents(elements: Elements, unmatchedParentsCache: Record<string, boolean>, matchedParentsCache: Record<string, boolean>, searchTerm: string, elementName: string, element: Element){
+  processParents(elements: Elements, unmatchedParentsCache: Record<string, boolean>, matchedParentsCache: Record<string, boolean>, searchTerm: string, elementName: string, element: Element): Elements {
     const processedParents = [],
       matchedElements: Elements = {};
     let elementParentName = elements[elementName].parent;
