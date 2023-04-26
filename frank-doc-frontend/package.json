@@ -8,7 +8,8 @@
     "lint": "eslint ./src",
     "prettier": "prettier -w .",
     "test": "ng test",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "prepare": "cd .. && husky install frank-doc-frontend/.husky"
   },
   "private": true,
   "dependencies": {
@@ -37,13 +38,19 @@
     "@typescript-eslint/parser": "^5.57.0",
     "eslint": "^8.39.0",
     "eslint-plugin-unicorn": "^46.0.0",
+    "husky": "^8.0.3",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
+    "lint-staged": "^13.2.1",
     "prettier": "2.8.8",
     "typescript": "~4.9.4"
+  },
+  "lint-staged": {
+    "*": "prettier --ignore-unknown --write",
+    "*.{ts, html}": "eslint"
   }
 }
