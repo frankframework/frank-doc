@@ -14,7 +14,7 @@
     <tbody>
       <tr *ngFor="let parameter of parameters">
         <td [innerHtml]="parameter.name"></td>
-        <td [innerHtml]="parameter.description | javadoc:elements"></td>
+        <td [innerHtml]="(parameter.description || '') | javadoc:elements"></td>
       </tr>
     </tbody>
   </table>

@@ -12,9 +12,8 @@ describe('ElementAttributesComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [AppService],
-      declarations: [ ElementAttributesComponent ]
-    })
-    .compileComponents();
+      declarations: [ElementAttributesComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ElementAttributesComponent);
     component = fixture.componentInstance;

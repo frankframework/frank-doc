@@ -8,9 +8,8 @@ describe('ElementForwardsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ElementForwardsComponent ]
-    })
-    .compileComponents();
+      declarations: [ElementForwardsComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ElementForwardsComponent);
     component = fixture.componentInstance;

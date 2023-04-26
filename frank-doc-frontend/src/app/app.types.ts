@@ -1,4 +1,9 @@
-import { Attribute as FrankDocAttribute, Group, Element as FrankDocElement, Value } from "./frankdoc.types";
+import {
+  Attribute as FrankDocAttribute,
+  Group,
+  Element as FrankDocElement,
+  Value,
+} from './frankdoc.types';
 
 export interface FrankDocState {
   groups: Group[];

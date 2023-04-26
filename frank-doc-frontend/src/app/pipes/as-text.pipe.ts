@@ -1,41 +1,60 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'asText'
+  name: 'asText',
 })
 export class AsTextPipe implements PipeTransform {
-
-  transform(value?: string) {
-    if (!value) return "";
+  transform(value: string): string {
+    if (value === '') return value;
+    const tagsRegex = /<[^>]*>?/gm;
+    const linkRegex = /(?:{@link\s(.*?)})/g;
     value = value.replaceAll('\\"', '"');
-    value = value.replace(/<[^>]*>?/gm, '');
-    value = value.replace(/(?:{@link\s(.*?)})/g, function (match, captureGroup) {
-      // {@link PipeLineSession pipeLineSession}
-      // {@link IPipe#configure()}
-      // {@link #doPipe(Message, PipeLineSession) doPipe}
-      let referencedElement = captureGroup;
-      const hash = captureGroup.indexOf("#");
-      if (hash > -1) {
-        referencedElement = captureGroup.split("#")[0];
-
-        if (referencedElement == '') { //if there is no element ref then it's a method
-          const method = captureGroup.slice(hash);
-          const nameOrAlias = method.split(") ");
-          if (nameOrAlias.length == 2) {
-            return nameOrAlias[1]; //If it's an alias
-          }
-          return method.slice(1, method.indexOf("("));
-        }
-      }
-      const captures = referencedElement.split(" "); //first part is the ClassName, 2nd part the written name
-      let name = captures[captures.length - 1];
-      if (hash > -1) {
-        const method = captureGroup.split("#")[1];
-        name = name + "." + (method.slice(method.indexOf(") ") + 1)).trim();
-      }
-      return name;
-    });
+    value = value.replace(tagsRegex, '');
+    value = value.replace(linkRegex, this.transformLink);
     return value;
   }
 
+  transformLink(_: string, captureGroup: string): string {
+    // {@link PipeLineSession pipeLineSession} -> 'PipeLineSession pipeLineSession'
+    // {@link IPipe#configure()} -> 'IPipe#configure()'
+    // {@link #doPipe(Message, PipeLineSession) doPipe} -> '#doPipe(Message, PipeLineSession) doPipe'
+    const hashPosition = captureGroup.indexOf('#'),
+      isMethod = hashPosition > -1,
+      element = isMethod ? captureGroup.split('#')[0] : captureGroup;
+
+    if (element === '') {
+      //if there is no element ref then it's a method
+      return this.getInternalMethodReference(captureGroup, hashPosition);
+    }
+
+    const elementParts = element.split(' '); //first part is the class name, 2nd part the written name
+    return this.getDisplayName(elementParts, isMethod, captureGroup);
+  }
+
+  getInternalMethodReference(
+    captureGroup: string,
+    hashPosition: number
+  ): string {
+    const method = captureGroup.slice(hashPosition),
+      methodParts = method.split(' ');
+    return methodParts.length === 2
+      ? methodParts[1] // 'methodName label' -> 'label'
+      : method.slice(1, method.indexOf('('));
+  }
+
+  getDisplayName(
+    elementParts: string[],
+    isMethod: boolean,
+    captureGroup: string
+  ): string {
+    const elementName = elementParts[elementParts.length - 1]; // element name/label
+    if (isMethod) {
+      const method = captureGroup.split('#')[1],
+        labelOrMethodName = method.slice(method.indexOf(') ') + 1).trim();
+      return labelOrMethodName.includes(' ')
+        ? method.split(' ')[1]
+        : `${elementName}.${labelOrMethodName}`;
+    }
+    return elementName;
+  }
 }

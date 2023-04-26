@@ -12,9 +12,8 @@ describe('ElementChildrenComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [AppService],
-      declarations: [ ElementChildrenComponent ]
-    })
-    .compileComponents();
+      declarations: [ElementChildrenComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ElementChildrenComponent);
     component = fixture.componentInstance;

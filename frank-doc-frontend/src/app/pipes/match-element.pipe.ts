@@ -1,60 +1,91 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppService } from '../app.service';
-import { Elements } from '../app.types';
+import { Elements, Element } from '../app.types';
 import { Group } from '../frankdoc.types';
 
 @Pipe({
-  name: 'matchElement'
+  name: 'matchElement',
 })
 export class MatchElementPipe implements PipeTransform {
-
   constructor(private appService: AppService) {}
 
-  transform(elements: Elements, searchText?: string, group?: Group) {
-    if (!elements || !group)
-      return {}; //Cannot filter elements if no group has been selected
+  transform(elements: Elements, searchText?: string, group?: Group): Elements {
+    if (!group) return {}; //Cannot filter elements if no group has been selected
 
-    const returnELements: Elements = {},
-      matchedParents: { [index: string]: boolean } = {}, // cache matched parents
-      noMatchParents: { [index: string]: boolean } = {}, // cache no match parents
-      groupMembers = this.appService.getGroupElements( group.types);
-    const searchTextLC = searchText && searchText != "" ? searchText.toLowerCase() : undefined;
+    const matchedParentsCache: Record<string, boolean> = {}, // cache matched parents
+      unmatchedParentsCache: Record<string, boolean> = {}, // cache no match parents
+      groupMembers = this.appService.getGroupElements(group.types),
+      searchTerm =
+        searchText && searchText != '' ? searchText.toLowerCase() : undefined;
+    let matchedElements: Elements = {};
+
     for (const elementName of groupMembers) {
       const element = elements[elementName];
-      const parentStack = [];
-      if (searchTextLC) {
-        if (JSON.stringify(element).replace(/"/g, '').toLowerCase().includes(searchTextLC)) {
-          returnELements[elementName] = element;
-        } else { // search in parent (accessing children is an expensive operation)
-          let elementParentName = elements[elementName].parent;
-          while (elementParentName) {
-            parentStack.push(elementParentName); // keep list of unmatched parents
-            if (matchedParents[elementParentName]) { // if parent matched already leave the loop
-              returnELements[elementName] = element;
-              break;
-            } else if (noMatchParents[elementParentName]) { // if parent has no match leave the loop
-              break;
-            }
-            const parentElement = elements[elementParentName];
-            if (JSON.stringify(parentElement).replace(/"/g, '').toLowerCase().includes(searchTextLC)) {
-              returnELements[elementName] = element;
-              matchedParents[elementParentName] = true;
-              break;
-            }
-            if (!elements[elementParentName].parent) {
-              for (const t of parentStack) {
-                noMatchParents[t] = true;
-              }
-              break;
-            }
-            elementParentName = elements[elementParentName].parent;
-          }
-        }
-      } else {
-        returnELements[elementName] = element;
+
+      if (!searchTerm) {
+        matchedElements[elementName] = element;
+        continue;
       }
+      if (this.elementToJSON(element).includes(searchTerm)) {
+        matchedElements[elementName] = element;
+        continue;
+      }
+
+      // caches will be updated inside function since they use the same reference
+      const matchedParents = this.processParents(
+        elements,
+        unmatchedParentsCache,
+        matchedParentsCache,
+        searchTerm,
+        elementName,
+        element
+      );
+      matchedElements = { ...matchedElements, ...matchedParents };
     }
-    return returnELements;
+
+    return matchedElements;
   }
 
+  elementToJSON(element: Element): string {
+    return JSON.stringify(element).replace(/"/g, '').toLowerCase();
+  }
+
+  processParents(
+    elements: Elements,
+    unmatchedParentsCache: Record<string, boolean>,
+    matchedParentsCache: Record<string, boolean>,
+    searchTerm: string,
+    elementName: string,
+    element: Element
+  ): Elements {
+    const processedParents = [],
+      matchedElements: Elements = {};
+    let elementParentName = elements[elementName].parent;
+    while (elementParentName) {
+      processedParents.push(elementParentName);
+
+      if (unmatchedParentsCache[elementParentName]) break;
+      if (matchedParentsCache[elementParentName]) {
+        matchedElements[elementName] = element;
+        break;
+      }
+
+      const parentElement = elements[elementParentName];
+
+      if (this.elementToJSON(parentElement).includes(searchTerm)) {
+        matchedElements[elementName] = element;
+        matchedParentsCache[elementParentName] = true;
+        break;
+      }
+
+      if (!parentElement.parent) {
+        for (const parentName of processedParents) {
+          unmatchedParentsCache[parentName] = true;
+        }
+        break;
+      }
+      elementParentName = parentElement.parent;
+    }
+    return matchedElements;
+  }
 }

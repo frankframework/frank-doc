@@ -32,15 +32,10 @@ import { MatchElementPipe } from './pipes/match-element.pipe';
     AttributeDescriptionComponent,
     AsTextPipe,
     JavadocPipe,
-    MatchElementPipe
+    MatchElementPipe,
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -10,7 +10,7 @@ describe('MatchElementPipe', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [AppService]
+      providers: [AppService],
     });
     appService = TestBed.inject(AppService);
   });

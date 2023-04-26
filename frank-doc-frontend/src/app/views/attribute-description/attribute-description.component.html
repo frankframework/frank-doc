@@ -8,7 +8,7 @@
   <ng-template ngFor let-enumField [ngForOf]="enumFields">
     <tr *ngIf="!enumField.deprecated || showDeprecatedElements">
       <td [ngClass]="{ 'deprecated': enumField.deprecated }">{{enumField.label}}</td>
-      <td [innerHtml]="enumField.description | javadoc:elements"></td>
+      <td [innerHtml]="(enumField.description || '') | javadoc:elements"></td>
     </tr>
   </ng-template>
 </table>
