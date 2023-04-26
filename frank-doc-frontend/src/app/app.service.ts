@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, isDevMode } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
-import { AppState, Attribute, Element, FrankDocState } from './app.types';
+import { AppState, Element, FrankDocState } from './app.types';
 import { FrankDoc, Group } from './frankdoc.types';
 
 @Injectable({
@@ -20,14 +20,13 @@ export class AppService {
     showInheritance: environment.showInheritance,
   };
   private frankDocStateSource = new BehaviorSubject<AppState>(this.emptyState);
-  private frankDocUrl = '/js/frankdoc.json';
 
   frankDoc$ = this.frankDocStateSource.asObservable();
 
   constructor(private http: HttpClient) {}
 
   private getFrankDoc(): Observable<FrankDoc> {
-    return this.http.get<FrankDoc>(this.frankDocUrl);
+    return this.http.get<FrankDoc>(environment.frankDocUrl);
   }
 
   showHideDeprecated(): void {
@@ -220,7 +219,7 @@ export class AppService {
       // `a` and `b` are of different types. Compare their string values.
       const aString = String(a);
       const bString = String(b);
-      return aString == bString ? 0 : (aString < bString ? -1 : 1);
+      return aString == bString ? 0 : aString < bString ? -1 : 1;
     };
   }
 }
