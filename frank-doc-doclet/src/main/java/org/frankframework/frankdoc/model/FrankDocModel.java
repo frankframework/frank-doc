@@ -600,7 +600,6 @@ public class FrankDocModel {
 			log.trace("Class [{}] is not a Java interface, creating its FrankElement", () -> clazz.getName());
 			FrankElement member = findOrCreateFrankElement(clazz.getName());
 			result.addMember(member);
-			member.addTypeMembership(result);
 		}
 		log.trace("Done creating ElementType for class [{}]", () -> clazz.getName());
 		return result;
@@ -614,7 +613,6 @@ public class FrankDocModel {
 		} else {
 			FrankElement frankElement = findOrCreateFrankElement(memberClass.getName());
 			result.addMember(frankElement);
-			frankElement.addTypeMembership(result);
 		}
 	}
 
@@ -880,9 +878,6 @@ public class FrankDocModel {
 			Collections.sort(elementTypes);
 			group.setElementTypes(elementTypes);
 		}
-		allElements.values().stream()
-			.filter(f -> f.getExplicitGroup() != null)
-			.forEach(f -> f.syntax2RestrictTo(f.getExplicitGroup().getElementTypes(), f.getExplicitGroup().getName()));
 		final Map<String, FrankElement> leftOvers = new HashMap<>(allElements);
 		allTypes.values().stream().flatMap(et -> et.getSyntax2Members().stream()).forEach(f -> leftOvers.remove(f.getFullName()));
 		elementsOutsideConfigChildren = leftOvers.values().stream()
