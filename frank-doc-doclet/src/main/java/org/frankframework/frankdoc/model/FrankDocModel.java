@@ -39,6 +39,7 @@ import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Default;
 import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.feature.Description;
+import org.frankframework.frankdoc.feature.ExcludeFromTypeFeature;
 import org.frankframework.frankdoc.feature.Mandatory;
 import org.frankframework.frankdoc.feature.Optional;
 import org.frankframework.frankdoc.feature.Protected;
@@ -588,7 +589,8 @@ public class FrankDocModel {
 		allTypes.put(result.getFullName(), result);
 		if(result.isFromJavaInterface()) {
 			log.trace("Class [{}] is a Java interface, going to create all member FrankElement", () -> clazz.getName());
-			List<FrankClass> memberClasses = clazz.getInterfaceImplementations();
+			List<FrankClass> memberClasses = clazz.getInterfaceImplementations().stream()
+					.filter(m -> ! excludedByExcludeFromTypeFeature(m, clazz)).collect(Collectors.toList());
 			// We sort here to make the order deterministic.
 			Collections.sort(memberClasses, Comparator.comparing(FrankClass::getName));
 			for(FrankClass memberClass: memberClasses) {
@@ -598,11 +600,28 @@ public class FrankDocModel {
 			// We do not create a config child if the argument clazz is not an interface and if it has feature PROTECTED.
 			// Therefore we can sefely proceed here.
 			log.trace("Class [{}] is not a Java interface, creating its FrankElement", () -> clazz.getName());
+			if(excludedByExcludeFromTypeFeature(clazz, clazz)) {
+				log.error("Feature ExcludeFromTypeFeature excludes the only possible member of class [{}]", clazz.getName());
+			}
 			FrankElement member = findOrCreateFrankElement(clazz.getName());
 			result.addMember(member);
 		}
 		log.trace("Done creating ElementType for class [{}]", () -> clazz.getName());
 		return result;
+	}
+
+	private boolean excludedByExcludeFromTypeFeature(FrankClass member, FrankClass typeClass) {
+		Set<FrankClass> explicitExcludes = ExcludeFromTypeFeature.getInstance(classRepository).excludedFrom(member);
+		if(explicitExcludes == null) {
+			return false;
+		}
+		if((explicitExcludes != null) && explicitExcludes.contains(typeClass)) {
+			return true;
+		} else if(member.getSuperclass() == null) {
+			return false;
+		} else {
+			return excludedByExcludeFromTypeFeature(member.getSuperclass(), typeClass);
+		}
 	}
 
 	private void addElementIfNotProtected(FrankClass memberClass, final ElementType result) throws FrankDocException {
