@@ -1,12 +1,17 @@
 package org.frankframework.frankdoc.feature;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 public final class ExcludeFromTypeFeature {
@@ -14,31 +19,78 @@ public final class ExcludeFromTypeFeature {
 	private static final String ANNOTATION_NAME = "nl.nn.adapterframework.doc.ExcludeFromType";
 	private static final String TAG_NAME = "@ff.excludeFromType";
 
-	private static final ExcludeFromTypeFeature INSTANCE = new ExcludeFromTypeFeature();
+	// In practice, this map will have only one member because we work with only one class repository.
+	// Conceptually, the result of calling excludeFrom depends both on the test class and on the repository.
+	// That becomes more clear by wrapping the applicable FrankClassRepository in the instance.
+	private static final Map<FrankClassRepository, ExcludeFromTypeFeature> INSTANCES = new HashMap<>();
 
-	private ExcludeFromTypeFeature() {
+	private final FrankClassRepository repository;
+
+	// We cache results of method excludeFrom to ensure that each result is calculated only once.
+	// If errors or warnings occur, they are not duplicated in the log.
+	private Map<FrankClass, Set<FrankClass>> checkedClasses = new HashMap<>();
+
+	private ExcludeFromTypeFeature(FrankClassRepository repository) {
+		this.repository = repository;
 	}
 
-	public static final ExcludeFromTypeFeature getInstance() {
-		return INSTANCE;
+	public static final ExcludeFromTypeFeature getInstance(FrankClassRepository repository) {
+		if(! INSTANCES.containsKey(repository)) {
+			INSTANCES.put(repository, new ExcludeFromTypeFeature(repository));
+		}
+		return INSTANCES.get(repository);
 	}
 
-	public String[] excludedFrom(FrankClass testClass) {
+	public Set<FrankClass> excludedFrom(FrankClass testClass) {
+		if(checkedClasses.containsKey(testClass)) {
+			return new HashSet<>(checkedClasses.get(testClass));
+		}
+		String[] classNames = getReferredClassNames(testClass);
+		if(classNames != null) {
+			return checkClassNamesAndGetClasses(classNames, testClass);
+		} else {
+			return null;
+		}
+	}
+
+	private String[] getReferredClassNames(FrankClass testClass) {
+		String[] classNames = null;
 		FrankAnnotation annotation = testClass.getAnnotation(ANNOTATION_NAME);
 		if(annotation != null) {
 			try {
-				return (String[]) annotation.getValue();
+				classNames = (String[]) annotation.getValue();
 			} catch(FrankDocException e) {
 				log.error("Class [{}] has annotation [{}], but could not parse the value", testClass.getName(), ANNOTATION_NAME, e);
 			}
 		} else {
 			String tagValue = testClass.getJavaDocTag(TAG_NAME);
 			if(tagValue != null) {
-				return Arrays.asList(tagValue.split(",")).stream()
+				classNames = Arrays.asList(tagValue.split(",")).stream()
 						.map(s -> s.trim())
 						.collect(Collectors.toList()).toArray(new String[] {});
 			}
 		}
-		return null;
+		return classNames;
+	}
+
+	private Set<FrankClass> checkClassNamesAndGetClasses(String[] classNames, FrankClass testClass) {
+		Set<FrankClass> result = new HashSet<>();
+		for(String className: classNames) {
+			try {
+				FrankClass clazz = repository.findClass(className);
+				if(clazz == null) {
+					log.error("Feature ExcludeFromTypeFeature of class [{}] refers to class [{}], but that is not a class", testClass.getName(), className);
+				} else {
+					result.add(clazz);
+					if(! testClass.extendsOrImplements(clazz)) {
+						log.warn("Feature ExcludeFromTypeFeature of [{}] mentions [{}] unnecessarily, because there is no ancestor relation", testClass.getName(), clazz.getName());
+					}
+				}
+			} catch(FrankDocException e) {
+				log.error("Feature ExcludeFromTypeFeature of class [{}] refers to class [{}]; caught exception while checking whether that is a class", testClass.getName(), className, e);
+			}
+		}
+		checkedClasses.put(testClass, result);
+		return result;
 	}
 }

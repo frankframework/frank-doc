@@ -1,6 +1,9 @@
 package org.frankframework.frankdoc.feature;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Set;
 
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
@@ -20,13 +23,18 @@ public class ExcludeFromTypeFeatureTest {
 
 	@Test
 	public void testValueFromAnnotation() throws Exception {
-		FrankClass clazz = classes.findClass(PACKAGE + "WithExcludeFromTypeAsAnnotation");
-		assertArrayEquals(new String[] {PACKAGE + "Parent", PACKAGE + "Child"}, ExcludeFromTypeFeature.getInstance().excludedFrom(clazz));
+		check(classes.findClass(PACKAGE + "WithExcludeFromTypeAsAnnotation"));
+	}
+
+	private void check(FrankClass clazz) throws Exception {
+		Set<FrankClass> result = ExcludeFromTypeFeature.getInstance(classes).excludedFrom(clazz);
+		assertEquals(2, result.size());
+		assertTrue(result.contains(classes.findClass(PACKAGE + "Parent")));
+		assertTrue(result.contains(classes.findClass(PACKAGE + "Child")));		
 	}
 
 	@Test
 	public void testValueFromTag() throws Exception {
-		FrankClass clazz = classes.findClass(PACKAGE + "WithExcludeFromTypeAsTag");
-		assertArrayEquals(new String[] {PACKAGE + "Parent", PACKAGE + "Child"}, ExcludeFromTypeFeature.getInstance().excludedFrom(clazz));
+		check(classes.findClass(PACKAGE + "WithExcludeFromTypeAsTag"));
 	}
 }
