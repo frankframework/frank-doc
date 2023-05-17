@@ -243,8 +243,8 @@ public class FrankDocModel {
 	}
 
 	FrankElement findOrCreateFrankElement(String fullClassName, FrankElementCreationStrategy creator) throws FrankDocException {
+		log.trace("FrankElement requested for class name [{}]", () -> fullClassName);
 		FrankClass clazz = classRepository.findClass(fullClassName);
-		log.trace("FrankElement requested for class name [{}]", () -> clazz.getName());
 		if(allElements.containsKey(clazz.getName())) {
 			log.trace("Already present");
 			return allElements.get(clazz.getName());
@@ -612,15 +612,12 @@ public class FrankDocModel {
 
 	private boolean excludedByExcludeFromTypeFeature(FrankClass member, FrankClass typeClass) {
 		Set<FrankClass> explicitExcludes = ExcludeFromTypeFeature.getInstance(classRepository).excludedFrom(member);
-		if(explicitExcludes == null) {
-			return false;
-		}
 		if((explicitExcludes != null) && explicitExcludes.contains(typeClass)) {
 			return true;
-		} else if(member.getSuperclass() == null) {
-			return false;
-		} else {
+		} else if(member.getSuperclass() != null) {
 			return excludedByExcludeFromTypeFeature(member.getSuperclass(), typeClass);
+		} else {
+			return false;
 		}
 	}
 
