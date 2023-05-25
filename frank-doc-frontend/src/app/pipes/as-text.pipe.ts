@@ -30,7 +30,6 @@ export class AsTextPipe implements PipeTransform {
     }
 
     const elementParts = element.split(' '); //first part is the class name, 2nd part the written name
-    console.log(this, elementParts, isMethod, captureGroup);
     return this.getDisplayName(elementParts, isMethod, captureGroup);
   }
 
