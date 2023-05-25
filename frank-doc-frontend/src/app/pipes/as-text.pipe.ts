@@ -10,11 +10,13 @@ export class AsTextPipe implements PipeTransform {
     const linkRegex = /(?:{@link\s(.*?)})/g;
     value = value.replaceAll('\\"', '"');
     value = value.replace(tagsRegex, '');
-    value = value.replace(linkRegex, this.transformLink);
+    value = value.replace(linkRegex, (_: string, captureGroup: string) =>
+      this.transformLink(captureGroup)
+    );
     return value;
   }
 
-  transformLink(_: string, captureGroup: string): string {
+  transformLink(captureGroup: string): string {
     // {@link PipeLineSession pipeLineSession} -> 'PipeLineSession pipeLineSession'
     // {@link IPipe#configure()} -> 'IPipe#configure()'
     // {@link #doPipe(Message, PipeLineSession) doPipe} -> '#doPipe(Message, PipeLineSession) doPipe'
