@@ -37,4 +37,12 @@ public class ExcludeFromTypeFeatureTest {
 	public void testValueFromTag() throws Exception {
 		check(classes.findClass(PACKAGE + "WithExcludeFromTypeAsTag"));
 	}
+
+	@Test
+	public void testValueFromTagThatReferencesOnlyOneClass() throws Exception {
+		FrankClass clazz = classes.findClass(PACKAGE + "WithExcludeFromTypeAsAnnotationSingleValue");
+		Set<FrankClass> result = ExcludeFromTypeFeature.getInstance(classes).excludedFrom(clazz);
+		assertEquals(1, result.size());
+		assertTrue(result.contains(classes.findClass(PACKAGE + "Parent")));
+	}
 }
