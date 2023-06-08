@@ -39,6 +39,7 @@ import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Default;
 import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.feature.Description;
+import org.frankframework.frankdoc.feature.ExcludeFromTypeFeature;
 import org.frankframework.frankdoc.feature.Mandatory;
 import org.frankframework.frankdoc.feature.Optional;
 import org.frankframework.frankdoc.feature.Protected;
@@ -242,8 +243,8 @@ public class FrankDocModel {
 	}
 
 	FrankElement findOrCreateFrankElement(String fullClassName, FrankElementCreationStrategy creator) throws FrankDocException {
+		log.trace("FrankElement requested for class name [{}]", () -> fullClassName);
 		FrankClass clazz = classRepository.findClass(fullClassName);
-		log.trace("FrankElement requested for class name [{}]", () -> clazz.getName());
 		if(allElements.containsKey(clazz.getName())) {
 			log.trace("Already present");
 			return allElements.get(clazz.getName());
@@ -588,7 +589,8 @@ public class FrankDocModel {
 		allTypes.put(result.getFullName(), result);
 		if(result.isFromJavaInterface()) {
 			log.trace("Class [{}] is a Java interface, going to create all member FrankElement", () -> clazz.getName());
-			List<FrankClass> memberClasses = clazz.getInterfaceImplementations();
+			List<FrankClass> memberClasses = clazz.getInterfaceImplementations().stream()
+					.filter(m -> ! excludedByExcludeFromTypeFeature(m, clazz)).collect(Collectors.toList());
 			// We sort here to make the order deterministic.
 			Collections.sort(memberClasses, Comparator.comparing(FrankClass::getName));
 			for(FrankClass memberClass: memberClasses) {
@@ -598,12 +600,25 @@ public class FrankDocModel {
 			// We do not create a config child if the argument clazz is not an interface and if it has feature PROTECTED.
 			// Therefore we can sefely proceed here.
 			log.trace("Class [{}] is not a Java interface, creating its FrankElement", () -> clazz.getName());
+			if(excludedByExcludeFromTypeFeature(clazz, clazz)) {
+				log.error("Feature ExcludeFromTypeFeature excludes the only possible member of class [{}]", clazz.getName());
+			}
 			FrankElement member = findOrCreateFrankElement(clazz.getName());
 			result.addMember(member);
-			member.addTypeMembership(result);
 		}
 		log.trace("Done creating ElementType for class [{}]", () -> clazz.getName());
 		return result;
+	}
+
+	private boolean excludedByExcludeFromTypeFeature(FrankClass member, FrankClass typeClass) {
+		Set<FrankClass> explicitExcludes = ExcludeFromTypeFeature.getInstance(classRepository).excludedFrom(member);
+		if((explicitExcludes != null) && explicitExcludes.contains(typeClass)) {
+			return true;
+		} else if(member.getSuperclass() != null) {
+			return excludedByExcludeFromTypeFeature(member.getSuperclass(), typeClass);
+		} else {
+			return false;
+		}
 	}
 
 	private void addElementIfNotProtected(FrankClass memberClass, final ElementType result) throws FrankDocException {
@@ -614,7 +629,6 @@ public class FrankDocModel {
 		} else {
 			FrankElement frankElement = findOrCreateFrankElement(memberClass.getName());
 			result.addMember(frankElement);
-			frankElement.addTypeMembership(result);
 		}
 	}
 
@@ -880,9 +894,6 @@ public class FrankDocModel {
 			Collections.sort(elementTypes);
 			group.setElementTypes(elementTypes);
 		}
-		allElements.values().stream()
-			.filter(f -> f.getExplicitGroup() != null)
-			.forEach(f -> f.syntax2RestrictTo(f.getExplicitGroup().getElementTypes(), f.getExplicitGroup().getName()));
 		final Map<String, FrankElement> leftOvers = new HashMap<>(allElements);
 		allTypes.values().stream().flatMap(et -> et.getSyntax2Members().stream()).forEach(f -> leftOvers.remove(f.getFullName()));
 		elementsOutsideConfigChildren = leftOvers.values().stream()

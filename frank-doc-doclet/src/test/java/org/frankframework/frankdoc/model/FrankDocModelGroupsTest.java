@@ -56,46 +56,4 @@ public class FrankDocModelGroupsTest {
 		assertEquals(1, leftOvers.size());
 		assertEquals("Container", leftOvers.get(0).getSimpleName());
 	}
-
-	@Test
-	public void testFrankDocGroupAnnotationOnFrankElement() throws Exception {
-		String thePackage = "org.frankframework.frankdoc.testtarget.groups.frankdocgroup.on.element.";
-		FrankClassRepository r = TestUtil.getFrankClassRepositoryDoclet(thePackage);
-		instance = FrankDocModel.populate(TestUtil.resourceAsURL("doc/fake-group-digester-rules.xml"), thePackage + "Container", r);
-		List<FrankDocGroup> groups = instance.getGroups();
-		assertEquals(4, groups.size());
-		FrankDocGroup group = groups.get(0);
-		assertEquals("Listeners", group.getName());
-		assertEquals(10, group.getOrder());
-		assertEquals(1, group.getElementTypes().size());
-		ElementType elementType = group.getElementTypes().get(0);
-		assertEquals("IListener", elementType.getSimpleName());
-		List<FrankElement> members = elementType.getSyntax2Members();
-		assertEquals(2, members.size());
-		assertEquals("MyListener", members.get(0).getSimpleName());
-		assertEquals("MySenderLikeListener", members.get(1).getSimpleName());
-		group = groups.get(1);
-		assertEquals("Senders", group.getName());
-		assertEquals(20, group.getOrder());
-		assertEquals(1, group.getElementTypes().size());
-		elementType = group.getElementTypes().get(0);
-		assertEquals("ISender", elementType.getSimpleName());
-		members = elementType.getSyntax2Members();
-		assertEquals(1, members.size());
-		assertEquals("MySender", members.get(0).getSimpleName());
-		group = groups.get(2);
-		assertEquals("Adapters", group.getName());
-		assertEquals(30, group.getOrder());
-		assertEquals(1, group.getElementTypes().size());
-		elementType = group.getElementTypes().get(0);
-		assertEquals("Adapter", elementType.getSimpleName());
-		members = elementType.getMembers();
-		assertEquals(1, members.size());
-		assertEquals("Adapter", members.get(0).getSimpleName());
-		group = groups.get(3);
-		assertEquals(FrankDocGroup.GROUP_NAME_OTHER, group.getName());
-		assertEquals(0, group.getElementTypes().size());
-		// FrankDocJsonFactory would use FrankDocModel.getElementsOutsideConfigChildren()
-		// to build the group for the web application.
-	}
 }

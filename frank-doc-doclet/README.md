@@ -26,7 +26,7 @@ The XML schema helps Frank developers when they are writing their configs, but t
 
 ![webapp-intro](./picturesForReadme/webapp-intro.jpg)
 
-To the top-left, you see a list of groups (number 1). These groups are controlled by Java annotation [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java). To the bottom-left, you see the Java class names that are members of the chosen group (number 2). When you select a class name, you get information about it (number 3). More explanation of this text follows later.
+To the top-left, you see a list of groups (number 1). These groups are controlled by Java annotation [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/iaf-commons/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java). To the bottom-left, you see the Java class names that are members of the chosen group (number 2). When you select a class name, you get information about it (number 3). More explanation of this text follows later.
 
 ## Descriptions of classes, child elements and attributes
 
@@ -108,25 +108,25 @@ The overview of all groups is shown as number 1. We have selected group `Batch` 
 
 ![eclipseIRecordHandlerManager](./picturesForReadme/eclipseIRecordHandlerManager.jpg)
 
-The interface has a Java annotation [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java). The annotation has fields `name` and `order`. The `order` is an integer that is used to sort the groups in the shown order.
+The interface has a Java annotation [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/iaf-commons/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java). The annotation has fields `name` and `order`. The `order` is an integer that is used to sort the groups in the shown order.
 
-When [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) is placed on a Java interface, then all Java classes that implement the interface are added to the group. Here is the type hierarchy of [IRecordHandlerManager](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/batch/IRecordHandlerManager.java):
+When [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/iaf-commons/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) is placed on a Java class or interface, then all Java classes that implement the interface (or only the class itself in case of a class) are added to the group. Here is the type hierarchy of [IRecordHandlerManager](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/batch/IRecordHandlerManager.java):
 
 ![eclipseTypeHierarchyIRecordHandlerManager](./picturesForReadme/eclipseTypeHierarchyIRecordHandlerManager.jpg)
 
 The Java classes that implement [IRecordHandlerManager](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/batch/IRecordHandlerManager.java) are highlighted. They are annotated in the first figure of this section as number 3.
 
-The annotation on [IRecordHandlerManager](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/batch/IRecordHandlerManager.java) only adds three classes to group `Batch`. The other elements are added by other [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) annotations. These do not have their `order` field set, see for example [RecordHandlingFlow](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/batch/RecordHandlingFlow.java)
+The annotation on [IRecordHandlerManager](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/batch/IRecordHandlerManager.java) only adds three classes to group `Batch`. The other elements are added by other [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/iaf-commons/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) annotations. These do not have their `order` field set, see for example [RecordHandlingFlow](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/batch/RecordHandlingFlow.java)
 
 ![eclipseRecordHandlingFlow](./picturesForReadme/eclipseRecordHandlingFlow.jpg)
 
-The annotation is placed on a class here. Then that class and its descendants are added to the group in the Frank!Doc web application.
+The annotation is placed on a class here. Then that class is added to the group in the Frank!Doc web application.
 
-You can also use the [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) annotation to restrict group membership. An example is [MessageStoreSender](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/jdbc/MessageStoreSender.java). It implements both [ISender](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/core/ISender.java) and [ITransactionalStorage](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/core/ITransactionalStorage.java) that have groups "Senders" and "TransactionalStorages". Class [MessageStoreSender](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/jdbc/MessageStoreSender.java) has a [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) annotation for group "Senders" to restrict it to that group. Restricting to a group that is not inherited from any interface would be an error. If the [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) would refer a non-existing group "xxx", then the build of the F!F would fail with an error.
+Java classes that do not have or inherit a [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/iaf-commons/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) annotation are put in group `Other`.
 
-Restricting [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) annotations are inherited. If [MessageStoreSender](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/jdbc/MessageStoreSender.java) had derived classes, these would also be restricted to group "Senders". Alternatively it would be possible to restrict a subclass of [MessageStoreSender](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/jdbc/MessageStoreSender.java) to group "TransactionalStorages" using a [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) on that subclass.
+A [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/iaf-commons/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) annotation is only processed when it appears on a class or interface that appears as the argument of a config child setter. This means: when it gives rise to an [ElementType](src/main/java/org/frankframework/frankdoc/model/ElementType.java).
 
-Finally, Java classes that do not have or inherit a [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) annotation are put in group `Other`.
+A Java class can extend a Java class or inherit an interface without a functional meaning. For example, class [MessageStoreSender](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/jdbc/MessageStoreSender.java) inherits `ITransactionalStorage`, but that has no functional meaning. Frank configs should not contain elements `MessageStoreSenderMessageLog` or `MessageStoreSenderErrorStorage`. This can be achieved by setting Java annotation `@ExcludeFromType` or JavaDoc tag `@ff.excludeFromType`. Both can take a list of classes as the argument. In case of the JavaDoc tag, do not add `.class` to a class name and separate the classes by a `,`. This annotation is inherited.
 
 ## Attribute types
 

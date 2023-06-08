@@ -57,6 +57,7 @@ public interface FrankClass extends FrankType {
 	String getJavaDocTag(String tagName);
 	String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException;
 	void browseAncestors(Consumer<FrankClass> handler) throws FrankDocException;
+	boolean extendsOrImplements(FrankClass ancestorCandidate);
 	List<String> getAllJavaDocTagsOf(String tagName);
 
 	String resolveValue(String variable, Function<FrankEnumConstant, String> enumHandler);

@@ -1,5 +1,5 @@
 /* 
-Copyright 2020, 2021, 2022 WeAreFrank! 
+Copyright 2020 - 2023 WeAreFrank! 
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
@@ -110,9 +110,6 @@ public class FrankElement implements Comparable<FrankElement> {
 	private @Getter List<ParsedJavaDocTag> forwards = new ArrayList<>();
 	private @Getter List<ParsedJavaDocTag> tags = new ArrayList<>();
 
-	private @Getter(AccessLevel.PACKAGE) FrankDocGroup explicitGroup = null;
-	private Set<String> inTypes = new HashSet<>();
-	private Set<String> syntax2ExcludedFromTypes = new HashSet<>();
 	private @Getter List<FrankLabel> labels = new ArrayList<>();
 
 	FrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory, LabelValues labelValues) {
@@ -121,10 +118,6 @@ public class FrankElement implements Comparable<FrankElement> {
 		configChildSets = new LinkedHashMap<>();
 		this.completeFrankElement(clazz);
 		handleConfigChildSetterCandidates(clazz);
-		if(clazz.getAnnotation(FrankDocGroupFactory.JAVADOC_GROUP_ANNOTATION) != null) {
-			explicitGroup = groupFactory.getGroup(clazz);
-			log.trace("FrankElement [{}] has explicit @FrankDocGroup annotation with group name [{}]", () -> getFullName(), () -> explicitGroup.getName());
-		}
 		handlePossibleParameters(clazz);
 		handlePossibleForwards(clazz);
 		handlePossibleTags(clazz);
@@ -287,13 +280,6 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	public void setParent(FrankElement parent) {
 		this.parent = parent;
-		if(parent != null) {
-			if(explicitGroup == null) {
-				explicitGroup = parent.explicitGroup;
-				log.trace("FrankElement [{}] inherits @FrankDocGroup annotation with name [{}] from parent [{}]",
-						() -> getFullName(), () -> explicitGroup == null ? "null" : explicitGroup.getName(), () -> parent.getFullName());
-			}
-		}
 		this.statistics = new FrankElementStatistics(this);
 	}
 
@@ -542,23 +528,6 @@ public class FrankElement implements Comparable<FrankElement> {
 		} else {
 			return getSimpleName() + Integer.valueOf(typeNameSeq).toString();
 		}
-	}
-
-	void addTypeMembership(ElementType elementType) {
-		inTypes.add(elementType.getFullName());
-	}
-
-	void syntax2RestrictTo(Collection<ElementType> elementTypes, String groupName) {
-		syntax2ExcludedFromTypes = new HashSet<>(inTypes);
-		syntax2ExcludedFromTypes.removeAll(elementTypes.stream().map(ElementType::getFullName).collect(Collectors.toSet()));
-		if(syntax2ExcludedFromTypes.equals(inTypes) && (! inTypes.isEmpty())) {
-			log.error("It is not allowed to restrict class [{}] to group [{}], because that group does not have an ElementType that contains the mentioned class. "
-					+ "This limitation exists to ensure that [{}] remains visible as a config child", fullName, groupName, fullName);
-		}
-	}
-
-	boolean syntax2ExcludedFromType(String typeName) {
-		return syntax2ExcludedFromTypes.contains(typeName);
 	}
 
 	@Override

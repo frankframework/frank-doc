@@ -341,7 +341,22 @@ class FrankClassDoclet implements FrankClass {
 		handler.accept(c);
 		return null;
 	}
-	
+
+	@Override
+	public boolean extendsOrImplements(FrankClass ancestorCandidate) {
+		Function<FrankClassDoclet, Boolean> getter = c -> c.equals(ancestorCandidate) ? true : null;
+		Boolean result = null;
+		try {
+			result = getIncludingInherited(getter);
+		} catch(FrankDocException e) {
+			log.error("Caught exception while checking if class [{}] has ancestor [{}]", this.getName(), ancestorCandidate.getName(), e);
+		}
+		if(result == null) {
+			return false;
+		}
+		return result;
+	}
+
 	@Override
 	public String getJavaDocTag(String tagName) {
 		Tag[] tags = clazz.tags(tagName);
