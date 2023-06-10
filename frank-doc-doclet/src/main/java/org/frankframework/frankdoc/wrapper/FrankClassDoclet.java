@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -303,15 +304,15 @@ class FrankClassDoclet implements FrankClass {
 	@Override
 	public FrankAnnotation getAnnotationIncludingInherited(String annotationFullName) throws FrankDocException {
 		Function<FrankClassDoclet, FrankAnnotation> getter = c -> c.getAnnotation(annotationFullName);
-		return getIncludingInherited(getter);
+		return getIncludingInherited(getter).orElse(null);
 	}
 
-	private <T> T getIncludingInherited(Function<FrankClassDoclet, T> getter) throws FrankDocException {
+	private <T> Optional<T> getIncludingInherited(Function<FrankClassDoclet, T> getter) throws FrankDocException {
 		T result = getExcludingImplementedInterfaces(getter);
 		if(result == null) {
 			result = getFromImplementedInterfaces(getter);
 		}
-		return result;
+		return Optional.ofNullable(result);
 	}
 
 	private <T> T getExcludingImplementedInterfaces(Function<FrankClassDoclet, T> getter) throws FrankDocException {
@@ -345,16 +346,12 @@ class FrankClassDoclet implements FrankClass {
 	@Override
 	public boolean extendsOrImplements(FrankClass ancestorCandidate) {
 		Function<FrankClassDoclet, Boolean> getter = c -> c.equals(ancestorCandidate) ? true : null;
-		Boolean result = null;
 		try {
-			result = getIncludingInherited(getter);
+			return getIncludingInherited(getter).orElse(false);
 		} catch(FrankDocException e) {
 			log.error("Caught exception while checking if class [{}] has ancestor [{}]", this.getName(), ancestorCandidate.getName(), e);
-		}
-		if(result == null) {
 			return false;
 		}
-		return result;
 	}
 
 	@Override
@@ -379,7 +376,7 @@ class FrankClassDoclet implements FrankClass {
 	@Override
 	public String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException {
 		Function<FrankClassDoclet, String> getter = c -> c.getJavaDocTag(tagName);
-		return getIncludingInherited(getter);
+		return getIncludingInherited(getter).orElse(null);
 	}
 
 	@Override
@@ -434,7 +431,7 @@ class FrankClassDoclet implements FrankClass {
 	public String resolveValue(String variable, Function<FrankEnumConstant, String> enumHandler) {
 		Function<FrankClassDoclet, String> getter =  c -> resolveValueImpl(c, variable, enumHandler);
 		try {
-			return getIncludingInherited(getter);
+			return getIncludingInherited(getter).orElse(null);
 		}
 		catch(FrankDocException e) {
 			log.error("Error resolving variable [{}]", variable);
