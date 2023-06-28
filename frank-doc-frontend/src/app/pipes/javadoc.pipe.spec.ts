@@ -66,7 +66,7 @@ describe('JavadocPipe', () => {
     expect(
       pipe.transform('A javadoc {@link Json2XmlValidator}', elements)
     ).toEqual(
-      'A javadoc <a href="/#/All/Json2XmlValidator">Json2XmlValidator</a>'
+      'A javadoc <a href="#/All/Json2XmlValidator">Json2XmlValidator</a>'
     );
   });
 
@@ -80,7 +80,7 @@ describe('JavadocPipe', () => {
     };
     expect(
       pipe.transform('{@link PipeLineSession pipeLineSession}', elements)
-    ).toEqual('<a href="/#/All/PipeLineSession">pipeLineSession</a>');
+    ).toEqual('<a href="#/All/PipeLineSession">pipeLineSession</a>');
   });
 
   it('transforms invalid javadoc link to class with method to html link', () => {
@@ -99,7 +99,7 @@ describe('JavadocPipe', () => {
       },
     };
     expect(pipe.transform('{@link IPipe#configure()}', elements)).toEqual(
-      '<a href="/#/All/IPipe">IPipe.configure()</a>'
+      '<a href="#/All/IPipe">IPipe.configure()</a>'
     );
   });
 

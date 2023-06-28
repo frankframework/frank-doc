@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:embedded": "ng serve --serve-path /context/iaf/frankdoc/",
     "build": "ng build",
     "lint": "eslint ./src",
     "prettier": "prettier -w .",

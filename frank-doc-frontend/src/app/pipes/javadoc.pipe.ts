@@ -45,7 +45,7 @@ export class JavadocPipe implements PipeTransform {
 
     const element = this.findElement(elements, elementParts[0]);
     if (!element) return name;
-    return `<a href="/#/All/${element.name}">${name}</a>`;
+    return `<a href="#/All/${element.name}">${name}</a>`;
   }
 
   getInternalMethodReference(
