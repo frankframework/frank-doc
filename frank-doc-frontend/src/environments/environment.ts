@@ -1,7 +1,7 @@
 export const environment = {
   showDeprecatedElements: false,
   showInheritance: true,
-  xsdUrl: '/xml/xsd/FrankConfig.xsd',
+  xsdUrl: 'xml/xsd/FrankConfig.xsd',
   javadocBaseUrl: 'https://javadoc.frankframework.org',
-  frankDocUrl: '/js/frankdoc.json',
+  frankDocUrl: 'js/frankdoc.json',
 };
