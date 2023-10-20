@@ -1,15 +1,15 @@
 package org.frankframework.frankdoc.feature;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Set;
-
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ExcludeFromTypeFeatureTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.featurepackage.";
@@ -30,7 +30,7 @@ public class ExcludeFromTypeFeatureTest {
 		Set<FrankClass> result = ExcludeFromTypeFeature.getInstance(classes).excludedFrom(clazz);
 		assertEquals(2, result.size());
 		assertTrue(result.contains(classes.findClass(PACKAGE + "Parent")));
-		assertTrue(result.contains(classes.findClass(PACKAGE + "Child")));		
+		assertTrue(result.contains(classes.findClass(PACKAGE + "Child")));
 	}
 
 	@Test

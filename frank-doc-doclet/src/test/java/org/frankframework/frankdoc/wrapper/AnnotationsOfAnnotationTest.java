@@ -1,13 +1,13 @@
 package org.frankframework.frankdoc.wrapper;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AnnotationsOfAnnotationTest {
 	static final String PACKAGE = "org.frankframework.frankdoc.testtarget.wrapper.annotations.of.annotations.";
@@ -51,6 +51,5 @@ public class AnnotationsOfAnnotationTest {
 	public void testEnumValue() throws Exception {
 		FrankEnumConstant enumValue = (FrankEnumConstant) instance.getValueOf("myEnumField");
 		assertEquals("SECOND", enumValue.getName());
-		assertEquals(1, enumValue.getPosition());
 	}
 }

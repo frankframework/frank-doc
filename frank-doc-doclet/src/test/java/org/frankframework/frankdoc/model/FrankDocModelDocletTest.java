@@ -1,14 +1,13 @@
 package org.frankframework.frankdoc.model;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.TestUtil;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
 
 public class FrankDocModelDocletTest {
 	private static final String SIMPLE = "org.frankframework.frankdoc.testtarget.simple.";

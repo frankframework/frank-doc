@@ -1,20 +1,24 @@
-/* 
-Copyright 2021 WeAreFrank! 
+/*
+Copyright 2021 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc;
+
+import org.apache.commons.lang3.StringUtils;
+import org.frankframework.frankdoc.model.FrankDocModel;
+import org.frankframework.frankdoc.model.FrankElement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,11 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-
-import org.frankframework.frankdoc.model.FrankDocModel;
-import org.frankframework.frankdoc.model.FrankElement;
 
 /**
  * Create text file, typically <code>elementSummary.txt</code>, with overview of Java classes with their Frank config XML elements.
@@ -127,5 +126,5 @@ public class FrankDocElementSummaryFactory {
 		}
 	}
 
-	
+
 }

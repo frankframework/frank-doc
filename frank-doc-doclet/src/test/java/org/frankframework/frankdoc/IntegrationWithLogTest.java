@@ -1,11 +1,11 @@
 package org.frankframework.frankdoc;
 
-import java.net.URL;
-
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Test;
+
+import java.net.URL;
 
 public class IntegrationWithLogTest {
 	@Test
@@ -46,7 +46,7 @@ public class IntegrationWithLogTest {
 			appender.assertLogged("In Frank element [Master]: setter [setMyAttribute2] has type [java.lang.String] while the getter has type [org.frankframework.frankdoc.testtarget.attribute.overload.MyEnum]");
 		} finally {
 			TestAppender.removeAppender(appender);
-		}		
+		}
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class IntegrationWithLogTest {
 			appender.assertLogged("Attribute [Master.mandatoryWithDefault] is [MANDATORY], but it also has a default value: [something]");
 		} finally {
 			TestAppender.removeAppender(appender);
-		}		
+		}
 	}
 
 	@Test
@@ -85,7 +85,7 @@ public class IntegrationWithLogTest {
 			appender.assertLogged("FrankElement [org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.Master] has a [@ff.forward] tag without a value: [myForwardWithoutDescription]");
 		} finally {
 			TestAppender.removeAppender(appender);
-		}		
+		}
 	}
 
 	public void whenFfTagOccursMultipleTimesWithSameNameThenError() throws Exception {
@@ -116,6 +116,6 @@ public class IntegrationWithLogTest {
 			appender.assertLogged("Error parsing a [@ff.parameter] tag of class [org.frankframework.frankdoc.testtarget.tag.no.name.Master]");
 		} finally {
 			TestAppender.removeAppender(appender);
-		}		
+		}
 	}
 }

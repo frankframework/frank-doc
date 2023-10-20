@@ -1,12 +1,12 @@
 package org.frankframework.frankdoc.wrapper;
 
-import static org.junit.Assert.assertNull;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertNull;
 
 public class FrankMethodOverrideTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.packageprivate.override.";

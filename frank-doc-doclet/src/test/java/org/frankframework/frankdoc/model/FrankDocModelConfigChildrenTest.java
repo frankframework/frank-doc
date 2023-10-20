@@ -1,19 +1,27 @@
-/* 
-Copyright 2021 WeAreFrank! 
+/*
+Copyright 2021 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 package org.frankframework.frankdoc.model;
+
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.TestUtil;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.frankframework.frankdoc.model.ElementChild.ALL_NOT_EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.IN_XSD;
@@ -24,21 +32,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.TestUtil;
-
 public class FrankDocModelConfigChildrenTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.children.";
 	private static String CONTAINER = PACKAGE + "Container";
 	private static String CONTAINER_DERIVED = PACKAGE + "ContainerDerived";
 	private static String CONTAINER_OTHER = PACKAGE + "ContainerOther";
-	
+
 	private FrankDocModel instance;
 	private FrankClassRepository classRepository;
 	private List<ConfigChild> configChildren;
@@ -75,7 +74,7 @@ public class FrankDocModelConfigChildrenTest {
 		assertFalse(actual.isDeprecated());
 		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());
 		assertNull(actual.getOverriddenFrom());
-		assertTrue(IN_XSD.test(actual));		
+		assertTrue(IN_XSD.test(actual));
 	}
 
 	@Test
@@ -246,7 +245,7 @@ public class FrankDocModelConfigChildrenTest {
 	public void whenConfigChildInheritsJavadocThenNotDocumentedButDescriptionTaken() throws Exception {
 		ConfigChild configChild = instance.findFrankElement(PACKAGE + "ContainerForConfigChildDescriptionJavadocDerived").getConfigChildren(ElementChild.ALL_NOT_EXCLUDED).get(0);
 		assertFalse(configChild.isDocumented());
-		assertEquals("JavaDoc of ContainerForConfigChildDescriptionJavadoc.setChild", configChild.getDescription());		
+		assertEquals("JavaDoc of ContainerForConfigChildDescriptionJavadoc.setChild", configChild.getDescription());
 	}
 
 	@Test

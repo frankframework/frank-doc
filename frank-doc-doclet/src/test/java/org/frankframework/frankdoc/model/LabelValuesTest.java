@@ -1,9 +1,9 @@
 package org.frankframework.frankdoc.model;
 
-import static org.junit.Assert.assertArrayEquals;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
 
 public class LabelValuesTest {
 	private LabelValues instance;
@@ -37,7 +37,7 @@ public class LabelValuesTest {
 		instance.addValue("LABEL", "C");
 		instance.addValue("LABEL", "B");
 		instance.finishInitialization();
-		assertArrayEquals(new String[] {"A", "B", "C"}, instance.getAllValuesOfLabel("LABEL").toArray(new String[] {}));		
+		assertArrayEquals(new String[] {"A", "B", "C"}, instance.getAllValuesOfLabel("LABEL").toArray(new String[] {}));
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class LabelValuesTest {
 		instance.addEnumValue("LABEL", "B", 3);
 		instance.addEnumValue("LABEL", "C", 2);
 		instance.finishInitialization();
-		assertArrayEquals(new String[] {"A", "C", "B"}, instance.getAllValuesOfLabel("LABEL").toArray(new String[] {}));		
+		assertArrayEquals(new String[] {"A", "C", "B"}, instance.getAllValuesOfLabel("LABEL").toArray(new String[] {}));
 	}
 
 	@Test(expected = ClassCastException.class)

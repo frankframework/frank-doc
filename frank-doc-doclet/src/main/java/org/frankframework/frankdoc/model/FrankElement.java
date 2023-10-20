@@ -1,20 +1,38 @@
-/* 
-Copyright 2020 - 2023 WeAreFrank! 
+/*
+Copyright 2020 - 2023 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc.model;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.feature.Deprecated;
+import org.frankframework.frankdoc.feature.Description;
+import org.frankframework.frankdoc.feature.Protected;
+import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankAnnotation;
+import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
+import org.frankframework.frankdoc.wrapper.FrankType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,28 +51,9 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.feature.Deprecated;
-import org.frankframework.frankdoc.feature.Description;
-import org.frankframework.frankdoc.feature.Protected;
-import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
-import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.wrapper.FrankAnnotation;
-import org.frankframework.frankdoc.wrapper.FrankClass;
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.frankframework.frankdoc.wrapper.FrankType;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Models a Java class that can be referred to in a Frank configuration.
- * 
+ *
  * @author martijn
  *
  */
@@ -75,13 +74,13 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private @Getter LinkedHashMap<FrankMethod, Integer> unusedConfigChildSetterCandidates = new LinkedHashMap<>();
 	private @Getter List<ConfigChild> configChildrenUnderConstruction = new ArrayList<>();
-	
+
 	private final @Getter String fullName;
 	private final @Getter String simpleName;
-	
+
 	// Needed to handle a corner case that is explained with method FrankDocModel.calculateTypeNameSeq
 	private @Setter int typeNameSeq = 1;
-	
+
 	private final @Getter boolean isAbstract;
 	private @Getter boolean isDeprecated = false;
 
@@ -153,7 +152,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	private boolean configChildCandidateHasProtectedArgument(FrankMethod frankMethod) {
-		log.trace("Checking method [{}]", () -> frankMethod.toString());
+		log.trace("Checking method [{}]", frankMethod::toString);
 		FrankType argumentType = frankMethod.getParameterTypes()[0];
 		if(! (argumentType instanceof FrankClass)) {
 			// Text config child, wont have feature PROTECTED
@@ -164,7 +163,7 @@ public class FrankElement implements Comparable<FrankElement> {
 			return false;
 		}
 		if(classIsProtected(argument)) {
-			log.trace("Method [{}] is not a config child candidate because class [{}] has feature PROTECTED", () -> frankMethod.toString(), () -> argument.toString());
+			log.trace("Method [{}] is not a config child candidate because class [{}] has feature PROTECTED", frankMethod::toString, argument::toString);
 			return true;
 		}
 		return false;
@@ -387,7 +386,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	public void walkCumulativeConfigChildren(
 			CumulativeChildHandler<ConfigChild> handler, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector) {
 		new AncestorChildNavigation<ConfigChild>(
-				handler, childSelector, childRejector, ConfigChild.class).run(this);		
+				handler, childSelector, childRejector, ConfigChild.class).run(this);
 	}
 
 	public List<ConfigChild> getCumulativeConfigChildren(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
@@ -455,7 +454,7 @@ public class FrankElement implements Comparable<FrankElement> {
 			if(result.endsWith(removablePostfix)) {
 				result = result.substring(0, result.lastIndexOf(removablePostfix));
 				break;
-			}			
+			}
 		}
 		result = result + Utils.toUpperCamelCase(roleName);
 		return result;

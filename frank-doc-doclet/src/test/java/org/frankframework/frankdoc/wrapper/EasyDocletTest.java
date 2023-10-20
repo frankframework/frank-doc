@@ -3,14 +3,17 @@ package org.frankframework.frankdoc.wrapper;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.sun.javadoc.ClassDoc;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 
 public class EasyDocletTest {
 	@Ignore
 	@Test
 	public void test() throws Exception {
-		for(ClassDoc c: TestUtil.getClassDocs("org.frankframework.frankdoc.testtarget.doclet")) {
-			System.out.println(c.name());
+		for (Element element : TestUtil.getTypeElements(null, "org.frankframework.frankdoc.testtarget.doclet")) {
+			if (element instanceof TypeElement) {
+				System.out.println(((TypeElement) element).getQualifiedName().toString());
+			}
 		}
 	}
 }

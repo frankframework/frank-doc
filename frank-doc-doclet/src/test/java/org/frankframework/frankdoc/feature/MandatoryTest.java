@@ -1,16 +1,16 @@
 package org.frankframework.frankdoc.feature;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.util.Arrays;
-
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class MandatoryTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.featurepackage.";
@@ -33,7 +33,7 @@ public class MandatoryTest {
 	@Test
 	public void whenNoAnnotationsThenNotMandatory() {
 		FrankMethod m = findMethod("notMandatory");
-		assertNull(Mandatory.getInstance().valueOf(m));		
+		assertNull(Mandatory.getInstance().valueOf(m));
 	}
 
 	@Test

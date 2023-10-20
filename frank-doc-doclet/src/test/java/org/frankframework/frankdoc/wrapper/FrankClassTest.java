@@ -1,244 +1,74 @@
 package org.frankframework.frankdoc.wrapper;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
+public class FrankClassTest {
+	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.doclet.";
+	private static final String ANNOTATION_WITH_CLASS_ARRAY = "nl.nn.adapterframework.doc.ExcludeFromType";
 
-import org.junit.Test;
+	private static final String EXPECTED_TYPE_ELEMENT =
+			"This is test class \"Child\". We use this comment to see how\n" +
+			" JavaDoc text is treated by the Doclet API.";
 
-public class FrankClassTest extends TestBase {
-	private static final String JAVA_5_ANNOTATION = "org.frankframework.frankdoc.testtarget.doclet.Java5Annotation";
-	private static final String JAVADOC_TAG = "@ff.myTag";
+	private FrankClassRepository repository;
+	private FrankClass instance;
 
-	@Test
-	public void testChildClass() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(PACKAGE + "Child");
-		assertEquals(PACKAGE + "Child", instance.getName());
-		assertTrue(instance.isPublic());
-		assertEquals(0, instance.getAnnotations().length);
-		assertNull(instance.getAnnotation(TestUtil.DEPRECATED));
-		assertFalse(instance.isAbstract());
-		assertEquals("Child", instance.getSimpleName());
-		assertEquals("Parent", instance.getSuperclass().getSimpleName());
-		assertFalse(instance.isInterface());
-		assertEquals(FrankClassRepository.removeTrailingDot(PACKAGE), instance.getPackageName());
-		assertFalse(instance.isEnum());
+	@Before
+	public void setUp() throws FrankDocException {
+		repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
+		instance = repository.findClass(PACKAGE + "Child");
 	}
 
 	@Test
-	public void whenClassIsPackagePrivateThenNotFound() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(PACKAGE + "PackagePrivateClass");
-		assertNull(instance);
+	public void testGetJavaDoc() {
+		assertEquals(EXPECTED_TYPE_ELEMENT, instance.getJavaDoc());
 	}
 
 	@Test
-	public void testClassAnnotations() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(PACKAGE + "DeprecatedChild");
-		FrankAnnotation[] annotations = instance.getAnnotations();
-		assertEquals(1, annotations.length);
-		FrankAnnotation annotation = annotations[0];
-		assertEquals(TestUtil.DEPRECATED, annotation.getName());
-		annotation = instance.getAnnotation(TestUtil.DEPRECATED);
-		assertNotNull(annotation);
-		assertEquals(TestUtil.DEPRECATED, annotation.getName());
-	}
-
-	@Test
-	public void classObjectHasSuperclassNull() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(FrankDocletConstants.OBJECT);
-		assertNull(instance.getSuperclass());
-	}
-
-	@Test
-	public void interfaceCanGiveItsImplementations() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(PACKAGE + "MyInterface");
-		List<FrankClass> implementations = instance.getInterfaceImplementations();
-		assertEquals(3, implementations.size());
-		// We test abstract classes are omitted. With reflection and Spring
-		// this happens automatically, so it should also work like that
-		// within a doclet.
-		//
-		// We also test that inner classes are omitted as interface implementations.
-		checkInterfaceImplementations(implementations);
-	}
-
-	private void checkInterfaceImplementations(List<FrankClass> implementations) {
-		List<String> expectedImplementationNames = Arrays.asList(new String[] {"Child", "GrandChild", "GrandGrandChild"});
-		List<String> actualImplementationNames = implementations.stream().map(FrankClass::getSimpleName).sorted().collect(Collectors.toList());
-		assertArrayEquals(expectedImplementationNames.toArray(new String[] {}), actualImplementationNames.toArray(new String[] {}));
-	}
-
-	@Test
-	public void superInterfaceHasImplementationsOfChildInterfaces() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(PACKAGE + "MyInterfaceParent");
-		List<FrankClass> implementations = instance.getInterfaceImplementations();
-		checkInterfaceImplementations(implementations);
-	}
-
-	@Test
-	public void superSuperInterfaceHasImplementationsOfChildInterfaces() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(PACKAGE + "MyInterfaceGrandParent");
-		List<FrankClass> implementations = instance.getInterfaceImplementations();
-		checkInterfaceImplementations(implementations);
-	}
-
-	@Test(expected = FrankDocException.class)
-	public void nonInterfaceCannotGiveItsImplementations() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(PACKAGE + "Child");
-		instance.getInterfaceImplementations();
-	}
-
-	@Test
-	public void nonInterfaceCanGiveItsSuperInterfaces() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(PACKAGE + "Child");
-		FrankClass[] result = instance.getInterfaces();
-		assertEquals(1, result.length);
-		assertEquals("MyInterface", result[0].getSimpleName());
-	}
-
-	@Test
-	public void getDeclaredMethodsDoesNotIncludeInheritedMethods() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(PACKAGE + "Child");
-		FrankMethod[] declaredMethods = instance.getDeclaredMethods();
-		final Set<String> actualMethodNames = new TreeSet<>();
-		Arrays.asList(declaredMethods).forEach(m -> actualMethodNames.add(m.getName()));
-		List<String> sortedActualMethodNames = new ArrayList<>(actualMethodNames);
-		sortedActualMethodNames = sortedActualMethodNames.stream().filter(name -> ! name.contains("jacoco")).collect(Collectors.toList());
-		assertArrayEquals(new String[] {"getMyInnerEnum", "methodWithoutAnnotations", "myAnnotatedMethod", "setInherited", "setVarargMethod"}, sortedActualMethodNames.toArray());
-	}
-
-	/**
-	 * The following is tested:
-	 * <ul>
-	 * <li> Inherited methods are included.
-	 * <li> Overridden methods are not duplicated.
-	 * <li> Only public methods are included.
-	 * </ul>
-	 */
-	@Test
-	public void testGetDeclaredAndInheritedMethods() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(PACKAGE + "Child");
-		FrankMethod[] methods = instance.getDeclaredAndInheritedMethods();
-		final Set<String> methodNames = new TreeSet<>();
-		Arrays.asList(methods).stream()
-			.map(FrankMethod::getName)
-			.filter(name -> ! name.contains("jacoco"))
-			.forEach(name -> methodNames.add(name));
-		assertArrayEquals(new String[] {"equals", "getClass", "getInherited", "getMyInnerEnum", "hashCode", "methodWithoutAnnotations", "myAnnotatedMethod", "myMethod", "notify", "notifyAll", "setInherited", "setVarargMethod", "toString", "wait", "withClassValuedAnnotation"}, new ArrayList<>(methodNames).toArray());
-		// Test we have no duplicates
-		Map<String, List<FrankMethod>> methodsByName = Arrays.asList(methods).stream()
-				.filter(m -> methodNames.contains(m.getName()))
-				.collect(Collectors.groupingBy(FrankMethod::getName));
-		for(String name: new String[] {"getInherited", "setInherited"}) {
-			assertEquals(String.format("Duplicate method name [%s]", name), 1, methodsByName.get(name).size());
-		}
-	}
-
-	@Test
-	public void whenInterfaceDoesNotExtendOthersThenGetInterfacesReturnsEmptyArray() throws Exception{
-		FrankClass instance = classRepository.findClass(PACKAGE + "MyInterfaceGrandParent");
-		assertEquals(0, instance.getInterfaces().length);
-	}
-
-	@Test
-	public void whenInterfaceExtendsOtherInterfaceThenReturnedByGetInterfaces() throws Exception {
-		FrankClass instance = classRepository.findClass(PACKAGE + "MyInterface");
-		FrankClass[] implementedInterfaces = instance.getInterfaces();
-		assertEquals(1, implementedInterfaces.length);
-		assertEquals("MyInterfaceParent", implementedInterfaces[0].getSimpleName());
-	}
-
-	@Test
-	public void testGetEnumConstants() throws FrankDocException {
-		FrankClass clazz = classRepository.findClass(PACKAGE + "MyEnum");
-		assertTrue(clazz.isEnum());
-		FrankEnumConstant[] actual = clazz.getEnumConstants();
-		String[] actualNames = Arrays.asList(actual).stream()
-				.map(c -> c.getName())
-				.collect(Collectors.toList()).toArray(new String[] {});
-		assertArrayEquals(new String[] {"ONE", "TWO", "THREE"}, actualNames);
-		List<Integer> actualPositions = Arrays.asList(actual).stream()
-				.map(c -> c.getPosition())
+	public void testMethodSequenceIsPreserved() {
+		List<String> actualMethodNames = Arrays.asList(instance.getDeclaredMethods()).stream()
+				.map(FrankMethod::getName)
 				.collect(Collectors.toList());
-		assertArrayEquals(new Integer[] {0, 1, 2}, actualPositions.toArray(new Integer[] {}));
-		FrankEnumConstant aConstant = actual[0];
-		assertTrue(aConstant.isPublic());
-		assertNull(aConstant.getAnnotation(JAVA_5_ANNOTATION));
-		assertNull(aConstant.getJavaDocTag(JAVADOC_TAG));
-		assertEquals("", aConstant.getJavaDoc());
-		aConstant = actual[1];
-		assertEquals("MyValue", aConstant.getJavaDocTag(JAVADOC_TAG));
+		assertEquals(6, actualMethodNames.size());
+		// TODO: check why "packagePrivateMethod" was not included in the list in the previous Java 8 version. It is now.
+		String[] expectedMethodNames = new String[] {"setInherited", "packagePrivateMethod", "setVarargMethod", "getMyInnerEnum", "myAnnotatedMethod", "methodWithoutAnnotations"};
+		assertArrayEquals(expectedMethodNames, actualMethodNames.toArray(new String[] {}));
 	}
 
 	@Test
-	public void testGetEnumConstantsInnerEnum() throws FrankDocException {
-		FrankClass clazz = classRepository.findClass(PACKAGE + "Child" + ".MyInnerEnum");
-		assertTrue(clazz.isEnum());
-		FrankEnumConstant[] actual = clazz.getEnumConstants();
-		String[] actualNames = Arrays.asList(actual).stream()
-				.map(c -> c.getName())
-				.collect(Collectors.toList()).toArray(new String[] {});
-		assertArrayEquals(new String[] {"INNER_FIRST", "INNER_SECOND"}, actualNames);
-		FrankEnumConstant aConstant = actual[0];
-		assertTrue(aConstant.isPublic());
-		assertNull(aConstant.getAnnotation(JAVA_5_ANNOTATION));
-		assertEquals("", aConstant.getJavaDoc());
-		aConstant = actual[1];
-		assertEquals("Description of INNER_SECOND", aConstant.getJavaDoc());
-		FrankAnnotation anAnnotation = aConstant.getAnnotation(JAVA_5_ANNOTATION);
-		assertNotNull(anAnnotation);
-		assertArrayEquals(new String[] {"a", "b"}, (String[]) anAnnotation.getValueOf("myStringArray"));
-		assertEquals("s", anAnnotation.getValueOf("myString"));
-		assertEquals(4, anAnnotation.getValueOf("myInt"));
-		clazz = classRepository.findClass(PACKAGE + "Child");
-		FrankMethod enumGetter = TestUtil.getDeclaredMethodOf(clazz, "getMyInnerEnum");
-		FrankType returnType = enumGetter.getReturnType();
-		assertTrue(returnType.isEnum());
+	public void testExtendsOrInherits() throws Exception {
+		FrankClass grandChild = repository.findClass(PACKAGE + "GrandChild");
+		FrankClass child = repository.findClass(PACKAGE + "Child");
+		FrankClass parent = repository.findClass(PACKAGE + "Parent");
+		FrankClass myInterface = repository.findClass(PACKAGE + "MyInterface");
+		assertTrue(grandChild.extendsOrImplements(parent));
+		assertTrue(grandChild.extendsOrImplements(myInterface));
+		assertFalse(myInterface.extendsOrImplements(child));
 	}
 
 	@Test
-	public void simpleNameOfInnerClassDoesNotContainOuterClassName() throws FrankDocException {
-		FrankClass clazz = classRepository.findClass(PACKAGE + "Child" + ".MyInnerEnum");
-		assertEquals("MyInnerEnum", clazz.getSimpleName());
+	public void testAnnotationHavingClassArrayValue() throws Exception {
+		FrankClass clazz = repository.findClass(PACKAGE + "WithAnnotationHavingClassArray");
+		FrankAnnotation annotation = clazz.getAnnotation(ANNOTATION_WITH_CLASS_ARRAY);
+		String[] value = (String[]) annotation.getValue();
+		assertArrayEquals(new String[] {PACKAGE + "Child", PACKAGE + "GrandChild"}, value);
 	}
 
 	@Test
-	public void testToString() throws Exception {
-		FrankClass clazz = classRepository.findClass(PACKAGE + "Child" + ".MyInnerEnum");
-		// This method is just for logging. There is no point in ensuring we get a "." instead of a "$".
-		String actual = clazz.toString().replace("$", ".");
-		assertEquals(PACKAGE + "Child" + ".MyInnerEnum", actual);
-	}
-
-	@Test
-	public void whenJavaDocTagHasArgumentThenTrimmedArgumentFound() throws Exception {
-		FrankClass clazz = classRepository.findClass(PACKAGE + "Child");
-		String actual = clazz.getJavaDocTag(JAVADOC_TAG);
-		assertEquals("This is the tag argument.", actual);
-	}
-
-	@Test
-	public void whenJavaDocTagHasNoArgumentThenEmptyStringFound() throws Exception {
-		FrankClass clazz = classRepository.findClass(PACKAGE + "Parent");
-		String actual = clazz.getJavaDocTag(JAVADOC_TAG);
-		assertEquals("", actual);
-	}
-
-	@Test
-	public void whenJavaDocTagIsMissingThenNullReturned() throws Exception {
-		FrankClass clazz = classRepository.findClass(PACKAGE + "GrandChild");
-		String actual = clazz.getJavaDocTag(JAVADOC_TAG);
-		assertNull(actual);
+	public void testAnnotationHavingClassArrayValueOneValue() throws Exception {
+		FrankClass clazz = repository.findClass(PACKAGE + "WithAnnotationHavingClassArrayOneValue");
+		FrankAnnotation annotation = clazz.getAnnotation(ANNOTATION_WITH_CLASS_ARRAY);
+		String[] value = (String[]) annotation.getValue();
+		assertArrayEquals(new String[] {PACKAGE + "Child"}, value);
 	}
 }

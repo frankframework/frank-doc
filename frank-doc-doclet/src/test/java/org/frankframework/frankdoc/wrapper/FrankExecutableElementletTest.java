@@ -1,15 +1,15 @@
 package org.frankframework.frankdoc.wrapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-public class FrankMethodDocletTest {
+public class FrankExecutableElementletTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.doclet.";
 
 	private FrankClassRepository repository;
@@ -38,7 +38,7 @@ public class FrankMethodDocletTest {
 	@Test
 	public void whenMethodHasJavadocThenReturnedByGetJavaDocIncludingInherited() throws FrankDocException {
 		FrankMethod method = getMethodByName(clazz, "setInherited");
-		assertEquals("This is the JavaDoc of method \"setInherited\".", method.getJavaDocIncludingInherited());		
+		assertEquals("This is the JavaDoc of method \"setInherited\".", method.getJavaDocIncludingInherited());
 	}
 
 	@Test
@@ -50,7 +50,7 @@ public class FrankMethodDocletTest {
 	@Test
 	public void whenMethodInheritsJavadocThenReturnedByGetJavadocIncludingInherited() throws FrankDocException {
 		FrankMethod method = getMethodByName(innerClass, "myAnnotatedMethod");
-		assertEquals("This is the javadoc of \"myAnnotatedMethod\".", method.getJavaDocIncludingInherited());		
+		assertEquals("This is the javadoc of \"myAnnotatedMethod\".", method.getJavaDocIncludingInherited());
 	}
 
 	@Test
@@ -62,7 +62,7 @@ public class FrankMethodDocletTest {
 	@Test
 	public void whenMethodInheritsDefaultThenReturnedByGetDefaultValueFromJavadocIncludingInherited() throws FrankDocException {
 		FrankMethod method = getMethodByName(innerClass, "myAnnotatedMethod");
-		assertEquals("InheritedDefault", method.getJavaDocTagIncludingInherited(TestUtil.JAVADOC_DEFAULT_VALUE_TAG));		
+		assertEquals("InheritedDefault", method.getJavaDocTagIncludingInherited(TestUtil.JAVADOC_DEFAULT_VALUE_TAG));
 	}
 
 	@Test

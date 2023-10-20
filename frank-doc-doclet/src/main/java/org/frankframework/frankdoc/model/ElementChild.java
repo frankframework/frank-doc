@@ -16,16 +16,15 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import java.util.function.Predicate;
-
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.DocWriterNew;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.LogUtil;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.function.Predicate;
 
 /**
  * Base class of FrankAttribute and ConfigChild. This class was introduced

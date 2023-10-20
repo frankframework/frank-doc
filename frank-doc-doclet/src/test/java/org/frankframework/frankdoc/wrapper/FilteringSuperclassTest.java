@@ -1,18 +1,6 @@
 package org.frankframework.frankdoc.wrapper;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assume.assumeFalse;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import org.frankframework.frankdoc.testdoclet.EasyDoclet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,13 +8,26 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.sun.javadoc.ClassDoc;
+import javax.lang.model.element.Element;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assume.assumeFalse;
 
 @RunWith(Parameterized.class)
 public class FilteringSuperclassTest {
 	private static final String CHILD_PACKAGE = "org.frankframework.frankdoc.testtarget.doclet.filtering.second.";
 	private static final String PARENT_PACKAGE = "org.frankframework.frankdoc.testtarget.doclet.filtering.first.";
-	private static final String CHILD_CLASS = "ChildDerivedFromOtherPackageParent";	
+	private static final String CHILD_CLASS = "ChildDerivedFromOtherPackageParent";
 	private static final Set<String> RELEVANT_METHODS = new HashSet<>(Arrays.asList("setChild", "setParent"));
 
 	@Parameters(name = "{0}")
@@ -59,8 +60,9 @@ public class FilteringSuperclassTest {
 	@Before
 	public void setUp() throws FrankDocException {
 		List<String> packages = Arrays.asList(CHILD_PACKAGE, PARENT_PACKAGE);
-		ClassDoc[] classDocs = TestUtil.getClassDocs(new String[] {CHILD_PACKAGE, PARENT_PACKAGE});
-		repository = FrankClassRepository.getDocletInstance(classDocs, new HashSet<>(packages), new HashSet<>(), new HashSet<>(Arrays.asList(superclassFilter)));
+		EasyDoclet easyDoclet = TestUtil.getEasyDoclet(CHILD_PACKAGE, PARENT_PACKAGE);
+		Set<? extends Element> classDocs = TestUtil.getTypeElements(easyDoclet, null);
+		repository = new FrankClassRepository(TestUtil.getDocTrees(easyDoclet), classDocs, new HashSet<>(packages), new HashSet<>(), new HashSet<>(Collections.singletonList(superclassFilter)));
 		childClass = repository.findClass(CHILD_PACKAGE + CHILD_CLASS);
 		assertNotNull(childClass);
 	}

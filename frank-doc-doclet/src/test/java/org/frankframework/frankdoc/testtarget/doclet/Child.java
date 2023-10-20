@@ -5,7 +5,7 @@ package org.frankframework.frankdoc.testtarget.doclet;
  * JavaDoc text is treated by the Doclet API.
  * @author martijn
  *
- * @ff.myTag This is the tag argument.  
+ * @ff.myTag This is the tag argument.
  */
 public class Child extends Parent implements MyInterface {
 	@Override
@@ -21,7 +21,7 @@ public class Child extends Parent implements MyInterface {
 
 	public enum MyInnerEnum {
 		INNER_FIRST,
-		
+
 		// It would be nice if the JavaDoc could go after the Java 5 annotation.
 		// The doclet API does not support that, however.
 		/** Description of INNER_SECOND */ @Java5Annotation(myStringArray = {"a", "b"}, myString = "s", myInt = 4, myBoolean = false)

@@ -1,7 +1,14 @@
 package org.frankframework.frankdoc.wrapper;
 
-import static org.junit.Assert.assertEquals;
+import com.sun.source.util.DocTrees;
+import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.testdoclet.EasyDoclet;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import javax.lang.model.element.Element;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.sax.SAXSource;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,19 +18,13 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.sax.SAXSource;
-
-import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.testdoclet.EasyDoclet;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import com.sun.javadoc.ClassDoc;
+import static org.junit.Assert.assertEquals;
 
 public final class TestUtil {
 	private static final Properties BUILD_PROPERTIES = new TestUtil().loadBuildProperties();
@@ -39,23 +40,34 @@ public final class TestUtil {
 
 	static FrankMethod getDeclaredMethodOf(FrankClass clazz, String methodName) {
 		FrankMethod[] methods = clazz.getDeclaredMethods();
-		for(FrankMethod m: methods) {
-			if(m.getName().equals(methodName)) {
+		for (FrankMethod m : methods) {
+			if (m.getName().equals(methodName)) {
 				return m;
 			}
 		}
 		return null;
 	}
 
-	public static FrankClassRepository getFrankClassRepositoryDoclet(String ...packages) {
-		ClassDoc[] classes = getClassDocs(packages);
-		return FrankClassRepository.getDocletInstance(classes, new HashSet<>(Arrays.asList(packages)), new HashSet<>(), new HashSet<>());
+	public static FrankClassRepository getFrankClassRepositoryDoclet(String... packages) {
+		EasyDoclet easyDoclet = getEasyDoclet(packages);
+		Set<? extends Element> classes = getTypeElements(easyDoclet, packages);
+		return new FrankClassRepository(getDocTrees(easyDoclet), classes, new HashSet<>(Arrays.asList(packages)), new HashSet<>(), new HashSet<>());
 	}
 
-	public static ClassDoc[] getClassDocs(String ...packages) {
+	public static Set<? extends Element> getTypeElements(EasyDoclet easyDoclet, String... packages) {
+		if (easyDoclet == null) {
+			easyDoclet = getEasyDoclet(packages);
+		}
+		return easyDoclet.getDocletEnvironment().getIncludedElements();
+	}
+
+	static EasyDoclet getEasyDoclet(String... packages) {
 		System.out.println("System property java.home: " + System.getProperty("java.home"));
-		EasyDoclet doclet = new EasyDoclet(TEST_SOURCE_DIRECTORY, packages);
-		return doclet.getRootDoc().classes();
+		return new EasyDoclet(TEST_SOURCE_DIRECTORY, packages);
+	}
+
+	static DocTrees getDocTrees(EasyDoclet easyDoclet) {
+		return easyDoclet.getDocletEnvironment().getDocTrees();
 	}
 
 	private Properties loadBuildProperties() {
@@ -64,13 +76,13 @@ public final class TestUtil {
 			InputStream is = getClass().getClassLoader().getResource("build.properties").openStream();
 			result.load(is);
 			return result;
-		} catch(IOException e) {
+		} catch (IOException e) {
 			throw new RuntimeException("Cannot load build.properties", e);
 		}
 	}
 
 	public static URL resourceAsURL(String path) throws IOException {
-		if(! path.startsWith("/")) {
+		if (!path.startsWith("/")) {
 			path = "/" + path;
 		}
 		return TestUtil.class.getResource(path);
@@ -89,7 +101,7 @@ public final class TestUtil {
 	}
 
 	public static String getTestFile(String file) throws IOException {
-		return getTestFile(file, Charset.forName("UTF-8"));
+		return getTestFile(file, StandardCharsets.UTF_8);
 	}
 
 	public static String getTestFile(String file, Charset charset) throws IOException {
@@ -101,7 +113,7 @@ public final class TestUtil {
 		return getTestFile(url, charset);
 	}
 
-	public static URL getTestFileURL(String file) throws IOException {
+	public static URL getTestFileURL(String file) {
 		return TestUtil.class.getResource(file);
 	}
 
@@ -132,6 +144,6 @@ public final class TestUtil {
 	}
 
 	static public void assertEqualsIgnoreCRLF(String message, String expected, String actual) {
-		assertEquals(message, expected.trim().replace("\r",""), actual.trim().replace("\r",""));
+		assertEquals(message, expected.trim().replace("\r", ""), actual.trim().replace("\r", ""));
 	}
 }

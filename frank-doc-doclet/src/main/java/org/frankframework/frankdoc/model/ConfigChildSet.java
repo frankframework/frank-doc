@@ -1,19 +1,23 @@
-/* 
-Copyright 2021 WeAreFrank! 
+/*
+Copyright 2021 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 package org.frankframework.frankdoc.model;
+
+import lombok.Getter;
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +27,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
-
-import lombok.Getter;
 
 /**
  * Holds the list of all cumulative config children sharing some role name, say R, but
@@ -145,7 +144,7 @@ public class ConfigChildSet {
 				String memberChildrenString = memberChildren.stream()
 						.map(ConfigChild::toString)
 						.collect(Collectors.joining(", "));
-				log.trace("  [{}]: [{}]", roleName, memberChildrenString);				
+				log.trace("  [{}]: [{}]", roleName, memberChildrenString);
 			}
 		}
 		return memberChildrenByRoleName;
@@ -172,7 +171,7 @@ public class ConfigChildSet {
 						.anyMatch(roleName -> roleName.equals("child"))) {
 					// We cannot fix this for Frank config element <Child>, so the build should not fail.
 					log.warn("ConfigChildSet [{}] has multiple candidates for the default element: [{}]", toString(),
-							candidates.stream().collect(Collectors.joining(", ")));					
+							candidates.stream().collect(Collectors.joining(", ")));
 				} else {
 					// We are hiding FrankElement-s. For the sake of the argument, say class Pipe implements interface IPipe,
 					// and say we have a config child with role name "pipe".

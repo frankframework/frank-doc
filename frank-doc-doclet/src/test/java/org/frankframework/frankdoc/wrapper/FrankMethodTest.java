@@ -1,10 +1,6 @@
 package org.frankframework.frankdoc.wrapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -12,7 +8,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class FrankMethodTest extends TestBase {
 	@Test
@@ -114,7 +114,7 @@ public class FrankMethodTest extends TestBase {
 		assertFalse(method.isVarargs());
 		assertEquals(1, method.getParameterCount());
 		FrankType parameter = method.getParameterTypes()[0];
-		assertEquals(FrankDocletConstants.STRING, parameter.getName());		
+		assertEquals(FrankDocletConstants.STRING, parameter.getName());
 	}
 
 	@Test

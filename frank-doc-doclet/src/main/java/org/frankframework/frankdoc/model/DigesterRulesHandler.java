@@ -15,23 +15,23 @@
 */
 package org.frankframework.frankdoc.model;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Parses file digester-rules.xml.
- * 
+ *
  * Copied from package nl.nn.adapterframework.configuration.digester.
- * 
+ *
  */
 public abstract class DigesterRulesHandler extends DefaultHandler {
 	protected final Logger log = LogUtil.getLogger(DigesterRulesHandler.class);
