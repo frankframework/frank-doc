@@ -103,7 +103,7 @@ public class FrankMethodTest extends TestBase {
 		// We use the parameter type to check whether we have a setter or not.
 		// If a method has a vararg argument, then it is not a setter.
 		// In this case the exact type of the parameter is not needed.
-		Set<String> stringOrStringArray = new HashSet<>(Arrays.asList(FrankDocletConstants.STRING, "[L" + FrankDocletConstants.STRING + ";"));
+		Set<String> stringOrStringArray = new HashSet<>(Arrays.asList(FrankDocletConstants.STRING, FrankDocletConstants.STRING + "[]"));
 		assertTrue(stringOrStringArray.contains(parameter.getName()));
 	}
 

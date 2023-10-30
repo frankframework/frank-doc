@@ -45,9 +45,6 @@ final class FrankDocletUtils {
 		if (superclass.getKind().equals(TypeKind.NONE)) {
 			return null;
 		}
-		if (superclass.toString().equals("java.lang.Object")) {
-			return null;
-		}
 		if (superclass.toString().equals("java.lang.Record")) {
 			return null;
 		}

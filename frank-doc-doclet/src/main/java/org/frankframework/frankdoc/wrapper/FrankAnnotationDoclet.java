@@ -112,13 +112,6 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 	}
 
 	private Object parseAnnotationValueAsStringArray(com.sun.tools.javac.util.List<Attribute> valueList) {
-//		AnnotationValue[] valueAsArray;
-//		try {
-//			valueAsArray = (AnnotationValue[]) rawValue;
-//		} catch (ClassCastException e) {
-//			throw new FrankDocException(String.format("Annotation has unknown type: [%s]", getName()), e);
-//		}
-//		List<Attribute.Constant> valueAsStringList = ((List)rawValue);
 		String[] result = new String[valueList.size()];
 		for (int i = 0; i < valueList.size(); ++i) {
 			result[i] = valueList.get(i).getValue().toString();

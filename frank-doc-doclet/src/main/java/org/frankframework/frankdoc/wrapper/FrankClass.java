@@ -33,8 +33,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,7 +87,7 @@ public class FrankClass implements FrankType {
 			frankMethodsByDocletMethod.values().forEach(m -> log.trace("  [{}], public: [{}]", m.getName(), m.isPublic()));
 		}
 
-		TypeElement superType = getSuperclassElement(element);
+		TypeElement superType = FrankDocletUtils.getSuperclassElement(clazz);
 		topLevel = superType == null;
 
 		AnnotationMirror[] annotationMirrors = element.getAnnotationMirrors().toArray(new AnnotationMirror[]{});
@@ -187,21 +185,6 @@ public class FrankClass implements FrankType {
 		return result;
 	}
 
-
-	static TypeElement getSuperclassElement(TypeElement typeElement) {
-		TypeMirror superclass = typeElement.getSuperclass();
-		if (superclass.getKind().equals(TypeKind.NONE)) {
-			return null;
-		}
-		if (superclass.toString().equals("java.lang.Object")) {
-			return null;
-		}
-		if (superclass.toString().equals("java.lang.Record")) {
-			return null;
-		}
-		return (TypeElement) ((DeclaredType) superclass).asElement();
-	}
-
 	/**
 	 * Get super interfaces of an interface, or interfaces implemented by a class.
 	 */
@@ -243,7 +226,6 @@ public class FrankClass implements FrankType {
 	/**
 	 * Assumes that this object models a Java interface and get the non-abstract interface implementations.
 	 */
-
 	public List<FrankClass> getInterfaceImplementations() throws FrankDocException {
 		if (!isInterface()) {
 			throw new FrankDocException(String.format("Cannot get implementations of non-interface [%s]", getName()), null);

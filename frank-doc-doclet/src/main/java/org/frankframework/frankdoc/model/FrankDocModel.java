@@ -832,9 +832,11 @@ public class FrankDocModel {
 	}
 
 	private void checkDescription(String description, String item, String itemName, Set<String> allSuspiciousHtmlTagsFound) {
+		if (description == null)
+			return;
 		List<String> htmlTags = Utils.getHtmlTags(description);
 		Set<String> suspiciousHtmlTags = new HashSet<>(htmlTags);
-		suspiciousHtmlTags.removeAll(EXPECTED_HTML_TAGS);
+		EXPECTED_HTML_TAGS.forEach(suspiciousHtmlTags::remove);
 		allSuspiciousHtmlTagsFound.addAll(suspiciousHtmlTags);
 		if(! suspiciousHtmlTags.isEmpty()) {
 			log.warn("{} [{}] has a description with suspicious HTML tags: [{}]", item, itemName, formatSuspiciousHtmlTags(suspiciousHtmlTags));
