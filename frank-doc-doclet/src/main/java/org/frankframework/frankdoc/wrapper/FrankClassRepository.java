@@ -39,9 +39,9 @@ public class FrankClassRepository {
 	private final Map<String, FrankClass> classesByName = new HashMap<>();
 	private final Set<FrankClass> filteredClassesForInterfaceImplementations;
 
-	public FrankClassRepository(DocTrees docTrees, Set<? extends Element> classDocs, Set<String> includeFilters, Set<String> excludeFilters, Set<String> excludeFiltersForSuperclass) {
+	public FrankClassRepository(DocTrees docTrees, Set<? extends Element> classElements, Set<String> includeFilters, Set<String> excludeFilters, Set<String> excludeFiltersForSuperclass) {
 		this.excludeFiltersForSuperclass = new HashSet<>(excludeFiltersForSuperclass);
-		classDocs.stream()
+		classElements.stream()
 			.filter(TypeElement.class::isInstance)
 			.map(TypeElement.class::cast)
 			.forEach(typeElement -> findOrCreateClass(typeElement, docTrees));

@@ -17,12 +17,14 @@ limitations under the License.
 package org.frankframework.frankdoc.wrapper;
 
 import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Symbol;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
-import java.lang.reflect.Method;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -79,11 +81,11 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 		if (foundAnnotation.isPresent()) {
 			return parseAnnotationValue(foundAnnotation.get());
 		} else {
-			return getDefaultValue(fieldName);
+			return getAnnotationDefaultValue(annotation, fieldName);
 		}
 	}
 
-	private Object parseAnnotationValue(AnnotationValue raw) throws FrankDocException {
+	private Object parseAnnotationValue(AnnotationValue raw) {
 		if (raw instanceof Attribute.Array) {
 			return parseAnnotationValueAsStringArray(((Attribute.Array) raw).getValue());
 		}
@@ -91,7 +93,6 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 			return ((Attribute.Class) raw).classType.toString();
 		}
 		if (raw instanceof Attribute.Enum) {
-//			return ((Attribute.Enum) raw).getValue().toString();
 			return new FrankEnumConstantDoclet(((Attribute.Enum) raw).getValue(), null);
 		}
 
@@ -119,14 +120,18 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 		return result;
 	}
 
-	private Object getDefaultValue(String fieldName) throws FrankDocException {
-		try {
-			Class<?> clazz = Class.forName(annotation.getAnnotationType().toString());
-			Method method = clazz.getDeclaredMethod(fieldName);
-			return method.getDefaultValue();
-		} catch (ClassNotFoundException | NoSuchMethodException e) {
-			throw new FrankDocException("Class not found while retrieving annotation default value: " + annotation.getAnnotationType(), e);
+	public static Object getAnnotationDefaultValue(AnnotationMirror annotationMirror, String elementName) {
+		TypeElement annotationTypeElement = (TypeElement) annotationMirror.getAnnotationType().asElement();
+		Element defaultValueMethod = annotationTypeElement.getEnclosedElements().stream()
+			.filter(methodElement -> methodElement.getSimpleName().contentEquals(elementName))
+			.findFirst()
+			.orElse(null);
+
+		if (defaultValueMethod instanceof Symbol.MethodSymbol) {
+			Symbol.MethodSymbol methodSymbol = (Symbol.MethodSymbol) defaultValueMethod;
+			return methodSymbol.getDefaultValue().getValue();
 		}
+		return null;
 	}
 
 	@Override

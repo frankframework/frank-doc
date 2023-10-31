@@ -493,7 +493,7 @@ public class FrankDocModel {
 					ancestorMethod -> handleConfigChildSetterAncestor(configChild, ancestorMethod, context));
 			configChild.setMandatoryStatus(MandatoryStatus.of(context.mandatoryValue, context.optionalValue));
 			log.trace("Mandatory status [{}]", configChild.getMandatoryStatus().toString());
-			if(configChildDescriptor.isForObject()) {
+			if(configChildDescriptor.isForObject() && frankMethod.getParameterTypes()[0] instanceof FrankClass) {
 				log.trace("For FrankElement [{}] method [{}], going to search element role", parent::getFullName, frankMethod::getName);
 				FrankClass elementTypeClass = (FrankClass) frankMethod.getParameterTypes()[0];
 				((ObjectConfigChild) configChild).setElementRole(findOrCreateElementRole(elementTypeClass, configChildDescriptor.getRoleName()));
@@ -502,7 +502,8 @@ public class FrankDocModel {
 			}
 			configChild.setOrder(parent.getUnusedConfigChildSetterCandidates().get(frankMethod));
 			createdNewConfigChildren = true;
-			parent.getConfigChildrenUnderConstruction().add(configChild);
+			if (configChild.getRoleName() != null)
+				parent.getConfigChildrenUnderConstruction().add(configChild);
 			parent.getUnusedConfigChildSetterCandidates().remove(frankMethod);
 			if(log.isTraceEnabled() && frankMethod.isMultiplyInheritedPlaceholder()) {
 				log.trace("Config child [{}] is not based on a declared method, but was added because of possible multiple inheritance", configChild.toString());

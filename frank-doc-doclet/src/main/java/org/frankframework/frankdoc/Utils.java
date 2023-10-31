@@ -286,16 +286,16 @@ public final class Utils {
 				return ref;
 			}
 		}
-		String result = fieldOwner.resolveValue(refComponents[1], e -> new EnumValue(e).getLabel());
+		String result = fieldOwner.resolveValue(refComponents[1], enumConstant -> new EnumValue(enumConstant).getLabel());
 		if (result == null) {
-			logValueSubstitutionError(ref, String.format("Found field owner class [{}], but not the referenced field or enum constant", fieldOwner.toString()));
+			logValueSubstitutionError(ref, String.format("Found field owner class [%s], but not the referenced field or enum constant", fieldOwner));
 			return ref;
 		}
 		return result;
 	}
 
 	private static void logValueSubstitutionError(String ref, String specificError) {
-		log.error("Error replacing text [{}]: {}", JAVADOC_VALUE_START_DELIMITER + ref + JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, specificError);
+		log.error("Error replacing text [{}{}{}]: {}", JAVADOC_VALUE_START_DELIMITER, ref, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, specificError);
 	}
 
 	public static boolean equalsNullable(Object o1, Object o2) {

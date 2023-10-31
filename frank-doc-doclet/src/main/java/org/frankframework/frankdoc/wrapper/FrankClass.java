@@ -451,7 +451,7 @@ public class FrankClass implements FrankType {
 	}
 
 	public String resolveValue(String variable, Function<FrankEnumConstant, String> enumHandler) {
-		Function<FrankClass, String> getter = c -> resolveValueImpl(c, variable, enumHandler);
+		Function<FrankClass, String> getter = frankClass -> resolveValueImpl(frankClass, variable, enumHandler);
 		try {
 			return getIncludingInherited(getter).orElse(null);
 		} catch (FrankDocException e) {
