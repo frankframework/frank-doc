@@ -19,6 +19,7 @@ package org.frankframework.frankdoc.wrapper;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.util.DocTrees;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -65,7 +66,6 @@ public class FrankClass implements FrankType {
 	private final @Getter(AccessLevel.PACKAGE) List<MultiplyInheritedMethodPlaceholder> multiplyInheritedMethodPlaceholders = new ArrayList<>();
 	private final Map<String, String> fields = new HashMap<>();
 	private final Map<String, FrankEnumConstant> enumFields = new HashMap<>();
-	private final @Getter boolean topLevel;
 
 	FrankClass(TypeElement element, DocTrees docTrees, FrankClassRepository repository) {
 		log.trace("Creating FrankClass for [{}]", element.getQualifiedName());
@@ -87,9 +87,6 @@ public class FrankClass implements FrankType {
 			log.trace("Class [{}] has the following methods:", element.getQualifiedName());
 			frankMethodsByDocletMethod.values().forEach(m -> log.trace("  [{}], public: [{}]", m.getName(), m.isPublic()));
 		}
-
-		TypeElement superType = FrankDocletUtils.getSuperclassElement(clazz);
-		topLevel = superType == null;
 
 		AnnotationMirror[] annotationMirrors = element.getAnnotationMirrors().toArray(new AnnotationMirror[]{});
 		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(annotationMirrors);
@@ -320,11 +317,9 @@ public class FrankClass implements FrankType {
 		return docCommentTree == null ? null : DocletHelper.convertDocTreeListToStr(docCommentTree.getFullBody());
 	}
 
-	/*boolean isTopLevel() {
-		// Note: dit was .containingClass() in Java 8. Werkt niet in Java 11!
-		return clazz.getSuperclass() == null;
-	}*/
-
+	boolean isTopLevel() {
+		return !((Symbol.ClassSymbol) clazz).isInner();
+	}
 
 	public String toString() {
 		return getName();

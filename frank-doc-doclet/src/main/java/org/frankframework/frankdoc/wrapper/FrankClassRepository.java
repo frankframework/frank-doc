@@ -50,6 +50,7 @@ public class FrankClassRepository {
 		filteredClassesForInterfaceImplementations = classesByName.values().stream()
 			.filter(c -> correctedIncludeFilters.stream().anyMatch(i -> c.getPackageName().startsWith(i)))
 			.filter(c -> !excludeFilters.contains(c.getName()))
+			.filter(FrankClass::isTopLevel) // Filter to get the same as with reflection (no inner classes e.g.)
 			.collect(Collectors.toSet());
 		for (FrankClass c : filteredClassesForInterfaceImplementations) {
 			log.trace("Examining what interfaces are implemented by class [{}]", c::getName);
