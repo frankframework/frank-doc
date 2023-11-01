@@ -282,7 +282,11 @@ public final class Utils {
 		if (!StringUtils.isBlank(refComponents[0])) {
 			fieldOwner = context.findClass(refComponents[0]);
 			if (fieldOwner == null) {
-				logValueSubstitutionError(ref, "Cannot find referenced class");
+				// Search for short class name only, to find Javadoc having only class name
+				fieldOwner = context.findMatchingClass(refComponents[0]);
+			}
+			if (fieldOwner == null) {
+				logValueSubstitutionError(ref, "Cannot find referenced class: " + refComponents[0]);
 				return ref;
 			}
 		}

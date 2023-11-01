@@ -63,6 +63,8 @@ public class DocletHelper {
 		List<String> docTreeStrList = docTreeList.stream()
 			.map(Object::toString)
 			.collect(Collectors.toList());
+		if (docTreeStrList.isEmpty())
+			return null;
 		return String.join("", docTreeStrList);
 	}
 }

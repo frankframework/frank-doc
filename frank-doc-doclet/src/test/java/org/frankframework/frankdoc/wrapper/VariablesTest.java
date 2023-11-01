@@ -37,6 +37,12 @@ public class VariablesTest {
 	}
 
 	@Test
+	public void findInheritedInterfaceValue() throws Exception {
+		instance = repository.findClass(PACKAGE + "Constants");
+		assertEquals("replyAddressFieldsDefault", instance.resolveValue("REPLY_ADDRESS_FIELDS_DEFAULT", FrankProgramElement::getName));
+	}
+
+	@Test
 	public void findClassSamePackage() throws Exception {
 		instance = repository.findClass(PACKAGE + "Constants");
 		FrankClass result = instance.findClass("OtherClass");

@@ -78,7 +78,9 @@ public class FrankClassRepository {
 		List<FrankClass> implementedInterfaces = clazz.getInterfacesAsList().stream()
 			.distinct()
 			.collect(Collectors.toList());
-		log.trace("Directly implemented interfaces: [{}]", () -> implementedInterfaces.stream().map(FrankClass::getSimpleName).collect(Collectors.joining(", ")));
+		if (!implementedInterfaces.isEmpty()) {
+			log.trace("Directly implemented interfaces for class [{}]: [{}]", clazz::getSimpleName, () -> implementedInterfaces.stream().map(FrankClass::getSimpleName).collect(Collectors.joining(", ")));
+		}
 		try {
 			for (FrankClass interfaze : implementedInterfaces) {
 				interfaze.recursivelyAddInterfaceImplementation(clazz);
@@ -109,6 +111,14 @@ public class FrankClassRepository {
 		} catch (Exception e) {
 			throw new FrankDocException(e.getMessage(), e.getCause());
 		}
+	}
+
+	public FrankClass findMatchingClass(String simpleClassName) {
+		String fullName = classesByName.keySet().stream().filter(c -> c.endsWith(simpleClassName)).findFirst().orElse(null);
+		if (fullName != null) {
+			return classesByName.get(fullName);
+		}
+		return null;
 	}
 
 	/**

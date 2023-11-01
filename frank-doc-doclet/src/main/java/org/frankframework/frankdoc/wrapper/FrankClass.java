@@ -19,6 +19,7 @@ package org.frankframework.frankdoc.wrapper;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.util.DocTrees;
+import com.sun.tools.javac.code.Type;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -67,7 +68,7 @@ public class FrankClass implements FrankType {
 	private final @Getter boolean topLevel;
 
 	FrankClass(TypeElement element, DocTrees docTrees, FrankClassRepository repository) {
-		log.trace("Creating FrankClass for [{}]", element.getSimpleName());
+		log.trace("Creating FrankClass for [{}]", element.getQualifiedName());
 		this.repository = repository;
 		this.clazz = element;
 		if (docTrees != null) {
@@ -197,7 +198,9 @@ public class FrankClass implements FrankType {
 		List<FrankClass> resultList = new ArrayList<>();
 		for (TypeMirror interfaceDoc : clazz.getInterfaces()) {
 			try {
-				FrankClass interfaze = repository.findClass(interfaceDoc.toString());
+				// Need to retrieve this full name, otherwise class name includes type parameters, e.g. org.ClassName<String>
+				String fullNameWithoutTypeInfo = ((Type.ClassType) interfaceDoc).tsym.toString();
+				FrankClass interfaze = repository.findClass(fullNameWithoutTypeInfo);
 				if (interfaze != null) {
 					resultList.add(interfaze);
 				}
@@ -409,15 +412,11 @@ public class FrankClass implements FrankType {
 
 	void addMultiplyInheritedMethodPlaceholders() {
 		MultiplyInheritedMethodBrowser handler = new MultiplyInheritedMethodBrowser();
-		try {
-			TransitiveImplementedInterfaceBrowser<Object> browser = new TransitiveImplementedInterfaceBrowser<>(this);
-			browser.search(c -> {
-				handler.acceptTransitivelyInheritedInterface(c);
-				return null;
-			});
-		} catch (FrankDocException e) {
-			log.error("Failed to create MultiplyInheritedMethodPlaceholder objects", e);
-		}
+		TransitiveImplementedInterfaceBrowser<Object> browser = new TransitiveImplementedInterfaceBrowser<>(this);
+		browser.search(c -> {
+			handler.acceptTransitivelyInheritedInterface(c);
+			return null;
+		});
 	}
 
 	private class MultiplyInheritedMethodBrowser {
@@ -504,5 +503,9 @@ public class FrankClass implements FrankType {
 		} catch (FrankDocException ignored) {
 		}
 		return null;
+	}
+
+	public FrankClass findMatchingClass(String simpleClassName) {
+		return repository.findMatchingClass(simpleClassName);
 	}
 }
