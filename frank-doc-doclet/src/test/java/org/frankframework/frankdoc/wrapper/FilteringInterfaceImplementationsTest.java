@@ -1,5 +1,6 @@
 package org.frankframework.frankdoc.wrapper;
 
+import org.frankframework.frankdoc.testdoclet.EasyDoclet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -58,8 +59,9 @@ public class FilteringInterfaceImplementationsTest {
 
 	@Test
 	public void test() throws FrankDocException {
-		Set<? extends Element> classDocs = TestUtil.getTypeElements(null, BOTH_PACKAGES);
-		FrankClassRepository repository = new FrankClassRepository(null, classDocs, new HashSet<>(includes), new HashSet<>(excludes), new HashSet<>());
+		EasyDoclet easyDoclet = TestUtil.getEasyDoclet(BOTH_PACKAGES);
+		Set<? extends Element> classDocs = TestUtil.getTypeElements(easyDoclet, BOTH_PACKAGES);
+		FrankClassRepository repository = new FrankClassRepository(TestUtil.getDocTrees(easyDoclet), classDocs, new HashSet<>(includes), new HashSet<>(excludes), new HashSet<>());
 		FrankClass clazz = repository.findClass(FIRST_PACKAGE + "MyInterface");
 		List<FrankClass> implementations = clazz.getInterfaceImplementations();
 		List<String> actualSimpleNames = implementations.stream()

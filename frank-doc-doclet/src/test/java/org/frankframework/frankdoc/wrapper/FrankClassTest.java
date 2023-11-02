@@ -39,9 +39,8 @@ public class FrankClassTest {
 		List<String> actualMethodNames = Arrays.asList(instance.getDeclaredMethods()).stream()
 				.map(FrankMethod::getName)
 				.collect(Collectors.toList());
-		assertEquals(6, actualMethodNames.size());
-		// TODO: check why "packagePrivateMethod" was not included in the list in the previous Java 8 version. It is now.
-		String[] expectedMethodNames = new String[] {"setInherited", "packagePrivateMethod", "setVarargMethod", "getMyInnerEnum", "myAnnotatedMethod", "methodWithoutAnnotations"};
+		assertEquals(5, actualMethodNames.size());
+		String[] expectedMethodNames = new String[] {"setInherited", "setVarargMethod", "getMyInnerEnum", "myAnnotatedMethod", "methodWithoutAnnotations"};
 		assertArrayEquals(expectedMethodNames, actualMethodNames.toArray(new String[] {}));
 	}
 
