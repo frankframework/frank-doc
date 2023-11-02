@@ -16,6 +16,9 @@ public class Child extends Parent implements MyInterface {
 		return null;
 	}
 
+	private void privateMethod() {
+	}
+
 	public void setVarargMethod(String ...value) {
 	}
 
