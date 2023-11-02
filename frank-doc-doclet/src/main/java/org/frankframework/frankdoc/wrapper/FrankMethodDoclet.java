@@ -23,8 +23,11 @@ import org.frankframework.frankdoc.doclet.DocletHelper;
 import org.frankframework.frankdoc.util.LogUtil;
 
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
@@ -134,9 +137,8 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 	}
 
 	void removeOverriddenFrom(Map<ExecutableElement, FrankMethod> methodRepository) {
-		// TODO find out how this works in the Doclet API
-//		ExecutableElement toRemove = method.overriddenMethod();
-//		methodRepository.remove(toRemove);
+		ExecutableElement toRemove = getOverriddenExecutableElement();
+		methodRepository.remove(toRemove);
 	}
 
 	void addToRepository(Map<ExecutableElement, FrankMethod> methodRepository) {
@@ -155,6 +157,16 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 
 	@Override
 	ExecutableElement getOverriddenExecutableElement() {
-		return null; //TODO FIX Jj method.overriddenMethod();
+		TypeElement declaringClassElement = (TypeElement) method.getEnclosingElement();
+		TypeElement superClazz = FrankDocletUtils.getSuperclassElement(declaringClassElement);
+		if (superClazz == null) {
+			return null;
+		}
+		Element overriddenMethodElement = superClazz.getEnclosedElements().stream()
+			.filter(element -> element.getKind().equals(ElementKind.METHOD))
+			.filter(element -> element.getSimpleName().toString().equals(method.getSimpleName().toString()))
+			.findFirst()
+			.orElse(null);
+		return (ExecutableElement) overriddenMethodElement;
 	}
 }
