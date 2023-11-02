@@ -27,6 +27,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -49,10 +50,13 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 			.filter(a -> !RECURSIVE_ANNOTATIONS.contains(a.getAnnotationType().toString()))
 			.collect(Collectors.toList())
 			.toArray(new AnnotationMirror[]{});
-		log.trace("Creating annotations of annotations");
-//		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(annotation.getAnnotationType().getAnnotationMirrors().toArray(new AnnotationMirror[] {}));
-		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(javaDocAnnotationsOfAnnotation);
-		log.trace("Done with annotations of annotations");
+
+		if (javaDocAnnotationsOfAnnotation.length > 0) {
+			log.trace("Creating annotations of annotations");
+			frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(javaDocAnnotationsOfAnnotation);
+		} else {
+			frankAnnotationsByName = new LinkedHashMap<>();
+		}
 	}
 
 	@Override

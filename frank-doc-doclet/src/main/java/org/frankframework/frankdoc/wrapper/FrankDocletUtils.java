@@ -31,9 +31,9 @@ final class FrankDocletUtils {
 	private FrankDocletUtils() {
 	}
 
-	static Map<String, FrankAnnotation> getFrankAnnotationsByName(AnnotationMirror[] AnnotationMirrors) {
+	static Map<String, FrankAnnotation> getFrankAnnotationsByName(AnnotationMirror[] annotationMirrors) {
 		Map<String, FrankAnnotation> annotationsByName = new LinkedHashMap<>();
-		for(AnnotationMirror AnnotationMirror: AnnotationMirrors) {
+		for(AnnotationMirror AnnotationMirror: annotationMirrors) {
 			FrankAnnotation frankAnnotation = new FrankAnnotationDoclet(AnnotationMirror);
 			annotationsByName.put(frankAnnotation.getName(), frankAnnotation);
 		}

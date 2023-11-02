@@ -56,12 +56,8 @@ public class EnumValue {
 		if(! StringUtils.isBlank(javaDoc)) {
 			this.description = javaDoc;
 		}
-		try {
-			if(Deprecated.getInstance().isSetOn(c)) {
-				this.deprecated = true;
-			}
-		} catch(FrankDocException e) {
-			log.error("Could not parse Java annotation or JavaDoc tag for enum constant [{}]", c.getName(), e);
+		if(Deprecated.getInstance().isSetOn(c)) {
+			this.deprecated = true;
 		}
 	}
 }

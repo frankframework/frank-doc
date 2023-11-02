@@ -81,7 +81,7 @@ public enum XsdVersion {
 		return delegate.childIsMandatory(child);
 	}
 
-	private static abstract class Delegate {
+	private abstract static class Delegate {
 		abstract void checkForMissingDescription(FrankAttribute attribute);
 		abstract void checkForMissingDescription(ConfigChild configChild);
 		abstract AttributeUse getRoleNameAttributeUse();
@@ -97,7 +97,7 @@ public enum XsdVersion {
 			if(attribute.getDescription() != null) {
 				return;
 			}
-			log.warn("Attribute [{}] lacks description", attribute.toString());
+			log.warn("Attribute [{}] lacks description", attribute);
 		}
 
 		@Override

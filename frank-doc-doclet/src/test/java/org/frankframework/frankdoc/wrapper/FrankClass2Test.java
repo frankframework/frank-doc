@@ -78,7 +78,7 @@ public class FrankClass2Test extends TestBase {
 	private void checkInterfaceImplementations(List<FrankClass> implementations) {
 		List<String> expectedImplementationNames = Arrays.asList("Child", "GrandChild", "GrandGrandChild");
 		List<String> actualImplementationNames = implementations.stream().map(FrankClass::getSimpleName).sorted().collect(Collectors.toList());
-		assertArrayEquals(expectedImplementationNames.toArray(new String[] {}), actualImplementationNames.toArray(new String[] {}));
+		assertArrayEquals(expectedImplementationNames.toArray(new String[]{}), actualImplementationNames.toArray(new String[]{}));
 	}
 
 	@Test
@@ -116,8 +116,8 @@ public class FrankClass2Test extends TestBase {
 		final Set<String> actualMethodNames = new TreeSet<>();
 		Arrays.asList(declaredMethods).forEach(m -> actualMethodNames.add(m.getName()));
 		List<String> sortedActualMethodNames = new ArrayList<>(actualMethodNames);
-		sortedActualMethodNames = sortedActualMethodNames.stream().filter(name -> ! name.contains("jacoco")).collect(Collectors.toList());
-		assertArrayEquals(new String[] {"getMyInnerEnum", "methodWithoutAnnotations", "myAnnotatedMethod", "setInherited", "setVarargMethod"}, sortedActualMethodNames.toArray());
+		sortedActualMethodNames = sortedActualMethodNames.stream().filter(name -> !name.contains("jacoco")).collect(Collectors.toList());
+		assertArrayEquals(new String[]{"getMyInnerEnum", "methodWithoutAnnotations", "myAnnotatedMethod", "setInherited", "setVarargMethod"}, sortedActualMethodNames.toArray());
 	}
 
 	/**
@@ -130,25 +130,25 @@ public class FrankClass2Test extends TestBase {
 	 */
 	@Test
 	public void testGetDeclaredAndInheritedMethods() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(PACKAGE + "Child");
-		FrankMethod[] methods = instance.getDeclaredAndInheritedMethods();
+		FrankClass childClass = classRepository.findClass(PACKAGE + "Child");
+		FrankMethod[] methods = childClass.getDeclaredAndInheritedMethods();
 		final Set<String> methodNames = new TreeSet<>();
-		Arrays.asList(methods).stream()
+		Arrays.stream(methods)
 			.map(FrankMethod::getName)
-			.filter(name -> ! name.contains("jacoco"))
-			.forEach(name -> methodNames.add(name));
-		assertArrayEquals(new String[] {"equals", "getClass", "getInherited", "getMyInnerEnum", "hashCode", "methodWithoutAnnotations", "myAnnotatedMethod", "myMethod", "notify", "notifyAll", "setInherited", "setVarargMethod", "toString", "wait", "withClassValuedAnnotation"}, new ArrayList<>(methodNames).toArray());
+			.filter(name -> !name.contains("jacoco"))
+			.forEach(methodNames::add);
+		assertArrayEquals(new String[]{"equals", "getClass", "getInherited", "getMyInnerEnum", "hashCode", "methodWithoutAnnotations", "myAnnotatedMethod", "myMethod", "notify", "notifyAll", "setInherited", "setVarargMethod", "toString", "wait", "withClassValuedAnnotation"}, new ArrayList<>(methodNames).toArray());
 		// Test we have no duplicates
-		Map<String, List<FrankMethod>> methodsByName = Arrays.asList(methods).stream()
-				.filter(m -> methodNames.contains(m.getName()))
-				.collect(Collectors.groupingBy(FrankMethod::getName));
-		for(String name: new String[] {"getInherited", "setInherited"}) {
+		Map<String, List<FrankMethod>> methodsByName = Arrays.stream(methods)
+			.filter(m -> methodNames.contains(m.getName()))
+			.collect(Collectors.groupingBy(FrankMethod::getName));
+		for (String name : new String[]{"getInherited", "setInherited"}) {
 			assertEquals(String.format("Duplicate method name [%s]", name), 1, methodsByName.get(name).size());
 		}
 	}
 
 	@Test
-	public void whenInterfaceDoesNotExtendOthersThenGetInterfacesReturnsEmptyArray() throws Exception{
+	public void whenInterfaceDoesNotExtendOthersThenGetInterfacesReturnsEmptyArray() throws Exception {
 		FrankClass instance = classRepository.findClass(PACKAGE + "MyInterfaceGrandParent");
 		assertEquals(0, instance.getInterfaces().length);
 	}
@@ -167,9 +167,9 @@ public class FrankClass2Test extends TestBase {
 		assertTrue(clazz.isEnum());
 		FrankEnumConstant[] actual = clazz.getEnumConstants();
 		String[] actualNames = Arrays.asList(actual).stream()
-				.map(c -> c.getName())
-				.collect(Collectors.toList()).toArray(new String[] {});
-		assertArrayEquals(new String[] {"ONE", "TWO", "THREE"}, actualNames);
+			.map(c -> c.getName())
+			.collect(Collectors.toList()).toArray(new String[]{});
+		assertArrayEquals(new String[]{"ONE", "TWO", "THREE"}, actualNames);
 		FrankEnumConstant aConstant = actual[0];
 		assertTrue(aConstant.isPublic());
 		assertNull(aConstant.getAnnotation(JAVA_5_ANNOTATION));
@@ -185,18 +185,18 @@ public class FrankClass2Test extends TestBase {
 		assertTrue(clazz.isEnum());
 		FrankEnumConstant[] actual = clazz.getEnumConstants();
 		String[] actualNames = Arrays.asList(actual).stream()
-				.map(c -> c.getName())
-				.collect(Collectors.toList()).toArray(new String[] {});
-		assertArrayEquals(new String[] {"INNER_FIRST", "INNER_SECOND"}, actualNames);
+			.map(FrankProgramElement::getName)
+			.collect(Collectors.toList()).toArray(new String[]{});
+		assertArrayEquals(new String[]{"INNER_FIRST", "INNER_SECOND"}, actualNames);
 		FrankEnumConstant aConstant = actual[0];
 		assertTrue(aConstant.isPublic());
 		assertNull(aConstant.getAnnotation(JAVA_5_ANNOTATION));
-		assertEquals("", aConstant.getJavaDoc());
+		assertNull(aConstant.getJavaDoc());
 		aConstant = actual[1];
 		assertEquals("Description of INNER_SECOND", aConstant.getJavaDoc());
 		FrankAnnotation anAnnotation = aConstant.getAnnotation(JAVA_5_ANNOTATION);
 		assertNotNull(anAnnotation);
-		assertArrayEquals(new String[] {"a", "b"}, (String[]) anAnnotation.getValueOf("myStringArray"));
+		assertArrayEquals(new String[]{"a", "b"}, (String[]) anAnnotation.getValueOf("myStringArray"));
 		assertEquals("s", anAnnotation.getValueOf("myString"));
 		assertEquals(4, anAnnotation.getValueOf("myInt"));
 		clazz = classRepository.findClass(PACKAGE + "Child");

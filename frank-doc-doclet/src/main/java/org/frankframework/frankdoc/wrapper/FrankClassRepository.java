@@ -53,9 +53,7 @@ public class FrankClassRepository {
 			.filter(FrankClass::isTopLevel) // Filter to get the same as with reflection (no inner classes e.g.)
 			.collect(Collectors.toSet());
 		for (FrankClass c : filteredClassesForInterfaceImplementations) {
-			log.trace("Examining what interfaces are implemented by class [{}]", c::getName);
 			setInterfaceImplementations(c);
-			log.trace("Done examining what interfaces are implemented by class [{}]", c::getName);
 		}
 		classesByName.values().forEach(FrankClass::addMultiplyInheritedMethodPlaceholders);
 	}

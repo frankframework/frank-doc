@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 class AttributeEnumFactory {
 	private static Logger log = LogUtil.getLogger(AttributeEnumFactory.class);
 
-	private Map<String, AttributeEnum> allAttributeEnumInstances = new LinkedHashMap<>();
-	private Map<String, Integer> lastAssignedSeq = new HashMap<>();
+	private final Map<String, AttributeEnum> allAttributeEnumInstances = new LinkedHashMap<>();
+	private final Map<String, Integer> lastAssignedSeq = new HashMap<>();
 
 	AttributeEnum findOrCreateAttributeEnum(FrankClass clazz) {
 		List<EnumValue> values = Arrays.asList(clazz.getEnumConstants()).stream()

@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -65,7 +64,7 @@ public class FrankClass implements FrankType {
 	private final Map<String, FrankAnnotation> frankAnnotationsByName;
 	private final @Getter(AccessLevel.PACKAGE) List<MultiplyInheritedMethodPlaceholder> multiplyInheritedMethodPlaceholders = new ArrayList<>();
 	private final Map<String, String> fields = new HashMap<>();
-	private final Map<String, FrankEnumConstant> enumFields = new HashMap<>();
+	private final Map<String, FrankEnumConstant> enumFields = new LinkedHashMap<>();
 
 	FrankClass(TypeElement element, DocTrees docTrees, FrankClassRepository repository) {
 		log.trace("Creating FrankClass for [{}]", element.getQualifiedName());
@@ -78,24 +77,22 @@ public class FrankClass implements FrankType {
 		}
 
 		// Add class attributes and methods
-		Map<String, Element> members = new TreeMap<>();
 		for (Element e : element.getEnclosedElements()) {
-			processElement(docTrees, members, e);
+			processElement(docTrees, e);
 		}
 
-		if (log.isTraceEnabled()) {
+		if (log.isTraceEnabled() && !frankMethodsByDocletMethod.isEmpty()) {
 			log.trace("Class [{}] has the following methods:", element.getQualifiedName());
-			frankMethodsByDocletMethod.values().forEach(m -> log.trace("  [{}], public: [{}]", m.getName(), m.isPublic()));
+			frankMethodsByDocletMethod.values().forEach(m -> log.trace(" Method [{}], public: [{}]", m.getName(), m.isPublic()));
 		}
 
 		AnnotationMirror[] annotationMirrors = element.getAnnotationMirrors().toArray(new AnnotationMirror[]{});
 		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(annotationMirrors);
 	}
 
-	protected void processElement(DocTrees docTrees, Map<String, Element> members, Element e) {
+	protected void processElement(DocTrees docTrees, Element e) {
 		ElementKind kind = e.getKind();
 		if (kind == ElementKind.METHOD) {
-			// TODO: only add methods of class itself, not the inherited ones.
 			ExecutableElement executableElement = (ExecutableElement) e;
 			FrankMethodDoclet frankMethodDoclet = new FrankMethodDoclet(executableElement, this, docTrees.getDocCommentTree(executableElement));
 			frankMethodsByDocletMethod.put(executableElement, frankMethodDoclet);
@@ -270,13 +267,6 @@ public class FrankClass implements FrankType {
 
 	public FrankEnumConstant[] getEnumConstants() {
 		return enumFields.values().toArray(new FrankEnumConstant[]{});
-
-//		VariableElement[] variableElements = clazz.enumConstants();
-//		FrankEnumConstant[] result = new FrankEnumConstant[variableElements.length];
-//		for (int i = 0; i < variableElements.length; ++i) {
-//			result[i] = new FrankEnumConstantDoclet(variableElements[i]);
-//		}
-//		return result;
 	}
 
 	FrankClassRepository getRepository() {
