@@ -19,6 +19,7 @@ package org.frankframework.frankdoc.wrapper;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.util.DocTrees;
+import com.sun.tools.javac.code.Kinds;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import lombok.AccessLevel;
@@ -60,10 +61,10 @@ public class FrankClass implements FrankType {
 	private final Set<String> childClassNames = new HashSet<>();
 	private final Map<String, FrankClass> interfaceImplementationsByName = new HashMap<>();
 	private final LinkedHashMap<ExecutableElement, FrankMethod> frankMethodsByDocletMethod = new LinkedHashMap<>();
-	private final Map<String, FrankMethodDoclet> methodsBySignature = new HashMap<>();
+	private final Map<String, FrankMethodDoclet> methodsBySignature = new LinkedHashMap<>();
 	private final Map<String, FrankAnnotation> frankAnnotationsByName;
 	private final @Getter(AccessLevel.PACKAGE) List<MultiplyInheritedMethodPlaceholder> multiplyInheritedMethodPlaceholders = new ArrayList<>();
-	private final Map<String, String> fields = new HashMap<>();
+	private final Map<String, String> fields = new LinkedHashMap<>();
 	private final Map<String, FrankEnumConstant> enumFields = new LinkedHashMap<>();
 
 	FrankClass(TypeElement element, DocTrees docTrees, FrankClassRepository repository) {
@@ -275,11 +276,11 @@ public class FrankClass implements FrankType {
 		return repository;
 	}
 
-	FrankMethod recursivelyFindFrankMethod(ExecutableElement ExecutableElement) {
-		if (frankMethodsByDocletMethod.containsKey(ExecutableElement)) {
-			return frankMethodsByDocletMethod.get(ExecutableElement);
+	FrankMethod recursivelyFindFrankMethod(ExecutableElement executableElement) {
+		if (frankMethodsByDocletMethod.containsKey(executableElement)) {
+			return frankMethodsByDocletMethod.get(executableElement);
 		} else if (getSuperclass() != null) {
-			return (getSuperclass()).recursivelyFindFrankMethod(ExecutableElement);
+			return (getSuperclass()).recursivelyFindFrankMethod(executableElement);
 		} else {
 			return null;
 		}
@@ -310,7 +311,8 @@ public class FrankClass implements FrankType {
 	}
 
 	boolean isTopLevel() {
-		return !((Symbol.ClassSymbol) clazz).isInner();
+		// Note: the isInner() method does not work for 'public static' inner classes.
+		return !((Symbol.ClassSymbol) clazz).owner.kind.equals(Kinds.Kind.TYP);
 	}
 
 	public String toString() {
@@ -338,9 +340,9 @@ public class FrankClass implements FrankType {
 		return result;
 	}
 
-	private <T> T getFromImplementedInterfaces(Function<FrankClass, T> getter) throws FrankDocException {
+	private <T> T getFromImplementedInterfaces(Function<FrankClass, T> getter) {
 		TransitiveImplementedInterfaceBrowser<T> browser = new TransitiveImplementedInterfaceBrowser<>(this);
-		T result = browser.search(getter::apply);
+		T result = browser.search(getter);
 		if ((result == null) && (getSuperclass() != null)) {
 			result = getSuperclass().getFromImplementedInterfaces(getter);
 		}
@@ -466,15 +468,15 @@ public class FrankClass implements FrankType {
 	 * @return
 	 */
 	public FrankClass findClass(String name) {
-		TypeElement foundTypeElement = clazz.getEnclosingElement().getEnclosedElements().stream()
+		TypeElement foundTypeElement = (TypeElement) clazz.getEnclosingElement().getEnclosedElements().stream()
 			.filter(e -> e.getSimpleName().toString().equals(name))
-			.findFirst().map(e -> (TypeElement) e)
+			.findFirst()
 			.orElse(null);
 		// Search for elements inside this class, such as embedded Enums.
 		if (foundTypeElement == null) {
-			foundTypeElement = clazz.getEnclosedElements().stream()
+			foundTypeElement = (TypeElement) clazz.getEnclosedElements().stream()
 				.filter(e -> e.getSimpleName().toString().equals(name))
-				.findFirst().map(e -> (TypeElement) e)
+				.findFirst()
 				.orElse(null);
 		}
 		if (foundTypeElement != null) {

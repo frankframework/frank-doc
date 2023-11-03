@@ -34,7 +34,6 @@ import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 class FrankMethodDoclet extends FrankMethodDocletBase {
 	private static final Logger log = LogUtil.getLogger(FrankMethodDoclet.class);
@@ -133,7 +132,7 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 		for (FrankType type : getParameterTypes()) {
 			components.add(type.getName());
 		}
-		return components.stream().collect(Collectors.joining(", "));
+		return String.join(", ", components);
 	}
 
 	void removeOverriddenFrom(Map<ExecutableElement, FrankMethod> methodRepository) {

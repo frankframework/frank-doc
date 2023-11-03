@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class FrankClassTest {
@@ -69,5 +70,26 @@ public class FrankClassTest {
 		FrankAnnotation annotation = clazz.getAnnotation(ANNOTATION_WITH_CLASS_ARRAY);
 		String[] value = (String[]) annotation.getValue();
 		assertArrayEquals(new String[] {PACKAGE + "Child"}, value);
+	}
+
+	@Test
+	public void testParentIsTopLevel() throws FrankDocException {
+		FrankClass clazz = repository.findClass(PACKAGE + "Parent");
+		assertNotNull(clazz);
+		assertTrue(clazz.isTopLevel());
+	}
+
+	@Test
+	public void testStaticInnerClassIsNotTopLevel() throws FrankDocException {
+		FrankClass clazz = repository.findClass(PACKAGE + "Child.ResponseValidatorWrapper");
+		assertNotNull(clazz);
+		assertFalse(clazz.isTopLevel());
+	}
+
+	@Test
+	public void testInnerEnumIsNotTopLevel() throws FrankDocException {
+		FrankClass clazz = repository.findClass(PACKAGE + "Child.MyInnerEnum");
+		assertNotNull(clazz);
+		assertFalse(clazz.isTopLevel());
 	}
 }

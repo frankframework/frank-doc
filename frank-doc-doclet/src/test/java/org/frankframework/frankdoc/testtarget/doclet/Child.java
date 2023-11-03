@@ -1,5 +1,7 @@
 package org.frankframework.frankdoc.testtarget.doclet;
 
+import org.frankframework.frankdoc.testtarget.examples.config.children.IChild;
+
 /**
  * This is test class "Child". We use this comment to see how
  * JavaDoc text is treated by the Doclet API.
@@ -39,5 +41,9 @@ public class Child extends Parent implements MyInterface {
 	}
 
 	public void methodWithoutAnnotations() {
+	}
+
+	public static class ResponseValidatorWrapper implements IChild {
+		// No methods needed
 	}
 }
