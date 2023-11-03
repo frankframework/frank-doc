@@ -1,11 +1,17 @@
 package org.frankframework.frankdoc;
 
 import org.frankframework.frankdoc.model.FrankDocModel;
+import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Test;
 
 import java.net.URL;
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class IntegrationWithLogTest {
 	@Test
@@ -40,6 +46,14 @@ public class IntegrationWithLogTest {
 			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel.populate(digesterRulesUrl, startClassName, classRepository);
+
+			// Verify that the overloaded methods are found
+			FrankClass masterClass = classRepository.findClass("org.frankframework.frankdoc.testtarget.attribute.overload.Master");
+			FrankMethod[] methods = masterClass.getDeclaredAndInheritedMethods();
+			FrankMethod parentOverloadedMethod = Arrays.stream(methods).filter(m -> m.toString().equals("Parent.setOverloadedInherited")).findFirst().orElse(null);
+			assertNotNull(parentOverloadedMethod);
+			assertEquals(17, masterClass.getDeclaredAndInheritedMethods().length);
+
 			appender.assertLogged("Class [org.frankframework.frankdoc.testtarget.attribute.overload.Master] has overloaded declared or inherited attribute setters. Type of attribute [overloadedInherited] can be any of [int, java.lang.String]");
 			appender.assertLogged("Class [org.frankframework.frankdoc.testtarget.attribute.overload.Master] has overloaded declared or inherited attribute setters. Type of attribute [overloadedEnum] can be any of [java.lang.String, org.frankframework.frankdoc.testtarget.attribute.overload.MyEnum]");
 			appender.assertLogged("In Frank element [Master]: setter [setMyAttribute] has type [org.frankframework.frankdoc.testtarget.attribute.overload.MyEnum] while the getter has type [java.lang.String]");

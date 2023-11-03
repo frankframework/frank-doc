@@ -66,7 +66,8 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 
 	@Override
 	public boolean isPublic() {
-		// TODO: This is not correct. It should be the visibility of the annotation type.
+		// This is not correct. It should be the visibility of the annotation type.
+		// Important note: In Java 8, this is never false inside unit tests.
 		return true;
 	}
 
@@ -100,19 +101,6 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 			return new FrankEnumConstantDoclet(((Attribute.Enum) raw).getValue(), null);
 		}
 
-		//return raw.getValue();
-//		if ((raw instanceof Integer) || (raw instanceof String) || (raw instanceof Boolean)) {
-//			return raw;
-//		} else
-//		if (raw instanceof TypeElement) {
-//			return ((TypeElement) raw).getQualifiedName();
-//		} else if(raw instanceof DeclaredType) {
-//			return ((DeclaredType) raw).asElement().toString(); //TODO: check if this is correct
-//		} else if (raw instanceof VariableElement) {
-//			return new FrankEnumConstantDoclet((VariableElement) raw, null);
-//		} else {
-//			return parseAnnotationValueAsStringArray(raw);
-//		}
 		return raw.getValue();
 	}
 

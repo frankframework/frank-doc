@@ -104,7 +104,7 @@ public class ElementRole implements Comparable<ElementRole> {
 		for (String name : conflictNames) {
 			Map<Boolean, List<FrankElement>> conflictingElementsByDeprecated = membersByXsdName.get(name).stream()
 				.collect(Collectors.groupingBy(FrankElement::isDeprecated));
-			if (!conflictingElementsByDeprecated.get(false).isEmpty()) {
+			if (conflictingElementsByDeprecated.get(false).size() != 1) {
 				log.error("Cannot resolve XML name conflict for non-deprecated FrankElement-s [{}]", () -> FrankElement.describe(conflictingElementsByDeprecated.get(false)));
 				nameConflicts.addAll(membersByXsdName.get(name));
 			} else {

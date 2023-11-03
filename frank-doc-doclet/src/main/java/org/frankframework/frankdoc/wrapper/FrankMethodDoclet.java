@@ -164,7 +164,7 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 		}
 		Element overriddenMethodElement = superClazz.getEnclosedElements().stream()
 			.filter(element -> element.getKind().equals(ElementKind.METHOD))
-			.filter(element -> element.getSimpleName().toString().equals(method.getSimpleName().toString()))
+			.filter(element -> element.toString().equals(method.toString())) // Need to use .toString to get the full method name including parameters
 			.findFirst()
 			.orElse(null);
 		return (ExecutableElement) overriddenMethodElement;
