@@ -19,7 +19,6 @@ package org.frankframework.frankdoc.wrapper;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.tools.javac.code.Type;
 import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.doclet.DocletHelper;
 import org.frankframework.frankdoc.util.LogUtil;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -77,7 +76,7 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 
 	@Override
 	public String getJavaDoc() {
-		return docCommentTree == null ? null : DocletHelper.convertDocTreeListToStr(docCommentTree.getFullBody());
+		return docCommentTree == null ? null : FrankDocletUtils.convertDocTreeListToStr(docCommentTree.getFullBody());
 	}
 
 	@Override

@@ -25,7 +25,11 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 final class FrankDocletUtils {
 	private FrankDocletUtils() {
@@ -33,7 +37,7 @@ final class FrankDocletUtils {
 
 	static Map<String, FrankAnnotation> getFrankAnnotationsByName(AnnotationMirror[] annotationMirrors) {
 		Map<String, FrankAnnotation> annotationsByName = new LinkedHashMap<>();
-		for(AnnotationMirror AnnotationMirror: annotationMirrors) {
+		for (AnnotationMirror AnnotationMirror : annotationMirrors) {
 			FrankAnnotation frankAnnotation = new FrankAnnotationDoclet(AnnotationMirror);
 			annotationsByName.put(frankAnnotation.getName(), frankAnnotation);
 		}
@@ -68,5 +72,43 @@ final class FrankDocletUtils {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Return the string representation of a list of {@link DocTree}.
+	 *
+	 * @param docTreeList a list of {@link DocTree}
+	 * @return string representation of the docTreeList
+	 */
+	public static String convertDocTreeListToStr(List<? extends DocTree> docTreeList) {
+		List<String> docTreeStrList = docTreeList.stream()
+			.map(Object::toString)
+			.collect(Collectors.toList());
+		if (docTreeStrList.isEmpty())
+			return null;
+		return String.join("", docTreeStrList);
+	}
+
+	/**
+	 * Get the canonical name of the inputClassType, which does not include any reference to its formal type parameter
+	 * when it comes to generic type. For example, the canonical name of the interface java.util.Set<E> is java.util.Set.
+	 *
+	 * @param inputClassType class/method/variable type str
+	 * @return canonical name of the inputClassType
+	 */
+	public static String getCanonicalClassName(String inputClassType) {
+		if (inputClassType == null) {
+			return null;
+		}
+		Pattern pattern = Pattern.compile("<.*>");
+		Matcher matcher = pattern.matcher(inputClassType);
+		StringBuilder sb = new StringBuilder();
+		int start = 0;
+		while (matcher.find()) {
+			sb.append(inputClassType.substring(start, matcher.start()));
+			start = matcher.end();
+		}
+		sb.append(inputClassType.substring(start));
+		return sb.toString();
 	}
 }

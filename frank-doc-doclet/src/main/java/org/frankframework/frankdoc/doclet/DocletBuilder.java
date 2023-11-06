@@ -25,13 +25,12 @@ import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.tools.Diagnostic;
 import java.util.Locale;
 import java.util.Set;
 
 @Log4j2
 public class DocletBuilder implements jdk.javadoc.doclet.Doclet {
-	private final FrankDocletOptionsNew options = new FrankDocletOptionsNew();
+	private final FrankDocletOptions options = new FrankDocletOptions();
 
 	@Override
 	public boolean run(DocletEnvironment docEnv) {
@@ -64,19 +63,9 @@ public class DocletBuilder implements jdk.javadoc.doclet.Doclet {
 		log.info(" frankFrameworkVersion: [{}]", options.getFrankFrameworkVersion());
 		log.info(" xsdStrictPath: [{}]", options.getXsdStrictPath());
 		log.info(" xsdCompatibilityPath: [{}]", options.getXsdCompatibilityPath());
-		log.info(" jsonOutputPath: [{}]", options.getJsonOutputPath());
+		log.info(" jsonOutputPath: [{}]", options.getJsonOutputFilePath());
 		log.info(" elementSummaryPath: [{}]", options.getElementSummaryPath());
 		log.info(" digesterRulesUrl: [{}]", options.getDigesterRulesUrl());
-	}
-
-	public static boolean validOptions(String options[][], Reporter reporter) {
-		try {
-			FrankDocletOptions.validateOptions(options);
-			return true;
-		} catch (InvalidDocletOptionsException e) {
-			reporter.print(Diagnostic.Kind.ERROR, e.getMessage());
-			return false;
-		}
 	}
 
 	public static SourceVersion SourceVersion() {

@@ -47,7 +47,7 @@ class Doclet {
 	private final File elementSummaryFile;
 	private final String frankFrameworkVersion;
 
-	Doclet(DocTrees docTrees, Set<? extends Element> classes, FrankDocletOptionsNew options) throws FrankDocException {
+	Doclet(DocTrees docTrees, Set<? extends Element> classes, FrankDocletOptions options) throws FrankDocException {
 		log.info("Output base directory is: [{}]", options.getOutputDirectory());
 		try {
 			FrankClassRepository repository = new FrankClassRepository(docTrees, classes, FrankElementFilters.getIncludeFilter(),
@@ -60,7 +60,7 @@ class Doclet {
 			xsdStrictFile.getParentFile().mkdirs();
 			xsdCompatibilityFile = new File(outputBaseDir, options.getXsdCompatibilityPath());
 			xsdCompatibilityFile.getParentFile().mkdirs();
-			jsonFile = new File(outputBaseDir, options.getJsonOutputPath());
+			jsonFile = new File(outputBaseDir, options.getJsonOutputFilePath());
 			jsonFile.getParentFile().mkdirs();
 			elementSummaryFile = new File(outputBaseDir, options.getElementSummaryPath());
 			elementSummaryFile.getParentFile().mkdirs();

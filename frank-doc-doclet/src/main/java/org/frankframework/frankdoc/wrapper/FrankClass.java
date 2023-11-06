@@ -26,7 +26,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.doclet.DocletHelper;
 import org.frankframework.frankdoc.util.LogUtil;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -307,7 +306,7 @@ public class FrankClass implements FrankType {
 	}
 
 	public String getJavaDoc() {
-		return docCommentTree == null ? null : DocletHelper.convertDocTreeListToStr(docCommentTree.getFullBody());
+		return docCommentTree == null ? null : FrankDocletUtils.convertDocTreeListToStr(docCommentTree.getFullBody());
 	}
 
 	boolean isTopLevel() {
