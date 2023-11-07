@@ -28,9 +28,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LabelValues {
-	private static Logger log = LogUtil.getLogger(LabelValues.class);
+	private static final Logger log = LogUtil.getLogger(LabelValues.class);
 
-	private static abstract class SortableValue implements Comparable<SortableValue> {
+	private abstract static class SortableValue implements Comparable<SortableValue> {
 		private @Getter final String value;
 
 		SortableValue(String value) {
@@ -55,7 +55,7 @@ public class LabelValues {
 		public int compareTo(SortableValue other) {
 			// It is a programming error if a label has both enum values and
 			// non-enum values. If this happens, a ClassCastException will occur.
-			return Integer.valueOf(order).compareTo(((EnumValue) other).order);
+			return Integer.compare(order, ((EnumValue) other).order);
 		}
 	}
 
@@ -73,7 +73,7 @@ public class LabelValues {
 	}
 
 	private boolean isInitialized = false;
-	private Map<String, List<SortableValue>> data = new HashMap<>();
+	private final Map<String, List<SortableValue>> data = new HashMap<>();
 
 	void addValue(String label, String value) {
 		log.trace("Label [{}] can have non-enum value [{}]", label, value);
@@ -86,7 +86,7 @@ public class LabelValues {
 	}
 
 	private void add(String label, SortableValue value) {
-		data.putIfAbsent(label, new ArrayList<SortableValue>());
+		data.putIfAbsent(label, new ArrayList<>());
 		data.get(label).add(value);
 	}
 

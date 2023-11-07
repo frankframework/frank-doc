@@ -27,7 +27,6 @@ import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +41,6 @@ import java.util.stream.Collectors;
  * implementing classes of a modeled Java interface.
  *
  * @author martijn
- *
  */
 public class ElementType implements Comparable<ElementType> {
 	private static final Logger log = LogUtil.getLogger(ElementType.class);
@@ -50,7 +48,7 @@ public class ElementType implements Comparable<ElementType> {
 	private static final String JAVADOC_DEFAULT_CLASSNAME = "@ff.defaultElement";
 
 	private static final Comparator<ElementType> COMPARATOR =
-			Comparator.comparing(ElementType::getSimpleName).thenComparing(ElementType::getFullName);
+		Comparator.comparing(ElementType::getSimpleName).thenComparing(ElementType::getFullName);
 
 	private final @Getter(AccessLevel.PACKAGE) List<FrankElement> members;
 	private final @Getter boolean fromJavaInterface;
@@ -63,8 +61,8 @@ public class ElementType implements Comparable<ElementType> {
 		InterfaceHierarchyItem(FrankClass clazz) {
 			this.fullName = clazz.getName();
 			this.simpleName = clazz.getSimpleName();
-			if(clazz.isInterface()) {
-				for(FrankClass superInterface: clazz.getInterfaces()) {
+			if (clazz.isInterface()) {
+				for (FrankClass superInterface : clazz.getInterfaces()) {
 					InterfaceHierarchyItem superInterfaceHierarchyItem = new InterfaceHierarchyItem(superInterface);
 					parentInterfaces.put(superInterfaceHierarchyItem.getFullName(), superInterfaceHierarchyItem);
 				}
@@ -73,11 +71,11 @@ public class ElementType implements Comparable<ElementType> {
 
 		List<ElementType> findMatchingElementTypes(FrankDocModel model) {
 			ElementType currentMatch = model.findElementType(fullName);
-			if(currentMatch != null) {
-				return Arrays.asList(currentMatch);
+			if (currentMatch != null) {
+				return List.of(currentMatch);
 			}
 			List<ElementType> result = new ArrayList<>();
-			for(String parentKey: parentInterfaces.keySet()) {
+			for (String parentKey : parentInterfaces.keySet()) {
 				result.addAll(parentInterfaces.get(parentKey).findMatchingElementTypes(model));
 			}
 			return result;
@@ -98,20 +96,20 @@ public class ElementType implements Comparable<ElementType> {
 	}
 
 	private static String parseDefaultElementTag(FrankClass clazz, FrankClassRepository repository) {
-		String result = null;
 		String value = clazz.getJavaDocTag(JAVADOC_DEFAULT_CLASSNAME);
-		if(StringUtils.isBlank(value)) {
+		if (StringUtils.isBlank(value)) {
 			// null means the JavaDoc tag was not present - then nothing to do.
-			if(value != null) {
+			if (value != null) {
 				log.error("JavaDoc tag {} of interface [{}] should have a parameter", JAVADOC_DEFAULT_CLASSNAME, clazz.getName());
 			}
-		} else {
-			try {
-				FrankClass defaultClass = repository.findClass(value);
-				result = defaultClass.getName();
-			} catch(FrankDocException e) {
-				log.error("JavaDoc tag {} on interface [{}] does not point to a valid class: [{}]", JAVADOC_DEFAULT_CLASSNAME, clazz.getName(), value, e);
-			}
+			return null;
+		}
+		String result = null;
+		try {
+			FrankClass defaultClass = repository.findClass(value);
+			result = defaultClass.getName();
+		} catch (FrankDocException e) {
+			log.error("JavaDoc tag {} on interface [{}] does not point to a valid class: [{}]", JAVADOC_DEFAULT_CLASSNAME, clazz.getName(), value, e);
 		}
 		return result;
 	}
@@ -127,7 +125,7 @@ public class ElementType implements Comparable<ElementType> {
 	// This is not about FrankDocGroups, but about groups in the XSDs.
 	String getGroupName() {
 		String result = getSimpleName();
-		if(result.startsWith("I")) {
+		if (result.startsWith("I")) {
 			result = result.substring(1);
 		}
 		return result;
@@ -141,11 +139,11 @@ public class ElementType implements Comparable<ElementType> {
 		commonInterfaceHierarchy = new ArrayList<>();
 		commonInterfaceHierarchy.add(this);
 		ElementType nextCandidate = commonInterfaceHierarchy.get(commonInterfaceHierarchy.size() - 1).getNextCommonInterface(model);
-		while(nextCandidate != null) {
+		while (nextCandidate != null) {
 			commonInterfaceHierarchy.add(nextCandidate);
 			nextCandidate = commonInterfaceHierarchy.get(commonInterfaceHierarchy.size() - 1).getNextCommonInterface(model);
 		}
-		if(log.isTraceEnabled()) {
+		if (log.isTraceEnabled()) {
 			String commonInterfaceHierarchyStr = commonInterfaceHierarchy.stream().map(ElementType::getFullName).collect(Collectors.joining(", "));
 			log.trace("ElementType [{}] has common interface hierarchy [{}]", this.getFullName(), commonInterfaceHierarchyStr);
 		}
@@ -156,20 +154,20 @@ public class ElementType implements Comparable<ElementType> {
 	}
 
 	private ElementType getNextCommonInterface(FrankDocModel model) {
-		if(! fromJavaInterface) {
+		if (!fromJavaInterface) {
 			return null;
 		}
 		List<ElementType> candidates = new ArrayList<>();
-		for(String key: interfaceHierarchy.getParentInterfaces().keySet()) {
+		for (String key : interfaceHierarchy.getParentInterfaces().keySet()) {
 			candidates.addAll(interfaceHierarchy.getParentInterfaces().get(key).findMatchingElementTypes(model));
 		}
-		if(candidates.isEmpty()) {
+		if (candidates.isEmpty()) {
 			return null;
 		} else {
 			ElementType result = candidates.get(0);
-			if(candidates.size() >= 2) {
+			if (candidates.size() >= 2) {
 				log.error("There are multiple candidates for the next common interface of ElementType [{}], which are [{}]. Chose [{}]",
-						() -> getFullName(), () -> candidates.stream().map(ElementType::getFullName).collect(Collectors.joining(", ")), () -> result.getFullName());
+					this::getFullName, () -> candidates.stream().map(ElementType::getFullName).collect(Collectors.joining(", ")), result::getFullName);
 			}
 			return result;
 		}
@@ -180,9 +178,9 @@ public class ElementType implements Comparable<ElementType> {
 	 */
 	public List<FrankElement> getSyntax2Members() {
 		return members.stream()
-				.filter(frankElement -> ! frankElement.getXmlElementNames().isEmpty())
-				.sorted()
-				.collect(Collectors.toList());
+			.filter(frankElement -> !frankElement.getXmlElementNames().isEmpty())
+			.sorted()
+			.collect(Collectors.toList());
 	}
 
 	@Override

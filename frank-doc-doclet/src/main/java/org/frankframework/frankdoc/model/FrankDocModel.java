@@ -423,13 +423,12 @@ public class FrankDocModel {
 
 	private static String attributeOf(String methodName, String prefix) {
 		String strippedName = methodName.substring(prefix.length());
-		String attributeName = strippedName.substring(0, 1).toLowerCase() + strippedName.substring(1);
-		return attributeName;
+		return strippedName.substring(0, 1).toLowerCase() + strippedName.substring(1);
 	}
 
 	static Map<String, FrankMethod> getEnumGettersByAttributeName(FrankClass clazz) {
 		FrankMethod[] rawMethods = clazz.getDeclaredAndInheritedMethods();
-		List<FrankMethod> methods = Arrays.asList(rawMethods).stream()
+		List<FrankMethod> methods = Arrays.stream(rawMethods)
 				.filter(m -> m.getName().endsWith(ENUM))
 				.filter(m -> m.getReturnType().isEnum())
 				.filter(m -> m.getParameterCount() == 0)
@@ -487,12 +486,12 @@ public class FrankDocModel {
 			log.trace("Have ConfigChildSetterDescriptor [{}]", configChildDescriptor::toString);
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);
 			configChild.setAllowMultiple(configChildDescriptor.isAllowMultiple());
-			log.trace("Allow multiple = [{}]", () -> Boolean.valueOf(configChild.isAllowMultiple()).toString());
+			log.trace("Allow multiple = [{}]", () -> Boolean.toString(configChild.isAllowMultiple()));
 			CreationContext context = new CreationContext();
 			(new AncestorMethodBrowser(classRepository, References.WITHOUT_REFERENCES)).browse(frankMethod,
 					ancestorMethod -> handleConfigChildSetterAncestor(configChild, ancestorMethod, context));
 			configChild.setMandatoryStatus(MandatoryStatus.of(context.mandatoryValue, context.optionalValue));
-			log.trace("Mandatory status [{}]", configChild.getMandatoryStatus().toString());
+			log.trace("Mandatory status [{}]", configChild.getMandatoryStatus());
 			if(configChildDescriptor.isForObject() && frankMethod.getParameterTypes()[0] instanceof FrankClass) {
 				log.trace("For FrankElement [{}] method [{}], going to search element role", parent::getFullName, frankMethod::getName);
 				FrankClass elementTypeClass = (FrankClass) frankMethod.getParameterTypes()[0];
@@ -506,7 +505,7 @@ public class FrankDocModel {
 				parent.getConfigChildrenUnderConstruction().add(configChild);
 			parent.getUnusedConfigChildSetterCandidates().remove(frankMethod);
 			if(log.isTraceEnabled() && frankMethod.isMultiplyInheritedPlaceholder()) {
-				log.trace("Config child [{}] is not based on a declared method, but was added because of possible multiple inheritance", configChild.toString());
+				log.trace("Config child [{}] is not based on a declared method, but was added because of possible multiple inheritance", configChild);
 			}
 			log.trace("Done creating config child [{}], the order is [{}]", configChild::toString, configChild::getOrder);
 		}
@@ -541,7 +540,7 @@ public class FrankDocModel {
 		parent.setConfigChildren(result);
 		log.trace("The config children are (sequence follows sequence of Java methods):");
 		if(log.isTraceEnabled()) {
-			result.forEach(c -> log.trace("{}", c.toString()));
+			result.forEach(c -> log.trace("{}", c));
 		}
 	}
 
@@ -551,8 +550,7 @@ public class FrankDocModel {
 		ElementRole.Key key = new ElementRole.Key(elementTypeClass.getName(), roleName);
 		if(allElementRoles.containsKey(key)) {
 			log.trace("ElementRole already present");
-			ElementRole result = allElementRoles.get(key);
-			return result;
+			return allElementRoles.get(key);
 		} else {
 			ElementRole result = elementRoleFactory.create(elementType, roleName);
 			allElementRoles.put(key, result);
@@ -596,7 +594,7 @@ public class FrankDocModel {
 			}
 		} else {
 			// We do not create a config child if the argument clazz is not an interface and if it has feature PROTECTED.
-			// Therefore we can sefely proceed here.
+			// Therefore, we can safely proceed here.
 			log.trace("Class [{}] is not a Java interface, creating its FrankElement", clazz::getName);
 			if(excludedByExcludeFromTypeFeature(clazz, clazz)) {
 				log.error("Feature ExcludeFromTypeFeature excludes the only possible member of class [{}]", clazz.getName());
@@ -651,13 +649,13 @@ public class FrankDocModel {
 			// Cannot eliminate isTraceEnabled here. Then the operation on variable current would need a lambda,
 			// but that is not possible because variable current is not final.
 			if(log.isTraceEnabled()) {
-				log.trace("Seting property overriddenFrom for all config children and all attributes of FrankElement [{}]", current.getFullName());
+				log.trace("Setting property overriddenFrom for all config children and all attributes of FrankElement [{}]", current.getFullName());
 			}
 			current.getConfigChildren(ALL).forEach(ElementChild::calculateOverriddenFrom);
 			current.getAttributes(ALL).forEach(ElementChild::calculateOverriddenFrom);
 			current.getStatistics().finish();
 			if(log.isTraceEnabled()) {
-				log.trace("Done seting property overriddenFrom for FrankElement [{}]", current.getFullName());
+				log.trace("Done setting property overriddenFrom for FrankElement [{}]", current.getFullName());
 			}
 			remainingElements.remove(current.getFullName());
 		}
@@ -700,7 +698,7 @@ public class FrankDocModel {
 		Collections.sort(sortedElementRoles);
 		sortedElementRoles.stream()
 			.filter(role -> role.getElementType().isFromJavaInterface())
-			.forEach(role -> recursivelyCreateElementRoleSets(Arrays.asList(role), 1));
+			.forEach(role -> recursivelyCreateElementRoleSets(List.of(role), 1));
 		allElementRoleSets.values().forEach(ElementRoleSet::initConflicts);
 		log.trace("Done FrankDocModel.createConfigChildSets");
 	}
@@ -727,7 +725,7 @@ public class FrankDocModel {
 			log.trace("[{}] holds only TextConfigChild. No ElementRoleSet needed", configChildSet::toString);
 			break;
 		case MIXED:
-			log.error("[{}] combines ObjectConfigChild and TextConfigChild, which is not supported", configChildSet.toString());
+			log.error("[{}] combines ObjectConfigChild and TextConfigChild, which is not supported", configChildSet::toString);
 			break;
 		case OBJECT:
 			createElementRoleSet(configChildSet);
@@ -798,7 +796,7 @@ public class FrankDocModel {
 			allElementRoleSets.put(key, new ElementRoleSet(roles));
 			log.trace("Added new ElementRoleSet [{}]", () -> allElementRoleSets.get(key).toString());
 			List<ElementRole> recursionParents = new ArrayList<>(roles);
-			recursionParents = recursionParents.stream().collect(Collectors.toList());
+			recursionParents = new ArrayList<>(recursionParents);
 			Collections.sort(recursionParents);
 			recursivelyCreateElementRoleSets(recursionParents, recursionDepth + 1);
 		}

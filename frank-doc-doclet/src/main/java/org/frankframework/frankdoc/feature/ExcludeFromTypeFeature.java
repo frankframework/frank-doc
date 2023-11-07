@@ -82,7 +82,7 @@ public final class ExcludeFromTypeFeature {
 			String tagValue = testClass.getJavaDocTag(TAG_NAME);
 			if(tagValue != null) {
 				classNames = Arrays.asList(tagValue.split(",")).stream()
-						.map(s -> s.trim())
+						.map(String::trim)
 						.collect(Collectors.toList()).toArray(new String[] {});
 			}
 		}
