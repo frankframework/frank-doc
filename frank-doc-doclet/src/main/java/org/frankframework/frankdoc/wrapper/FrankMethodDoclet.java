@@ -92,9 +92,16 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 
 		String fullNameWithoutTypeInfo = docletType.toString();
 
-		// Fix situation where the type is a generic type, e.g. FrankClass<String>.
+		// Fix situation where the type is a generic type, e.g. FrankClass<String> var.
 		if (docletType instanceof Type.ClassType) {
 			fullNameWithoutTypeInfo = ((Type.ClassType) docletType).tsym.toString();
+		}
+		// Fix situation where the type is an array of generic type, e.g. FrankClass<?>[] vars.
+		if (docletType instanceof Type.ArrayType) {
+			fullNameWithoutTypeInfo = ((Type.ArrayType) docletType).elemtype.tsym.toString();
+		}
+		if (fullNameWithoutTypeInfo.contains("<")) {
+			log.error("Still found type with Generic information in type at: {}; {}. Please fix this inside FrankDocDoclet.", fullNameWithoutTypeInfo, getName());
 		}
 		try {
 			FrankClass clazz = getDeclaringClass().getRepository().findClass(fullNameWithoutTypeInfo);

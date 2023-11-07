@@ -25,7 +25,7 @@ public class Parent<M> {
 	 * @ff.default   Default
 	 */
 	@IbisDoc("50")
-	public void setInherited(String value, Parent<M> parent) {
+	public void setInherited(String value, Parent<M> parent, Parent<?> clas, Parent<?>[] parameterTypes) {
 	}
 
 	public String getInherited() {

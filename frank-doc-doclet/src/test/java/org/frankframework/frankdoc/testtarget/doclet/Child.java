@@ -11,7 +11,7 @@ import org.frankframework.frankdoc.testtarget.examples.config.children.IChild;
  */
 public class Child<M> extends Parent<M> implements MyInterface {
 	@Override
-	public void setInherited(String value, Parent<M> parent) {
+	public void setInherited(String value, Parent<M> parent, Parent<?> clas, Parent<?>[] parameterTypes) {
 	}
 
 	String packagePrivateMethod() {
