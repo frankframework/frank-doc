@@ -9,9 +9,9 @@ import org.frankframework.frankdoc.testtarget.examples.config.children.IChild;
  *
  * @ff.myTag This is the tag argument.
  */
-public class Child extends Parent implements MyInterface {
+public class Child<M> extends Parent<M> implements MyInterface {
 	@Override
-	public void setInherited(String value) {
+	public void setInherited(String value, Parent<M> parent) {
 	}
 
 	String packagePrivateMethod() {

@@ -32,12 +32,16 @@ public class FrankMethodTest extends TestBase {
 		assertNotNull(returnType);
 		assertTrue(returnType.isPrimitive());
 		assertEquals("void", returnType.getName());
-		assertEquals(1, setter.getParameterCount());
+		assertEquals(2, setter.getParameterCount());
+
 		FrankType[] parameters = setter.getParameterTypes();
-		assertEquals(1, parameters.length);
-		FrankType parameter = parameters[0];
-		assertFalse(parameter.isPrimitive());
-		assertEquals(FrankDocletConstants.STRING, parameter.getName());
+		assertEquals(2, parameters.length);
+		FrankType parameter1 = parameters[0];
+		assertFalse(parameter1.isPrimitive());
+		assertEquals(FrankDocletConstants.STRING, parameter1.getName());
+		FrankType parameter2 = parameters[1];
+		assertTrue(parameter2 instanceof FrankClass);
+
 		annotation = setter.getAnnotationIncludingInherited(FrankDocletConstants.IBISDOC);
 		assertNotNull(annotation);
 		assertEquals(FrankDocletConstants.IBISDOC, annotation.getName());
@@ -112,7 +116,7 @@ public class FrankMethodTest extends TestBase {
 		FrankClass clazz = classRepository.findClass(PACKAGE + "Child");
 		FrankMethod method = TestUtil.getDeclaredMethodOf(clazz, "setInherited");
 		assertFalse(method.isVarargs());
-		assertEquals(1, method.getParameterCount());
+		assertEquals(2, method.getParameterCount());
 		FrankType parameter = method.getParameterTypes()[0];
 		assertEquals(FrankDocletConstants.STRING, parameter.getName());
 	}

@@ -90,17 +90,22 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 			return new FrankPrimitiveType(docletType.toString());
 		}
 
-		String typeName = docletType.toString();
+		String fullNameWithoutTypeInfo = docletType.toString();
+
+		// Fix situation where the type is a generic type, e.g. FrankClass<String>.
+		if (docletType instanceof Type.ClassType) {
+			fullNameWithoutTypeInfo = ((Type.ClassType) docletType).tsym.toString();
+		}
 		try {
-			FrankClass clazz = getDeclaringClass().getRepository().findClass(typeName);
+			FrankClass clazz = getDeclaringClass().getRepository().findClass(fullNameWithoutTypeInfo);
 			if (clazz == null) {
-				return new FrankNonCompiledClassDoclet(typeName);
+				return new FrankNonCompiledClassDoclet(fullNameWithoutTypeInfo);
 			} else {
 				return clazz;
 			}
 		} catch (FrankDocException e) {
-			log.error("Failed to search for class with name {}", typeName, e);
-			return new FrankNonCompiledClassDoclet(typeName);
+			log.error("Failed to search for class with name {}", fullNameWithoutTypeInfo, e);
+			return new FrankNonCompiledClassDoclet(fullNameWithoutTypeInfo);
 		}
 	}
 
