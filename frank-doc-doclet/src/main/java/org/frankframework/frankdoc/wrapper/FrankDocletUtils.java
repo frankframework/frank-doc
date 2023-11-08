@@ -16,8 +16,14 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
+import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.EndElementTree;
+import com.sun.source.doctree.EntityTree;
+import com.sun.source.doctree.StartElementTree;
+import com.sun.source.doctree.TextTree;
+import lombok.NonNull;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.TypeElement;
@@ -29,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 final class FrankDocletUtils {
 	private FrankDocletUtils() {
@@ -81,12 +86,58 @@ final class FrankDocletUtils {
 	 * @return string representation of the docTreeList
 	 */
 	public static String convertDocTreeListToStr(List<? extends DocTree> docTreeList) {
-		List<String> docTreeStrList = docTreeList.stream()
-			.map(Object::toString)
-			.collect(Collectors.toList());
+		String docTreeStrList = docTreesToText(docTreeList);
 		if (docTreeStrList.isEmpty())
 			return null;
 		return String.join("", docTreeStrList);
+	}
+
+	/**
+	 * Convert a list of DocTrees into a text string.
+	 * Text nodes, entity nodes and element nodes are handled in detail, because whitespaces are missing in the toString representation.
+	 * Other nodes are converted by toString.
+	 *
+	 * @param docTreeList list of trees
+	 * @return text content
+	 */
+	private static String docTreesToText(@NonNull List<? extends DocTree> docTreeList) {
+		StringBuilder builder = new StringBuilder();
+		for (DocTree docTree : docTreeList) {
+			if (docTree instanceof TextTree) {
+				TextTree text = (TextTree) docTree;
+				builder.append(text.getBody());
+			} else if (docTree instanceof EntityTree) {
+				EntityTree entity = (EntityTree) docTree;
+				builder.append('&')
+					.append(entity.getName())
+					.append(';');
+			} else if (docTree instanceof StartElementTree) {
+				StartElementTree startEl = (StartElementTree) docTree;
+				builder.append("<").append(startEl.getName());
+				for (DocTree tree : startEl.getAttributes()) {
+					if (tree instanceof AttributeTree) {
+						AttributeTree att = (AttributeTree) tree;
+						char quote = (att.getValueKind() == AttributeTree.ValueKind.SINGLE) ? '\'' : '"';
+						builder.append(' ')
+							.append(att.getName())
+							.append('=')
+							.append(quote)
+							.append(docTreesToText(att.getValue()))
+							.append(quote);
+					}
+				}
+				if (startEl.isSelfClosing()) {
+					builder.append('/');
+				}
+				builder.append('>');
+			} else if (docTree instanceof EndElementTree) {
+				EndElementTree endEl = (EndElementTree) docTree;
+				builder.append("</").append(endEl.getName()).append(">");
+			} else {
+				builder.append(docTree);
+			}
+		}
+		return builder.toString();
 	}
 
 	/**

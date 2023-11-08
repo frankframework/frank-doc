@@ -17,14 +17,11 @@ limitations under the License.
 package org.frankframework.frankdoc.wrapper;
 
 import com.sun.source.doctree.DocCommentTree;
-import com.sun.source.doctree.DocTree;
 import lombok.Getter;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 class FrankEnumConstantDoclet implements FrankEnumConstant {
@@ -39,8 +36,7 @@ class FrankEnumConstantDoclet implements FrankEnumConstant {
 	public FrankEnumConstantDoclet(VariableElement variableElement, DocCommentTree docCommentTree) {
 		name = variableElement.getSimpleName().toString();
 		isPublic = variableElement.getModifiers().stream().anyMatch(m -> m == Modifier.PUBLIC);
-		List<? extends DocTree> fullBody = docCommentTree != null ? docCommentTree.getFullBody() : Collections.emptyList();
-		javaDoc = fullBody.isEmpty() ? null : fullBody.toString();
+		javaDoc = docCommentTree != null ? docCommentTree.toString() : null;
 		this.docCommentTree = docCommentTree;
 		AnnotationMirror[] javaDocAnnotations = variableElement.getAnnotationMirrors().toArray(new AnnotationMirror[0]);
 		annotationsByName = FrankDocletUtils.getFrankAnnotationsByName(javaDocAnnotations);

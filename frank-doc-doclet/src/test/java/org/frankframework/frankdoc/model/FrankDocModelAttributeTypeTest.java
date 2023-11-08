@@ -55,7 +55,7 @@ public class FrankDocModelAttributeTypeTest {
 		// This one has a custom label and a description
 		v = myEnum.getValues().get(1);
 		assertEquals("customLabelOne", v.getLabel());
-		assertEquals("Description of customLabelOne", v.getDescription());
+		assertEquals("Description of customLabelOne <code>MrBean</code>.", v.getDescription());
 
 		// By fixing the list index like this, we test that the attributes are sorted correctly.
 		FrankAttribute childAttribute = child.getAttributes(ElementChild.ALL_NOT_EXCLUDED).get(0);
