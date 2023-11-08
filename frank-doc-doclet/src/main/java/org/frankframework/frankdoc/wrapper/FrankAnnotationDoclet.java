@@ -46,7 +46,7 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 	FrankAnnotationDoclet(AnnotationMirror annotation) {
 		log.trace("Creating FrankAnnotation for [{}]", annotation.getAnnotationType());
 		this.annotation = annotation;
-		AnnotationMirror[] javaDocAnnotationsOfAnnotation = annotation.getAnnotationType().getAnnotationMirrors().stream()
+		AnnotationMirror[] javaDocAnnotationsOfAnnotation = annotation.getAnnotationType().asElement().getAnnotationMirrors().stream()
 			.filter(a -> !RECURSIVE_ANNOTATIONS.contains(a.getAnnotationType().toString()))
 			.collect(Collectors.toList())
 			.toArray(new AnnotationMirror[]{});
@@ -77,7 +77,7 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 	}
 
 	@Override
-	public Object getValueOf(String fieldName) throws FrankDocException {
+	public Object getValueOf(String fieldName) {
 		Optional<? extends AnnotationValue> foundAnnotation = annotation.getElementValues().keySet().stream()
 			.filter(executableElement -> executableElement.getSimpleName().toString().equals(fieldName))
 			.map(executableElement -> annotation.getElementValues().get(executableElement))
@@ -129,5 +129,20 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 	@Override
 	public FrankAnnotation getAnnotation(String name) {
 		return frankAnnotationsByName.get(name);
+	}
+
+	@Override
+	public int getAnnotationCount() {
+		return frankAnnotationsByName.size();
+	}
+
+	@Override
+	public String toString() {
+		String value = null;
+		try {
+			value = getValue() == null ? "null" : getValue().toString();
+		} catch (FrankDocException ignored) {
+		}
+		return "FrankAnnotationDoclet name: [" + getName() + "], value: [" + value + "] annotations size: " + getAnnotationCount();
 	}
 }

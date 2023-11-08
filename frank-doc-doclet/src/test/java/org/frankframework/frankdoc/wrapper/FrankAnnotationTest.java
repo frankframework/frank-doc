@@ -1,15 +1,20 @@
 package org.frankframework.frankdoc.wrapper;
 
+import org.frankframework.frankdoc.model.FrankElement;
 import org.frankframework.frankdoc.testtarget.doclet.ClassValuedAnnotation;
 import org.frankframework.frankdoc.testtarget.doclet.Java5Annotation;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class FrankAnnotationTest extends TestBase{
+public class FrankAnnotationTest extends TestBase {
 	@Test
 	public void whenArrayAnnotationValueProvidedAsScalarThenStillFetchable() throws FrankDocException {
 		FrankClass clazz = classRepository.findClass(PACKAGE + "Parent");
@@ -22,7 +27,7 @@ public class FrankAnnotationTest extends TestBase{
 		assertTrue(annotation.isPublic());
 		Object rawValue = annotation.getValue();
 		String[] value = (String[]) rawValue;
-		assertArrayEquals(new String[] {"50"}, value);
+		assertArrayEquals(new String[]{"50"}, value);
 	}
 
 	@Test
@@ -32,7 +37,7 @@ public class FrankAnnotationTest extends TestBase{
 		assertEquals("someSetter", setter.getName());
 		FrankAnnotation annotation = setter.getAnnotation(FrankDocletConstants.IBISDOC);
 		assertEquals(FrankDocletConstants.IBISDOC, annotation.getName());
-		assertArrayEquals(new String[] {"100", "Some description", "0"}, (String[]) annotation.getValue());
+		assertArrayEquals(new String[]{"100", "Some description", "0"}, (String[]) annotation.getValue());
 	}
 
 	@Test
@@ -42,7 +47,7 @@ public class FrankAnnotationTest extends TestBase{
 		assertNotNull(annotation);
 		Object stringArrayRawValue = annotation.getValueOf("myStringArray");
 		String[] stringArrayValue = (String[]) stringArrayRawValue;
-		assertArrayEquals(new String[] {"first", "second"}, stringArrayValue);
+		assertArrayEquals(new String[]{"first", "second"}, stringArrayValue);
 	}
 
 	@Test
@@ -78,5 +83,21 @@ public class FrankAnnotationTest extends TestBase{
 		FrankMethod method = TestUtil.getDeclaredMethodOf(clazz, "withClassValuedAnnotation");
 		FrankAnnotation classAnnotation = method.getAnnotation(ClassValuedAnnotation.class.getName());
 		assertEquals("org.frankframework.frankdoc.testtarget.doclet.Parent", classAnnotation.getValue());
+	}
+
+	@Test
+	public void testAnnotationsOfAnnotations() {
+		classRepository = TestUtil.getFrankClassRepositoryDoclet("org.frankframework.frankdoc.testtarget.examples.labels");
+		FrankClass clazz = classRepository.findMatchingClass("Master");
+		FrankAnnotation[] annotations = clazz.getAnnotations();
+
+		assertEquals(3, annotations.length);
+		Arrays.stream(annotations).forEach(frankAnnotation -> assertEquals(1, frankAnnotation.getAnnotationCount()));
+
+		List<FrankAnnotation> annotationsForLabels = Arrays.stream(annotations)
+			.filter(a -> a.getAnnotation(FrankElement.LABEL) != null)
+			.collect(Collectors.toList());
+
+		assertEquals(3, annotationsForLabels.size());
 	}
 }

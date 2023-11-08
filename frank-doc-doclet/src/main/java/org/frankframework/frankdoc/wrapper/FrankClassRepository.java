@@ -133,4 +133,8 @@ public class FrankClassRepository {
 			return s;
 		}
 	}
+
+	public int size() {
+		return classesByName.size();
+	}
 }
