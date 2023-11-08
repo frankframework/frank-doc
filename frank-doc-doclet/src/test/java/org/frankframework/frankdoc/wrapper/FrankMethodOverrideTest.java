@@ -50,7 +50,7 @@ public class FrankMethodOverrideTest {
 
 		assertEquals("By default text from Parent.", setForceMethod.getJavaDocIncludingInherited());
 		assertEquals("Text from the Default-tag in Child.", setForceMethod.getAnnotation("nl.nn.adapterframework.doc.Default").getValue());
-		assertEquals("FrankAnnotationDoclet name: [nl.nn.adapterframework.doc.Default], value: [Text from the Default-tag in Child.]", setForceMethod.getAnnotations()[1].toString());
+		assertEquals("FrankAnnotationDoclet name: [nl.nn.adapterframework.doc.Default], value: [Text from the Default-tag in Child.] annotations size: 0", setForceMethod.getAnnotations()[1].toString());
 	}
 
 	private FrankMethod getMethodByName(FrankClass c, String name) {
