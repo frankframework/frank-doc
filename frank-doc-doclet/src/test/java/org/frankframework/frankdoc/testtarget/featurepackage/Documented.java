@@ -16,7 +16,7 @@ public abstract class Documented implements IMailFileSystem<String> {
 	/**
 	 * @ff.default default value
 	 */
-	public void withDefaultTag() {
+	public void withDefaultTag(Boolean force) {
 	}
 
 	/**

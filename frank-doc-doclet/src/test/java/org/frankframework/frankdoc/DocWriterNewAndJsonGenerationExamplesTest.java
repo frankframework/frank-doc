@@ -92,7 +92,8 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.reintroduce.Master", "reintroduce.xsd", "reintroduce.json"},
 			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.reintroduce.Master", "reintroduceCompatibility.xsd", null},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.labels.Master", null, "labels.json"},
-			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.exclude.from.type.Master", "excludeFromType.xsd", "excludeFromType.json"}
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.exclude.from.type.Master", "excludeFromType.xsd", "excludeFromType.json"},
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.packageprivate.override.Child", "Documented.xsd", null}
 		});
 	}
 
@@ -140,7 +141,7 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 		return FrankDocModel.populate(getDigesterRulesURL(digesterRulesFileName), startClassName, classRepository);
 	}
 
-	// It would be nice to put this information in the test case table, method data(). That table is quite wide however.
+	// It would be nice to put this information in the test case table, method data(). That table is quite wide, however.
 	// Adding data there would make the table harder to read.
 	private String[] getAllRequiredPackages(String originalPackage) {
 		if(originalPackage.equals("org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first")) {
@@ -156,7 +157,10 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 
 	@Test
 	public void testJson() throws Exception {
-		assumeNotNull(expectedJsonFileName);
+		// Skip JSON testing when filename is defined as null
+		if (expectedJsonFileName == null) {
+			return;
+		}
 		FrankDocModel model = createModel();
 		FrankDocJsonFactory jsonFactory = new FrankDocJsonFactory(model, "1.2.3-SNAPSHOT");
 		JsonObject jsonObject = jsonFactory.getJson();

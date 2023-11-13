@@ -168,6 +168,14 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 	@Override
 	ExecutableElement getOverriddenExecutableElement() {
 		TypeElement declaringClassElement = (TypeElement) method.getEnclosingElement();
+		Element overriddenMethodElement = checkSuperclassForOverriddenMethod(declaringClassElement);
+		return (ExecutableElement) overriddenMethodElement;
+	}
+
+	private Element checkSuperclassForOverriddenMethod(TypeElement declaringClassElement) {
+		if (declaringClassElement == null) {
+			return null;
+		}
 		TypeElement superClazz = FrankDocletUtils.getSuperclassElement(declaringClassElement);
 		if (superClazz == null) {
 			return null;
@@ -177,6 +185,10 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 			.filter(element -> element.toString().equals(method.toString())) // Need to use .toString to get the full method name including parameters
 			.findFirst()
 			.orElse(null);
-		return (ExecutableElement) overriddenMethodElement;
+		if (overriddenMethodElement != null)
+			return overriddenMethodElement;
+
+		// When not found yet, check the superclass of the superclass
+		return checkSuperclassForOverriddenMethod(superClazz);
 	}
 }

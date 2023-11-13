@@ -80,7 +80,7 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 		return result;
 	}
 
-	private <T> T searchExcludingImplementedInterfaces(Function<FrankMethodDocletBase, T> getter) throws FrankDocException {
+	private <T> T searchExcludingImplementedInterfaces(Function<FrankMethodDocletBase, T> getter) {
 		T result = getter.apply(this);
 		if(result != null) {
 			return result;
@@ -88,7 +88,7 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 		ExecutableElement overriddenExecutableElement = getOverriddenExecutableElement();
 		// The overriddenExecutableElement can be in a Java interface instead of an ancestor class.
 		// This is because in Java 8 a Java interface can have default method implementations.
-		if((overriddenExecutableElement != null)) { //TODO check if this is needed in Java 11: && (! overriddenExecutableElement.containingClass().isInterface())) {
+		if((overriddenExecutableElement != null) && (! overriddenExecutableElement.getClass().isInterface())) {
 			FrankMethodDocletBase overriddenMethod = (FrankMethodDocletBase) declaringClass.recursivelyFindFrankMethod(overriddenExecutableElement);
 			if(overriddenMethod != null) {
 				return overriddenMethod.searchExcludingImplementedInterfaces(getter);

@@ -5,6 +5,8 @@ public abstract class AbstractParent<M> {
 	public String keyField;
 	private String destinationName;
 
+	private Boolean forceMessageIdAsCorrelationId = null;
+
 	public M var;
 
 	/** Primary key field of the table, used to identify messages. <a href="https://www.eclipse.org/paho/files/javadoc" target="_blank">link</a>.
@@ -15,6 +17,10 @@ public abstract class AbstractParent<M> {
 
 	public String getKeyField() {
 		return keyField;
+	}
+
+	public Boolean getForceMessageIdAsCorrelationId() {
+		return forceMessageIdAsCorrelationId;
 	}
 
 	/**

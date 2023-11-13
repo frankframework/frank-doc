@@ -25,6 +25,7 @@ import com.sun.tools.javac.code.Type;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 
@@ -196,6 +197,9 @@ public class FrankClass implements FrankType {
 			try {
 				// Need to retrieve this full name, otherwise class name includes type parameters, e.g. org.ClassName<String>
 				String fullNameWithoutTypeInfo = ((Type.ClassType) interfaceDoc).tsym.toString();
+				if (fullNameWithoutTypeInfo.contains("<")) {
+					log.error("2 HELP! {}; {}", fullNameWithoutTypeInfo, getName());
+				}
 				FrankClass interfaze = repository.findClass(fullNameWithoutTypeInfo);
 				if (interfaze != null) {
 					resultList.add(interfaze);
@@ -316,6 +320,13 @@ public class FrankClass implements FrankType {
 
 	public String toString() {
 		return getName();
+	}
+
+	public String getFullToString() {
+		return new ToStringBuilder(this).append("name", getName()).append("isAbstract", isAbstract()).append("isInterface", isInterface())
+			.append("isPublic", isPublic()).append("isTopLevel", isTopLevel()).append("superclass", getSuperclass())
+			.append("interfaces", getInterfaces()).append("methods", getDeclaredMethods()).append("enumConstants", getEnumConstants())
+			.append("annotations", getAnnotations()).append("javaDoc", StringUtils.substring(getJavaDoc(), 0, 25)).toString();
 	}
 
 	public FrankAnnotation getAnnotationIncludingInherited(String annotationFullName) throws FrankDocException {

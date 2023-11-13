@@ -3,7 +3,7 @@ package org.frankframework.frankdoc.testtarget.packageprivate.override;
 import nl.nn.adapterframework.doc.Default;
 import nl.nn.adapterframework.doc.Mandatory;
 
-public class Child<M> extends AbstractParent<M> implements IPeekableListener<M> {
+public class Child extends JmsListener {
 
 	public String ownField;
 	@Override
