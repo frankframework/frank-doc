@@ -232,7 +232,7 @@ public final class Utils {
 	}
 
 	public static String flattenJavaDocLinksToLastWords(String text) throws FrankDocException {
-		return replacePattern(text, JAVADOC_LINK_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, s -> getLinkReplacement(s));
+		return replacePattern(text, JAVADOC_LINK_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, Utils::getLinkReplacement);
 	}
 
 	private static String replacePattern(String text, String patternStart, String patternStop, Function<String, String> substitution) throws FrankDocException {

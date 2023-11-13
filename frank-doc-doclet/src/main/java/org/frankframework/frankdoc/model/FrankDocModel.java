@@ -336,7 +336,7 @@ public class FrankDocModel {
 		if(attribute.getDescription() == null) {
 			attribute.setDescription(Description.getInstance().valueOf(ancestorMethod));
 			if(attribute.getDescription() != null) {
-				log.trace("Description comes from (ancestor) method [{}]", ancestorMethod::toString);
+				log.trace("Description comes from (ancestor) method [{}], attribute: {}", ancestorMethod::toString, attribute::toString);
 			}
 		}
 		if(attribute.getDefaultValue() == null) {
@@ -344,7 +344,7 @@ public class FrankDocModel {
 			// It may not be the literal default value.
 			attribute.setDefaultValue(Default.getInstance().valueOf(ancestorMethod));
 			if(attribute.getDefaultValue() != null) {
-				log.trace("Default value comes from (ancestor) method [{}]", ancestorMethod::toString);
+				log.trace("Default value comes from (ancestor) method [{}], attribute: {}", ancestorMethod::toString, attribute::toString);
 			}
 		}
 		if(Protected.getInstance().isSetOn(ancestorMethod)) {
@@ -521,7 +521,7 @@ public class FrankDocModel {
 				log.trace("Set excluded because of method [{}]", ancestorMethod::toString);
 			}
 		}
-		if(configChild.getDescription() == null) {
+		if(StringUtils.isEmpty(configChild.getDescription())) {
 			configChild.setDescription(Description.getInstance().valueOf(ancestorMethod));
 			if(configChild.getDescription() != null) {
 				log.trace("Set description from method [{}]", ancestorMethod::toString);

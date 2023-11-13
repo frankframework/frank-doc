@@ -25,7 +25,7 @@ import org.frankframework.frankdoc.wrapper.FrankDocException;
 public class ParsedJavaDocTag {
 	private static Logger log = LogUtil.getLogger(ParsedJavaDocTag.class);
 
-	private static String QUOTE = "\"";
+	private static final String QUOTE = "\"";
 
 	private final @Getter String name;
 	private final @Getter String description;
@@ -72,5 +72,10 @@ public class ParsedJavaDocTag {
 	private ParsedJavaDocTag(String name, String description) {
 		this.name = name;
 		this.description = description;
+	}
+
+	@Override
+	public String toString() {
+		return "Name: " + name + (description == null ? "" : ", description: " + description);
 	}
 }

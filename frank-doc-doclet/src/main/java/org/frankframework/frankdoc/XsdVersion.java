@@ -105,7 +105,7 @@ public enum XsdVersion {
 			if(configChild.getDescription() != null) {
 				return;
 			}
-			log.warn("Config child [{}] lacks description", configChild.toString());
+			log.warn("Config child [{}] lacks description", configChild);
 		}
 
 		AttributeUse getRoleNameAttributeUse() {

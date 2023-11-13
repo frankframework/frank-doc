@@ -71,8 +71,8 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private static final Pattern DESCRIPTION_HEADER_SPLIT = Pattern.compile("(\\. )|(\\.\\n)|(\\.\\r\\n)");
 
-	private @Getter LinkedHashMap<FrankMethod, Integer> unusedConfigChildSetterCandidates = new LinkedHashMap<>();
-	private @Getter List<ConfigChild> configChildrenUnderConstruction = new ArrayList<>();
+	private final @Getter LinkedHashMap<FrankMethod, Integer> unusedConfigChildSetterCandidates = new LinkedHashMap<>();
+	private final @Getter List<ConfigChild> configChildrenUnderConstruction = new ArrayList<>();
 
 	private final @Getter String fullName;
 	private final @Getter String simpleName;
@@ -274,6 +274,10 @@ public class FrankElement implements Comparable<FrankElement> {
 		this.allChildren.put(FrankAttribute.class, new LinkedHashMap<>());
 		this.allChildren.put(ConfigChild.class, new LinkedHashMap<>());
 		this.xmlElementNames = new ArrayList<>();
+
+		if (fullName.contains("<")) {
+			log.error("Still found type with Generic information in type at: {}. Please fix this inside FrankDocDoclet.", fullName);
+		}
 	}
 
 	public void setParent(FrankElement parent) {
@@ -363,17 +367,15 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	public FrankElement getNextAncestorThatHasOrRejectsConfigChildren(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		FrankElement ancestorConfigChildren = getNextAncestorThatHasChildren(el -> (
+		return getNextAncestorThatHasChildren(el -> (
 			el.getChildrenOfKind(selector, ConfigChild.class).isEmpty()
 				&& el.getChildrenOfKind(rejector, ConfigChild.class).isEmpty()));
-		return ancestorConfigChildren;
 	}
 
 	public FrankElement getNextAncestorThatHasOrRejectsAttributes(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		FrankElement ancestorAttributes = getNextAncestorThatHasChildren(el -> (
+		return getNextAncestorThatHasChildren(el -> (
 			el.getChildrenOfKind(selector, FrankAttribute.class).isEmpty()
 				&& el.getChildrenOfKind(rejector, FrankAttribute.class).isEmpty()));
-		return ancestorAttributes;
 	}
 
 	public void walkCumulativeAttributes(

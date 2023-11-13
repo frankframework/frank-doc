@@ -1156,10 +1156,10 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 	private String getDocumentationText(ElementChild elementChild) {
 		StringBuilder result = new StringBuilder();
-		if(! StringUtils.isEmpty(elementChild.getDescription())) {
+		if(StringUtils.isNotEmpty(elementChild.getDescription())) {
 			result.append(elementChild.getDescription());
 		}
-		if(! StringUtils.isEmpty(elementChild.getDefaultValue())) {
+		if(StringUtils.isNotEmpty(elementChild.getDefaultValue())) {
 			if(result.length() >= 1) {
 				result.append(" ");
 			}

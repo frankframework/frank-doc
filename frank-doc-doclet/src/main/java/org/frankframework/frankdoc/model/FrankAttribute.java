@@ -28,13 +28,13 @@ import org.frankframework.frankdoc.wrapper.FrankType;
 import java.util.EnumSet;
 
 public class FrankAttribute extends ElementChild {
-	private static Logger log = LogUtil.getLogger(FrankAttribute.class);
+	private static final Logger log = LogUtil.getLogger(FrankAttribute.class);
 
 	static final String JAVADOC_ATTRIBUTE_REF = "@ff.ref";
 
 	@EqualsAndHashCode(callSuper = false)
 	static class Key extends AbstractKey {
-		private String name;
+		private final String name;
 
 		Key(String name) {
 			this.name = name;
@@ -46,7 +46,7 @@ public class FrankAttribute extends ElementChild {
 		}
 	}
 
-	private @Getter String name;
+	private final @Getter String name;
 
 	private @Getter @Setter AttributeType attributeType;
 
@@ -88,7 +88,7 @@ public class FrankAttribute extends ElementChild {
 			return;
 		}
 		if(isExplicitNull) {
-			log.trace("Attribute [{}] has explicit default value [{}], clearing the default value", () -> toString(), () -> getDefaultValue());
+			log.trace("Attribute [{}] has explicit default value [{}], clearing the default value", this::toString, this::getDefaultValue);
 			clearDefaultValue();
 		}
 	}
