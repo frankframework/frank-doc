@@ -13,16 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and 
 limitations under the License. 
 */
-
 package nl.nn.adapterframework.doc;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * Copied from IAF project.
- */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FrankDocGroup {

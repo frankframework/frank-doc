@@ -46,4 +46,8 @@ public class Child<M> extends Parent<M> implements MyInterface {
 	public static class ResponseValidatorWrapper implements IChild {
 		// No methods needed
 	}
+
+	protected String getProtectedStuff() {
+		return "protectedStuff";
+	}
 }

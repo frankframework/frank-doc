@@ -96,7 +96,7 @@ public class FrankClass implements FrankType {
 		if (kind == ElementKind.METHOD) {
 			ExecutableElement executableElement = (ExecutableElement) e;
 			FrankMethodDoclet frankMethodDoclet = new FrankMethodDoclet(executableElement, this, docTrees.getDocCommentTree(executableElement));
-			if (!frankMethodDoclet.isPublic()) // Skip non-public methods (private/package privates)
+			if (!frankMethodDoclet.isPublic() && !frankMethodDoclet.isProtected()) // Skip non-public methods (private/package privates). Protected is needed for inherited annotations.
 				return;
 			frankMethodsByDocletMethod.put(executableElement, frankMethodDoclet);
 			methodsBySignature.put(frankMethodDoclet.getSignature(), frankMethodDoclet);
@@ -224,6 +224,10 @@ public class FrankClass implements FrankType {
 
 	public boolean isPublic() {
 		return clazz.getModifiers().stream().anyMatch(m -> m == Modifier.PUBLIC);
+	}
+
+	public boolean isProtected() {
+		return clazz.getModifiers().stream().anyMatch(m -> m == Modifier.PROTECTED);
 	}
 
 	/**

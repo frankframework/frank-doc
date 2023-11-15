@@ -117,6 +117,11 @@ public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 	}
 
 	@Override
+	public boolean isProtected() {
+		return classAncestorMethod.isProtected();
+	}
+
+	@Override
 	ExecutableElement getOverriddenExecutableElement() {
 		return classAncestorMethod.method;
 	}

@@ -64,6 +64,10 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 		return method.getModifiers().stream().anyMatch(m -> m == Modifier.PUBLIC);
 	}
 
+	public boolean isProtected() {
+		return method.getModifiers().stream().anyMatch(m -> m == Modifier.PROTECTED);
+	}
+
 	@Override
 	public FrankAnnotation[] getAnnotations() {
 		return frankAnnotationsByName.values().toArray(new FrankAnnotation[]{});

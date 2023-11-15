@@ -9,4 +9,9 @@ public class ExtendsDocumented extends Documented {
 	public void withDefaultTag(Boolean force) {
 	}
 
+	@Override
+	public void setDestinationName(String destinationName) {
+		super.setDestinationName(destinationName);
+	}
+
 }

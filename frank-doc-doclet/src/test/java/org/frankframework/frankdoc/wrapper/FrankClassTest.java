@@ -40,8 +40,8 @@ public class FrankClassTest {
 		List<String> actualMethodNames = Arrays.asList(instance.getDeclaredMethods()).stream()
 				.map(FrankMethod::getName)
 				.collect(Collectors.toList());
-		assertEquals(5, actualMethodNames.size());
-		String[] expectedMethodNames = new String[] {"setInherited", "setVarargMethod", "getMyInnerEnum", "myAnnotatedMethod", "methodWithoutAnnotations"};
+		assertEquals(6, actualMethodNames.size());
+		String[] expectedMethodNames = new String[] {"setInherited", "setVarargMethod", "getMyInnerEnum", "myAnnotatedMethod", "methodWithoutAnnotations", "getProtectedStuff"};
 		assertArrayEquals(expectedMethodNames, actualMethodNames.toArray(new String[] {}));
 	}
 

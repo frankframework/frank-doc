@@ -13,4 +13,7 @@
   <rule pattern="*/q" registerTextMethod="registerQ"/>
   <rule pattern="*/r" registerTextMethod="registerR"/>
   <rule pattern="*/s" registerTextMethod="registerS"/>
+
+  <rule pattern="*/sender" registerMethod="setSender" beanClass="org.frankframework.frankdoc.testtarget.featurepackage.ISender" />
+  <rule pattern="*/listener" registerMethod="setListener"/>
 </digester-rules>

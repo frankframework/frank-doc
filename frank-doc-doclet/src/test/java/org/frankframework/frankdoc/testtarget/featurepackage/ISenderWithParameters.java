@@ -1,5 +1,5 @@
 /*
-   Copyright 2023 WeAreFrank!
+   Copyright 2013 Nationale-Nederlanden, 2021 WeAreFrank!
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,16 +13,18 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package nl.nn.adapterframework.doc;
+package org.frankframework.frankdoc.testtarget.featurepackage;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Target;
+/**
+ * The <code>ISenderWithParameters</code> allows Senders to declare that they accept and may use {@link String parameters}
+ *
+ * @author Gerrit van Brakel
+ */
+public interface ISenderWithParameters extends ISender {
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
+	@Override
+	default boolean consumesSessionVariable(String sessionKey) {
+		return true;
+	}
 
-@Target({TYPE, METHOD})
-@Documented
-public @interface ReferTo {
-	Class<?> value();
 }

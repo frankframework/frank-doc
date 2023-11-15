@@ -31,8 +31,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assume.assumeNotNull;
-
 @RunWith(Parameterized.class)
 public class DocWriterNewAndJsonGenerationExamplesTest {
 	@Parameters(name = "{0}-{1}-{4}-{5}")
@@ -93,7 +91,8 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.reintroduce.Master", "reintroduceCompatibility.xsd", null},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.labels.Master", null, "labels.json"},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.exclude.from.type.Master", "excludeFromType.xsd", "excludeFromType.json"},
-			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.packageprivate.override.Child", "Documented.xsd", null}
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.packageprivate.override.Child", "child.xsd", null},
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.featurepackage.Documented", "documented.xsd", "documented.json"}
 		});
 	}
 
@@ -125,7 +124,10 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 
 	@Test
 	public void testXsd() throws Exception {
-		assumeNotNull(expectedXsdFileName);
+		// Skip testing when filename is defined as null
+		if (expectedXsdFileName == null) {
+			return;
+		}
 		FrankDocModel model = createModel();
 		DocWriterNew docWriter = new DocWriterNew(model, attributeTypeStrategy, "1.2.3-SNAPSHOT");
 		docWriter.init(startClassName, xsdVersion);

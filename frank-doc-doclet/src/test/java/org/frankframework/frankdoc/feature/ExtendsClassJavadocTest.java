@@ -18,13 +18,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 @RunWith(Parameterized.class)
-public class DefaultAndDescriptionTest {
+public class ExtendsClassJavadocTest {
 	@Parameters(name = "{0}-{1}-{2}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 			{"notDocumented", null, null},
 			{"withDefaultAnnotation", null, "default value"},
-			{"withDefaultTag", null, "default value"},
+			{"withDefaultTag", null, "child default value"},
 			{"withJavaDoc", "My description", null},
 			{"withFullIbisDoc", "My description", "default value"},
 			{"withIbisDocNoOrder", "My description", "default value"},
@@ -46,7 +46,7 @@ public class DefaultAndDescriptionTest {
 	public String expectedDefaultValue;
 
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.featurepackage.";
-	private static final String CLASS_NAME = PACKAGE + "Documented";
+	private static final String CLASS_NAME = PACKAGE + "ExtendsDocumented";
 
 	private FrankMethod method;
 
@@ -54,7 +54,7 @@ public class DefaultAndDescriptionTest {
 	public void setUp() throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, "org.frankframework.frankdoc.testtarget.wrapper.variables");
 		FrankClass clazz = repository.findClass(CLASS_NAME);
-		method = Arrays.stream(clazz.getDeclaredMethods())
+		method = Arrays.stream(clazz.getDeclaredAndInheritedMethods())
 				.filter(m -> m.getName().equals(methodToTest))
 				.findFirst()
 				.get();

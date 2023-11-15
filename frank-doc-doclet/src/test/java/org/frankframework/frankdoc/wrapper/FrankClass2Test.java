@@ -113,11 +113,18 @@ public class FrankClass2Test extends TestBase {
 	public void getDeclaredMethodsDoesNotIncludeInheritedMethods() throws FrankDocException {
 		FrankClass instance = classRepository.findClass(PACKAGE + "Child");
 		FrankMethod[] declaredMethods = instance.getDeclaredMethods();
+
+		// Assert protected method is valid
+		FrankMethod getProtectedStuff = Arrays.stream(declaredMethods).filter(frankMethod -> frankMethod.getName().equals("getProtectedStuff")).findFirst().get();
+		assertTrue(getProtectedStuff.isProtected());
+		assertFalse(getProtectedStuff.isPublic());
+
+		// Assert the whole list of methods
 		final Set<String> actualMethodNames = new TreeSet<>();
 		Arrays.asList(declaredMethods).forEach(m -> actualMethodNames.add(m.getName()));
 		List<String> sortedActualMethodNames = new ArrayList<>(actualMethodNames);
 		sortedActualMethodNames = sortedActualMethodNames.stream().filter(name -> !name.contains("jacoco")).collect(Collectors.toList());
-		assertArrayEquals(new String[]{"getMyInnerEnum", "methodWithoutAnnotations", "myAnnotatedMethod", "setInherited", "setVarargMethod"}, sortedActualMethodNames.toArray());
+		assertArrayEquals(new String[]{"getMyInnerEnum", "getProtectedStuff", "methodWithoutAnnotations", "myAnnotatedMethod", "setInherited", "setVarargMethod"}, sortedActualMethodNames.toArray());
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
-   Copyright 2023 WeAreFrank!
+   Copyright 2022 WeAreFrank!
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,13 +16,15 @@
 package nl.nn.adapterframework.doc;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 
-@Target({TYPE, METHOD})
+@Target(TYPE)
+@Label(name="SupportsOutputStreaming")
 @Documented
-public @interface ReferTo {
-	Class<?> value();
+@Inherited
+public @interface SupportsOutputStreaming {
+	@LabelValue boolean value() default true;
 }
