@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assume.assumeFalse;
 
 @RunWith(Parameterized.class)
 public class FilteringSuperclassTest {
@@ -54,7 +53,6 @@ public class FilteringSuperclassTest {
 	@Parameter(4)
 	public String[] expectedMethodNames;
 
-	private FrankClassRepository repository;
 	private FrankClass childClass;
 
 	@Before
@@ -62,7 +60,7 @@ public class FilteringSuperclassTest {
 		List<String> packages = Arrays.asList(CHILD_PACKAGE, PARENT_PACKAGE);
 		EasyDoclet easyDoclet = TestUtil.getEasyDoclet(CHILD_PACKAGE, PARENT_PACKAGE);
 		Set<? extends Element> classDocs = TestUtil.getTypeElements(easyDoclet, null);
-		repository = new FrankClassRepository(TestUtil.getDocTrees(easyDoclet), classDocs, new HashSet<>(packages), new HashSet<>(), new HashSet<>(Collections.singletonList(superclassFilter)));
+		FrankClassRepository repository = new FrankClassRepository(TestUtil.getDocTrees(easyDoclet), classDocs, new HashSet<>(packages), new HashSet<>(), new HashSet<>(Collections.singletonList(superclassFilter)));
 		childClass = repository.findClass(CHILD_PACKAGE + CHILD_CLASS);
 		assertNotNull(childClass);
 	}
@@ -77,12 +75,11 @@ public class FilteringSuperclassTest {
 	@Test
 	public void onlyWhenSuperclassNotExcludedThenMethodInheritedFromSuperclassFound() {
 		// There is no need to filter superclasses when filtering declared and inherited method.
-		// Therefore we omit this case from these tests.
-		assumeFalse(omitAllAsSuperclasses);
+		// Therefore, we omit this case from these tests.
 		FrankMethod[] actualMethods = childClass.getDeclaredAndInheritedMethods();
-		List<String> actualMethodNames = Arrays.asList(actualMethods).stream()
+		List<String> actualMethodNames = Arrays.stream(actualMethods)
 				.map(FrankMethod::getName)
-				.filter(name -> RELEVANT_METHODS.contains(name))
+				.filter(RELEVANT_METHODS::contains)
 				.sorted()
 				.collect(Collectors.toList());
 		assertArrayEquals(expectedMethodNames, actualMethodNames.toArray(new String[] {}));
