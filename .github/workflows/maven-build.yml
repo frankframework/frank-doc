@@ -49,7 +49,9 @@ jobs:
       working-directory: frank-doc
 
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Set Frank!Doc version environment variable
       run: echo "FRANKDOC_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
