@@ -110,13 +110,13 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 		try {
 			FrankClass clazz = getDeclaringClass().getRepository().findClass(fullNameWithoutTypeInfo);
 			if (clazz == null) {
-				return new FrankNonCompiledClassDoclet(fullNameWithoutTypeInfo);
+				return getDeclaringClass().getRepository().findOrCreateNonCompiledClass(fullNameWithoutTypeInfo);
 			} else {
 				return clazz;
 			}
 		} catch (FrankDocException e) {
 			log.error("Failed to search for class with name {}", fullNameWithoutTypeInfo, e);
-			return new FrankNonCompiledClassDoclet(fullNameWithoutTypeInfo);
+			return getDeclaringClass().getRepository().findOrCreateNonCompiledClass(fullNameWithoutTypeInfo);
 		}
 	}
 

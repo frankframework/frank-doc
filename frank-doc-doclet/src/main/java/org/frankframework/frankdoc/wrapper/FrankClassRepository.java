@@ -24,6 +24,7 @@ import org.frankframework.frankdoc.util.LogUtil;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ public class FrankClassRepository {
 	private final @Getter(AccessLevel.PACKAGE) Set<String> excludeFiltersForSuperclass;
 
 	private final Map<String, FrankClass> classesByName = new LinkedHashMap<>();
+	private final Map<String, FrankNonCompiledClassDoclet> nonFrankClassesByName = new HashMap<>();
 	private final Set<FrankClass> filteredClassesForInterfaceImplementations;
 
 	public FrankClassRepository(DocTrees docTrees, Set<? extends Element> classElements, Set<String> includeFilters, Set<String> excludeFilters, Set<String> excludeFiltersForSuperclass) {
@@ -118,6 +120,10 @@ public class FrankClassRepository {
 			return classesByName.get(fullName);
 		}
 		return null;
+	}
+
+	public FrankNonCompiledClassDoclet findOrCreateNonCompiledClass(final String fullName) {
+		return nonFrankClassesByName.computeIfAbsent(fullName, FrankNonCompiledClassDoclet::new);
 	}
 
 	/**
