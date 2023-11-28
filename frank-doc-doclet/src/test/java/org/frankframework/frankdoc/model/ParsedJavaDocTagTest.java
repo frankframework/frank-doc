@@ -1,10 +1,10 @@
 package org.frankframework.frankdoc.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ParsedJavaDocTagTest {
 	@Test
@@ -18,7 +18,7 @@ public class ParsedJavaDocTagTest {
 	public void whenParamTagHasSpacesAfterNameThenStillDescriptionNull() throws Exception {
 		ParsedJavaDocTag p = ParsedJavaDocTag.getInstance("myName ");
 		assertNull(p.getDescription());
-		assertEquals("myName", p.getName());		
+		assertEquals("myName", p.getName());
 	}
 
 	@Test

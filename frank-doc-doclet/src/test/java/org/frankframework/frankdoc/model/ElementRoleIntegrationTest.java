@@ -1,30 +1,29 @@
-/* 
-Copyright 2021 WeAreFrank! 
+/*
+Copyright 2021 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 package org.frankframework.frankdoc.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
-
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.TestUtil;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ElementRoleIntegrationTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.role.";
@@ -41,7 +40,7 @@ public class ElementRoleIntegrationTest {
 	public void testExampleClassesTesttargetRole() {
 		// We have two interfaces and two syntax 1 names (roles). We try all combinations
 		assertEquals(4, model.getAllElementRoles().size());
-		
+
 		// These two ElementRole-s are created on behalf of Container
 		ElementRole er = model.findElementRole(PACKAGE + "Interface1", "role2");
 		assertEquals(PACKAGE + "Interface1", er.getElementType().getFullName());
@@ -51,7 +50,7 @@ public class ElementRoleIntegrationTest {
 		assertEquals(PACKAGE + "Interface2", er.getElementType().getFullName());
 		assertEquals("role1", er.getRoleName());
 		assertEquals("Role1Element_2", er.createXsdElementName("Element"));
-		
+
 		// These two are created on behalf of Master
 		er = model.findElementRole(PACKAGE + "Interface1", "role1");
 		assertNotNull(er);

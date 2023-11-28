@@ -1,20 +1,38 @@
-/* 
-Copyright 2020 - 2023 WeAreFrank! 
+/*
+Copyright 2020 - 2023 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc.model;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.feature.Deprecated;
+import org.frankframework.frankdoc.feature.Description;
+import org.frankframework.frankdoc.feature.Protected;
+import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankAnnotation;
+import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
+import org.frankframework.frankdoc.wrapper.FrankType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,30 +51,10 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.feature.Deprecated;
-import org.frankframework.frankdoc.feature.Description;
-import org.frankframework.frankdoc.feature.Protected;
-import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
-import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.wrapper.FrankAnnotation;
-import org.frankframework.frankdoc.wrapper.FrankClass;
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.frankframework.frankdoc.wrapper.FrankType;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Models a Java class that can be referred to in a Frank configuration.
- * 
- * @author martijn
  *
+ * @author martijn
  */
 public class FrankElement implements Comparable<FrankElement> {
 	static final String JAVADOC_PARAMETERS = "@ff.parameters";
@@ -69,19 +67,19 @@ public class FrankElement implements Comparable<FrankElement> {
 	private static Logger log = LogUtil.getLogger(FrankElement.class);
 
 	private static final Comparator<FrankElement> COMPARATOR =
-			Comparator.comparing(FrankElement::getSimpleName).thenComparing(FrankElement::getFullName);
+		Comparator.comparing(FrankElement::getSimpleName).thenComparing(FrankElement::getFullName);
 
 	private static final Pattern DESCRIPTION_HEADER_SPLIT = Pattern.compile("(\\. )|(\\.\\n)|(\\.\\r\\n)");
 
-	private @Getter LinkedHashMap<FrankMethod, Integer> unusedConfigChildSetterCandidates = new LinkedHashMap<>();
-	private @Getter List<ConfigChild> configChildrenUnderConstruction = new ArrayList<>();
-	
+	private final @Getter LinkedHashMap<FrankMethod, Integer> unusedConfigChildSetterCandidates = new LinkedHashMap<>();
+	private final @Getter List<ConfigChild> configChildrenUnderConstruction = new ArrayList<>();
+
 	private final @Getter String fullName;
 	private final @Getter String simpleName;
-	
+
 	// Needed to handle a corner case that is explained with method FrankDocModel.calculateTypeNameSeq
 	private @Setter int typeNameSeq = 1;
-	
+
 	private final @Getter boolean isAbstract;
 	private @Getter boolean isDeprecated = false;
 
@@ -126,7 +124,7 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private void completeFrankElement(FrankClass clazz) {
 		setDescription(Description.getInstance().valueOf(clazz));
-		if(getDescription() != null) {
+		if (getDescription() != null) {
 			setDescriptionHeader(calculateDescriptionHeader(getDescription()));
 		}
 	}
@@ -134,7 +132,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	static String calculateDescriptionHeader(String description) {
 		String descriptionHeader = DESCRIPTION_HEADER_SPLIT.split(description)[0];
 		String remainder = description.substring(descriptionHeader.length());
-		if(remainder.startsWith(".")) {
+		if (remainder.startsWith(".")) {
 			descriptionHeader = descriptionHeader + ".";
 		}
 		return descriptionHeader;
@@ -142,29 +140,29 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private void handleConfigChildSetterCandidates(FrankClass clazz) {
 		List<FrankMethod> methods = Arrays.asList(clazz.getDeclaredMethodsAndMultiplyInheritedPlaceholders()).stream()
-				.filter(FrankMethod::isPublic)
-				.filter(Utils::isConfigChildSetter)
-				.collect(Collectors.toList());
-		for(int i = 0; i < methods.size(); ++i) {
-			if(! configChildCandidateHasProtectedArgument(methods.get(i))) {
+			.filter(FrankMethod::isPublic)
+			.filter(Utils::isConfigChildSetter)
+			.collect(Collectors.toList());
+		for (int i = 0; i < methods.size(); ++i) {
+			if (!configChildCandidateHasProtectedArgument(methods.get(i))) {
 				unusedConfigChildSetterCandidates.put(methods.get(i), i);
 			}
 		}
 	}
 
 	private boolean configChildCandidateHasProtectedArgument(FrankMethod frankMethod) {
-		log.trace("Checking method [{}]", () -> frankMethod.toString());
+		log.trace("Checking method [{}]", frankMethod::toString);
 		FrankType argumentType = frankMethod.getParameterTypes()[0];
-		if(! (argumentType instanceof FrankClass)) {
+		if (!(argumentType instanceof FrankClass)) {
 			// Text config child, wont have feature PROTECTED
 			return false;
 		}
 		FrankClass argument = (FrankClass) argumentType;
-		if(argument.isInterface()) {
+		if (argument.isInterface()) {
 			return false;
 		}
-		if(classIsProtected(argument)) {
-			log.trace("Method [{}] is not a config child candidate because class [{}] has feature PROTECTED", () -> frankMethod.toString(), () -> argument.toString());
+		if (classIsProtected(argument)) {
+			log.trace("Method [{}] is not a config child candidate because class [{}] has feature PROTECTED", frankMethod::toString, argument::toString);
 			return true;
 		}
 		return false;
@@ -174,11 +172,11 @@ public class FrankElement implements Comparable<FrankElement> {
 		IsProtectedContext ctx = new IsProtectedContext();
 		try {
 			clazz.browseAncestors(ctx::handleAncestorMethod);
-		} catch(FrankDocException e) {
+		} catch (FrankDocException e) {
 			log.error("Could not browse ancestor classes of class [{}]", clazz.getName(), e);
 		}
-		if(ctx.isProtected) {
-			log.trace("Class [{}] inherits feature Protected from class [{}]", () -> clazz.getName(), () -> ctx.cause.getName());
+		if (ctx.isProtected) {
+			log.trace("Class [{}] inherits feature Protected from class [{}]", clazz::getName, () -> ctx.cause.getName());
 		}
 		return ctx.isProtected;
 	}
@@ -188,9 +186,9 @@ public class FrankElement implements Comparable<FrankElement> {
 		FrankClass cause = null;
 
 		void handleAncestorMethod(FrankClass ancestorClass) {
-			if(Protected.getInstance().isSetOn(ancestorClass)) {
+			if (Protected.getInstance().isSetOn(ancestorClass)) {
 				isProtected = true;
-				if(cause == null) {
+				if (cause == null) {
 					cause = ancestorClass;
 				}
 			}
@@ -210,25 +208,25 @@ public class FrankElement implements Comparable<FrankElement> {
 		assembleParsedJavaDocTags(clazz, JAVADOC_TAG, p -> this.tags.add(p));
 		Map<String, Long> tagCounts = tags.stream().collect(Collectors.groupingBy(ParsedJavaDocTag::getName, Collectors.counting()));
 		List<String> duplicates = tagCounts.entrySet().stream()
-				.filter(e -> e.getValue() >= 2L)
-				.map(Entry::getKey)
-				.sorted()
-				.collect(Collectors.toList());
-		for(String duplicate: duplicates) {
+			.filter(e -> e.getValue() >= 2L)
+			.map(Entry::getKey)
+			.sorted()
+			.collect(Collectors.toList());
+		for (String duplicate : duplicates) {
 			log.error("FrankElement [{}] has multiple values for tag [{}]", fullName, duplicate);
 		}
 	}
 
 	private void assembleParsedJavaDocTags(FrankClass clazz, String tagName, Consumer<ParsedJavaDocTag> acceptor) {
-		for(String arguments: clazz.getAllJavaDocTagsOf(tagName)) {
-			ParsedJavaDocTag parsed = null;
+		for (String arguments : clazz.getAllJavaDocTagsOf(tagName)) {
+			ParsedJavaDocTag parsed;
 			try {
 				parsed = ParsedJavaDocTag.getInstance(arguments);
-			} catch(FrankDocException e) {
+			} catch (FrankDocException e) {
 				log.error("Error parsing a [{}] tag of class [{}]", tagName, fullName, e);
 				continue;
 			}
-			if(parsed.getDescription() == null) {
+			if (parsed.getDescription() == null) {
 				log.warn("FrankElement [{}] has a [{}] tag without a value: [{}]", fullName, tagName, arguments);
 			}
 			acceptor.accept(parsed);
@@ -237,12 +235,12 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private void handleLabels(FrankClass clazz, LabelValues labelValues) {
 		List<FrankAnnotation> annotationsForLabels = Arrays.asList(clazz.getAnnotations()).stream()
-				.filter(a -> a.getAnnotation(LABEL) != null)
-				.collect(Collectors.toList());
-		for(FrankAnnotation a: annotationsForLabels) {
+			.filter(a -> a.getAnnotation(LABEL) != null)
+			.collect(Collectors.toList());
+		for (FrankAnnotation a : annotationsForLabels) {
 			try {
 				handleSpecificLabel(a, labelValues);
-			} catch(FrankDocException e) {
+			} catch (FrankDocException e) {
 				log.error("Could not parse label [{}] of [{}]", a.getName(), toString());
 			}
 		}
@@ -251,7 +249,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	void handleSpecificLabel(FrankAnnotation labelAddingAnnotation, LabelValues labelValues) throws FrankDocException {
 		String label = labelAddingAnnotation.getAnnotation(LABEL).getValueOf(LABEL_NAME).toString();
 		Object rawValue = labelAddingAnnotation.getValue();
-		if(rawValue instanceof FrankEnumConstant) {
+		if (rawValue instanceof FrankEnumConstant) {
 			FrankEnumConstant enumConstant = (FrankEnumConstant) rawValue;
 			// This considers annotation @EnumLabel
 			EnumValue value = new EnumValue(enumConstant);
@@ -276,6 +274,10 @@ public class FrankElement implements Comparable<FrankElement> {
 		this.allChildren.put(FrankAttribute.class, new LinkedHashMap<>());
 		this.allChildren.put(ConfigChild.class, new LinkedHashMap<>());
 		this.xmlElementNames = new ArrayList<>();
+
+		if (fullName.contains("<")) {
+			log.error("Still found type with Generic information in type at: {}. Please fix this inside FrankDocDoclet.", fullName);
+		}
 	}
 
 	public void setParent(FrankElement parent) {
@@ -303,9 +305,9 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	public String getTheSingleXmlElementName() {
-		if(! hasOnePossibleXmlElementName()) {
+		if (!hasOnePossibleXmlElementName()) {
 			throw new IllegalStateException(String.format("FrankElement [%s] has more then one possible XML element name: [%s]",
-					fullName, xmlElementNames.stream().collect(Collectors.joining(", "))));
+				fullName, xmlElementNames.stream().collect(Collectors.joining(", "))));
 		}
 		return xmlElementNames.get(0);
 	}
@@ -316,10 +318,10 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private <C extends ElementChild> void setChildrenOfKind(List<C> inputChildren, Class<C> kind) {
 		LinkedHashMap<AbstractKey, C> children = new LinkedHashMap<>();
-		for(C c: inputChildren) {
-			if(children.containsKey(c.getKey())) {
+		for (C c : inputChildren) {
+			if (children.containsKey(c.getKey())) {
 				log.error("Frank element [{}] has multiple attributes / config children with key [{}]",
-						() -> fullName, () -> c.getKey().toString());
+					() -> fullName, () -> c.getKey().toString());
 			} else {
 				children.put(c.getKey(), c);
 			}
@@ -349,7 +351,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		Class<? extends ElementChild> clazz = elementChild.getClass();
 		// We do not have separate lookups for ObjectConfigChild and TextConfigChild.
 		// We only have a lookup for ConfigChild.
-		if(elementChild instanceof ConfigChild) {
+		if (elementChild instanceof ConfigChild) {
 			clazz = ConfigChild.class;
 		}
 		Map<? extends AbstractKey, ? extends ElementChild> lookup = allChildren.get(clazz);
@@ -358,46 +360,42 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	public FrankElement getNextAncestorThatHasChildren(Predicate<FrankElement> noChildren) {
 		FrankElement ancestor = parent;
-		while((ancestor != null) && noChildren.test(ancestor)) {
+		while ((ancestor != null) && noChildren.test(ancestor)) {
 			ancestor = ancestor.getParent();
 		}
 		return ancestor;
 	}
 
 	public FrankElement getNextAncestorThatHasOrRejectsConfigChildren(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		FrankElement ancestorConfigChildren = getNextAncestorThatHasChildren(el -> (
-				el.getChildrenOfKind(selector, ConfigChild.class).isEmpty()
+		return getNextAncestorThatHasChildren(el -> (
+			el.getChildrenOfKind(selector, ConfigChild.class).isEmpty()
 				&& el.getChildrenOfKind(rejector, ConfigChild.class).isEmpty()));
-		return ancestorConfigChildren;
 	}
 
 	public FrankElement getNextAncestorThatHasOrRejectsAttributes(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		FrankElement ancestorAttributes = getNextAncestorThatHasChildren(el -> (
-				el.getChildrenOfKind(selector, FrankAttribute.class).isEmpty()
+		return getNextAncestorThatHasChildren(el -> (
+			el.getChildrenOfKind(selector, FrankAttribute.class).isEmpty()
 				&& el.getChildrenOfKind(rejector, FrankAttribute.class).isEmpty()));
-		return ancestorAttributes;
 	}
 
 	public void walkCumulativeAttributes(
-			CumulativeChildHandler<FrankAttribute> handler, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector) {
-		new AncestorChildNavigation<FrankAttribute>(
-				handler, childSelector, childRejector, FrankAttribute.class).run(this);
+		CumulativeChildHandler<FrankAttribute> handler, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector) {
+		new AncestorChildNavigation<>(
+			handler, childSelector, childRejector, FrankAttribute.class).run(this);
 	}
 
 	public void walkCumulativeConfigChildren(
-			CumulativeChildHandler<ConfigChild> handler, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector) {
-		new AncestorChildNavigation<ConfigChild>(
-				handler, childSelector, childRejector, ConfigChild.class).run(this);		
+		CumulativeChildHandler<ConfigChild> handler, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector) {
+		new AncestorChildNavigation<>(
+			handler, childSelector, childRejector, ConfigChild.class).run(this);
 	}
 
 	public List<ConfigChild> getCumulativeConfigChildren(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		return getCumulativeChildren(selector, rejector, ConfigChild.class).stream()
-				.map(c -> (ConfigChild) c).collect(Collectors.toList());
+		return new ArrayList<>(getCumulativeChildren(selector, rejector, ConfigChild.class));
 	}
 
 	public List<FrankAttribute> getCumulativeAttributes(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		return getCumulativeChildren(selector, rejector, FrankAttribute.class).stream()
-				.map(c -> (FrankAttribute) c).collect(Collectors.toList());
+		return new ArrayList<>(getCumulativeChildren(selector, rejector, FrankAttribute.class));
 	}
 
 	private <T extends ElementChild> List<T> getCumulativeChildren(Predicate<ElementChild> selector, Predicate<ElementChild> rejector, Class<T> kind) {
@@ -431,7 +429,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	String getXsdElementName(ElementType elementType, String roleName) {
-		if(! elementType.isFromJavaInterface()) {
+		if (!elementType.isFromJavaInterface()) {
 			return Utils.toUpperCamelCase(roleName);
 		}
 		// Depends on the fact that FrankDocModel.calculateCommonInterfacesHierarchies() has been executed.
@@ -451,11 +449,11 @@ public class FrankElement implements Comparable<FrankElement> {
 		//
 		List<String> removablePostfixes = elementType.getCommonInterfaceHierarchy().stream().map(ElementType::getGroupName).collect(Collectors.toList());
 		String result = simpleName;
-		for(String removablePostfix: removablePostfixes) {
-			if(result.endsWith(removablePostfix)) {
+		for (String removablePostfix : removablePostfixes) {
+			if (result.endsWith(removablePostfix)) {
 				result = result.substring(0, result.lastIndexOf(removablePostfix));
 				break;
-			}			
+			}
 		}
 		result = result + Utils.toUpperCamelCase(roleName);
 		return result;
@@ -471,39 +469,39 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	public List<ConfigChildSet> getCumulativeConfigChildSets() {
 		Map<String, ConfigChildSet> resultAsMap = new HashMap<>();
-		for(String roleName: configChildSets.keySet()) {
+		for (String roleName : configChildSets.keySet()) {
 			resultAsMap.put(roleName, configChildSets.get(roleName));
 		}
-		if(parent != null) {
+		if (parent != null) {
 			List<ConfigChildSet> inheritedConfigChildSets = getParent().getCumulativeConfigChildSets();
-			for(ConfigChildSet inherited: inheritedConfigChildSets) {
+			for (ConfigChildSet inherited : inheritedConfigChildSets) {
 				resultAsMap.putIfAbsent(inherited.getRoleName(), inherited);
 			}
 		}
 		List<ConfigChildSet> result = new ArrayList<>();
 		List<String> keys = new ArrayList<>(resultAsMap.keySet());
 		Collections.sort(keys);
-		for(String key: keys) {
+		for (String key : keys) {
 			result.add(resultAsMap.get(key));
 		}
 		return result;
 	}
 
 	public boolean hasFilledConfigChildSets(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		if(configChildSets.isEmpty()) {
+		if (configChildSets.isEmpty()) {
 			return false;
 		}
 		return configChildSets.values().stream()
-				.anyMatch(cs -> cs.getConfigChildren().stream().filter(selector.or(rejector)).collect(Collectors.counting()) >= 1);
+			.anyMatch(cs -> cs.getConfigChildren().stream().filter(selector.or(rejector)).count() >= 1);
 	}
 
 	public FrankElement getNextPluralConfigChildrenAncestor(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
 		FrankElement ancestor = parent;
-		while(ancestor != null) {
-			if(! ancestor.getParent().hasOrInheritsPluralConfigChildren(selector, rejector)) {
+		while (ancestor != null) {
+			if (!ancestor.getParent().hasOrInheritsPluralConfigChildren(selector, rejector)) {
 				return ancestor;
 			}
-			if(ancestor.hasFilledConfigChildSets(selector, rejector)) {
+			if (ancestor.hasFilledConfigChildSets(selector, rejector)) {
 				return ancestor;
 			}
 			ancestor = ancestor.getParent();
@@ -513,20 +511,20 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	public boolean hasOrInheritsPluralConfigChildren(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
 		boolean hasPluralConfigChildren = configChildSets.values().stream()
-				.anyMatch(c -> c.getFilteredElementRoles(selector, rejector).size() >= 2);
+			.anyMatch(c -> c.getFilteredElementRoles(selector, rejector).size() >= 2);
 		boolean inheritsPluralConfigChildren = false;
 		FrankElement ancestor = getNextAncestorThatHasOrRejectsConfigChildren(selector, rejector);
-		if(ancestor != null) {
+		if (ancestor != null) {
 			inheritsPluralConfigChildren = ancestor.hasOrInheritsPluralConfigChildren(selector, rejector);
 		}
 		return hasPluralConfigChildren || inheritsPluralConfigChildren;
 	}
 
 	public String getTypeNameBase() {
-		if(typeNameSeq <= 1) {
+		if (typeNameSeq <= 1) {
 			return getSimpleName();
 		} else {
-			return getSimpleName() + Integer.valueOf(typeNameSeq).toString();
+			return getSimpleName() + typeNameSeq;
 		}
 	}
 

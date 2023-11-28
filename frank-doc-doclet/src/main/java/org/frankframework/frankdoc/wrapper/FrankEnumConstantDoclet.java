@@ -1,73 +1,50 @@
-/* 
-Copyright 2021, 2022 WeAreFrank! 
+/*
+Copyright 2021, 2022 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc.wrapper;
 
-import java.util.Map;
-
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
-
-import com.sun.javadoc.AnnotationDesc;
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.FieldDoc;
-import com.sun.javadoc.Tag;
-import com.sun.javadoc.Type;
-
+import com.sun.source.doctree.DocCommentTree;
 import lombok.Getter;
 
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
+import java.util.Map;
+
 class FrankEnumConstantDoclet implements FrankEnumConstant {
-	private static Logger log = LogUtil.getLogger(FrankEnumConstant.class);
-	private FieldDoc fieldDoc;
-	private @Getter String name;
-	private boolean isPublic;
-	private @Getter String javaDoc;
-	private Map<String, FrankAnnotation> annotationsByName;
-	private @Getter int position = 0;
+	private final @Getter String name;
+	private final boolean isPublic;
+	private final @Getter String javaDoc;
+	private final DocCommentTree docCommentTree;
 
-	FrankEnumConstantDoclet(FieldDoc fieldDoc) {
-		this.fieldDoc = fieldDoc;
-		this.name = fieldDoc.name();
-		this.isPublic = fieldDoc.isPublic();
-		this.javaDoc = fieldDoc.commentText();
-		AnnotationDesc[] javaDocAnnotations = fieldDoc.annotations();
+	private final Map<String, FrankAnnotation> annotationsByName;
+	private final @Getter int position = 0;
+
+	public FrankEnumConstantDoclet(VariableElement variableElement, DocCommentTree docCommentTree) {
+		name = variableElement.getSimpleName().toString();
+		isPublic = variableElement.getModifiers().stream().anyMatch(m -> m == Modifier.PUBLIC);
+		javaDoc = docCommentTree != null ? docCommentTree.toString() : null;
+		this.docCommentTree = docCommentTree;
+		AnnotationMirror[] javaDocAnnotations = variableElement.getAnnotationMirrors().toArray(new AnnotationMirror[0]);
 		annotationsByName = FrankDocletUtils.getFrankAnnotationsByName(javaDocAnnotations);
-		calculatePosition(fieldDoc);
-	}
-
-	private void calculatePosition(FieldDoc fieldDoc) {
-		Type rawEnumType = fieldDoc.type();
-		if(! (rawEnumType instanceof ClassDoc)) {
-			log.error("Cannot calculate position of enum constant {} because it is not part of a ClassDoc", fieldDoc.name());
-			return;
-		}
-		ClassDoc enumType = (ClassDoc) rawEnumType;
-		FieldDoc[] fieldsOfType = enumType.enumConstants();
-		for(int i = 0; i < fieldsOfType.length; ++i) {
-			if(fieldsOfType[i].name().equals(fieldDoc.name())) {
-				position = i;
-				return;
-			}
-		}
-		log.error("Cannot calculate position of enum constant {} because it cannot be found in the enclosing type {}", fieldDoc.name(), enumType.name());
 	}
 
 	@Override
 	public boolean isPublic() {
-		return this.isPublic;
+		return isPublic;
 	}
 
 	@Override
@@ -77,11 +54,6 @@ class FrankEnumConstantDoclet implements FrankEnumConstant {
 
 	@Override
 	public String getJavaDocTag(String tagName) {
-		Tag[] tags = fieldDoc.tags(tagName);
-		if((tags == null) || (tags.length == 0)) {
-			return null;
-		}
-		// The Doclet API trims the value.
-		return tags[0].text();
+		return FrankDocletUtils.getJavaDocTag(docCommentTree, tagName);
 	}
 }

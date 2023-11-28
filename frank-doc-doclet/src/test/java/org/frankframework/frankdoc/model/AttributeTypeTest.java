@@ -1,14 +1,13 @@
 package org.frankframework.frankdoc.model;
 
-import static org.junit.Assert.assertTrue;
+import org.frankframework.frankdoc.Utils;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Test;
-
-import org.frankframework.frankdoc.Utils;
+import static org.junit.Assert.assertTrue;
 
 public class AttributeTypeTest {
 	@Test

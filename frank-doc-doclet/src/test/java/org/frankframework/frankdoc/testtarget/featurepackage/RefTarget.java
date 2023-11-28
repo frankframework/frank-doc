@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.featurepackage;
 
-public class RefTarget {
+public class RefTarget<M> {
 	public void referencedByIbisDocRef() {
 	}
 

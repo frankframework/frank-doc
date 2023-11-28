@@ -1,30 +1,29 @@
-/* 
-Copyright 2020, 2021, 2022 WeAreFrank! 
+/*
+Copyright 2020, 2021, 2022 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
+import lombok.Getter;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 
-import lombok.Getter;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 class DocWriterNewXmlUtils {
 	private static Logger log = LogUtil.getLogger(DocWriterNewXmlUtils.class);
@@ -106,7 +105,7 @@ class DocWriterNewXmlUtils {
 		XmlBuilder complexType;
 		complexType = new XmlBuilder("complexType", "xs", XML_SCHEMA_URI);
 		complexType.addAttribute("name", name);
-		return complexType;		
+		return complexType;
 	}
 
 	static XmlBuilder addSimpleType(XmlBuilder schema) {
@@ -119,7 +118,7 @@ class DocWriterNewXmlUtils {
 	static XmlBuilder createSimpleType(String name) {
 		XmlBuilder simpleType = new XmlBuilder("simpleType", "xs", XML_SCHEMA_URI);
 		simpleType.addAttribute("name", name);
-		return simpleType;		
+		return simpleType;
 	}
 
 	static XmlBuilder addComplexType(XmlBuilder schema, String name) {
@@ -127,7 +126,7 @@ class DocWriterNewXmlUtils {
 		complexType = new XmlBuilder("complexType", "xs", XML_SCHEMA_URI);
 		complexType.addAttribute("name", name);
 		schema.addSubElement(complexType);
-		return complexType;		
+		return complexType;
 	}
 
 	static XmlBuilder addChoice(XmlBuilder context) {
@@ -240,7 +239,7 @@ class DocWriterNewXmlUtils {
 		XmlBuilder attribute = new XmlBuilder("anyAttribute", "xs", XML_SCHEMA_URI);
 		attribute.addAttribute("namespace", "##other");
 		attribute.addAttribute("processContents", "skip");
-		return attribute;		
+		return attribute;
 	}
 
 	static XmlBuilder createAttributeWithType(String name) {

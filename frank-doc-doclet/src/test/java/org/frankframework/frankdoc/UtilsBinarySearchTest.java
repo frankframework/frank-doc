@@ -1,17 +1,17 @@
 package org.frankframework.frankdoc;
 
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertArrayEquals;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  * Unit tests of methods {@link Utils#addToSortedListNonUnique(List, Object)} and {@link Utils#addToSortedListUnique(List, Object)}.

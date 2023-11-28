@@ -1,90 +1,96 @@
-/* 
-Copyright 2021 WeAreFrank! 
+/*
+Copyright 2021 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc.doclet;
 
-import org.apache.logging.log4j.Logger;
+import com.sun.source.util.DocTrees;
+import jdk.javadoc.doclet.DocletEnvironment;
+import jdk.javadoc.doclet.Reporter;
+import lombok.extern.log4j.Log4j2;
 import org.frankframework.frankdoc.util.ErrorDetectingAppender;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.DocErrorReporter;
-import com.sun.javadoc.LanguageVersion;
-import com.sun.javadoc.RootDoc;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
+import java.util.Locale;
+import java.util.Set;
 
-public class DocletBuilder extends com.sun.javadoc.Doclet {
-	private static final Logger log = LogUtil.getLogger(DocletBuilder.class);
+@Log4j2
+public class DocletBuilder implements jdk.javadoc.doclet.Doclet {
+	private final FrankDocletOptions options = new FrankDocletOptions();
 
-    public static boolean start(RootDoc root) {
-    	printOptions(root);
-    	ClassDoc classes[] = root.classes();
-    	boolean result = true;
-    	try {
-        	FrankDocletOptions options = FrankDocletOptions.getInstance(root.options());
-    		new Doclet(classes, options).run();
-    	}
-    	catch(RuntimeException e) {
-    		e.printStackTrace();
-    		result = false;
-    	}
-    	catch(FrankDocException e) {
-    		log.error("FrankDocException occurred while running Frank!Doc Doclet", e);
-    		result = false;
-    	}
-    	if(ErrorDetectingAppender.HAVE_ERRORS) {
-    		log.error("There were log statements with level ERROR or FATAL. Failing");
-    		result = false;
-    	}
-    	return result;
-    }
+	@Override
+	public boolean run(DocletEnvironment docEnv) {
+		printOptions();
 
-	private static void printOptions(RootDoc root) {
-		log.info("Here are the options given to the Frank!Doc doclet");
-    	String[][] options = root.options();
-    	for(int i = 0; i < options.length; i++) {
-    		String[] curOption = options[i];
-    		String line = "";
-    		for(int j = 0; j < curOption.length; j++) {
-    			if(j != 0) {
-    				line += " ";
-    			}
-    			line += curOption[j];
-    		}
-    		log.info(line);
-    	}
-    	log.info("End of options given to Frank!Doc doclet");
+		Set<? extends Element> elements = docEnv.getIncludedElements();
+		DocTrees docTrees = docEnv.getDocTrees();
+
+		boolean result = true;
+		try {
+			new Doclet(docTrees, elements, options).run();
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			result = false;
+		} catch (FrankDocException e) {
+			log.error("FrankDocException occurred while running Frank!Doc Doclet", e);
+			result = false;
+		}
+		if (ErrorDetectingAppender.HAVE_ERRORS) {
+			log.error("There were log statements with level ERROR or FATAL. Failing");
+			result = false;
+		}
+		return result;
 	}
 
-    public static int optionLength(String option) {
-    	return FrankDocletOptions.optionLength(option);
-    }
+	private void printOptions() {
+		log.info("Options used in the Frank!Doc doclet:");
+		log.info(" rootClass: [{}]", options.getRootClass());
+		log.info(" outputDirectory: [{}]", options.getOutputDirectory());
+		log.info(" frankFrameworkVersion: [{}]", options.getFrankFrameworkVersion());
+		log.info(" xsdStrictPath: [{}]", options.getXsdStrictPath());
+		log.info(" xsdCompatibilityPath: [{}]", options.getXsdCompatibilityPath());
+		log.info(" jsonOutputPath: [{}]", options.getJsonOutputFilePath());
+		log.info(" elementSummaryPath: [{}]", options.getElementSummaryPath());
+		log.info(" digesterRulesUrl: [{}]", options.getDigesterRulesUrl());
+	}
 
-    public static boolean validOptions(String options[][], DocErrorReporter reporter) {
-    	try {
-    		FrankDocletOptions.validateOptions(options);
-    		return true;
-    	} catch(InvalidDocletOptionsException e) {
-    		reporter.printError(e.getMessage());
-    		return false;
-    	}
-    }
+	public static SourceVersion SourceVersion() {
+		log.trace("Method SourceVersion() called");
+		return SourceVersion.RELEASE_11;
+	}
 
-    public static LanguageVersion languageVersion() {
-    	log.trace("Method languageVersion() called");
-    	return LanguageVersion.JAVA_1_5;
-    }
+	@Override
+	public void init(Locale locale, Reporter reporter) {
+	}
+
+	@Override
+	public String getName() {
+		return getClass().getName();
+	}
+
+	@Override
+	public Set<? extends Option> getSupportedOptions() {
+		return options.getOptions();
+	}
+
+	@Override
+	public SourceVersion getSupportedSourceVersion() {
+		return SourceVersion.latest();
+	}
+
+
 }

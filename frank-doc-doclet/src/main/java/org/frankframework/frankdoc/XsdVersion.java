@@ -1,28 +1,22 @@
-/* 
-Copyright 2021, 2022 WeAreFrank! 
+/*
+Copyright 2021, 2022 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 package org.frankframework.frankdoc;
 
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addChoice;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addSequence;
-
-import java.util.function.Predicate;
-
-import org.apache.logging.log4j.Logger;
-
 import lombok.Getter;
+import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.DocWriterNewXmlUtils.AttributeUse;
 import org.frankframework.frankdoc.model.ConfigChild;
 import org.frankframework.frankdoc.model.ElementChild;
@@ -31,6 +25,11 @@ import org.frankframework.frankdoc.model.FrankElement;
 import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
+
+import java.util.function.Predicate;
+
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addChoice;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addSequence;
 
 public enum XsdVersion {
 	STRICT(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED, f -> ! f.isDeprecated(), new DelegateStrict()),
@@ -82,7 +81,7 @@ public enum XsdVersion {
 		return delegate.childIsMandatory(child);
 	}
 
-	private static abstract class Delegate {
+	private abstract static class Delegate {
 		abstract void checkForMissingDescription(FrankAttribute attribute);
 		abstract void checkForMissingDescription(ConfigChild configChild);
 		abstract AttributeUse getRoleNameAttributeUse();
@@ -98,7 +97,7 @@ public enum XsdVersion {
 			if(attribute.getDescription() != null) {
 				return;
 			}
-			log.warn("Attribute [{}] lacks description", attribute.toString());
+			log.warn("Attribute [{}] lacks description", attribute);
 		}
 
 		@Override
@@ -106,7 +105,7 @@ public enum XsdVersion {
 			if(configChild.getDescription() != null) {
 				return;
 			}
-			log.warn("Config child [{}] lacks description", configChild.toString());
+			log.warn("Config child [{}] lacks description", configChild);
 		}
 
 		AttributeUse getRoleNameAttributeUse() {
@@ -161,7 +160,7 @@ public enum XsdVersion {
 		@Override
 		AttributeUse getClassNameAttributeUse(FrankElement frankElement) {
 			if(frankElement.isInterfaceBased()) {
-				return AttributeUse.OPTIONAL;	
+				return AttributeUse.OPTIONAL;
 			} else {
 				return AttributeUse.PROHIBITED;
 			}

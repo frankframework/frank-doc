@@ -1,27 +1,26 @@
 package org.frankframework.frankdoc;
 
-import static org.junit.Assert.assertEquals;
+import org.frankframework.frankdoc.model.FrankDocModel;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.TestUtil;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import org.junit.Test;
-
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.frankframework.frankdoc.model.FrankDocModel;
+import static org.junit.Assert.assertEquals;
 
 public class FrankDocElementSummaryTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.element.summary.";
 	private static final String DIGESTER_RULES_FILE_NAME = "general-test-digester-rules.xml";
 	private static final String EXPECTED = Arrays.asList(
 		"              Master: Master",
-		"              Object: ", 
-		"    Other (from sub): ", 
+		"              Object: ",
+		"    Other (from sub): ",
 		"Other (from summary): ").stream().map(s -> s + "\n").collect(Collectors.joining());
-	
+
 	@Test
 	public void testElementSummary() throws IOException {
 		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);

@@ -1,16 +1,16 @@
 package org.frankframework.frankdoc.feature;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.util.Arrays;
-
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ReferenceTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.featurepackage.";
@@ -61,7 +61,7 @@ public class ReferenceTest {
 		FrankMethod targetMethod = findMethod("referencedByIbisDocRefOtherMethod");
 		FrankMethod referenced = instance.valueOf(targetMethod);
 		assertEquals(REF_TARGET, referenced.getDeclaringClass().getSimpleName());
-		assertEquals("otherMethod", referenced.getName());		
+		assertEquals("otherMethod", referenced.getName());
 	}
 
 	@Test

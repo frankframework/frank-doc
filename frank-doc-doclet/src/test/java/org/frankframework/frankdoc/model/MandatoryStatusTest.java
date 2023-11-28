@@ -1,11 +1,5 @@
 package org.frankframework.frankdoc.model;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
-
 import org.frankframework.frankdoc.feature.Mandatory;
 import org.frankframework.frankdoc.feature.Optional;
 import org.frankframework.frankdoc.wrapper.FrankClass;
@@ -17,6 +11,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
 public class MandatoryStatusTest {

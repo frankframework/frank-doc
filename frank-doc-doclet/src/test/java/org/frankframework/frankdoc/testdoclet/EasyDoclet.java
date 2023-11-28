@@ -1,120 +1,87 @@
 package org.frankframework.frankdoc.testdoclet;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.ToolProvider;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
-
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.RootDoc;
+import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.ListBuffer;
-import com.sun.tools.javac.util.Options;
-import com.sun.tools.javadoc.JavadocTool;
-import com.sun.tools.javadoc.ModifierFilter;
+import jdk.javadoc.doclet.DocletEnvironment;
+import jdk.javadoc.internal.tool.AccessKind;
+import jdk.javadoc.internal.tool.JavadocTool;
+import jdk.javadoc.internal.tool.Messager;
+import jdk.javadoc.internal.tool.ToolOption;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
-import org.frankframework.frankdoc.util.LogUtil;
+import javax.tools.StandardLocation;
+import java.io.File;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+@Log4j2
+@Getter
 public class EasyDoclet {
-	private static Logger log = LogUtil.getLogger(EasyDoclet.class);
-
 	final private File sourceDirectory;
 	final private String[] packageNames;
-	final private RootDoc rootDoc;
+	final private DocletEnvironment docletEnvironment;
+
+	private static final AccessKind ACCESS_KIND = AccessKind.PUBLIC;
 
 	public EasyDoclet(File sourceDirectory, String[] packageNames) {
 		this.sourceDirectory = sourceDirectory;
 		this.packageNames = packageNames;
 
-		Context context = new Context();
-		Options compOpts = Options.instance(context);
+		String sourcePath = getSourceDirectory().getAbsolutePath();
 
 		if (getSourceDirectory().exists()) {
-			log.info("Using source path: " + getSourceDirectory().getAbsolutePath());
-			compOpts.put("-sourcepath", getSourceDirectory().getAbsolutePath());
+			log.info("Using source path: [{}]", sourcePath);
+//			compOpts.put("-sourcepath", getSourceDirectory().getAbsolutePath());
 		} else {
-			log.info("Ignoring non-existant source path, check your source directory argument");
+			log.error("Ignoring non-existing source path, check your source directory argument. Used: [{}]", sourcePath);
 		}
 
-		ListBuffer<String> javaNames = new ListBuffer<String>();
-
-		ListBuffer<String> subPackages = new ListBuffer<String>();
-		for (String packageName : packageNames) {
-			log.info("Adding sub-packages to documentation path: " + packageName);
-			subPackages.append(packageName);
-		}
-
-		new PublicMessager(context, getApplicationName(), new PrintWriter(new LogWriter(Level.ERROR), true),
-				new PrintWriter(new LogWriter(Level.WARN), true), new PrintWriter(new LogWriter(Level.INFO), true));
-
-		JavadocTool javadocTool = JavadocTool.make0(context);
-
-		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-		if(compiler == null) {
-			throw new RuntimeException("No Java compiler available, maybe you are using a JRE instead of a JDK");
-		}
 		try {
-			Iterable<? extends JavaFileObject> files = new ArrayList<>();
-			rootDoc = javadocTool.getRootDocImpl(Locale.ENGLISH.getDisplayCountry(), "UTF-8", new ModifierFilter(Modifier.PUBLIC),
-					javaNames.toList(), new ListBuffer<String[]>().toList(), files, false, subPackages.toList(), new ListBuffer<String>().toList(),
-					false, false, false);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new RuntimeException(ex);
-		}
-
-		if (log.isDebugEnabled()) {
-			for (ClassDoc classDoc : getRootDoc().classes()) {
-				log.debug("Parsed Javadoc class source: " + classDoc.position() + " with inline tags: " + classDoc.inlineTags().length);
-			}
+			docletEnvironment = createDocletEnv(sourcePath, List.of(packageNames));
+		} catch (Exception e) {
+			log.error(e);
+			throw new RuntimeException(e);
 		}
 	}
 
-	public File getSourceDirectory() {
-		return sourceDirectory;
-	}
+	private static DocletEnvironment createDocletEnv(String sourcePath, Collection<String> packageNames) throws Exception {
 
-	public String[] getPackageNames() {
-		return packageNames;
-	}
+		// Create a context to hold settings for Javadoc.
+		Context context = new Context();
 
-	public RootDoc getRootDoc() {
-		return rootDoc;
-	}
+		// Pre-register a messager for the context. Not needed for Java 17!
+		Messager.preRegister(context, EasyDoclet.class.getName());
 
-	protected class LogWriter extends Writer {
+		// Set source path option for Javadoc.
+		try (JavacFileManager fileManager = new JavacFileManager(context, true, UTF_8)) {
 
-		Level level;
+			fileManager.setLocation(StandardLocation.SOURCE_PATH, List.of(new File(sourcePath)));
 
-		public LogWriter(Level level) {
-			this.level = level;
+//			JavadocLog.preRegister(context, "javadoc"); // Java 17
+
+			// Create an instance of Javadoc.
+			JavadocTool javadocTool = JavadocTool.make0(context);
+
+			// Set up javadoc tool options. Not needed for Java 17!
+//			ToolOption options = new ToolOption(context, log, null); // Java 17 ??
+			Map<ToolOption, Object> options = new EnumMap<>(ToolOption.class);
+			options.put(ToolOption.SHOW_PACKAGES, ACCESS_KIND);
+			options.put(ToolOption.SHOW_TYPES, ACCESS_KIND);
+			options.put(ToolOption.SHOW_MEMBERS, ACCESS_KIND);
+			options.put(ToolOption.SHOW_MODULE_CONTENTS, ACCESS_KIND);
+			options.put(ToolOption.SUBPACKAGES, packageNames);
+
+			// Invoke Javadoc and ask it for a DocletEnvironment containing the specified packages.
+			return javadocTool.getEnvironment(
+				options, // options
+				List.of(), // java names
+				List.of()); // java files
 		}
-
-		public void write(char[] chars, int offset, int length) throws IOException {
-			String s = new String(Arrays.copyOf(chars, length));
-			if (!s.equals("\n"))
-				log.info(s);
-		}
-
-		public void flush() throws IOException {
-		}
-
-		public void close() throws IOException {
-		}
-	}
-
-	protected String getApplicationName() {
-		return getClass().getSimpleName() + " Application";
 	}
 
 }

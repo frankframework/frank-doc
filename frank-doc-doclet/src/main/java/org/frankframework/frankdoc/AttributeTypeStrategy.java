@@ -1,20 +1,35 @@
-/* 
-Copyright 2021, 2022 WeAreFrank! 
+/*
+Copyright 2021, 2022 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.model.AttributeEnum;
+import org.frankframework.frankdoc.model.AttributeType;
+import org.frankframework.frankdoc.model.EnumValue;
+import org.frankframework.frankdoc.model.FrankAttribute;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.util.XmlBuilder;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.frankframework.frankdoc.DocWriterNew.ATTRIBUTE_VALUES_TYPE;
 import static org.frankframework.frankdoc.DocWriterNew.VARIABLE_REFERENCE;
@@ -27,21 +42,6 @@ import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addSimpleType;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addUnion;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createAttributeWithType;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createSimpleType;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.model.AttributeEnum;
-import org.frankframework.frankdoc.model.EnumValue;
-import org.frankframework.frankdoc.model.AttributeType;
-import org.frankframework.frankdoc.model.FrankAttribute;
-import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.util.XmlBuilder;
 
 public enum AttributeTypeStrategy {
 	// Also excludes deprecated enum values
@@ -114,7 +114,7 @@ public enum AttributeTypeStrategy {
 				break;
 			}
 			attribute.addAttribute("type", typeName);
-			return attribute;						
+			return attribute;
 		}
 
 		final XmlBuilder createRestrictedAttribute(FrankAttribute attribute, Consumer<XmlBuilder> documenter) {

@@ -16,16 +16,15 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import java.util.function.Predicate;
-
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.DocWriterNew;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.LogUtil;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.function.Predicate;
 
 /**
  * Base class of FrankAttribute and ConfigChild. This class was introduced
@@ -42,9 +41,9 @@ import lombok.Setter;
  * @author martijn
  */
 public abstract class ElementChild {
-	private static Logger log = LogUtil.getLogger(ElementChild.class);
+	private static final Logger log = LogUtil.getLogger(ElementChild.class);
 
-	private @Getter FrankElement owningElement;
+	private final @Getter FrankElement owningElement;
 
 	/**
 	 * The value is inherited from ElementChild corresponding to superclass.
@@ -106,7 +105,7 @@ public abstract class ElementChild {
 	public static Predicate<ElementChild> REJECT_DEPRECATED = c -> c.isExcluded() || c.isDeprecated();
 	static Predicate<ElementChild> ALL = c -> true;
 	public static Predicate<ElementChild> ALL_NOT_EXCLUDED = c -> ! c.isExcluded();
-	public static Predicate<ElementChild> EXCLUDED = c -> c.isExcluded();
+	public static Predicate<ElementChild> EXCLUDED = ElementChild::isExcluded;
 	public static Predicate<ElementChild> JSON_NOT_INHERITED = c -> c.isExcluded() && (c.getOverriddenFrom() != null);
 	// A config child is also relevant for the JSON if it is excluded. The frontend has to mention it as not inherited.
 	// Technical overrides are not relevant. But isTechnicalOverride() is also true for undocumented
@@ -117,7 +116,7 @@ public abstract class ElementChild {
 	 * Base class for keys used to look up {@link FrankAttribute} objects or
 	 * {@link ConfigChild} objects from a map.
 	 */
-	static abstract class AbstractKey {
+	abstract static class AbstractKey {
 	}
 
 	ElementChild(final FrankElement owningElement) {
@@ -135,14 +134,14 @@ public abstract class ElementChild {
 			ElementChild matchingChild = match.findElementChildMatch(this);
 			if(matchingChild != null) {
 				if(matchingChild.isDeprecated()) {
-					log.warn("Element child overrides deprecated ElementChild: descendant [{}], super [{}]", () -> toString(), () -> matchingChild.toString());
+					log.warn("Element child overrides deprecated ElementChild: descendant [{}], super [{}]", this::toString, matchingChild::toString);
 				}
 				overriddenFrom = match;
 				if(! overrideIsMeaningful(matchingChild)) {
 					technicalOverride = true;
 				}
 				log.trace("{} [{}] of FrankElement [{}] has overriddenFrom = [{}]",
-						() -> getClass().getSimpleName(), () -> toString(), () -> owningElement.getFullName(), () -> overriddenFrom.getFullName());
+						() -> getClass().getSimpleName(), this::toString, owningElement::getFullName, () -> overriddenFrom.getFullName());
 				return;
 			}
 		}
@@ -170,7 +169,7 @@ public abstract class ElementChild {
 		result = result || specificOverrideIsMeaningful(overriddenFrom);
 		if(log.isTraceEnabled() && (! isOverrideMeaningfulLogged) && result) {
 			isOverrideMeaningfulLogged = true;
-			log.trace("ElementChld {} overrides {} and changes something relevant for the Frank!Doc", toString(), overriddenFrom.toString());
+			log.trace("ElementChild {} overrides {} and changes something relevant for the Frank!Doc", toString(), overriddenFrom.toString());
 		}
 		return result;
 	}

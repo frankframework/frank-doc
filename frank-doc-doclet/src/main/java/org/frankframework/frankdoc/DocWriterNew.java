@@ -1,52 +1,20 @@
-/* 
-Copyright 2020, 2021, 2022 WeAreFrank! 
+/*
+Copyright 2020, 2021, 2022 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc;
-
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addChoice;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexContent;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexType;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addDocumentation;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addElement;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addElementRef;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addElementWithType;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addExtension;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addSequence;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createAnyOtherNamespaceAttribute;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createAttributeGroup;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createComplexType;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createElement;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createElementWithType;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createGroup;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.getXmlSchema;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.AttributeUse.OPTIONAL;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.AttributeUse.REQUIRED;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.AttributeValueStatus.DEFAULT;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.AttributeValueStatus.FIXED;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
@@ -66,11 +34,43 @@ import org.frankframework.frankdoc.model.TextConfigChild;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.AttributeUse.OPTIONAL;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.AttributeUse.REQUIRED;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.AttributeValueStatus.DEFAULT;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.AttributeValueStatus.FIXED;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addChoice;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexContent;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexType;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addDocumentation;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addElement;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addElementRef;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addElementWithType;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addExtension;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addSequence;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createAnyOtherNamespaceAttribute;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createAttributeGroup;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createComplexType;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createElement;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createElementWithType;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createGroup;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.getXmlSchema;
+
 /**
  * This class writes the XML schema document (XSD) that checks the validity of a
  * Frank configuration XML file. The XML schema is written based on the information
  * in a {@link FrankDocModel} object (the model).
- * 
+ *
  * <h1>Summary of XSD definitions</h1>
  *
  * Here is a summary of all definitions that appear in the XSD:
@@ -136,9 +136,9 @@ import org.frankframework.frankdoc.util.XmlBuilder;
  *
  */
 public class DocWriterNew implements AttributeReuseManagerCallback {
-	private static Logger log = LogUtil.getLogger(DocWriterNew.class);
+	private static final Logger log = LogUtil.getLogger(DocWriterNew.class);
 
-	private static Map<XsdVersion, String> outputFileNames = new HashMap<>();
+	private static final Map<XsdVersion, String> outputFileNames = new HashMap<>();
 	static {
 		outputFileNames.put(XsdVersion.STRICT, "strict.xsd");
 		outputFileNames.put(XsdVersion.COMPATIBILITY, "compatibility.xsd");
@@ -151,18 +151,18 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 	static final String ATTRIBUTE_VALUES_TYPE = "AttributeValuesType";
 	static final String VARIABLE_REFERENCE = "variableRef";
 
-	private FrankDocModel model;
+	private final FrankDocModel model;
 	private String startClassName;
 	private XsdVersion version;
 	private final AttributeReuseManager attributeReuseManager = new AttributeReuseManager();
-	private List<XmlBuilder> xsdElements = new ArrayList<>();
-	private List<XmlBuilder> xsdComplexItems = new ArrayList<>();
-	private List<XmlBuilder> xsdReusedAttributes = new ArrayList<>();
-	private Set<String> namesCreatedFrankElements = new HashSet<>();
-	private Set<ElementRole.Key> idsCreatedElementGroups = new HashSet<>();
+	private final List<XmlBuilder> xsdElements = new ArrayList<>();
+	private final List<XmlBuilder> xsdComplexItems = new ArrayList<>();
+	private final List<XmlBuilder> xsdReusedAttributes = new ArrayList<>();
+	private final Set<String> namesCreatedFrankElements = new HashSet<>();
+	private final Set<ElementRole.Key> idsCreatedElementGroups = new HashSet<>();
 	private ElementGroupManager elementGroupManager;
-	private Set<String> definedAttributeEnumInstances = new HashSet<>();
-	private AttributeTypeStrategy attributeTypeStrategy;
+	private final Set<String> definedAttributeEnumInstances = new HashSet<>();
+	private final AttributeTypeStrategy attributeTypeStrategy;
 	private final String frankFrameworkVersion;
 
 	public DocWriterNew(FrankDocModel model, AttributeTypeStrategy attributeTypeStrategy, String frankFrameworkVersion) {
@@ -179,7 +179,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		this.startClassName = startClassName;
 		this.version = version;
 		log.trace("Initialized DocWriterNew with start element name [{}], version [{}] and output file [{}]",
-				() -> startClassName, () -> version.toString(), () -> outputFileNames.get(version));
+				() -> startClassName, version::toString, () -> outputFileNames.get(version));
 		elementGroupManager = new ElementGroupManager(version.getChildSelector(), version.getChildRejector());
 	}
 
@@ -232,7 +232,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 	// Defines XML element <Configuration>
 	private void addStartElementAsTypeReference(FrankElement startElement) {
-		log.trace("Adding element [{}] as type reference", () -> startElement.getSimpleName());
+		log.trace("Adding element [{}] as type reference", startElement::getSimpleName);
 		XmlBuilder startElementBuilder = createElementWithType(startElement.getSimpleName());
 		xsdElements.add(startElementBuilder);
 		addDocumentationFrom(startElementBuilder, startElement);
@@ -271,12 +271,12 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		if(frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
 			return xsdPluralGroupNameForChildren(frankElement);
 		} else {
-			return xsdDeclaredGroupNameForChildren(frankElement);			
+			return xsdDeclaredGroupNameForChildren(frankElement);
 		}
 	}
 
 	private void recursivelyDefineRootFrankElement(FrankElement frankElement) {
-		log.trace("Enter root FrankElement [{}]", () -> frankElement.getFullName());
+		log.trace("Enter root FrankElement [{}]", frankElement::getFullName);
 		if(checkNotDefined(frankElement)) {
 			String xsdElementName = frankElement.getSimpleName();
 			XmlBuilder elementBuilder = createElement(xsdElementName, getTypeName(xsdElementName));
@@ -284,11 +284,11 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 			XmlBuilder attributeBuilder = recursivelyDefineSimpleFrankElementTypeUnchecked(frankElement, getTypeName(xsdElementName));
 			// Adding the other-namespace attribute cannot be done in recursivelyDefineXsdElementUnchecked() because the anyAttribute must be last.
 			// After recursivelyDefineXsdElementUnchecked(), the "elementRole" attribute is added separately for non-root elements.
-			log.trace("Adding any attribute in another namespace to root element [{}]", () -> frankElement.getFullName());
+			log.trace("Adding any attribute in another namespace to root element [{}]", frankElement::getFullName);
 			XmlBuilder anyOther = createAnyOtherNamespaceAttribute();
 			attributeReuseManager.addAttribute(anyOther, attributeBuilder);
 		}
-		log.trace("Leave root FrankElement [{}]", () -> frankElement.getFullName());
+		log.trace("Leave root FrankElement [{}]", frankElement::getFullName);
 	}
 
 	private String getTypeName(String elementName) {
@@ -296,13 +296,13 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 	}
 
 	private XmlBuilder recursivelyDefineSimpleFrankElementTypeUnchecked(FrankElement frankElement, String xsdElementTypeName) {
-		log.trace("Defining [{}] for FrankElement [{}], no groups for attributes or config children", () -> xsdElementTypeName, () -> frankElement.getFullName());
+		log.trace("Defining [{}] for FrankElement [{}], no groups for attributes or config children", () -> xsdElementTypeName, frankElement::getFullName);
 		XmlBuilder complexType = createComplexType(xsdElementTypeName);
 		xsdElements.add(complexType);
 		addDocumentationFrom(complexType, frankElement);
-		log.trace("Adding cumulative config chidren of FrankElement [{}] to XSD type [{}]", () -> frankElement.getFullName(), () -> xsdElementTypeName);
+		log.trace("Adding cumulative config chidren of FrankElement [{}] to XSD type [{}]", frankElement::getFullName, () -> xsdElementTypeName);
 		if(frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
-			log.trace("FrankElement [{}] has plural config children", () -> frankElement.getFullName());
+			log.trace("FrankElement [{}] has plural config children", frankElement::getFullName);
 			// Within <xs:sequence><xs:choice> group, we cannot enforce that mandatory config children are
 			// included. We also do not check there that non-plural config children occur at most once.
 			// Martijn investigated whether the <xs:all> element can be used instead. That element
@@ -316,22 +316,22 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 				addPluralConfigChild(choice, configChildSet, frankElement);
 			}
 		} else {
-			log.trace("FrankElement [{}] does not have plural config children", () -> frankElement.getFullName());
+			log.trace("FrankElement [{}] does not have plural config children", frankElement::getFullName);
 			List<ConfigChild> cumulativeConfigChildren = frankElement.getCumulativeConfigChildren(version.getChildSelector(), version.getChildRejector());
 			if(cumulativeConfigChildren.isEmpty()) {
 				log.trace("There are no config children, not adding <sequence><choice>");
 			} else {
 				XmlBuilder sequence = addSequence(complexType);
 				final XmlBuilder childContext = version.configChildBuilderWithinSequence(sequence);
-				cumulativeConfigChildren.forEach(c -> addConfigChild(childContext, c));				
+				cumulativeConfigChildren.forEach(c -> addConfigChild(childContext, c));
 			}
 		}
-		log.trace("Adding cumulative attributes of FrankElement [{}] to XSD element type [{}]", () -> frankElement.getFullName(), () -> xsdElementTypeName);
+		log.trace("Adding cumulative attributes of FrankElement [{}] to XSD element type [{}]", frankElement::getFullName, () -> xsdElementTypeName);
 		addAttributeList(complexType, frankElement.getCumulativeAttributes(version.getChildSelector(), version.getChildRejector()), xsdElementTypeName);
-		log.trace("Adding attribute className for FrankElement [{}]", () -> frankElement.getFullName());
+		log.trace("Adding attribute className for FrankElement [{}]", frankElement::getFullName);
 		XmlBuilder classNameAttribute = DocWriterNewXmlUtils.createAttribute(CLASS_NAME, FIXED, frankElement.getFullName(), version.getClassNameAttributeUse(frankElement));
 		attributeReuseManager.addAttribute(classNameAttribute, complexType);
-		log.trace("Adding attribute active for FrankElement [{}]", () -> frankElement.getFullName());
+		log.trace("Adding attribute active for FrankElement [{}]", frankElement::getFullName);
 		XmlBuilder attributeActive = AttributeTypeStrategy.createAttributeActive();
 		attributeReuseManager.addAttribute(attributeActive, complexType);
 		return complexType;
@@ -344,26 +344,26 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		}
 		if(checkNotDefined(frankElement)) {
 			ElementBuildingStrategy elementBuildingStrategy = getElementBuildingStrategy(frankElement);
-			log.trace("Visiting config children for FrankElement [{}]", () -> frankElement.getFullName());
+			log.trace("Visiting config children for FrankElement [{}]", frankElement::getFullName);
 			addConfigChildren(elementBuildingStrategy, frankElement);
-			log.trace("Visiting attributes for FrankElement [{}]", () -> frankElement.getFullName());
+			log.trace("Visiting attributes for FrankElement [{}]", frankElement::getFullName);
 			addAttributes(elementBuildingStrategy, frankElement);
 			if(! frankElement.isAbstract()) {
-				log.trace("Adding attribute className to the element type of [{}]", () -> frankElement.getFullName());
+				log.trace("Adding attribute className to the element type of [{}]", frankElement::getFullName);
 				XmlBuilder classNameAttribute = DocWriterNewXmlUtils.createAttribute(CLASS_NAME, FIXED, frankElement.getFullName(), version.getClassNameAttributeUse(frankElement));
 				attributeReuseManager.addAttribute(classNameAttribute, elementBuildingStrategy.getElementTypeBuilder());
 			}
 			if(elementBuildingStrategy.needsSpecialAttributesInElementType()) {
-				log.trace("Adding attribute active and anyAttribute in another namespace to the element type of [{}], because there are no attribute groups to put this in", () -> frankElement.toString());
+				log.trace("Adding attribute active and anyAttribute in another namespace to the element type of [{}], because there are no attribute groups to put this in", frankElement::toString);
 				XmlBuilder attributeActive = AttributeTypeStrategy.createAttributeActive();
 				attributeReuseManager.addAttribute(attributeActive, elementBuildingStrategy.getElementTypeBuilder());
 				XmlBuilder anyOther = createAnyOtherNamespaceAttribute();
 				attributeReuseManager.addAttribute(anyOther, elementBuildingStrategy.getElementTypeBuilder());
 			}
-			log.trace("Creating reusable type definitions (or only groups) for Java ancestors of FrankElement [{}]", () -> frankElement.getFullName());
+			log.trace("Creating reusable type definitions (or only groups) for Java ancestors of FrankElement [{}]", frankElement::getFullName);
 			recursivelyDefineReusableFrankElementType(frankElement.getNextAncestorThatHasOrRejectsConfigChildren(version.getChildSelector(), version.getChildRejector()));
 			recursivelyDefineReusableFrankElementType(frankElement.getNextAncestorThatHasOrRejectsAttributes(version.getChildSelector(), version.getChildRejector()));
-			log.trace("Done with reusable XSD type definitions for ancestors of FrankElement [{}]", () -> frankElement.getFullName());
+			log.trace("Done with reusable XSD type definitions for ancestors of FrankElement [{}]", frankElement::getFullName);
 		} else {
 			log.trace("Reusable type definition was already included");
 		}
@@ -413,10 +413,10 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 	private ElementBuildingStrategy getElementBuildingStrategy(FrankElement element) {
 		if(element.isAbstract()) {
-			log.trace("FrankElement [{}] is abstract, so we do not actually create an XSD type definition. We only create config child or attribute groups to be referenced from other XSD types", () -> element.getFullName());
+			log.trace("FrankElement [{}] is abstract, so we do not actually create an XSD type definition. We only create config child or attribute groups to be referenced from other XSD types", element::getFullName);
 			return new ElementOmitter();
 		} else {
-			log.trace("FrankElement [{}] is not abstract. We really make the XSD type definition", () -> element.getFullName());
+			log.trace("FrankElement [{}] is not abstract. We really make the XSD type definition", element::getFullName);
 			return new ElementAdder(element);
 		}
 	}
@@ -450,13 +450,13 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 		@Override
 		void addGroupRef(String referencedGroupName) {
-			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}]", () -> addingTo.getFullName(), () -> referencedGroupName);
+			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}]", addingTo::getFullName, () -> referencedGroupName);
 			// We do not create configChildBuilder during construction, because
 			// that would produce an empty <seqneuce><choice> when there are no
 			// config children.
 			if(configChildBuilder == null) {
 				log.trace("Create <sequence><choice> to wrap the config children in");
-				configChildBuilder = version.configChildBuilder(elementTypeBuilder);				
+				configChildBuilder = version.configChildBuilder(elementTypeBuilder);
 			} else {
 				log.trace("Already have <sequence><choice> for the config children");
 			}
@@ -465,7 +465,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 		@Override
 		void addAttributeGroupRef(String referencedGroupName) {
-			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}]", () -> addingTo.getFullName(), () -> referencedGroupName);
+			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}]", addingTo::getFullName, () -> referencedGroupName);
 			XmlBuilder builder = DocWriterNewXmlUtils.createAttributeGroupRef(referencedGroupName);
 			attributeReuseManager.addAttribute(builder, elementTypeBuilder);
 		}
@@ -473,7 +473,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		@Override
 		void addThePluralConfigChildGroup(String referencedGroupName) {
 			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}], without adding <sequence><choice>",
-					() -> addingTo.getFullName(), () -> referencedGroupName);
+				addingTo::getFullName, () -> referencedGroupName);
 			DocWriterNewXmlUtils.addGroupRef(elementTypeBuilder, referencedGroupName);
 		}
 	}
@@ -524,10 +524,10 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 			public void addDeclaredGroupRef(FrankElement referee) {
 				elementBuildingStrategy.addGroupRef(xsdDeclaredGroupNameForChildren(referee));
 			}
-			
+
 			@Override
 			public void addCumulativeGroupRef(FrankElement referee) {
-				elementBuildingStrategy.addGroupRef(xsdCumulativeGroupNameForChildren(referee));				
+				elementBuildingStrategy.addGroupRef(xsdCumulativeGroupNameForChildren(referee));
 			}
 
 			@Override
@@ -545,7 +545,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 				// Adds <Module> as a child of <Configuration>
 				addReferencedEntityRootChildIfApplicable(sequence, frankElement);
 				frankElement.getConfigChildren(version.getChildSelector()).forEach(c -> addConfigChild(sequence, c));
-				log.trace("Done creating XSD group [{}] on behalf of FrankElement [{}]", () -> groupName, () -> frankElement.getFullName());
+				log.trace("Done creating XSD group [{}] on behalf of FrankElement [{}]", () -> groupName, frankElement::getFullName);
 			}
 
 			@Override
@@ -559,10 +559,10 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 			@Override
 			public void handleSelectedChildren(List<ConfigChild> children, FrankElement owner) {
-				log.trace("Appending some of the config children of FrankElement [{}] to XSD group [{}]", () -> owner.getFullName(), () -> cumulativeGroupName);
+				log.trace("Appending some of the config children of FrankElement [{}] to XSD group [{}]", owner::getFullName, () -> cumulativeGroupName);
 				children.forEach(c -> addConfigChild(cumulativeBuilder, c));
 			}
-		
+
 			@Override
 			public void handleSelectedChildrenOfTopLevel(List<ConfigChild> children, FrankElement owner) {
 				handleSelectedChildren(children, owner);
@@ -585,7 +585,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 	}
 
 	private void addConfigChild(XmlBuilder context, ConfigChild child) {
-		log.trace("Adding config child [{}]", () -> child.toString());
+		log.trace("Adding config child [{}]", child::toString);
 		version.checkForMissingDescription(child);
 		if(child instanceof ObjectConfigChild) {
 			addObjectConfigChild(context, (ObjectConfigChild) child);
@@ -594,7 +594,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		} else {
 			throw new IllegalArgumentException("Cannot happen, there are no other ConfigChild subclasses than ObjectConfigChild or TextConfigChild");
 		}
-		log.trace("Done adding config child [{}]", () -> child.toString());
+		log.trace("Done adding config child [{}]", child::toString);
 	}
 
 	private void addObjectConfigChild(XmlBuilder context, ObjectConfigChild child) {
@@ -603,7 +603,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 			addConfigChildSingleReferredElement(context, child);
 		} else {
 			addConfigChildWithElementGroup(context, child);
-		}		
+		}
 	}
 
 	private boolean isNoElementTypeNeeded(ElementRole role) {
@@ -620,11 +620,11 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		ElementRole role = model.findElementRole(child);
 		FrankElement elementInType = singleElementOf(role);
 		if(elementInType == null) {
-			log.trace("Omitting config child [{}] because of name conflict", () -> child.toString());
+			log.trace("Omitting config child [{}] because of name conflict", child::toString);
 			return;
 		}
 		String referredXsdElementName = elementInType.getXsdElementName(role);
-		log.trace("Config child appears as element reference to FrankElement [{}], XSD element [{}]", () -> elementInType.getFullName(), () -> referredXsdElementName);
+		log.trace("Config child appears as element reference to FrankElement [{}], XSD element [{}]", elementInType::getFullName, () -> referredXsdElementName);
 		addElement(context, referredXsdElementName, getTypeName(referredXsdElementName), getMinOccurs(child), getMaxOccurs(child));
 		recursivelyDefineSimpleFrankElementType(elementInType, role);
 	}
@@ -638,19 +638,19 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 	}
 
 	private void recursivelyDefineSimpleFrankElementType(FrankElement frankElement, ElementRole role) {
-		log.trace("FrankElement [{}] is needed in XML Schema", () -> frankElement.getFullName());
+		log.trace("FrankElement [{}] is needed in XML Schema", frankElement::getFullName);
 		if(checkNotDefined(frankElement)) {
 			log.trace("Not yet defined in XML Schema, going to define a type for it without reusable config children or attribute groups");
 			String xsdElementName = frankElement.getXsdElementName(role);
 			XmlBuilder attributeBuilder = recursivelyDefineSimpleFrankElementTypeUnchecked(frankElement, getTypeName(xsdElementName));
-			log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, () -> frankElement.getFullName());
+			log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, frankElement::getFullName);
 			XmlBuilder attributeElementRole = DocWriterNewXmlUtils.createAttribute(ELEMENT_ROLE, FIXED, role.getRoleName(), version.getRoleNameAttributeUse());
 			attributeReuseManager.addAttribute(attributeElementRole, attributeBuilder);
 			// Adding the other-namespace attribute cannot be done in recursivelyDefineXsdElementUnchecked because the anyAttribute must be last.
-			log.trace("Adding any attribute in another namespace to FrankElement [{}]", () -> frankElement.getFullName());
+			log.trace("Adding any attribute in another namespace to FrankElement [{}]", frankElement::getFullName);
 			XmlBuilder anyOther = createAnyOtherNamespaceAttribute();
 			attributeReuseManager.addAttribute(anyOther, attributeBuilder);
-			log.trace("Done defining type for FrankElement [{}], XSD element [{}]", () -> frankElement.getFullName(), () -> xsdElementName);
+			log.trace("Done defining type for FrankElement [{}], XSD element [{}]", frankElement::getFullName, () -> xsdElementName);
 		} else {
 			log.trace("Already defined in XML Schema");
 		}
@@ -706,19 +706,19 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 	private void addElementGroupOptions(XmlBuilder context, List<ElementRole> roles) {
 		for(ElementRole role: roles) {
 			if(isNoElementTypeNeeded(role)) {
-				log.trace("ElementRole [{}] is not interface-based, nothing to do for this role", () -> role.toString());
+				log.trace("ElementRole [{}] is not interface-based, nothing to do for this role", role::toString);
 				continue;
 			}
 			String groupName = role.createXsdElementName(ELEMENT_GROUP_BASE);
-			log.trace("Adding group [{}] of role [{}] to element group", () -> groupName, () -> role.toString());
+			log.trace("Adding group [{}] of role [{}] to element group", () -> groupName, role::toString);
 			DocWriterNewXmlUtils.addGroupRef(context, groupName);
 			if(! idsCreatedElementGroups.contains(role.getKey())) {
 				idsCreatedElementGroups.add(role.getKey());
-				log.trace("Creating group [{}] for role [{}]", () -> groupName, () -> role.toString());
+				log.trace("Creating group [{}] for role [{}]", () -> groupName, role::toString);
 				defineElementGroupBaseUnchecked(role);
-				log.trace("Done creating group [{}] for role [{}]", () -> groupName, () -> role.toString());
+				log.trace("Done creating group [{}] for role [{}]", () -> groupName, role::toString);
 			} else {
-				log.trace("Group [{}] of role [{}] exists, no need to create it again", () -> groupName, () -> role.toString());				
+				log.trace("Group [{}] of role [{}] exists, no need to create it again", () -> groupName, role::toString);
 			}
 		}
 	}
@@ -732,9 +732,9 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 				.filter(f -> (f != role.getDefaultElementOptionConflict()))
 				.collect(Collectors.toList());
 		for(FrankElement frankElement: frankElementOptions) {
-			log.trace("Append ElementGroup with FrankElement [{}]", () -> frankElement.getFullName());
+			log.trace("Append ElementGroup with FrankElement [{}]", frankElement::getFullName);
 			addElementToElementGroup(choice, frankElement, role);
-		}		
+		}
 	}
 
 	private void addElementToElementGroup(XmlBuilder context, FrankElement frankElement, ElementRole role) {
@@ -743,9 +743,9 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 			log.error("Expected ElementRole [{}] to be interface-based", role.toString());
 		} else {
 			log.trace("FrankElement [{}] in role [{}] appears as type reference, XSD element [{}]",
-					() -> frankElement.getFullName(), () -> role.toString(), () -> referredXsdElementName);
+				frankElement::getFullName, role::toString, () -> referredXsdElementName);
 			addElementTypeRefToElementGroup(context, frankElement, role);
-			recursivelyDefineReusableFrankElementType(frankElement);			
+			recursivelyDefineReusableFrankElementType(frankElement);
 		}
 	}
 
@@ -755,7 +755,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		XmlBuilder complexType = addComplexType(element);
 		XmlBuilder complexContent = addComplexContent(complexType);
 		XmlBuilder extension = addExtension(complexContent, xsdElementType(frankElement));
-		log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, () -> frankElement.getFullName());
+		log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, frankElement::getFullName);
 		XmlBuilder attributeElementRole = DocWriterNewXmlUtils.createAttribute(ELEMENT_ROLE, FIXED, role.getRoleName(), version.getRoleNameAttributeUse());
 		attributeReuseManager.addAttribute(attributeElementRole, extension);
 	}
@@ -788,7 +788,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 	}
 
 	private void addGenericElementOptionAttributes(XmlBuilder complexType, ConfigChildSet configChildSet) {
-		log.trace("Enter for ConfigChildSet [{}]", () -> configChildSet.toString());
+		log.trace("Enter for ConfigChildSet [{}]", configChildSet::toString);
 		log.trace("Adding attribute [{}] to generic element option", AttributeTypeStrategy.ATTRIBUTE_ACTIVE_NAME);
 		XmlBuilder attributeActive = AttributeTypeStrategy.createAttributeActive();
 		attributeReuseManager.addAttribute(attributeActive, complexType);
@@ -798,7 +798,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		Optional<String> defaultFrankElementName = configChildSet.getGenericElementOptionDefault(version.getElementFilter());
 		XmlBuilder attributeClassName = null;
 		if(defaultFrankElementName.isPresent()) {
-			log.trace("Adding attribute [{}] with default [{}]", () -> CLASS_NAME, () -> defaultFrankElementName.get());
+			log.trace("Adding attribute [{}] with default [{}]", () -> CLASS_NAME, defaultFrankElementName::get);
 			attributeClassName = DocWriterNewXmlUtils.createAttribute(CLASS_NAME, DEFAULT, defaultFrankElementName.get(), OPTIONAL);
 		} else {
 			log.trace("Adding attribute [{}] without default", () -> CLASS_NAME);
@@ -839,7 +839,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		for(String name: names) {
 			if(choice == null) {
 				XmlBuilder sequence = addSequence(context);
-				choice = addChoice(sequence, "0", "unbounded");				
+				choice = addChoice(sequence, "0", "unbounded");
 			}
 			addConfigChildrenOfRoleNameToGenericOption(choice, memberChildrenByRoleName.get(name));
 		}
@@ -868,7 +868,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		List<ElementRole> childRoles = ElementRole.promoteIfConflict(ConfigChild.getElementRoleStream(configChildren).collect(Collectors.toList()));
 		if((childRoles.size() == 1) && isNoElementTypeNeeded(childRoles.get(0))) {
 			log.trace("A single ElementRole [{}] that appears as element reference", () -> childRoles.get(0).toString());
-			addElementRoleAsElement(context, childRoles.get(0));				
+			addElementRoleAsElement(context, childRoles.get(0));
 		} else {
 			if(log.isTraceEnabled()) {
 				ThreadContext.push(String.format("nest [%s]", roleName));
@@ -878,13 +878,13 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 				ThreadContext.pop();
 			}
 			DocWriterNewXmlUtils.addGroupRef(context, elementGroupManager.getGroupName(childRoles));
-		}		
+		}
 	}
 
 	private void addElementRoleAsElement(XmlBuilder context, ElementRole elementRole) {
 		FrankElement elementInType = singleElementOf(elementRole);
 		if(elementInType == null) {
-			log.trace("Omitting ElementRole [{}] from group because of conflict", () -> elementRole.toString());
+			log.trace("Omitting ElementRole [{}] from group because of conflict", elementRole::toString);
 			return;
 		}
 		String referredXsdElementName = elementInType.getXsdElementName(elementRole);
@@ -916,16 +916,16 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 	}
 
 	void addConfigChildrenWithPluralConfigChildSets(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
-		log.trace("Applying algorithm for plural config children for FrankElement [{}]", () -> frankElement.getFullName());
+		log.trace("Applying algorithm for plural config children for FrankElement [{}]", frankElement::getFullName);
 		if(! frankElement.hasFilledConfigChildSets(version.getChildSelector(), version.getChildRejector())) {
 			FrankElement ancestor = frankElement.getNextPluralConfigChildrenAncestor(version.getChildSelector(), version.getChildRejector());
-			log.trace("No config children, inheriting from [{}]", () -> ancestor.getFullName());
+			log.trace("No config children, inheriting from [{}]", ancestor::getFullName);
 			elementBuildingStrategy.addThePluralConfigChildGroup(xsdPluralGroupNameForChildren(ancestor));
 		} else {
-			log.trace("Adding new group for plural config children for FrankElement [{}]", () -> frankElement.getFullName());
+			log.trace("Adding new group for plural config children for FrankElement [{}]", frankElement::getFullName);
 			addConfigChildrenWithPluralConfigChildSetsUnchecked(elementBuildingStrategy, frankElement);
 		}
-		log.trace("Done applying algorithm for plural config children for FrankElement [{}]", () -> frankElement.getFullName());
+		log.trace("Done applying algorithm for plural config children for FrankElement [{}]", frankElement::getFullName);
 	}
 
 	private void addConfigChildrenWithPluralConfigChildSetsUnchecked(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
@@ -948,7 +948,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 	private void addPluralConfigChild(XmlBuilder choice, ConfigChildSet configChildSet, FrankElement frankElement) {
 		if(log.isTraceEnabled()) {
-			log.trace("Adding ConfigChildSet [{}]", () -> configChildSet.toString());
+			log.trace("Adding ConfigChildSet [{}]", configChildSet::toString);
 			ThreadContext.push(String.format("Owning element [%s], ConfigChildSet [%s]", frankElement.getSimpleName(), configChildSet.toString()));
 		}
 		configChildSet.getConfigChildren().forEach(version::checkForMissingDescription);
@@ -966,12 +966,12 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		}
 		if(log.isTraceEnabled()) {
 			ThreadContext.pop();
-			log.trace("Done adding ConfigChildSet with ElementRoleSet [{}]", () -> configChildSet.toString());
+			log.trace("Done adding ConfigChildSet with ElementRoleSet [{}]", configChildSet::toString);
 		}
 	}
 
 	private void addPluralObjectConfigChild(XmlBuilder choice, ConfigChildSet configChildSet) {
-		List<ElementRole> roles = configChildSet.getFilteredElementRoles(version.getChildSelector(), version.getChildRejector());		
+		List<ElementRole> roles = configChildSet.getFilteredElementRoles(version.getChildSelector(), version.getChildRejector());
 		if((roles.size() == 1) && isNoElementTypeNeeded(roles.get(0))) {
 			log.trace("Config child set appears as element reference");
 			addElementRoleAsElement(choice, roles.get(0));
@@ -1034,7 +1034,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 				XmlBuilder attributeGroup = createAttributeGroup(groupName);
 				xsdComplexItems.add(attributeGroup);
 				addAttributeList(attributeGroup, frankElement.getAttributes(version.getChildSelector()), groupName);
-				log.trace("Done creating XSD group [{}] on behalf of FrankElement [{}]", () -> groupName, () -> frankElement.getFullName());
+				log.trace("Done creating XSD group [{}] on behalf of FrankElement [{}]", () -> groupName, frankElement::getFullName);
 				return attributeGroup;
 			}
 
@@ -1048,14 +1048,14 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 			@Override
 			public void handleSelectedChildren(List<FrankAttribute> children, FrankElement owner) {
-				log.trace("Appending some of the attributes of FrankElement [{}] to XSD group [{}]", () -> owner.getFullName(), () -> cumulativeGroupName);
+				log.trace("Appending some of the attributes of FrankElement [{}] to XSD group [{}]", owner::getFullName, () -> cumulativeGroupName);
 				addAttributeList(cumulativeBuilder, children, cumulativeGroupName);
 			}
 
 			@Override
 			public void handleSelectedChildrenOfTopLevel(List<FrankAttribute> children, FrankElement owner) {
 				handleSelectedChildren(children, owner);
-				log.trace("Adding attribute active because [{}] has no ancestors with children", () -> owner.getFullName());
+				log.trace("Adding attribute active because [{}] has no ancestors with children", owner::getFullName);
 				XmlBuilder attributeActive = AttributeTypeStrategy.createAttributeActive();
 				attributeReuseManager.addAttribute(attributeActive, cumulativeBuilder);
 				log.trace("Adding any attribute in another namespace");
@@ -1084,14 +1084,14 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 	private void addAttributeList(XmlBuilder context, List<FrankAttribute> frankAttributes, String groupName) {
 		frankAttributes.forEach(version::checkForMissingDescription);
 		for(FrankAttribute frankAttribute: frankAttributes) {
-			log.trace("Group [{}] has attribute [{}], will decide later whether to add it inline or to reuse it", () -> groupName, () -> frankAttribute.getName());
+			log.trace("Group [{}] has attribute [{}], will decide later whether to add it inline or to reuse it", () -> groupName, frankAttribute::getName);
 			attributeReuseManager.addAttribute(frankAttribute, context, groupName);
-		}		
+		}
 	}
 
 	@Override
 	public void addAttributeInline(FrankAttribute attribute, XmlBuilder group, String targetName) {
-		log.trace("Attribute [{}] in FrankElement [{}] for group [{}] is inline", () -> attribute.toString(), () -> attribute.getOwningElement().toString(), () -> targetName);
+		log.trace("Attribute [{}] in FrankElement [{}] for group [{}] is inline", attribute::toString, () -> attribute.getOwningElement().toString(), () -> targetName);
 		XmlBuilder attributeBuilder = createAttribute(attribute);
 		if(version.childIsMandatory(attribute)) {
 			log.trace("It is mandatory, adding \"use=required\"");
@@ -1108,7 +1108,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 	@Override
 	public void addReusedAttributeReference(FrankAttribute attribute, XmlBuilder group, String targetName) {
-		log.trace("Reference reused attribute [{}] of FrankElement [{}] for group [{}]", () -> attribute.toString(), () -> attribute.getOwningElement().toString(), () -> targetName);
+		log.trace("Reference reused attribute [{}] of FrankElement [{}] for group [{}]", attribute::toString, () -> attribute.getOwningElement().toString(), () -> targetName);
 		XmlBuilder attributeBuilder = DocWriterNewXmlUtils.createAttributeRef(attribute.getName());
 		if(version.childIsMandatory(attribute)) {
 			log.trace("It is mandatory, adding \"use=required\" with the reference, not the referee");
@@ -1128,7 +1128,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		} else {
 			log.trace("Attribute is restricted by enum [{}]", frankAttribute.getAttributeEnum().getFullName());
 			attribute = createRestrictedAttribute(frankAttribute, a -> documentAttributeIfNeeded(frankAttribute, a));
-		}		
+		}
 		return attribute;
 	}
 
@@ -1156,10 +1156,10 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 	private String getDocumentationText(ElementChild elementChild) {
 		StringBuilder result = new StringBuilder();
-		if(! StringUtils.isEmpty(elementChild.getDescription())) {
+		if(StringUtils.isNotEmpty(elementChild.getDescription())) {
 			result.append(elementChild.getDescription());
 		}
-		if(! StringUtils.isEmpty(elementChild.getDefaultValue())) {
+		if(StringUtils.isNotEmpty(elementChild.getDefaultValue())) {
 			if(result.length() >= 1) {
 				result.append(" ");
 			}
@@ -1191,7 +1191,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 	private static String xsdPluralGroupNameForChildren(FrankElement element) {
 		return element.getTypeNameBase() + "PluralConfigChildGroup";
 	}
-	
+
 	private static String xsdDeclaredGroupNameForAttributes(FrankElement element) {
 		return element.getTypeNameBase() + "DeclaredAttributeGroup";
 	}

@@ -1,16 +1,16 @@
 package org.frankframework.frankdoc.wrapper;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class InterfaceAndAnnotationTest {
 	static final String PACKAGE = "org.frankframework.frankdoc.testtarget.doclet.interfaces.";

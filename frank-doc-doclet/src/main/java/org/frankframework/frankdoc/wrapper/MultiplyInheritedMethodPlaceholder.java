@@ -1,39 +1,39 @@
-/* 
-Copyright 2022, 2023 WeAreFrank! 
+/*
+Copyright 2022, 2023 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 package org.frankframework.frankdoc.wrapper;
 
-import com.sun.javadoc.MethodDoc;
+import javax.lang.model.element.ExecutableElement;
 
 /**
  * Placeholder for a method that is inherited from the superclass and also from interfaces in the
  * <code>implements</code> clause of a Java class.
- * 
- * There is no corresponding {@link com.sun.javadoc.MethodDoc} because this placeholder does not
+ *
+ * There is no corresponding {@link javax.lang.model.element.ExecutableElement} because this placeholder does not
  * correspond to a declared Java method. An object of this type corresponds to an inherited
  * method that may be different from the inherited method because of inheritance from the
  * interfaces implemented by the class. The Frank!Doc needs this placeholder to see that a
  * derived attribute or config child may differ from the overridden attribute or config child.
- * 
+ *
  * @author martijn
  *
  */
 public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 	private FrankMethodDoclet classAncestorMethod;
 
-	MultiplyInheritedMethodPlaceholder(FrankMethodDoclet classAncestorMethod, FrankClassDoclet declaringClass) {
+	MultiplyInheritedMethodPlaceholder(FrankMethodDoclet classAncestorMethod, FrankClass declaringClass) {
 		super(declaringClass);
 		this.classAncestorMethod = classAncestorMethod;
 	}
@@ -117,7 +117,12 @@ public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 	}
 
 	@Override
-	MethodDoc getOverriddenMethodDoc() {
+	public boolean isProtected() {
+		return classAncestorMethod.isProtected();
+	}
+
+	@Override
+	ExecutableElement getOverriddenExecutableElement() {
 		return classAncestorMethod.method;
 	}
 

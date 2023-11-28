@@ -1,11 +1,5 @@
 package org.frankframework.frankdoc.feature;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.util.Arrays;
-import java.util.Collection;
-
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
@@ -16,6 +10,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @RunWith(Parameterized.class)
 public class DefaultAndDescriptionTest {
@@ -30,7 +30,9 @@ public class DefaultAndDescriptionTest {
 			{"withIbisDocNoOrder", "My description", "default value"},
 			{"withIbisDocNoDefault", "My description", null},
 			{"withIbisDocNoDefaultNoOrder", "My description", null},
-			{"withReferencedValue", "Description with my value", "my value"}
+			{"withReferencedValue", "Description with my value", "my value"},
+			{"withReferencedInterfaceValue", "Description with replyAddressFieldsDefault", "replyAddressFieldsDefault"},
+			{"setTransacted", "controls the use of transactions", null}
 		});
 	}
 
@@ -50,9 +52,9 @@ public class DefaultAndDescriptionTest {
 
 	@Before
 	public void setUp() throws Exception {
-		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
+		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, "org.frankframework.frankdoc.testtarget.wrapper.variables");
 		FrankClass clazz = repository.findClass(CLASS_NAME);
-		method = Arrays.asList(clazz.getDeclaredMethods()).stream()
+		method = Arrays.stream(clazz.getDeclaredMethods())
 				.filter(m -> m.getName().equals(methodToTest))
 				.findFirst()
 				.get();

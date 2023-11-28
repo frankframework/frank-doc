@@ -15,12 +15,12 @@
 */
 package org.frankframework.frankdoc.testtarget.examples.labels;
 
-import static java.lang.annotation.ElementType.TYPE;
+import nl.nn.adapterframework.doc.Label;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Target;
 
-import nl.nn.adapterframework.doc.Label;
+import static java.lang.annotation.ElementType.TYPE;
 
 @Target(TYPE)
 @Label(name="myLabel")

@@ -1,14 +1,14 @@
 package org.frankframework.frankdoc.model;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 public class FrankDocGroupFactoryTest {
 	private FrankDocGroupFactory instance;
@@ -44,7 +44,7 @@ public class FrankDocGroupFactoryTest {
 	public void whenAnnotationWithTwoValuesThenGroupWithOrder() throws Exception {
 		FrankDocGroup group = instance.getGroup("MyGroup", 3);
 		assertEquals("MyGroup", group.getName());
-		assertEquals(3, group.getOrder());		
+		assertEquals(3, group.getOrder());
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class FrankDocGroupFactoryTest {
 		FrankDocGroup group = instance.getGroup("MyGroup", 3);
 		group = instance.getGroup("MyGroup", Integer.MAX_VALUE);
 		assertEquals("MyGroup", group.getName());
-		assertEquals(3, group.getOrder());				
+		assertEquals(3, group.getOrder());
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class FrankDocGroupFactoryTest {
 		FrankDocGroup group = instance.getGroup("MyGroup", Integer.MAX_VALUE);
 		group = instance.getGroup("MyGroup", 3);
 		assertEquals("MyGroup", group.getName());
-		assertEquals(3, group.getOrder());				
+		assertEquals(3, group.getOrder());
 	}
 
 	@Test
@@ -70,7 +70,7 @@ public class FrankDocGroupFactoryTest {
 		FrankDocGroup second = instance.getGroup("MyGroup", 2);
 		assertSame(second, first);
 		assertEquals("MyGroup", first.getName());
-		assertEquals(2, first.getOrder());		
+		assertEquals(2, first.getOrder());
 	}
 
 	@Test
@@ -79,7 +79,7 @@ public class FrankDocGroupFactoryTest {
 		FrankDocGroup second = instance.getGroup("MyGroup", 3);
 		assertSame(second, first);
 		assertEquals("MyGroup", first.getName());
-		assertEquals(3, first.getOrder());		
+		assertEquals(3, first.getOrder());
 	}
 
 	@Test

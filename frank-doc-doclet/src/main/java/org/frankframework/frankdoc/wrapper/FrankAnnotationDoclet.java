@@ -1,68 +1,74 @@
-/* 
-Copyright 2021 - 2023 WeAreFrank! 
+/*
+Copyright 2021 - 2023 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc.wrapper;
 
+import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Symbol;
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
-
-import com.sun.javadoc.AnnotationDesc;
-import com.sun.javadoc.AnnotationValue;
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.FieldDoc;
-import com.sun.javadoc.ParameterizedType;
-
 class FrankAnnotationDoclet implements FrankAnnotation {
-	private static Logger log = LogUtil.getLogger(FrankAnnotationDoclet.class);
+	private static final Logger log = LogUtil.getLogger(FrankAnnotationDoclet.class);
 	private static final Set<String> RECURSIVE_ANNOTATIONS = new HashSet<>(Arrays.asList(
-			"java.lang.annotation.Documented",
-			"java.lang.annotation.Retention",
-			"java.lang.annotation.Target"));
-	
-	private final AnnotationDesc annotation;
+		"java.lang.annotation.Documented",
+		"java.lang.annotation.Retention",
+		"java.lang.annotation.Target"));
+
+	private final AnnotationMirror annotation;
 	private final Map<String, FrankAnnotation> frankAnnotationsByName;
 
-	FrankAnnotationDoclet(AnnotationDesc annotation) {
-		log.trace("Creating FrankAnnotation for [{}]", annotation.annotationType().qualifiedName());
+	FrankAnnotationDoclet(AnnotationMirror annotation) {
+		log.trace("Creating FrankAnnotation for [{}]", annotation.getAnnotationType());
 		this.annotation = annotation;
-		AnnotationDesc[] javaDocAnnotationsOfAnnotation = Arrays.asList(annotation.annotationType().annotations()).stream()
-				.filter(a -> ! RECURSIVE_ANNOTATIONS.contains(a.annotationType().qualifiedName()))
-				.collect(Collectors.toList())
-				.toArray(new AnnotationDesc[] {});
-		log.trace("Creating annotations of annotations");
-		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(javaDocAnnotationsOfAnnotation);
-		log.trace("Done with annotations of annotations");
+		AnnotationMirror[] javaDocAnnotationsOfAnnotation = annotation.getAnnotationType().asElement().getAnnotationMirrors().stream()
+			.filter(a -> !RECURSIVE_ANNOTATIONS.contains(a.getAnnotationType().toString()))
+			.collect(Collectors.toList())
+			.toArray(new AnnotationMirror[]{});
+
+		if (javaDocAnnotationsOfAnnotation.length > 0) {
+			log.trace("Creating annotations of annotations");
+			frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(javaDocAnnotationsOfAnnotation);
+		} else {
+			frankAnnotationsByName = new LinkedHashMap<>();
+		}
 	}
 
 	@Override
 	public String getName() {
-		return annotation.annotationType().qualifiedName();
+		return annotation.getAnnotationType().toString();
 	}
 
 	@Override
 	public boolean isPublic() {
-		return annotation.annotationType().isPublic();
+		// This is not correct. It should be the visibility of the annotation type.
+		// Important note: In Java 8, this is never false inside unit tests.
+		return true;
 	}
 
 	@Override
@@ -71,63 +77,72 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 	}
 
 	@Override
-	public Object getValueOf(String fieldName) throws FrankDocException {
-		Optional<Object> candidate = Arrays.asList(annotation.elementValues()).stream()
-				.filter(ev -> ev.element().name().equals(fieldName))
-				.map(ev -> ev.value().value())
-				.findAny();
-		if(candidate.isPresent()) {
-			return parseAnnotationValue(candidate.get());
+	public Object getValueOf(String fieldName) {
+		Optional<? extends AnnotationValue> foundAnnotation = annotation.getElementValues().keySet().stream()
+			.filter(executableElement -> executableElement.getSimpleName().toString().equals(fieldName))
+			.map(executableElement -> annotation.getElementValues().get(executableElement))
+			.findFirst();
+
+		if (foundAnnotation.isPresent()) {
+			return parseAnnotationValue(foundAnnotation.get());
 		} else {
-			return getDefaultValue(fieldName);			
+			return getAnnotationDefaultValue(annotation, fieldName);
 		}
 	}
 
-	private Object parseAnnotationValue(Object raw) throws FrankDocException {
-		if((raw instanceof Integer) || (raw instanceof String) || (raw instanceof Boolean)) {
-			return raw;
-		} else if(raw instanceof ClassDoc) {
-			return ((ClassDoc) raw).qualifiedTypeName();
-		} else if(raw instanceof ParameterizedType) {
-			return ((ParameterizedType) raw).asClassDoc().qualifiedName();
-		} else if(raw instanceof FieldDoc) {
-			return new FrankEnumConstantDoclet((FieldDoc) raw);
-		} else {
-			return parseAnnotationValueAsStringArray(raw);
+	private Object parseAnnotationValue(AnnotationValue raw) {
+		if (raw instanceof Attribute.Array) {
+			return parseAnnotationValueAsStringArray(((Attribute.Array) raw).getValue());
 		}
+		if (raw instanceof Attribute.Class) {
+			return ((Attribute.Class) raw).classType.toString();
+		}
+		if (raw instanceof Attribute.Enum) {
+			return new FrankEnumConstantDoclet(((Attribute.Enum) raw).getValue(), null);
+		}
+
+		return raw.getValue();
 	}
 
-	private Object parseAnnotationValueAsStringArray(Object rawValue) throws FrankDocException {
-		AnnotationValue[] valueAsArray = null;
-		try {
-			valueAsArray = (AnnotationValue[]) rawValue;
-		} catch(ClassCastException e) {
-			throw new FrankDocException(String.format("Annotation has unknown type: [%s]", getName()), e);
-		}
-		List<String> valueAsStringList = Arrays.asList(valueAsArray).stream()
-				.map(v -> v.value().toString())
-				.collect(Collectors.toList());
-		String[] result = new String[valueAsStringList.size()];
-		for(int i = 0; i < valueAsStringList.size(); ++i) {
-			result[i] = valueAsStringList.get(i);
+	private Object parseAnnotationValueAsStringArray(com.sun.tools.javac.util.List<Attribute> valueList) {
+		String[] result = new String[valueList.size()];
+		for (int i = 0; i < valueList.size(); ++i) {
+			result[i] = valueList.get(i).getValue().toString();
 		}
 		return result;
 	}
 
-	private Object getDefaultValue(String fieldName) throws FrankDocException {
-		Optional<Object> candidate = Arrays.asList(annotation.annotationType().elements()).stream()
-			.filter(e -> e.name().equals(fieldName))
-			.map(e -> e.defaultValue().value())
-			.findAny();
-		if(candidate.isPresent()) {
-			return parseAnnotationValue(candidate.get());
-		} else {
-			return null;
+	public static Object getAnnotationDefaultValue(AnnotationMirror annotationMirror, String elementName) {
+		TypeElement annotationTypeElement = (TypeElement) annotationMirror.getAnnotationType().asElement();
+		Element defaultValueMethod = annotationTypeElement.getEnclosedElements().stream()
+			.filter(methodElement -> methodElement.getSimpleName().contentEquals(elementName))
+			.findFirst()
+			.orElse(null);
+
+		if (defaultValueMethod instanceof Symbol.MethodSymbol) {
+			Symbol.MethodSymbol methodSymbol = (Symbol.MethodSymbol) defaultValueMethod;
+			return methodSymbol.getDefaultValue().getValue();
 		}
+		return null;
 	}
 
 	@Override
 	public FrankAnnotation getAnnotation(String name) {
 		return frankAnnotationsByName.get(name);
+	}
+
+	@Override
+	public int getAnnotationCount() {
+		return frankAnnotationsByName.size();
+	}
+
+	@Override
+	public String toString() {
+		String value = null;
+		try {
+			value = getValue() == null ? "null" : getValue().toString();
+		} catch (FrankDocException ignored) {
+		}
+		return "FrankAnnotationDoclet name: [" + getName() + "], value: [" + value + "] annotations size: " + getAnnotationCount();
 	}
 }

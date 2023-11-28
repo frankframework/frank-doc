@@ -1,37 +1,36 @@
-/* 
-Copyright 2022, 2023 WeAreFrank! 
+/*
+Copyright 2022, 2023 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc.wrapper;
 
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
+
+import javax.lang.model.element.ExecutableElement;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
-
-import com.sun.javadoc.MethodDoc;
-
 abstract class FrankMethodDocletBase implements FrankMethod {
 	private static Logger log = LogUtil.getLogger(FrankMethodDocletBase.class);
 
-	private final FrankClassDoclet declaringClass;
-	private final Set<MethodDoc> warnedMethodsNotInJavaDoc = new HashSet<>();
+	private final FrankClass declaringClass;
+	private final Set<ExecutableElement> warnedMethodsNotInJavaDoc = new HashSet<>();
 
-	FrankMethodDocletBase(FrankClassDoclet declaringClass) {
+	FrankMethodDocletBase(FrankClass declaringClass) {
 		this.declaringClass = declaringClass;
 	}
 
@@ -48,7 +47,7 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 
 	@Override
 	public String getJavaDocIncludingInherited() throws FrankDocException {
-		Function<FrankMethodDocletBase, String> getter = m -> m.getJavaDoc();
+		Function<FrankMethodDocletBase, String> getter = FrankMethod::getJavaDoc;
 		return searchIncludingInherited(getter);
 	}
 
@@ -70,7 +69,7 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 	@Override
 	public String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException {
 		Function<FrankMethodDocletBase, String> getter = m -> m.getJavaDocTag(tagName);
-		return searchIncludingInherited(getter);		
+		return searchIncludingInherited(getter);
 	}
 
 	private <T> T searchIncludingInherited(Function<FrankMethodDocletBase, T> getter) throws FrankDocException {
@@ -81,35 +80,35 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 		return result;
 	}
 
-	private <T> T searchExcludingImplementedInterfaces(Function<FrankMethodDocletBase, T> getter) throws FrankDocException {
+	private <T> T searchExcludingImplementedInterfaces(Function<FrankMethodDocletBase, T> getter) {
 		T result = getter.apply(this);
 		if(result != null) {
 			return result;
 		}
-		MethodDoc overriddenMethodDoc = getOverriddenMethodDoc();
-		// The overriddenMethodDoc can be in a Java interface instead of an ancestor class.
+		ExecutableElement overriddenExecutableElement = getOverriddenExecutableElement();
+		// The overriddenExecutableElement can be in a Java interface instead of an ancestor class.
 		// This is because in Java 8 a Java interface can have default method implementations.
-		if((overriddenMethodDoc != null) && (! overriddenMethodDoc.containingClass().isInterface())) {
-			FrankMethodDocletBase overriddenMethod = (FrankMethodDocletBase) declaringClass.recursivelyFindFrankMethod(overriddenMethodDoc);
+		if((overriddenExecutableElement != null) && (! overriddenExecutableElement.getClass().isInterface())) {
+			FrankMethodDocletBase overriddenMethod = (FrankMethodDocletBase) declaringClass.recursivelyFindFrankMethod(overriddenExecutableElement);
 			if(overriddenMethod != null) {
 				return overriddenMethod.searchExcludingImplementedInterfaces(getter);
 			} else {
-				if(! warnedMethodsNotInJavaDoc.contains(overriddenMethodDoc)) {
-					warnedMethodsNotInJavaDoc.add(overriddenMethodDoc);
+				if(! warnedMethodsNotInJavaDoc.contains(overriddenExecutableElement)) {
+					warnedMethodsNotInJavaDoc.add(overriddenExecutableElement);
 					// To see this warning, run test FrankMethodOverrideTest.whenPackagePrivateOverriddenByPublicThenOnlyChildMethodConsidered().
 					log.warn("Class {} inherits method {}, but no annotations or JavaDocs are known because the overridden method is not public.",
-							() -> declaringClass.getName(), () -> overriddenMethodDoc.qualifiedName());
+						declaringClass::getName, overriddenExecutableElement::getSimpleName);
 				}
 			}
 		}
 		return null;
 	}
 
-	abstract MethodDoc getOverriddenMethodDoc();
+	abstract ExecutableElement getOverriddenExecutableElement();
 
 	private <T> T searchImplementedInterfaces(FrankClass clazz, String methodSignature, Function<FrankMethodDocletBase, T> getter) throws FrankDocException {
-		TransitiveImplementedInterfaceBrowser<T> interfaceBrowser = new TransitiveImplementedInterfaceBrowser<>((FrankClassDoclet) clazz);
-		Function<FrankClass, T> classGetter = interfaze -> ((FrankClassDoclet) interfaze).getMethodItemFromSignature(methodSignature, getter);
+		TransitiveImplementedInterfaceBrowser<T> interfaceBrowser = new TransitiveImplementedInterfaceBrowser<>(clazz);
+		Function<FrankClass, T> classGetter = interfaze -> interfaze.getMethodItemFromSignature(methodSignature, getter);
 		T result = interfaceBrowser.search(classGetter);
 		if(result != null) {
 			return result;

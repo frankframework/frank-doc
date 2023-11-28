@@ -44,7 +44,7 @@ public class AbstractNonValuedFeatureTest {
 	}
 
 	@Test
-	public void testForEnum() throws Exception {
+	public void testForEnum() {
 		FrankEnumConstant[] constants = myEnum.getEnumConstants();
 		assertTrue(Deprecated.getInstance().isSetOn(constants[0]));
 		assertTrue(Deprecated.getInstance().isSetOn(constants[1]));

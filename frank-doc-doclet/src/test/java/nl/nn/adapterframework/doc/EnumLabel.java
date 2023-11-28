@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Copied from IAF project.
+ * Represents the value when setting a {@link DocumentedEnum} field, opposed to using the enumeration field it self.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

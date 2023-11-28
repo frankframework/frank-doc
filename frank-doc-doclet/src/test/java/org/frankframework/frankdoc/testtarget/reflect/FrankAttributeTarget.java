@@ -1,8 +1,8 @@
 package org.frankframework.frankdoc.testtarget.reflect;
 
-import java.util.List;
-
 import nl.nn.adapterframework.doc.IbisDoc;
+
+import java.util.List;
 
 public class FrankAttributeTarget extends FrankAttributeTargetParent {
 	public static enum FrankAttributeTargetEnum {ONE, TWO};

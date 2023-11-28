@@ -1,47 +1,52 @@
-/* 
-Copyright 2021, 2022 WeAreFrank! 
+/*
+Copyright 2021, 2022 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc.wrapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
+import com.sun.source.doctree.DocCommentTree;
+import com.sun.tools.javac.code.Type;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 
-import com.sun.javadoc.AnnotationDesc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.Parameter;
-import com.sun.javadoc.Tag;
-import com.sun.javadoc.Type;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeMirror;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 class FrankMethodDoclet extends FrankMethodDocletBase {
-	private static Logger log = LogUtil.getLogger(FrankMethodDoclet.class);
+	private static final Logger log = LogUtil.getLogger(FrankMethodDoclet.class);
 
-	final MethodDoc method;
+	final ExecutableElement method;
+	private final DocCommentTree docCommentTree;
 	private final Map<String, FrankAnnotation> frankAnnotationsByName;
 
-	FrankMethodDoclet(MethodDoc method, FrankClassDoclet declaringClass) {
+	public FrankMethodDoclet(ExecutableElement method, FrankClass declaringClass, DocCommentTree docCommentTree) {
 		super(declaringClass);
 		this.method = method;
-		AnnotationDesc[] annotationDescs = method.annotations();
-		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(annotationDescs);
+		this.docCommentTree = docCommentTree;
+		AnnotationMirror[] annotationsByName = method.getAnnotationMirrors().toArray(new AnnotationMirror[]{});
+		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(annotationsByName);
 	}
 
 	@Override
@@ -51,17 +56,21 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 
 	@Override
 	public String getName() {
-		return method.name();
+		return method.getSimpleName().toString();
 	}
 
 	@Override
 	public boolean isPublic() {
-		return method.isPublic();
+		return method.getModifiers().stream().anyMatch(m -> m == Modifier.PUBLIC);
+	}
+
+	public boolean isProtected() {
+		return method.getModifiers().stream().anyMatch(m -> m == Modifier.PROTECTED);
 	}
 
 	@Override
 	public FrankAnnotation[] getAnnotations() {
-		return frankAnnotationsByName.values().toArray(new FrankAnnotation[] {});
+		return frankAnnotationsByName.values().toArray(new FrankAnnotation[]{});
 	}
 
 	@Override
@@ -71,44 +80,49 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 
 	@Override
 	public String getJavaDoc() {
-		String result = method.commentText();
-		// We need null when there is no JavaDoc, not the empty string.
-		// We use the null result in getJavaDocIncludingInherited() to
-		// continue searching.
-		if(StringUtils.isBlank(result)) {
-			return null;
-		}
-		return result;
+		return docCommentTree == null ? null : FrankDocletUtils.convertDocTreeListToStr(docCommentTree.getFullBody());
 	}
 
 	@Override
 	public FrankType getReturnType() {
-		Type docletType = method.returnType();
+		TypeMirror docletType = method.getReturnType();
 		return typeOf(docletType);
 	}
 
-	private FrankType typeOf(Type docletType) {
-		if(docletType.isPrimitive()) {
-			return new FrankPrimitiveType(docletType.simpleTypeName());
-		} else {
-			String typeName = docletType.qualifiedTypeName();
-			try {
-				FrankClass clazz = ((FrankClassDoclet) getDeclaringClass()).getRepository().findClass(typeName);
-				if(clazz == null) {
-					return new FrankNonCompiledClassDoclet(typeName);
-				} else {
-					return clazz;
-				}
-			} catch(FrankDocException e) {
-				log.error("Failed to search for class with name {}", typeName, e);
-				return new FrankNonCompiledClassDoclet(typeName);
+	private FrankType typeOf(TypeMirror docletType) {
+		if (docletType instanceof PrimitiveType || docletType instanceof Type.JCVoidType) {
+			return new FrankPrimitiveType(docletType.toString());
+		}
+
+		String fullNameWithoutTypeInfo = docletType.toString();
+
+		// Fix situation where the type is a generic type, e.g. FrankClass<String> var.
+		if (docletType instanceof Type.ClassType) {
+			fullNameWithoutTypeInfo = ((Type.ClassType) docletType).tsym.toString();
+		}
+		// Fix situation where the type is an array of generic type, e.g. FrankClass<?>[] vars.
+		if (docletType instanceof Type.ArrayType) {
+			fullNameWithoutTypeInfo = ((Type.ArrayType) docletType).elemtype.tsym.toString();
+		}
+		if (fullNameWithoutTypeInfo.contains("<")) {
+			log.error("Still found type with Generic information in type at: {}; {}. Please fix this inside FrankDocDoclet.", fullNameWithoutTypeInfo, getName());
+		}
+		try {
+			FrankClass clazz = getDeclaringClass().getRepository().findClass(fullNameWithoutTypeInfo);
+			if (clazz == null) {
+				return getDeclaringClass().getRepository().findOrCreateNonCompiledClass(fullNameWithoutTypeInfo);
+			} else {
+				return clazz;
 			}
+		} catch (FrankDocException e) {
+			log.error("Failed to search for class with name {}", fullNameWithoutTypeInfo, e);
+			return getDeclaringClass().getRepository().findOrCreateNonCompiledClass(fullNameWithoutTypeInfo);
 		}
 	}
 
 	@Override
 	public int getParameterCount() {
-		return method.parameters().length;
+		return method.getParameters().size();
 	}
 
 	@Override
@@ -118,10 +132,10 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 
 	@Override
 	public FrankType[] getParameterTypes() {
-		Parameter[] parametersDoclet = method.parameters();
+		VariableElement[] parametersDoclet = method.getParameters().toArray(new VariableElement[]{});
 		FrankType[] result = new FrankType[parametersDoclet.length];
-		for(int i = 0; i < parametersDoclet.length; ++i) {
-			result[i] = typeOf(parametersDoclet[i].type());
+		for (int i = 0; i < parametersDoclet.length; ++i) {
+			result[i] = typeOf(parametersDoclet[i].asType());
 		}
 		return result;
 	}
@@ -130,29 +144,24 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 	public String getSignature() {
 		List<String> components = new ArrayList<>();
 		components.add(getName());
-		for(FrankType type: getParameterTypes()) {
+		for (FrankType type : getParameterTypes()) {
 			components.add(type.getName());
 		}
-		return components.stream().collect(Collectors.joining(", "));
+		return String.join(", ", components);
 	}
 
-	void removeOverriddenFrom(Map<MethodDoc, FrankMethod> methodRepository) {
-		MethodDoc toRemove = method.overriddenMethod();
+	void removeOverriddenFrom(Map<ExecutableElement, FrankMethod> methodRepository) {
+		ExecutableElement toRemove = getOverriddenExecutableElement();
 		methodRepository.remove(toRemove);
 	}
 
-	void addToRepository(Map<MethodDoc, FrankMethod> methodRepository) {
+	void addToRepository(Map<ExecutableElement, FrankMethod> methodRepository) {
 		methodRepository.put(method, this);
 	}
 
 	@Override
 	public String getJavaDocTag(String tagName) {
-		Tag[] tags = method.tags(tagName);
-		if((tags == null) || (tags.length == 0)) {
-			return null;
-		}
-		// The Doclet API trims the value.
-		return tags[0].text();
+		return FrankDocletUtils.getJavaDocTag(docCommentTree, tagName);
 	}
 
 	@Override
@@ -161,7 +170,29 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 	}
 
 	@Override
-	MethodDoc getOverriddenMethodDoc() {
-		return method.overriddenMethod();
+	ExecutableElement getOverriddenExecutableElement() {
+		TypeElement declaringClassElement = (TypeElement) method.getEnclosingElement();
+		Element overriddenMethodElement = checkSuperclassForOverriddenMethod(declaringClassElement);
+		return (ExecutableElement) overriddenMethodElement;
+	}
+
+	private Element checkSuperclassForOverriddenMethod(TypeElement declaringClassElement) {
+		if (declaringClassElement == null) {
+			return null;
+		}
+		TypeElement superClazz = FrankDocletUtils.getSuperclassElement(declaringClassElement);
+		if (superClazz == null) {
+			return null;
+		}
+		Element overriddenMethodElement = superClazz.getEnclosedElements().stream()
+			.filter(element -> element.getKind().equals(ElementKind.METHOD))
+			.filter(element -> element.toString().equals(method.toString())) // Need to use .toString to get the full method name including parameters
+			.findFirst()
+			.orElse(null);
+		if (overriddenMethodElement != null)
+			return overriddenMethodElement;
+
+		// When not found yet, check the superclass of the superclass
+		return checkSuperclassForOverriddenMethod(superClazz);
 	}
 }

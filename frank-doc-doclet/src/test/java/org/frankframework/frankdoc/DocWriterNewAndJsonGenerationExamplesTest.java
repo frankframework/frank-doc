@@ -1,29 +1,23 @@
-/* 
-Copyright 2021 WeAreFrank! 
+/*
+Copyright 2021 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 package org.frankframework.frankdoc;
 
-import static org.junit.Assume.assumeNotNull;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collection;
-
-import javax.json.JsonObject;
-
+import org.frankframework.frankdoc.model.FrankDocModel;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,9 +25,11 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.frankframework.frankdoc.model.FrankDocModel;
+import javax.json.JsonObject;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Collection;
 
 @RunWith(Parameterized.class)
 public class DocWriterNewAndJsonGenerationExamplesTest {
@@ -94,7 +90,9 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.reintroduce.Master", "reintroduce.xsd", "reintroduce.json"},
 			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.reintroduce.Master", "reintroduceCompatibility.xsd", null},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.labels.Master", null, "labels.json"},
-			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.exclude.from.type.Master", "excludeFromType.xsd", "excludeFromType.json"}
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.exclude.from.type.Master", "excludeFromType.xsd", "excludeFromType.json"},
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.packageprivate.override.Child", "child.xsd", null},
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.featurepackage.Documented", "documented.xsd", "documented.json"}
 		});
 	}
 
@@ -126,7 +124,10 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 
 	@Test
 	public void testXsd() throws Exception {
-		assumeNotNull(expectedXsdFileName);
+		// Skip testing when filename is defined as null
+		if (expectedXsdFileName == null) {
+			return;
+		}
 		FrankDocModel model = createModel();
 		DocWriterNew docWriter = new DocWriterNew(model, attributeTypeStrategy, "1.2.3-SNAPSHOT");
 		docWriter.init(startClassName, xsdVersion);
@@ -142,7 +143,7 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 		return FrankDocModel.populate(getDigesterRulesURL(digesterRulesFileName), startClassName, classRepository);
 	}
 
-	// It would be nice to put this information in the test case table, method data(). That table is quite wide however.
+	// It would be nice to put this information in the test case table, method data(). That table is quite wide, however.
 	// Adding data there would make the table harder to read.
 	private String[] getAllRequiredPackages(String originalPackage) {
 		if(originalPackage.equals("org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first")) {
@@ -158,7 +159,10 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 
 	@Test
 	public void testJson() throws Exception {
-		assumeNotNull(expectedJsonFileName);
+		// Skip JSON testing when filename is defined as null
+		if (expectedJsonFileName == null) {
+			return;
+		}
 		FrankDocModel model = createModel();
 		FrankDocJsonFactory jsonFactory = new FrankDocJsonFactory(model, "1.2.3-SNAPSHOT");
 		JsonObject jsonObject = jsonFactory.getJson();

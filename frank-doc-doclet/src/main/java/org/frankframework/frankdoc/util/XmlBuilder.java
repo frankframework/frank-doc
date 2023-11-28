@@ -15,8 +15,6 @@
  */
 package org.frankframework.frankdoc.util;
 
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Attribute;
@@ -27,6 +25,8 @@ import org.jdom2.Namespace;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import java.util.List;
+
 /**
  * Builds a XML-element with attributes and sub-elements. Attributes can be
  * added with the addAttribute method, the content can be set with the setValue
@@ -35,13 +35,13 @@ import org.jdom2.output.XMLOutputter;
  * <p/>
  * Before February 2018 this class was deprecated. From then it uses the JDOM
  * standard solution.
- * 
+ *
  * @author Johan Verrips
  * @author Peter Leeuwenburgh
  **/
 public class XmlBuilder {
 	static Logger log = LogUtil.getLogger(XmlBuilder.class);
-	
+
 	private final String CDATA_END="]]>";
 
 	private Element element;

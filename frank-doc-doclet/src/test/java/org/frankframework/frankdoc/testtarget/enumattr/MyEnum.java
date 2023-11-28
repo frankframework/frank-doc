@@ -7,7 +7,7 @@ public enum MyEnum {
 	// not alphabetically, when put into the model.
 	TWO,
 
-	/** Description of customLabelOne */ @EnumLabel("customLabelOne")
+	/** Description of customLabelOne <code>MrBean</code>. */ @EnumLabel("customLabelOne")
 	ONE,
 
 	THREE;

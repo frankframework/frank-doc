@@ -1,16 +1,16 @@
 package org.frankframework.frankdoc.model;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class FrankElementChildAndAncestorSelectionTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.children.ancestors.";

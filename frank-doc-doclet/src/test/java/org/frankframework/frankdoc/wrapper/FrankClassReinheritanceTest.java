@@ -1,13 +1,13 @@
 package org.frankframework.frankdoc.wrapper;
 
-import static org.junit.Assert.assertArrayEquals;
+import org.junit.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Test;
+import static org.junit.Assert.assertArrayEquals;
 
-public class FrankClassDocletReinheritanceTest {
+public class FrankClassReinheritanceTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.wrapper.reinherit.";
 	private static final String SUBJECT = PACKAGE + "Subject";
 
@@ -15,7 +15,7 @@ public class FrankClassDocletReinheritanceTest {
 	public void testReInheritedMethods() throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		FrankClass subject = repository.findClass(SUBJECT);
-		List<MultiplyInheritedMethodPlaceholder> actualPlaceholders = ((FrankClassDoclet) subject).getMultiplyInheritedMethodPlaceholders();
+		List<MultiplyInheritedMethodPlaceholder> actualPlaceholders = subject.getMultiplyInheritedMethodPlaceholders();
 		List<String> actual = actualPlaceholders.stream().map(FrankMethod::getName).sorted().collect(Collectors.toList());
 		assertArrayEquals(new String[] { "reInherited1", "reInherited2", "reInherited3", "reInherited4" }, actual.toArray(new String[] {}));
 	}

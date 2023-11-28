@@ -1,19 +1,32 @@
-/* 
-Copyright 2021 WeAreFrank! 
+/*
+Copyright 2021 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 package org.frankframework.frankdoc.model;
+
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
+import org.frankframework.frankdoc.wrapper.TestUtil;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.frankframework.frankdoc.model.ElementChild.ALL_NOT_EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.IN_XSD;
@@ -24,19 +37,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public class FrankDocModelTest {
 	private static final String SIMPLE = "org.frankframework.frankdoc.testtarget.simple";
@@ -75,7 +75,7 @@ public class FrankDocModelTest {
 	public void whenSingletonTypeAndInterfaceTypeThenCorrectElements() throws FrankDocException {
 		ElementType childType = instance.findOrCreateElementType(classRepository.findClass(SIMPLE_CHILD));
 		ElementType listenerType = instance.findOrCreateElementType(classRepository.findClass(LISTENER));
-		checkModelTypes(listenerType, childType);		
+		checkModelTypes(listenerType, childType);
 	}
 
 	private void checkModelTypes(ElementType actualListener, ElementType actualChild) {
@@ -226,7 +226,7 @@ public class FrankDocModelTest {
 	private Map<String, FrankAttribute> getAttributesOfClass(final String className) throws FrankDocException {
 		attributeOwner = instance.findOrCreateFrankElement(className);
 		final List<FrankAttribute> attributes = instance.createAttributes(classRepository.findClass(className), attributeOwner, classRepository);
-		return attributes.stream().collect(Collectors.toMap(att -> att.getName(), att -> att));		
+		return attributes.stream().collect(Collectors.toMap(att -> att.getName(), att -> att));
 	}
 
 	@Test
@@ -245,12 +245,12 @@ public class FrankDocModelTest {
 	 * to do with method {@link org.frankframework.frankdoc.Utils#isAttributeGetterOrSetter(FrankMethod)}.
 	 * That method filters method using {@link org.frankframework.frankdoc.wrapper.FrankMethod#isVarargs()}.
 	 * That filter is only needed when a varargs String argument appears as a String argument type.
-	 * This might be the case for ClassDoc but not for Java reflection. With reflection, a
+	 * This might be the case for TypeElement but not for Java reflection. With reflection, a
 	 * varargs String appears as type String[].
 	 * <p>
 	 * Probably, vararg strings arguments only appear as simple String arguments for ClassDoc-s
-	 * if a doclet does not set the languageVersion to JAVA_1_5. There was no need to investigate
-	 * further, because the JAVA_1_5 language version is now set, see {@link org.frankframework.frankdoc.doclet.DocletBuilder#languageVersion()}.
+	 * if a doclet does not set the SourceVersion to JAVA_1_5. There was no need to investigate
+	 * further, because the JAVA_1_5 language version is now set, see {@link org.frankframework.frankdoc.doclet.DocletBuilder#SourceVersion()}.
 	 * Furthermore, filtering with isVarargs() certainly does no harm.
 	 * @throws FrankDocException
 	 */
@@ -299,7 +299,7 @@ public class FrankDocModelTest {
 		Map<String, FrankAttribute> actual = getReflectInvestigatedFrankAttributes();
 		assertFalse(actual.containsKey(attributeName));
 	}
-	
+
 	@Test
 	public void whenMethodsHaveWrongTypeThenNoAttribute() throws FrankDocException {
 		checkReflectAttributeOmitted("noAttributeComplexType");
@@ -414,7 +414,7 @@ public class FrankDocModelTest {
 		assertTrue(actual.isDocumented());
 		assertEquals("My default value", actual.getDefaultValue());
 	}
-	
+
 	@Test
 	public void whenAttributeHasInheritedJavaDocThenNotDocumentedButDescription() throws Exception {
 		FrankAttribute actual = checkReflectAttributeCreated("attributeWithInheritedJavaDoc");
@@ -476,7 +476,7 @@ public class FrankDocModelTest {
 	public void testReferredJavaDocDefaultAppearsInFrankAttribute() throws FrankDocException {
 		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("ibisDocRefRefersJavaDocDefault");
 		assertTrue(actual.isDocumented());
-		assertEquals("setIbisDocRefRefersJavaDocDefault default value", actual.getDefaultValue());		
+		assertEquals("setIbisDocRefRefersJavaDocDefault default value", actual.getDefaultValue());
 	}
 
 	@Test
@@ -526,7 +526,7 @@ public class FrankDocModelTest {
 		assertTrue(actual.isDocumented());
 		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());
 		assertSame(attributeOwner, actual.getOwningElement());
-		assertEquals("Description testing reference to parameterized class.", actual.getDescription());		
+		assertEquals("Description testing reference to parameterized class.", actual.getDescription());
 	}
 
 	@Test

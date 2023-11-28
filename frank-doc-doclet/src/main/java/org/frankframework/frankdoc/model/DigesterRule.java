@@ -15,14 +15,13 @@
 */
 package org.frankframework.frankdoc.model;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Java representation of a digester rule specified in the digester-rules.xml file.
- * 
+ *
  * Copied from package nl.nn.adapterframework.configuration.digester.
  *
  */
@@ -40,7 +39,7 @@ public class DigesterRule {
 
 	/**
 	 * The 'factory-create-rule' attribute.
-	 * When non specified it uses the GenericFactory. When specified as 
+	 * When non specified it uses the GenericFactory. When specified as
 	 * NULL-String it does not use a factory.
 	 */
 	private @Getter @Setter String factory;

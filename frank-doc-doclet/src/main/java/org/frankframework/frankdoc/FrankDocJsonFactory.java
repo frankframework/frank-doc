@@ -1,44 +1,29 @@
-/* 
-Copyright 2021, 2022 WeAreFrank! 
+/*
+Copyright 2021, 2022 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonException;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.AttributeEnum;
-import org.frankframework.frankdoc.model.EnumValue;
 import org.frankframework.frankdoc.model.AttributeType;
 import org.frankframework.frankdoc.model.ConfigChild;
 import org.frankframework.frankdoc.model.ElementChild;
 import org.frankframework.frankdoc.model.ElementType;
+import org.frankframework.frankdoc.model.EnumValue;
 import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.model.FrankDocGroup;
 import org.frankframework.frankdoc.model.FrankDocModel;
@@ -48,6 +33,20 @@ import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.ParsedJavaDocTag;
 import org.frankframework.frankdoc.util.LogUtil;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonException;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FrankDocJsonFactory {
 	private static Logger log = LogUtil.getLogger(FrankDocJsonFactory.class);
@@ -132,7 +131,7 @@ public class FrankDocJsonFactory {
 		JsonArrayBuilder members = bf.createArrayBuilder();
 		members.add(Constants.MODULE_ELEMENT_NAME);
 		result.add("members", members);
-		return result.build();		
+		return result.build();
 	}
 
 	private JsonObject getType(ElementType elementType) {
@@ -395,7 +394,7 @@ public class FrankDocJsonFactory {
 			}
 			result.add(valueBuilder.build());
 		}
-		return result.build();	
+		return result.build();
 	}
 
 	// We omit the "labels" element if there are no labels. This

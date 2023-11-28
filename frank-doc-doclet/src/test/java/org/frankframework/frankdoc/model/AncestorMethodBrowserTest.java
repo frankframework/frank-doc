@@ -1,17 +1,17 @@
 package org.frankframework.frankdoc.model;
 
-import static org.junit.Assert.assertArrayEquals;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertArrayEquals;
 
 public class AncestorMethodBrowserTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.browse.ancestor.methods.";

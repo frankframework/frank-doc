@@ -1,20 +1,28 @@
-/* 
-Copyright 2020, 2021 WeAreFrank! 
+/*
+Copyright 2020, 2021 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc.model;
+
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.util.LogUtil;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -25,20 +33,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.Logger;
-
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.util.LogUtil;
-
 public class ElementRole implements Comparable<ElementRole> {
 	private static Logger log = LogUtil.getLogger(ElementRole.class);
 
 	private static final Comparator<ElementRole> COMPARATOR =
-			Comparator.comparing(ElementRole::getRoleName).thenComparing(role -> role.getElementType().getFullName());
+		Comparator.comparing(ElementRole::getRoleName).thenComparing(role -> role.getElementType().getFullName());
 
 	private final @Getter ElementType elementType;
 	private final @Getter String roleName;
@@ -93,19 +92,19 @@ public class ElementRole implements Comparable<ElementRole> {
 	/**
 	 * Can only be called after all {@link ConfigChild},
 	 * {@link ElementRole}, {@link ElementType}
-	 *  and {@link FrankElement} have been created.
+	 * and {@link FrankElement} have been created.
 	 */
 	void initConflicts() {
 		nameConflicts = new HashSet<>();
 		Map<String, List<FrankElement>> membersByXsdName = elementType.getMembers().stream()
-				.collect(Collectors.groupingBy(el -> el.getXsdElementName(this)));
+			.collect(Collectors.groupingBy(el -> el.getXsdElementName(this)));
 		Set<String> conflictNames = membersByXsdName.keySet().stream()
-				.filter(name -> membersByXsdName.get(name).size() >= 2)
-				.collect(Collectors.toSet());
-		for(String name: conflictNames) {
+			.filter(name -> membersByXsdName.get(name).size() >= 2)
+			.collect(Collectors.toSet());
+		for (String name : conflictNames) {
 			Map<Boolean, List<FrankElement>> conflictingElementsByDeprecated = membersByXsdName.get(name).stream()
-					.collect(Collectors.groupingBy(FrankElement::isDeprecated));
-			if(conflictingElementsByDeprecated.get(false).size() != 1) {
+				.collect(Collectors.groupingBy(FrankElement::isDeprecated));
+			if (conflictingElementsByDeprecated.get(false).size() != 1) {
 				log.error("Cannot resolve XML name conflict for non-deprecated FrankElement-s [{}]", () -> FrankElement.describe(conflictingElementsByDeprecated.get(false)));
 				nameConflicts.addAll(membersByXsdName.get(name));
 			} else {
@@ -114,12 +113,12 @@ public class ElementRole implements Comparable<ElementRole> {
 			}
 		}
 		List<FrankElement> defaultOptionConflictCandidates = membersByXsdName.get(getGenericOptionElementName());
-		if(defaultOptionConflictCandidates != null) {
+		if (defaultOptionConflictCandidates != null) {
 			Set<FrankElement> asSet = new HashSet<>(defaultOptionConflictCandidates);
 			asSet.removeAll(nameConflicts);
-			if(asSet.size() == 1) {
+			if (asSet.size() == 1) {
 				defaultElementOptionConflict = asSet.iterator().next();
-			} else if(asSet.size() >= 2) {
+			} else if (asSet.size() >= 2) {
 				throw new IllegalArgumentException("Programming error. Something went wrong resolving name conflicts, please debug");
 			}
 		}
@@ -131,18 +130,18 @@ public class ElementRole implements Comparable<ElementRole> {
 
 	List<FrankElement> getRawMembers() {
 		try {
-		return elementType.getMembers().stream()
-				.filter(el -> ! nameConflicts.contains(el))
+			return elementType.getMembers().stream()
+				.filter(el -> !nameConflicts.contains(el))
 				.collect(Collectors.toList());
-		} catch(Exception e) {
-			throw(e);
+		} catch (Exception e) {
+			throw (e);
 		}
 	}
 
 	public List<FrankElement> getMembers() {
 		return getRawMembers().stream()
-				.filter(frankElement -> noConflictingRoleSet(frankElement))
-				.collect(Collectors.toList());
+			.filter(this::noConflictingRoleSet)
+			.collect(Collectors.toList());
 	}
 
 	private boolean noConflictingRoleSet(FrankElement frankElement) {
@@ -158,7 +157,7 @@ public class ElementRole implements Comparable<ElementRole> {
 	}
 
 	private String disambiguation() {
-		if(roleNameSeq == 1) {
+		if (roleNameSeq == 1) {
 			return "";
 		} else {
 			return "_" + roleNameSeq;
@@ -179,7 +178,7 @@ public class ElementRole implements Comparable<ElementRole> {
 	 * interface inheritance.
 	 */
 	public static List<ElementRole> promoteIfConflict(List<ElementRole> roles) {
-		if(roles.size() == 1) {
+		if (roles.size() == 1) {
 			return roles;
 		} else {
 			return roles.stream().map(ElementRole::getHighestCommonInterface).distinct().collect(Collectors.toList());
@@ -229,11 +228,11 @@ public class ElementRole implements Comparable<ElementRole> {
 
 		@Override
 		public String toString() {
-			return "(" + elementTypeSimpleName + ", " + roleName + ")"; 
+			return "(" + elementTypeSimpleName + ", " + roleName + ")";
 		}
 
 		public static String describeCollection(Collection<ElementRole.Key> keys) {
-			return keys.stream().map(key -> key.toString()).collect(Collectors.joining(", "));
+			return keys.stream().map(Key::toString).collect(Collectors.joining(", "));
 		}
 	}
 }

@@ -1,32 +1,23 @@
-/* 
-Copyright 2021 WeAreFrank! 
+/*
+Copyright 2021 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 package org.frankframework.frankdoc.model;
 
-import static java.util.Arrays.asList;
-import static org.frankframework.frankdoc.model.ElementChild.ALL_NOT_EXCLUDED;
-import static org.frankframework.frankdoc.model.ElementChild.REJECT_DEPRECATED;
-import static org.frankframework.frankdoc.model.ElementChild.IN_XSD;
-import static org.frankframework.frankdoc.model.ElementChild.EXCLUDED;
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Predicate;
-
+import lombok.EqualsAndHashCode;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,9 +25,17 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import lombok.EqualsAndHashCode;
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.TestUtil;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Predicate;
+
+import static java.util.Arrays.asList;
+import static org.frankframework.frankdoc.model.ElementChild.ALL_NOT_EXCLUDED;
+import static org.frankframework.frankdoc.model.ElementChild.EXCLUDED;
+import static org.frankframework.frankdoc.model.ElementChild.IN_XSD;
+import static org.frankframework.frankdoc.model.ElementChild.REJECT_DEPRECATED;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
 public class NavigationTest {
@@ -74,7 +73,7 @@ public class NavigationTest {
 		});
 	}
 
-	private static enum RefKind {
+	private enum RefKind {
 		CHILD,
 		CHILD_TOP_LEVEL,
 		DECLARED,
@@ -93,7 +92,7 @@ public class NavigationTest {
 
 		@Override
 		public String toString() {
-			return "(" + kind.toString() + ", " + name + ")"; 
+			return "(" + kind.toString() + ", " + name + ")";
 		}
 	}
 
@@ -146,7 +145,7 @@ public class NavigationTest {
 			public void handleCumulativeChildrenOf(FrankElement frankElement) {
 				actual.add(ref(RefKind.CUMULATIVE, frankElement.getSimpleName()));
 			}
-			
+
 		}, childSelector, childRejector);
 		assertEquals(expectedRefs, actual);
 	}

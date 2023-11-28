@@ -1,22 +1,13 @@
 package org.frankframework.frankdoc;
 
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexType;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addElementWithType;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.getXmlSchema;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Arrays;
-import java.util.Collection;
-
-import javax.xml.XMLConstants;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-
+import org.frankframework.frankdoc.model.AttributeEnum;
+import org.frankframework.frankdoc.model.AttributeType;
+import org.frankframework.frankdoc.model.ElementChild;
+import org.frankframework.frankdoc.model.FrankAttribute;
+import org.frankframework.frankdoc.model.FrankDocModel;
+import org.frankframework.frankdoc.util.XmlBuilder;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,14 +17,21 @@ import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.frankframework.frankdoc.model.AttributeEnum;
-import org.frankframework.frankdoc.model.AttributeType;
-import org.frankframework.frankdoc.model.ElementChild;
-import org.frankframework.frankdoc.model.FrankAttribute;
-import org.frankframework.frankdoc.model.FrankDocModel;
-import org.frankframework.frankdoc.util.XmlBuilder;
+import javax.xml.XMLConstants;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Arrays;
+import java.util.Collection;
+
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexType;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addElementWithType;
+import static org.frankframework.frankdoc.DocWriterNewXmlUtils.getXmlSchema;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(Parameterized.class)
 public class AttributeTypeStrategyTest {

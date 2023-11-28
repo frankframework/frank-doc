@@ -1,41 +1,40 @@
-/* 
-Copyright 2020, 2021, 2022 WeAreFrank! 
+/*
+Copyright 2020, 2021, 2022 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc.model;
 
-import java.util.EnumSet;
-
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankType;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.EnumSet;
 
 public class FrankAttribute extends ElementChild {
-	private static Logger log = LogUtil.getLogger(FrankAttribute.class);
+	private static final Logger log = LogUtil.getLogger(FrankAttribute.class);
 
 	static final String JAVADOC_ATTRIBUTE_REF = "@ff.ref";
 
 	@EqualsAndHashCode(callSuper = false)
 	static class Key extends AbstractKey {
-		private String name;
+		private final String name;
 
 		Key(String name) {
 			this.name = name;
@@ -47,7 +46,7 @@ public class FrankAttribute extends ElementChild {
 		}
 	}
 
-	private @Getter String name;
+	private final @Getter String name;
 
 	private @Getter @Setter AttributeType attributeType;
 
@@ -89,7 +88,7 @@ public class FrankAttribute extends ElementChild {
 			return;
 		}
 		if(isExplicitNull) {
-			log.trace("Attribute [{}] has explicit default value [{}], clearing the default value", () -> toString(), () -> getDefaultValue());
+			log.trace("Attribute [{}] has explicit default value [{}], clearing the default value", this::toString, this::getDefaultValue);
 			clearDefaultValue();
 		}
 	}

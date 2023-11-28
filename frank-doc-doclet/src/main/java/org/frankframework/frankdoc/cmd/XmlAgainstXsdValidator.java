@@ -1,32 +1,20 @@
-/* 
-Copyright 2022 WeAreFrank! 
+/*
+Copyright 2022 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc.cmd;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
-
-import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.ValidatorHandler;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
@@ -36,10 +24,21 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
+import javax.xml.XMLConstants;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.ValidatorHandler;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
+
 public class XmlAgainstXsdValidator {
 	public static void main(String[] argv) {
 		try {
-			if((argv.length <= 0) || (argv.length >= 3)) {
+			if((argv.length == 0) || (argv.length >= 3)) {
 				printUsage();
 				System.exit(2);
 			} else {
@@ -49,7 +48,7 @@ public class XmlAgainstXsdValidator {
 			}
 		}
 		catch(Exception e) {
-			System.out.println(String.format("Failed validating XML file [%s] against XSD [%s]: ", argv[0], argv[1]));
+			System.out.printf("Failed validating XML file [%s] against XSD [%s]: %n", argv[0], argv[1]);
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -75,7 +74,7 @@ public class XmlAgainstXsdValidator {
 
 	private static ValidatorHandler getValidatorHandler(URL schemaURL) throws SAXException {
 		SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		Schema schema = sf.newSchema(schemaURL); 
+		Schema schema = sf.newSchema(schemaURL);
 		return schema.newValidatorHandler();
 	}
 

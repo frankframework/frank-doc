@@ -15,15 +15,14 @@
 */
 package nl.nn.adapterframework.doc;
 
-import static java.lang.annotation.ElementType.TYPE;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.TYPE;
 
 @Target(TYPE)
 @Label(name="Category")
 @Documented
 public @interface Category {
-	// TODO: The original annotation has @LabelValue - Martijn thinks we can do without
-	public String value();
+	@LabelValue String value();
 }

@@ -1,5 +1,5 @@
 package org.frankframework.frankdoc.testtarget.doclet.interfaces;
 
-public interface FirstChildOfCommonParent extends ParentOfTwoChildren {
+public interface FirstChildOfCommonParent<M> extends ParentOfTwoChildren {
 
 }
