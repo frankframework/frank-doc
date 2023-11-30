@@ -141,12 +141,6 @@
                     "name":"&lt;defined-by-sender&gt;",
                     "description":"any forward, as returned by name by {@link ISender sender}"
                 }
-            ],
-            "labels":[
-                {
-                    "label":"SupportsOutputStreaming",
-                    "value":"true"
-                }
             ]
         },
         {
@@ -177,12 +171,6 @@
             "label":"Category",
             "values":[
                 "Basic"
-            ]
-        },
-        {
-            "label":"SupportsOutputStreaming",
-            "values":[
-                "true"
             ]
         }
     ]

@@ -1,7 +1,5 @@
 package org.frankframework.frankdoc.testtarget.featurepackage;
 
-import nl.nn.adapterframework.doc.SupportsOutputStreaming;
-
 /**
  * Sends a message using a {@link ISender sender} and optionally receives a reply from the same sender, or
  * from a {@link ICorrelatedPullingListener listener}.
@@ -20,7 +18,6 @@ import nl.nn.adapterframework.doc.SupportsOutputStreaming;
  *
  * @author  Gerrit van Brakel
  */
-@SupportsOutputStreaming
 public class DocumentedParent implements HasSender {
 
 	private String destinationName;
