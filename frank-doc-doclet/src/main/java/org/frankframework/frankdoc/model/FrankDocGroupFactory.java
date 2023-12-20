@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 class FrankDocGroupFactory {
-	static final String JAVADOC_GROUP_ANNOTATION = "nl.nn.adapterframework.doc.FrankDocGroup";
+	static final String JAVADOC_GROUP_ANNOTATION = "org.frankframework.doc.FrankDocGroup";
 
 	private static Logger log = LogUtil.getLogger(FrankDocGroupFactory.class);
 

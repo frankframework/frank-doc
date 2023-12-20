@@ -28,7 +28,7 @@ import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 public class EnumValue {
 	private static Logger log = LogUtil.getLogger(EnumValue.class);
 
-	private static final String ENUM_LABEL = "nl.nn.adapterframework.doc.EnumLabel";
+	private static final String ENUM_LABEL = "org.frankframework.doc.EnumLabel";
 
 	private @Getter boolean explicitLabel = false;
 	private @Getter String javaTag;

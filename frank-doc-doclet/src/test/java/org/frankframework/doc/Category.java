@@ -1,5 +1,5 @@
 /*
-   Copyright 2021 WeAreFrank!
+   Copyright 2022 WeAreFrank!
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,21 +13,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package nl.nn.adapterframework.doc;
+package org.frankframework.doc;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * Copied from IAF project.
- * 
- * @author Jaco de Groot
- */
+import static java.lang.annotation.ElementType.TYPE;
+
+@Target(TYPE)
+@Label(name="Category")
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
-public @interface IbisDoc {
-
-	String[] value();
-
+public @interface Category {
+	@LabelValue String value();
 }

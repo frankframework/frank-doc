@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.examples.exclude;
 
-import nl.nn.adapterframework.doc.Protected;
+import org.frankframework.doc.Protected;
 
 // It is important that this class does not have shown attributes.
 // It only has excluded attributes. We want to test that GroupCreator

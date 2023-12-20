@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.enumattr;
 
-import nl.nn.adapterframework.doc.EnumLabel;
+import org.frankframework.doc.EnumLabel;
 
 public enum MyEnum {
 	// These values are not sorted alphabetically. With these values we test that the values are ordered by occurrence,

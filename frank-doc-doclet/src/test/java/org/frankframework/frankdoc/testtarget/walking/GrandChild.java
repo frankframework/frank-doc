@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.walking;
 
-import nl.nn.adapterframework.doc.IbisDoc;
+import org.frankframework.doc.IbisDoc;
 
 public class GrandChild extends Child {
 	@IbisDoc("Some description")

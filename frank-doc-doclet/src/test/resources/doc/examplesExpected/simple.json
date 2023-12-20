@@ -58,7 +58,7 @@
     {
       "name": "DescribedPossibleIChild",
       "fullName": "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
-      "description": "This is the header of the JavaDoc of \\\"DescribedPossibleIChild\\\".\n \n And this is remaining documentation of \\\"DescribedPossibleIChild\\\".",
+      "description": "This is the header of the JavaDoc of \\\"DescribedPossibleIChild\\\".\n\n And this is remaining documentation of \\\"DescribedPossibleIChild\\\".",
       "elementNames": ["DescribedPossibleIRoleNameIChild"],
       "attributes": [
         {

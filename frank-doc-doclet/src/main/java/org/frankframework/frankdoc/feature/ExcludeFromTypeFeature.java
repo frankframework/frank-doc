@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public final class ExcludeFromTypeFeature {
 	private static Logger log = LogUtil.getLogger(ExcludeFromTypeFeature.class);
-	private static final String ANNOTATION_NAME = "nl.nn.adapterframework.doc.ExcludeFromType";
+	private static final String ANNOTATION_NAME = "org.frankframework.doc.ExcludeFromType";
 	private static final String TAG_NAME = "@ff.excludeFromType";
 
 	// In practice, this map will have only one member because we work with only one class repository.

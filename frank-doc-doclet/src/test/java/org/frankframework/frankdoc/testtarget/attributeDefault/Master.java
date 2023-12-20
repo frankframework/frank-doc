@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.attributeDefault;
 
-import nl.nn.adapterframework.doc.IbisDoc;
+import org.frankframework.doc.IbisDoc;
 
 public class Master {
 	// No default, because "null"

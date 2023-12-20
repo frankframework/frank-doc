@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.examples.labels;
 
-import nl.nn.adapterframework.doc.EnumLabel;
+import org.frankframework.doc.EnumLabel;
 
 public enum MyEnum {
 	@EnumLabel("first")

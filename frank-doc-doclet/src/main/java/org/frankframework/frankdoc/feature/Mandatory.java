@@ -30,7 +30,7 @@ public class Mandatory {
 	}
 
 	private static final String TAG_NAME = "@ff.mandatory";
-	private static final String ANNOTATION_NAME = "nl.nn.adapterframework.doc.Mandatory";
+	private static final String ANNOTATION_NAME = "org.frankframework.doc.Mandatory";
 
 	private static final String IGNORE_COMPATIBILITY_MODE = "ignoreInCompatibilityMode";
 

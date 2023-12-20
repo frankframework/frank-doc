@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.featurepackage;
 
-import nl.nn.adapterframework.doc.Mandatory;
+import org.frankframework.doc.Mandatory;
 
 public class ForMandatory {
 	public void notMandatory() {

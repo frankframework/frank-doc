@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.featurepackage;
 
-import nl.nn.adapterframework.doc.IbisDocRef;
+import org.frankframework.doc.IbisDocRef;
 
 public class Child extends Parent {
 	@Override

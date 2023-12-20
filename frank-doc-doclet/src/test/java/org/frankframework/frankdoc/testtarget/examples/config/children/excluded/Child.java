@@ -1,12 +1,12 @@
 package org.frankframework.frankdoc.testtarget.examples.config.children.excluded;
 
-import nl.nn.adapterframework.doc.Protected;
+import org.frankframework.doc.Protected;
 
 public class Child extends Parent {
 	/**
 	 * Documented, but still not a config child. @Protected is inherited.
 	 */
-	public void registerB(Item child) {		
+	public void registerB(Item child) {
 	}
 
 	// Not documented, but the Frank!Doc should see this config child.

@@ -1,5 +1,5 @@
 /*
-Copyright 2021, 2022 WeAreFrank!
+Copyright 2021 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,15 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+package org.frankframework.doc;
 
-package org.frankframework.frankdoc.wrapper;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-public class FrankDocletConstants {
-	public static final String IBISDOC = "org.frankframework.doc.IbisDoc";
-	public static final String IBISDOCREF = "org.frankframework.doc.IbisDocRef";
-	public static final String OBJECT = "java.lang.Object";
-	public static final String STRING = "java.lang.String";
-
-	private FrankDocletConstants() {
-	}
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+public @interface FrankDocGroup {
+	String name();
+	int order() default Integer.MAX_VALUE;
 }

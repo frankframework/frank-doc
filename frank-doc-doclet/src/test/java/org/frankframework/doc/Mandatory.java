@@ -13,16 +13,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package nl.nn.adapterframework.doc;
+package org.frankframework.doc;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.Target;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import static java.lang.annotation.ElementType.TYPE;
-
-@Target(TYPE)
-@Label(name="Category")
 @Documented
-public @interface Category {
-	@LabelValue String value();
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Mandatory {
+	boolean ignoreInCompatibilityMode() default false;
 }

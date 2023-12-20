@@ -1,7 +1,7 @@
 package org.frankframework.frankdoc.testtarget.reflect;
 
-import nl.nn.adapterframework.doc.IbisDoc;
-import nl.nn.adapterframework.doc.IbisDocRef;
+import org.frankframework.doc.IbisDoc;
+import org.frankframework.doc.IbisDocRef;
 
 public class FrankAttributeTargetParent {
 	@IbisDoc({"1000", "This one should not count as documenting the override in FrankAttributeTarget"})

@@ -30,7 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * Parses file digester-rules.xml.
  *
- * Copied from package nl.nn.adapterframework.configuration.digester.
+ * Copied from package org.frankframework.configuration.digester.
  *
  */
 public abstract class DigesterRulesHandler extends DefaultHandler {

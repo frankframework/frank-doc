@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.featurepackage;
 
-import nl.nn.adapterframework.doc.Default;
+import org.frankframework.doc.Default;
 
 public class ExtendsDocumented extends Documented {
 

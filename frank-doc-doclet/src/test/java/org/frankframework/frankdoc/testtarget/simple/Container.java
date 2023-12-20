@@ -1,10 +1,10 @@
 package org.frankframework.frankdoc.testtarget.simple;
 
-import nl.nn.adapterframework.doc.IbisDoc;
+import org.frankframework.doc.IbisDoc;
 
 /**
  * The JavaDoc comment of class "Container".
- * 
+ *
  * This is additional text that we do not add to the XSDs or the Frank!Doc website.
  * @author martijn
  *

@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.ibisdocref;
 
-import nl.nn.adapterframework.doc.IbisDoc;
+import org.frankframework.doc.IbisDoc;
 
 public class ChildTarget extends ParentTarget {
 	@IbisDoc("Description of ibisDocRefClassNoOrderRefersIbisDocOrderDescriptionDefault")

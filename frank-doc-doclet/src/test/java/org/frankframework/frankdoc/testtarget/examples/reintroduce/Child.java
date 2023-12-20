@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.examples.reintroduce;
 
-import nl.nn.adapterframework.doc.Reintroduce;
+import org.frankframework.doc.Reintroduce;
 
 /**
  * The attribute and the config child are the same as in parent and they are not documented.

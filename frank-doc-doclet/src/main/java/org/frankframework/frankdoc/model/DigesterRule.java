@@ -22,7 +22,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 /**
  * Java representation of a digester rule specified in the digester-rules.xml file.
  *
- * Copied from package nl.nn.adapterframework.configuration.digester.
+ * Copied from package org.frankframework.configuration.digester.
  *
  */
 public class DigesterRule {

@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.reflect;
 
-import nl.nn.adapterframework.doc.IbisDoc;
+import org.frankframework.doc.IbisDoc;
 
 import java.util.List;
 

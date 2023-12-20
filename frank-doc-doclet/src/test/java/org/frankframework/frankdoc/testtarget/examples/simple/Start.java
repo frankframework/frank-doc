@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.examples.simple;
 
-import nl.nn.adapterframework.doc.EnumLabel;
+import org.frankframework.doc.EnumLabel;
 
 /**
  * Description of Start. Value of VARIABLE is {@value #VARIABLE}. Value of TheEnum.ENUM_CONSTANT is {@value org.frankframework.frankdoc.testtarget.examples.simple.Start.TheEnum#ENUM_CONSTANT}.

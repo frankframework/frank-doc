@@ -1,5 +1,5 @@
 /*
-   Copyright 2022 WeAreFrank!
+   Copyright 2021 WeAreFrank!
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,16 +13,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package nl.nn.adapterframework.doc;
+package org.frankframework.doc;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/**
+ * Copied from IAF project.
+ *
+ * @author Chakir el Moussaoui
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Default {
+public @interface IbisDocRef {
 
-	String value();
+	String[] value();
 
 }

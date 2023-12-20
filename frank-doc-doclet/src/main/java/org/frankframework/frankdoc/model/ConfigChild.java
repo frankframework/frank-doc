@@ -69,7 +69,7 @@ public abstract class ConfigChild extends ElementChild {
 	 * input config children are unique by the combination of role name, ElementType,
 	 * isAllowMultiple() and isMandatory().
 	 * <p>
-	 * Now consider Java class <code>nl.nn.adapterframework.senders.SenderSeries</code>. It both has methods
+	 * Now consider Java class <code>org.frankframework.senders.SenderSeries</code>. It both has methods
 	 * setSender() and registerSender(), which would cause a duplicate config child. If both would be
 	 * included, the XSDs would define multiple times that a SenderSeries can have a sender as child.
 	 * This method makes the config children unique by role name and element type, which means

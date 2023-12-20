@@ -13,14 +13,29 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package nl.nn.adapterframework.doc;
+package org.frankframework.doc;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Documented;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface LabelValue {
+import static java.lang.annotation.ElementType.TYPE;
+
+@Target(TYPE)
+@Label(name="Element Type")
+@Documented
+public @interface ElementType {
+
+	public enum ElementTypes {
+		UNKNOWN,
+		ENDPOINT,
+		VALIDATOR,
+		WRAPPER,
+		ROUTER,
+		ITERATOR,
+		SESSION,
+		ERRORHANDLING,
+		TRANSLATOR;
+	}
+
+	@LabelValue ElementTypes value();
 }

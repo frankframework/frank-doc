@@ -1,10 +1,10 @@
 package org.frankframework.frankdoc.testtarget.examples.config.children.excluded;
 
-import nl.nn.adapterframework.doc.Protected;
+import org.frankframework.doc.Protected;
 
 public class Parent implements IInterface {
 	@Protected
-	public void registerB(Item child) {		
+	public void registerB(Item child) {
 	}
 
 	public void registerC(Item child) {
