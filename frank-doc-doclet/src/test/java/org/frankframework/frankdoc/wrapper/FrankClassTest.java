@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 public class FrankClassTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.doclet.";
-	private static final String ANNOTATION_WITH_CLASS_ARRAY = "nl.nn.adapterframework.doc.ExcludeFromType";
+	private static final String ANNOTATION_WITH_CLASS_ARRAY = "org.frankframework.doc.ExcludeFromType";
 
 	private static final String EXPECTED_TYPE_ELEMENT =
 			"This is test class \"Child\". We use this comment to see how\n" +

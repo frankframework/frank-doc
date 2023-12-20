@@ -1,11 +1,11 @@
 package org.frankframework.frankdoc.testtarget.examples.simple;
 
-import nl.nn.adapterframework.doc.IbisDoc;
-import nl.nn.adapterframework.doc.Mandatory;
+import org.frankframework.doc.IbisDoc;
+import org.frankframework.doc.Mandatory;
 
 /**
  * This is the header of the JavaDoc of "DescribedPossibleIChild".
- * 
+ *
  * And this is remaining documentation of "DescribedPossibleIChild".
  * @author martijn
  *

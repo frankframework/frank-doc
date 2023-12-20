@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-package nl.nn.adapterframework.doc;
+package org.frankframework.doc;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

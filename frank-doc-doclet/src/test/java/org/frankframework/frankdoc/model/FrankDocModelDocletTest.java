@@ -13,7 +13,7 @@ public class FrankDocModelDocletTest {
 	private static final String SIMPLE = "org.frankframework.frankdoc.testtarget.simple.";
 	private static final String EXPECTED_DESCRIPTION =
 			"The JavaDoc comment of class \"Container\".\n" +
-			" \n" +
+			"\n" +
 			" This is additional text that we do not add to the XSDs or the Frank!Doc website.";
 	private static final String EXPECTED_DESCRIPTION_HEADER = "The JavaDoc comment of class \"Container\".";
 

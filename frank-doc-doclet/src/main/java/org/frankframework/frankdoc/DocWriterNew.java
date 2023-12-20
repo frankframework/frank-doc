@@ -144,7 +144,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		outputFileNames.put(XsdVersion.COMPATIBILITY, "compatibility.xsd");
 	}
 
-	private static final String CONFIGURATION = "nl.nn.adapterframework.configuration.Configuration";
+	private static final String CONFIGURATION = "org.frankframework.configuration.Configuration";
 	private static final String ELEMENT_ROLE = "elementRole";
 	private static final String CLASS_NAME = "className";
 	private static final String ELEMENT_GROUP_BASE = "ElementGroupBase";

@@ -41,7 +41,7 @@ public class FrankDocletOptions {
 	private String jsonOutputFilePath = "js/frankdoc.json";
 	private String elementSummaryPath = "txt/elementSummary.txt";
 	private URL digesterRulesUrl;
-	private String rootClass = "nl.nn.adapterframework.configuration.Configuration";
+	private String rootClass = "org.frankframework.configuration.Configuration";
 	private String frankFrameworkVersion;
 
 	private final Set<Option> options = Set.of(

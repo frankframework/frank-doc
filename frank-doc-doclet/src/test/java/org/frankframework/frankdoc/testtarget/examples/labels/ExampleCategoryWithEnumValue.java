@@ -16,7 +16,7 @@
 package org.frankframework.frankdoc.testtarget.examples.labels;
 
 
-import nl.nn.adapterframework.doc.Label;
+import org.frankframework.doc.Label;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Target;

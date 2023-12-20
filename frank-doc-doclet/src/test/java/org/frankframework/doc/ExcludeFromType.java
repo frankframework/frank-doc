@@ -1,5 +1,5 @@
 /*
-   Copyright 2022 WeAreFrank!
+   Copyright 2023 WeAreFrank!
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,13 +13,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package nl.nn.adapterframework.doc;
+package org.frankframework.doc;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.TYPE;
+
+@Target(TYPE)
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Optional {
+public @interface ExcludeFromType {
+	public Class<?>[] value(); //TODO why is this an array?
 }

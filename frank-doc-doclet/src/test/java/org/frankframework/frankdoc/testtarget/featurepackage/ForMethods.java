@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.featurepackage;
 
-import nl.nn.adapterframework.doc.Optional;
+import org.frankframework.doc.Optional;
 
 public class ForMethods {
 	@Optional

@@ -1,5 +1,5 @@
 /*
-Copyright 2021, 2022 WeAreFrank!
+Copyright 2021 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,14 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.frankframework.frankdoc.wrapper;
+package org.frankframework.doc;
 
-public class FrankDocletConstants {
-	public static final String IBISDOC = "org.frankframework.doc.IbisDoc";
-	public static final String IBISDOCREF = "org.frankframework.doc.IbisDocRef";
-	public static final String OBJECT = "java.lang.Object";
-	public static final String STRING = "java.lang.String";
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-	private FrankDocletConstants() {
-	}
+/**
+ * Represents the value when setting a {@link DocumentedEnum} field, opposed to using the enumeration field it self.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface EnumLabel {
+	String value();
 }

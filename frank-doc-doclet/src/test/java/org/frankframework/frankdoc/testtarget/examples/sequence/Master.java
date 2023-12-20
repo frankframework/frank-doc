@@ -1,11 +1,11 @@
 package org.frankframework.frankdoc.testtarget.examples.sequence;
 
-import nl.nn.adapterframework.doc.IbisDoc;
+import org.frankframework.doc.IbisDoc;
 
 /**
  * We test here that the sequence of groups, config children and attributes is right.
  * It is important that the sequences in @IbisDoc annotations, in the alphabetic order
- * and in the order of appearance are all different. 
+ * and in the order of appearance are all different.
  */
 public class Master {
 	@IbisDoc("20")

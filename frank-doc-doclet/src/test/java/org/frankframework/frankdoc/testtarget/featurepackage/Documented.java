@@ -1,9 +1,9 @@
 package org.frankframework.frankdoc.testtarget.featurepackage;
 
-import nl.nn.adapterframework.doc.Category;
-import nl.nn.adapterframework.doc.Default;
-import nl.nn.adapterframework.doc.IbisDoc;
-import nl.nn.adapterframework.doc.Reintroduce;
+import org.frankframework.doc.Category;
+import org.frankframework.doc.Default;
+import org.frankframework.doc.IbisDoc;
+import org.frankframework.doc.Reintroduce;
 import org.frankframework.frankdoc.testtarget.wrapper.variables.IMailFileSystem;
 
 

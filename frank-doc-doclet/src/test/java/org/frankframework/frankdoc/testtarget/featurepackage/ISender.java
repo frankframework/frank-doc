@@ -15,7 +15,7 @@ package org.frankframework.frankdoc.testtarget.featurepackage;
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-import nl.nn.adapterframework.doc.FrankDocGroup;
+import org.frankframework.doc.FrankDocGroup;
 
 /**
  * The <code>ISender</code> is responsible for sending a message to

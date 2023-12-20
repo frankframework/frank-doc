@@ -134,6 +134,7 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 		String actualXsd = docWriter.getSchema();
 		System.out.println(actualXsd);
 		String expectedXsd = TestUtil.getTestFile("/doc/examplesExpected/" + expectedXsdFileName);
+		System.out.println("Jacobjob: " + "/doc/examplesExpected/" + expectedXsdFileName);
 		TestUtil.assertEqualsIgnoreCRLF(expectedXsd, actualXsd);
 	}
 

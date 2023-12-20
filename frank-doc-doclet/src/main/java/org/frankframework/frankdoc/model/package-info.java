@@ -1,23 +1,23 @@
-/* 
-Copyright 2021 WeAreFrank! 
+/*
+Copyright 2021 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 /**
  * This package contains a set of model classes that is used by {@link org.frankframework.frankdoc.DocWriterNew} to generate the
  * XML configuration schema used by Frank developers. Please note that {@link org.frankframework.frankdoc.DocWriterNew} is
  * presently not used; this class is under development.
- * 
+ *
  * <h1>The model</h1>
  *
  * The following diagram introduces the Java classes of the model:
@@ -25,14 +25,14 @@ limitations under the License.
  * <img src="doc-files/FrankDocModel.jpg" width="600" alt="Image FrankDocModel.jpg can not be shown" />
  * <p>
  * Class {@link org.frankframework.frankdoc.model.FrankElement} models a Java class of the Frank!Framework that can be accessed from a
- * Frank config. An example is {@link org.frankframework.frankdoc.model.FrankElement} <code>nl.nn.adapterframework.parameters.Parameter</code>,
+ * Frank config. An example is {@link org.frankframework.frankdoc.model.FrankElement} <code>org.frankframework.parameters.Parameter</code>,
  * which you can reference in a Frank config with the tag <code>&lt;Param&gt;</code>. The modeled Java class
  * can have a superclass, which is expressed by the link named "parent".
  * <p>
  * A tag in a Frank config can contain other tags. A <code>&lt;Receiver&gt;</code> can
  * for example contain <code>&lt;DirectQuerySender&gt;</code> or
  * <code>DirectQueryErrorSender</code>. These two tags reference the same Java class, namely
- * {@code nl.nn.adapterframework.jdbc.DirectQuerySender}, but the first tag uses
+ * {@code org.frankframework.jdbc.DirectQuerySender}, but the first tag uses
  * it as a Sender while the second tag uses it as an ErrorSender. The model expresses a set
  * of allowed child tags by relating a containing {@link org.frankframework.frankdoc.model.FrankElement} to an {@link org.frankframework.frankdoc.model.ElementRole}.
  * An {@link org.frankframework.frankdoc.model.ElementRole} has a property <code>roleName</code> to express the role and references
@@ -63,7 +63,7 @@ limitations under the License.
  * Tags in Frank configs can have attributes, which are modeled by class {@link org.frankframework.frankdoc.model.FrankAttribute}.
  * Attributes have a type that is modeled by {@link org.frankframework.frankdoc.model.AttributeType} (not in diagram).
  * String attributes can have their values restricted by a Java enum type. In that case, the list of allowed values is stored in a
- * {@link org.frankframework.frankdoc.model.AttributeEnum}, which can be shared by multiple {@link org.frankframework.frankdoc.model.FrankAttribute}. 
+ * {@link org.frankframework.frankdoc.model.AttributeEnum}, which can be shared by multiple {@link org.frankframework.frankdoc.model.FrankAttribute}.
  * The tag in which the attribute occurs is modeled by its {@link org.frankframework.frankdoc.model.FrankElement}, see relation
  * "attribute of". The documentation of an attribute may appear in a Java class that differs
  * from the attribute owning Java class (the IbisDocRef Java annotation). This is expressed
@@ -83,14 +83,14 @@ limitations under the License.
  * ({@link org.frankframework.frankdoc.model.FrankElement} objects) that can be used. The {@link org.frankframework.frankdoc.model.FrankElement} objects are grouped
  * by the implemented Java interface (interface-implementing {@link org.frankframework.frankdoc.model.ElementType} objects). There
  * is an additional group "Other" for all {@link org.frankframework.frankdoc.model.FrankElement} that belong to a non-interface-based
- * {@link org.frankframework.frankdoc.model.ElementType} (e.g. <code>nl.nn.adapterframework.core.PipeForward</code>). These table-of-contents (TOC)
+ * {@link org.frankframework.frankdoc.model.ElementType} (e.g. <code>org.frankframework.core.PipeForward</code>). These table-of-contents (TOC)
  * groups are modeled by model class {@link org.frankframework.frankdoc.model.FrankDocGroup}.
  * <p>
  * Class {@link org.frankframework.frankdoc.model.FrankDocModel} holds the entire model (not shown in the diagram). Two model classes
  * have not been explained yet: {@link org.frankframework.frankdoc.model.ConfigChildSet} and
  * {@link org.frankframework.frankdoc.model.ElementRoleSet}. These have been introduced to avoid conflicts
  * in the XML schema file. These conflicts are explained in the next section.
- * 
+ *
  * <h1>Conflicts</h1>
  *
  * <h2>Element names from FrankElement</h2>
@@ -112,16 +112,16 @@ limitations under the License.
  * {@link org.frankframework.frankdoc.model.FrankElement}-s are included. These potential conflicts
  * are explained in the following subsections, with the solutions applied to prevent them. There are
  * also some other potential conflicts. These are explained as well.
- * 
+ *
  * <h2>ElementRole member conflicts</h2>
- * 
+ *
  * A Pipeline can have pipes as children, which appears in the Java code as a config child setter:
- * <code>nl.nn.adapterframework.core.PipeLine.addPipe(nl.nn.adapterframework.core.IPipe)</code>.
+ * <code>org.frankframework.core.PipeLine.addPipe(org.frankframework.core.IPipe)</code>.
  * The resulting config child has an {@link org.frankframework.frankdoc.model.ElementRole}
  * that we can express as (IPipe, pipe), IPipe representing the
  * {@link org.frankframework.frankdoc.model.ElementType} and "pipe" is the syntax 1 name.
- * The members of this element role include the following: 
- * <code>nl.nn.adapterframework.pipes.FixedResult</code> and <code>nl.nn.adapterframework.pipes.FixedResultPipe</code>.
+ * The members of this element role include the following:
+ * <code>org.frankframework.pipes.FixedResult</code> and <code>org.frankframework.pipes.FixedResultPipe</code>.
  * Method {@link org.frankframework.frankdoc.model.FrankElement#getXsdElementName(ElementRole)} gives
  * them the same name, which is <code>FixedResultPipe</code>.
  * <p>
@@ -135,7 +135,7 @@ limitations under the License.
  * but it has been deprecated to support resolving the conflict. This assumption allows us
  * to omit the deprecated {@link org.frankframework.frankdoc.model.FrankElement}-s. We
  * emit a warning in case the conflict remains unresolved.
- * 
+ *
  * <h2>The generic element option</h2>
  *
  * The XML schema files we produce are needed by the Frank!Framework to parse
@@ -146,7 +146,7 @@ limitations under the License.
  * We say that <code>&lt;Listener&gt;</code> is the generic element option of
  * <code>&lt;Receiver&gt;</code>.
  * <p>
- * Our XML schemas should specify which 
+ * Our XML schemas should specify which
  * {@link org.frankframework.frankdoc.model.FrankElement}-s are allowed as
  * children of a generic element option. These {@link org.frankframework.frankdoc.model.FrankElement}-s
  * do not have to be written out explicitly, because we can reference
@@ -160,7 +160,7 @@ limitations under the License.
  * <p>
  * In some cases, multiple {@link org.frankframework.frankdoc.model.ElementRole}-s have to
  * share a generic element option. The example is
- * <code>nl.nn.adapterframework.batch.StreamTransformerPipe</code>. It has
+ * <code>org.frankframework.batch.StreamTransformerPipe</code>. It has
  * config children with the followin {@link org.frankframework.frankdoc.model.ElementRole}-s:
  *
  * <ul>
@@ -169,7 +169,7 @@ limitations under the License.
  * <li>(IRecordHandler, child)
  * <li>(IResultHandler, child)
  * </ul>
- * 
+ *
  * If all of these would be used to define the generic element option <code>&lt;Child&gt;</code>,
  * the XML schema would be invalid. If the parser would encounter <code>&lt;Child&gt;</code>, it
  * would not know which definition to apply.
@@ -187,16 +187,16 @@ limitations under the License.
  * by syntax 1 name, and each group results in a {@link org.frankframework.frankdoc.model.ConfigChildSet}.
  * We use {@link org.frankframework.frankdoc.model.ConfigChildSet}-s instead of {@link org.frankframework.frankdoc.model.ConfigChild}-s
  * to fill XSD element groups, resulting in common code for plural and non-plural config children.
- * 
+ *
  * <h2>Conflicts by ElementType interface inheritance</h2>
  *
  * Listeners are Frank elements that receive incoming messages. A Java class within
- * the Frank!Framework is a listener when it implements <code>nl.nn.adapterframework.core.IListener</code>.
+ * the Frank!Framework is a listener when it implements <code>org.frankframework.core.IListener</code>.
  * There is a potential conflict because there are Java interfaces that inherit from
- * <code>nl.nn.adapterframework.core.IListener</code. There is a pipe
- * <code>nl.nn.adapterframework.pipes.PostboxRetrieverPipe</code> with
+ * <code>org.frankframework.core.IListener</code. There is a pipe
+ * <code>org.frankframework.pipes.PostboxRetrieverPipe</code> with
  * {@link org.frankframework.frankdoc.model.ElementRole} (IPostboxListener, listener).
- * We also have <code>nl.nn.adapterframework.pipes.SenderPipe</code> with
+ * We also have <code>org.frankframework.pipes.SenderPipe</code> with
  * {@link org.frankframework.frankdoc.model.ElementRole} (ICorrelatedPullingListener, listener).
  * These two pipes are members of role (IPipe, pipe). There is a generic element
  * option <code>&lt;Pipe&gt;</code> that can have an element <code>&lt;Listener&gt;</code>.
@@ -213,26 +213,26 @@ limitations under the License.
  * {@link org.frankframework.frankdoc.model.ElementRole#getHighestCommonInterface()}.
  *
  * <h2>Member conflicts with element name of generic element option</h2>
- * 
+ *
  * We have an {@link org.frankframework.frankdoc.model.ElementRole}
  * (IErrorMessageFormatter, errorMessageFormatter) which has
  * {@link org.frankframework.frankdoc.model.FrankElement}
- * <code>nl.nn.adapterframework.errormessageformatters.ErrorMessageFormatter</code>
+ * <code>org.frankframework.errormessageformatters.ErrorMessageFormatter</code>
  * as member. Element groups including a generic element option
  * <code>&lt;ErrorMessageFormatter&gt;</code> cannot also define
  * XML element <code>&lt;ErrorMessageFormatter&gt;</code> to reference
- * Java class <code>nl.nn.adapterframework.errormessageformatters.ErrorMessageFormatter</code>.
+ * Java class <code>org.frankframework.errormessageformatters.ErrorMessageFormatter</code>.
  * This conflict with the element name of the generic element option is found
  * by method {@link org.frankframework.frankdoc.model.ElementRole#getDefaultElementOptionConflict()}
- * by that XML element. 
- * 
+ * by that XML element.
+ *
  * <h2>Member conflicts in shared generic element option</h2>
  *
  * Members of a generic element options shared by plural config children can introduce a conflict.
  * An example occurs in {@link org.frankframework.frankdoc.model.FrankElement}
- * <code>nl.nn.adapterframework.batch.AbstractRecordHandler</code>. It has the following
+ * <code>org.frankframework.batch.AbstractRecordHandler</code>. It has the following
  * {@link org.frankframework.frankdoc.model.ElementRole}-s:
- * 
+ *
  * <ul>
  * <li> (InputfieldsPart, child)
  * <li> (OutputfieldsPart, child)
@@ -266,8 +266,8 @@ limitations under the License.
  * omit members that would conflict with a shared generic element option. Class
  * {@link org.frankframework.frankdoc.model.ElementRoleSet} is not public, because
  * {@link org.frankframework.frankdoc.model.ElementRole} takes care of calling
- * {@link org.frankframework.frankdoc.model.ElementRoleSet}. 
- * 
+ * {@link org.frankframework.frankdoc.model.ElementRoleSet}.
+ *
  * <h2>Generic element option recursion</h2>
  *
  * This subsection describes a conflict that does not occur in version 7.6-SNAPSHOT

@@ -57,9 +57,9 @@ describe('JavadocPipe', () => {
 
   it('transforms basic javadoc valid link to html link', () => {
     const elements: Elements = {
-      'nl.nn.adapterframework.pipes.Json2XmlValidator': {
+      'org.frankframework.pipes.Json2XmlValidator': {
         name: 'Json2XmlValidator',
-        fullName: 'nl.nn.adapterframework.pipes.Json2XmlValidator',
+        fullName: 'org.frankframework.pipes.Json2XmlValidator',
         elementNames: [],
       },
     };
@@ -72,9 +72,9 @@ describe('JavadocPipe', () => {
 
   it('transforms javadoc link to class with label to html link', () => {
     const elements: Elements = {
-      'nl.nn.adapterframework.pipes.PipeLineSession': {
+      'org.frankframework.pipes.PipeLineSession': {
         name: 'PipeLineSession',
-        fullName: 'nl.nn.adapterframework.pipes.PipeLineSession',
+        fullName: 'org.frankframework.pipes.PipeLineSession',
         elementNames: [],
       },
     };
@@ -92,9 +92,9 @@ describe('JavadocPipe', () => {
 
   it('transforms valid javadoc link to class with method to html link', () => {
     const elements: Elements = {
-      'nl.nn.adapterframework.pipes.IPipe': {
+      'org.frankframework.pipes.IPipe': {
         name: 'IPipe',
-        fullName: 'nl.nn.adapterframework.pipes.IPipe',
+        fullName: 'org.frankframework.pipes.IPipe',
         elementNames: [],
       },
     };

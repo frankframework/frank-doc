@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package nl.nn.adapterframework.doc;
+package org.frankframework.doc;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -21,6 +21,5 @@ import java.lang.annotation.RetentionPolicy;
 
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Mandatory {
-	boolean ignoreInCompatibilityMode() default false;
+public @interface Optional {
 }

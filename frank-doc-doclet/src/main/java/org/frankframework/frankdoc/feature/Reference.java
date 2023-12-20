@@ -29,7 +29,7 @@ import org.frankframework.frankdoc.wrapper.FrankMethod;
 public class Reference {
 	private static Logger log = LogUtil.getLogger(Reference.class);
 	private static final String JAVADOC_ATTRIBUTE_REF = "@ff.ref";
-	private static final String REFER_TO = "nl.nn.adapterframework.doc.ReferTo";
+	private static final String REFER_TO = "org.frankframework.doc.ReferTo";
 
 	private final FrankClassRepository classRepository;
 

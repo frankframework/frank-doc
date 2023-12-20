@@ -32,7 +32,7 @@ public final class TestUtil {
 
 	public static final String DEPRECATED = "java.lang.Deprecated";
 
-	static final String JAVADOC_GROUP_ANNOTATION = "nl.nn.adapterframework.doc.FrankDocGroup";
+	static final String JAVADOC_GROUP_ANNOTATION = "org.frankframework.doc.FrankDocGroup";
 	static final String JAVADOC_DEFAULT_VALUE_TAG = "@ff.default";
 
 	private TestUtil() {

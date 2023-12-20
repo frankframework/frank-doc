@@ -1,7 +1,7 @@
 package org.frankframework.frankdoc.testtarget.ibisdocref;
 
-import nl.nn.adapterframework.doc.IbisDocRef;
-import nl.nn.adapterframework.doc.ReferTo;
+import org.frankframework.doc.IbisDocRef;
+import org.frankframework.doc.ReferTo;
 
 public class Referrer {
 	@IbisDocRef("org.frankframework.frankdoc.testtarget.ibisdocref.ChildTarget")
@@ -34,7 +34,7 @@ public class Referrer {
 
 	/**
 	 * @ff.ref org.frankframework.frankdoc.testtarget.ibisdocref.ChildTarget
-	 * 
+	 *
 	 */
 	public void setFfReferInheritedDescription(String value) {
 	}

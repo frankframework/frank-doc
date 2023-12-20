@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.children;
 
-import nl.nn.adapterframework.doc.IbisDoc;
+import org.frankframework.doc.IbisDoc;
 
 public class ContainerOther extends ContainerParent {
 	@IbisDoc("110")

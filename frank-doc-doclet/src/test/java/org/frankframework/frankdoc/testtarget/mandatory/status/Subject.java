@@ -1,7 +1,7 @@
 package org.frankframework.frankdoc.testtarget.mandatory.status;
 
-import nl.nn.adapterframework.doc.Mandatory;
-import nl.nn.adapterframework.doc.Optional;
+import org.frankframework.doc.Mandatory;
+import org.frankframework.doc.Optional;
 
 public class Subject {
 	public void setNotMandatory(String value) {

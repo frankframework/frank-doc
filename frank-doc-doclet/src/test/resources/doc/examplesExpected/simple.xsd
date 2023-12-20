@@ -61,7 +61,7 @@
       <xs:element name="DescribedPossibleIRoleNameIChild">
         <xs:annotation>
           <xs:documentation>This is the header of the JavaDoc of "DescribedPossibleIChild".
- 
+
  And this is remaining documentation of "DescribedPossibleIChild".</xs:documentation>
         </xs:annotation>
         <xs:complexType>

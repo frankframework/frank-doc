@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.doclet;
 
-import nl.nn.adapterframework.doc.IbisDoc;
+import org.frankframework.doc.IbisDoc;
 
 @Deprecated
 public class DeprecatedChild extends Parent {

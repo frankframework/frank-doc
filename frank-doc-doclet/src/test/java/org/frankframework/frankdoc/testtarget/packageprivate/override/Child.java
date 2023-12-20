@@ -1,7 +1,7 @@
 package org.frankframework.frankdoc.testtarget.packageprivate.override;
 
-import nl.nn.adapterframework.doc.Default;
-import nl.nn.adapterframework.doc.Mandatory;
+import org.frankframework.doc.Default;
+import org.frankframework.doc.Mandatory;
 
 public class Child extends JmsListener {
 

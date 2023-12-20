@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.examples.omit.config.childProtected;
 
-import nl.nn.adapterframework.doc.Protected;
+import org.frankframework.doc.Protected;
 
 @Protected
 public class ProtectedChild {

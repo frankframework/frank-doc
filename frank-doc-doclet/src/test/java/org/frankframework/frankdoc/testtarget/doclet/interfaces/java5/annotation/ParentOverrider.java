@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.testtarget.doclet.interfaces.java5.annotation;
 
-import nl.nn.adapterframework.doc.FrankDocGroup;
+import org.frankframework.doc.FrankDocGroup;
 
 /**
  * @author martijn

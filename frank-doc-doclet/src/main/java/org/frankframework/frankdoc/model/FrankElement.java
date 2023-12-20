@@ -61,7 +61,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	public static final String JAVADOC_PARAMETER = "@ff.parameter";
 	public static final String JAVADOC_FORWARD = "@ff.forward";
 	public static final String JAVADOC_TAG = "@ff.tag";
-	public static final String LABEL = "nl.nn.adapterframework.doc.Label";
+	public static final String LABEL = "org.frankframework.doc.Label";
 	public static final String LABEL_NAME = "name";
 
 	private static Logger log = LogUtil.getLogger(FrankElement.class);
