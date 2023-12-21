@@ -26,7 +26,7 @@ public final class FrankElementFilters {
 	}
 
 	public static Set<String> getIncludeFilter() {
-		return new HashSet<>(Arrays.asList("nl.nn.adapterframework", "nl.nn.ibistesttool"));
+		return new HashSet<>(Arrays.asList("org.frankframework", "nl.nn.ibistesttool"));
 	}
 
 	/**
