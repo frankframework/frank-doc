@@ -4,7 +4,6 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -39,20 +38,22 @@ public class DefaultAndDescriptionTest {
 
 	private FrankMethod method;
 
-	@BeforeEach
+	// @BeforeEach
+	// Should happen after initDefaultAndDescriptionTest
 	public void setUp() throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, "org.frankframework.frankdoc.testtarget.wrapper.variables");
 		FrankClass clazz = repository.findClass(CLASS_NAME);
 		method = Arrays.stream(clazz.getDeclaredMethods())
 				.filter(m -> m.getName().equals(methodToTest))
 				.findFirst()
-				.get();
+				.orElseThrow(() -> new IllegalStateException("Method not found"));
 	}
 
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0}-{1}-{2}")
 	public void test(String methodToTest, String expectedDescription, String expectedDefaultValue) throws Exception {
 		initDefaultAndDescriptionTest(methodToTest, expectedDescription, expectedDefaultValue);
+		setUp();
 		String description = Description.getInstance().valueOf(method);
 		String defaultValue = Default.getInstance().valueOf(method);
 		if(expectedDescription == null) {
