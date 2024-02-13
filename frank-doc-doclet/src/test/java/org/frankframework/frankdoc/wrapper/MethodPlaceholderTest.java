@@ -1,16 +1,16 @@
 package org.frankframework.frankdoc.wrapper;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MethodPlaceholderTest {
 	static final String PACKAGE = "org.frankframework.frankdoc.testtarget.wrapper.method.placeholder.";
@@ -18,7 +18,7 @@ public class MethodPlaceholderTest {
 	private FrankClass child;
 	private final List<String> ancestorMethodOwningClassNames = new ArrayList<>();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		child = classRepository.findClass(PACKAGE + "Child");

@@ -1,23 +1,23 @@
 package org.frankframework.frankdoc.wrapper;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class InterfaceAndAnnotationTest {
 	static final String PACKAGE = "org.frankframework.frankdoc.testtarget.doclet.interfaces.";
 
 	FrankClassRepository classRepository;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		classRepository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 	}
@@ -152,7 +152,7 @@ public class InterfaceAndAnnotationTest {
 		String actualDeclaredMethodsString = actualDeclaredMethods.stream()
 				.map(FrankMethod::getName)
 				.collect(Collectors.joining(", "));
-		assertEquals(String.format("Have methods [%s]",  actualDeclaredMethodsString), 1, actualDeclaredMethods.size());
+		assertEquals(1, actualDeclaredMethods.size(), String.format("Have methods [%s]",  actualDeclaredMethodsString));
 		FrankMethod method = actualDeclaredMethods.get(0);
 		assertEquals("annotatedMethod", method.getName());
 		assertNull(method.getAnnotation(TestUtil.DEPRECATED));

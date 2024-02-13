@@ -18,12 +18,9 @@ package org.frankframework.frankdoc;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.json.JsonObject;
 import java.io.IOException;
@@ -31,9 +28,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 
-@RunWith(Parameterized.class)
 public class DocWriterNewAndJsonGenerationExamplesTest {
-	@Parameters(name = "{0}-{1}-{4}-{5}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "examples-simple-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.simple.Start", "simple.xsd", "simple.json"},
@@ -95,35 +90,25 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.featurepackage.Documented", "documented.xsd", "documented.json"}
 		});
 	}
-
-	@Parameter(0)
 	public XsdVersion xsdVersion;
-
-	@Parameter(1)
 	public AttributeTypeStrategy attributeTypeStrategy;
-
-	@Parameter(2)
 	public String digesterRulesFileName;
-
-	@Parameter(3)
 	public String startClassName;
-
-	@Parameter(4)
 	public String expectedXsdFileName;
-
-	@Parameter(5)
 	public String expectedJsonFileName;
 
 	private String packageOfClasses;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		int idx = startClassName.lastIndexOf(".");
 		packageOfClasses = startClassName.substring(0, idx);
 	}
 
-	@Test
-	public void testXsd() throws Exception {
+	@MethodSource("data")
+	@ParameterizedTest(name = "{0}-{1}-{4}-{5}")
+	public void testXsd(XsdVersion xsdVersion, AttributeTypeStrategy attributeTypeStrategy, String digesterRulesFileName, String startClassName, String expectedXsdFileName, String expectedJsonFileName) throws Exception {
+		initDocWriterNewAndJsonGenerationExamplesTest(xsdVersion, attributeTypeStrategy, digesterRulesFileName, startClassName, expectedXsdFileName, expectedJsonFileName);
 		// Skip testing when filename is defined as null
 		if (expectedXsdFileName == null) {
 			return;
@@ -158,8 +143,10 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 		return TestUtil.resourceAsURL("doc/" + fileName);
 	}
 
-	@Test
-	public void testJson() throws Exception {
+	@MethodSource("data")
+	@ParameterizedTest(name = "{0}-{1}-{4}-{5}")
+	public void testJson(XsdVersion xsdVersion, AttributeTypeStrategy attributeTypeStrategy, String digesterRulesFileName, String startClassName, String expectedXsdFileName, String expectedJsonFileName) throws Exception {
+		initDocWriterNewAndJsonGenerationExamplesTest(xsdVersion, attributeTypeStrategy, digesterRulesFileName, startClassName, expectedXsdFileName, expectedJsonFileName);
 		// Skip JSON testing when filename is defined as null
 		if (expectedJsonFileName == null) {
 			return;
@@ -171,5 +158,14 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 		System.out.println(Utils.jsonPretty(actual));
 		String expectedJson = TestUtil.getTestFile("/doc/examplesExpected/" + expectedJsonFileName);
 		TestUtil.assertJsonEqual("Comparing JSON", expectedJson, actual);
+	}
+
+	public void initDocWriterNewAndJsonGenerationExamplesTest(XsdVersion xsdVersion, AttributeTypeStrategy attributeTypeStrategy, String digesterRulesFileName, String startClassName, String expectedXsdFileName, String expectedJsonFileName) {
+		this.xsdVersion = xsdVersion;
+		this.attributeTypeStrategy = attributeTypeStrategy;
+		this.digesterRulesFileName = digesterRulesFileName;
+		this.startClassName = startClassName;
+		this.expectedXsdFileName = expectedXsdFileName;
+		this.expectedJsonFileName = expectedJsonFileName;
 	}
 }

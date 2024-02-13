@@ -1,19 +1,14 @@
 package org.frankframework.frankdoc;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(Parameterized.class)
 public class UtilsFlattenJavaDocLinksTest {
-	@Parameters(name = "{0}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 			{"{@link Receiver Receivers}", "Receivers"},
@@ -26,16 +21,19 @@ public class UtilsFlattenJavaDocLinksTest {
 			{"Some {@link Receiver	Receivers} here", "Some Receivers here"}
 		});
 	}
-
-	@Parameter(0)
 	public String input;
-
-	@Parameter(1)
 	public String expected;
 
-	@Test
-	public void test() throws Exception {
+	@MethodSource("data")
+	@ParameterizedTest(name = "{0}")
+	public void test(String input, String expected) throws Exception {
+		initUtilsFlattenJavaDocLinksTest(input, expected);
 		String actual = Utils.flattenJavaDocLinksToLastWords(input);
 		assertEquals(expected, actual);
+	}
+
+	public void initUtilsFlattenJavaDocLinksTest(String input, String expected) {
+		this.input = input;
+		this.expected = expected;
 	}
 }

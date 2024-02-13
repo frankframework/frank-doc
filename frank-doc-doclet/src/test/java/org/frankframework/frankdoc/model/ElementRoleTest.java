@@ -16,18 +16,18 @@ limitations under the License.
 package org.frankframework.frankdoc.model;
 
 import org.frankframework.frankdoc.model.ElementRole.Key;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class ElementRoleTest {
 	private static final String ELEMENT = "Element";
 
 	private ElementRole.Factory factory;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		factory = new ElementRole.Factory();
 	}

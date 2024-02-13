@@ -1,13 +1,13 @@
 package org.frankframework.frankdoc.wrapper;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 class TestBase {
 	static final String PACKAGE = "org.frankframework.frankdoc.testtarget.doclet.";
 
 	FrankClassRepository classRepository;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		classRepository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 	}

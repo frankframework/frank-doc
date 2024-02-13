@@ -18,12 +18,9 @@ package org.frankframework.frankdoc.model;
 import lombok.EqualsAndHashCode;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,13 +32,11 @@ import static org.frankframework.frankdoc.model.ElementChild.ALL_NOT_EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.IN_XSD;
 import static org.frankframework.frankdoc.model.ElementChild.REJECT_DEPRECATED;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(Parameterized.class)
 public class NavigationTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.walking";
 
-	@Parameters(name = "{0}")
 	public static Collection<Object[]> data() {
 		return asList(new Object[][] {
 			{"Parent", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "Parent"))},
@@ -99,28 +94,22 @@ public class NavigationTest {
 	private static Ref ref(RefKind kind, String name) {
 		return new Ref(kind, name);
 	}
-
-	@Parameter(0)
 	public String simpleClassName;
-
-	@Parameter(1)
 	public Predicate<ElementChild> childSelector;
-
-	@Parameter(2)
 	public Predicate<ElementChild> childRejector;
-
-	@Parameter(3)
 	public List<Ref> expectedRefs;
 
 	private List<Ref> actual;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		actual = new ArrayList<>();
 	}
 
-	@Test
-	public void test() throws Exception {
+	@MethodSource("data")
+	@ParameterizedTest(name = "{0}")
+	public void test(String simpleClassName, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, List<Ref> expectedRefs) throws Exception {
+		initNavigationTest(simpleClassName, childSelector, childRejector, expectedRefs);
 		String rootClassName = PACKAGE + "." + simpleClassName;
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		FrankDocModel model = FrankDocModel.populate(TestUtil.resourceAsURL("doc/empty-digester-rules.xml"), rootClassName, repository);
@@ -148,5 +137,12 @@ public class NavigationTest {
 
 		}, childSelector, childRejector);
 		assertEquals(expectedRefs, actual);
+	}
+
+	public void initNavigationTest(String simpleClassName, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, List<Ref> expectedRefs) {
+		this.simpleClassName = simpleClassName;
+		this.childSelector = childSelector;
+		this.childRejector = childRejector;
+		this.expectedRefs = expectedRefs;
 	}
 }

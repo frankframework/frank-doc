@@ -6,23 +6,18 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(Parameterized.class)
 public class MandatoryStatusTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.mandatory.status.";
 
-	@Parameters(name = "Test method {0} has status {1}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 			{"setNotMandatory", MandatoryStatus.OPTIONAL},
@@ -33,15 +28,13 @@ public class MandatoryStatusTest {
 			{"setOptional", MandatoryStatus.OPTIONAL},
 		});
 	}
-
-	@Parameter(0)
 	public String methodName;
-
-	@Parameter(1)
 	public MandatoryStatus expectedMandatoryStatus;
 
-	@Test
-	public void test() throws Exception {
+	@MethodSource("data")
+	@ParameterizedTest(name = "Test method {0} has status {1}")
+	public void test(String methodName, MandatoryStatus expectedMandatoryStatus) throws Exception {
+		initMandatoryStatusTest(methodName, expectedMandatoryStatus);
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		FrankClass clazz = repository.findClass(PACKAGE + "Subject");
 		FrankMethod testMethod = Arrays.asList(clazz.getDeclaredMethods()).stream()
@@ -50,5 +43,10 @@ public class MandatoryStatusTest {
 		MandatoryStatus actualMandatoryStatus = null;
 		actualMandatoryStatus = MandatoryStatus.of(Mandatory.getInstance().valueOf(testMethod), Optional.getInstance().isSetOn(testMethod));
 		assertEquals(expectedMandatoryStatus, actualMandatoryStatus);
+	}
+
+	public void initMandatoryStatusTest(String methodName, MandatoryStatus expectedMandatoryStatus) {
+		this.methodName = methodName;
+		this.expectedMandatoryStatus = expectedMandatoryStatus;
 	}
 }

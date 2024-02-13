@@ -1,19 +1,19 @@
 package org.frankframework.frankdoc.model;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class FrankDocGroupFactoryTest {
 	private FrankDocGroupFactory instance;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		instance = new FrankDocGroupFactory();
 	}

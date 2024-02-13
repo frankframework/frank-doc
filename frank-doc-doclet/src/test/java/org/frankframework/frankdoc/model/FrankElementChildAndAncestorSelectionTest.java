@@ -2,21 +2,21 @@ package org.frankframework.frankdoc.model;
 
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class FrankElementChildAndAncestorSelectionTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.children.ancestors.";
 	private FrankDocModel model;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		model = FrankDocModel.populate(TestUtil.resourceAsURL("doc/general-test-digester-rules.xml"), PACKAGE + "Master", repository);

@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.wrapper;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;

@@ -1,10 +1,11 @@
 package org.frankframework.frankdoc.model;
 
 import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ParsedJavaDocTagTest {
 	@Test
@@ -42,8 +43,10 @@ public class ParsedJavaDocTagTest {
 		assertEquals("Description", p.getDescription());
 	}
 
-	@Test(expected = FrankDocException.class)
+	@Test
 	public void whenJavaDocHasNoParametersThenError() throws Exception {
-		ParsedJavaDocTag.getInstance("");
+		assertThrows(FrankDocException.class, () -> {
+			ParsedJavaDocTag.getInstance("");
+		});
 	}
 }

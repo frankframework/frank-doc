@@ -4,22 +4,17 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-@RunWith(Parameterized.class)
 public class ExtendsClassJavadocTest {
-	@Parameters(name = "{0}-{1}-{2}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 			{"notDocumented", null, null},
@@ -35,14 +30,8 @@ public class ExtendsClassJavadocTest {
 			{"setTransacted", "controls the use of transactions", null}
 		});
 	}
-
-	@Parameter(0)
 	public String methodToTest;
-
-	@Parameter(1)
 	public String expectedDescription;
-
-	@Parameter(2)
 	public String expectedDefaultValue;
 
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.featurepackage.";
@@ -50,7 +39,7 @@ public class ExtendsClassJavadocTest {
 
 	private FrankMethod method;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, "org.frankframework.frankdoc.testtarget.wrapper.variables");
 		FrankClass clazz = repository.findClass(CLASS_NAME);
@@ -60,8 +49,10 @@ public class ExtendsClassJavadocTest {
 				.get();
 	}
 
-	@Test
-	public void test() throws Exception {
+	@MethodSource("data")
+	@ParameterizedTest(name = "{0}-{1}-{2}")
+	public void test(String methodToTest, String expectedDescription, String expectedDefaultValue) throws Exception {
+		initExtendsClassJavadocTest(methodToTest, expectedDescription, expectedDefaultValue);
 		String description = Description.getInstance().valueOf(method);
 		String defaultValue = Default.getInstance().valueOf(method);
 		if(expectedDescription == null) {
@@ -74,5 +65,11 @@ public class ExtendsClassJavadocTest {
 		} else {
 			assertEquals(expectedDefaultValue, defaultValue);
 		}
+	}
+
+	public void initExtendsClassJavadocTest(String methodToTest, String expectedDescription, String expectedDefaultValue) {
+		this.methodToTest = methodToTest;
+		this.expectedDescription = expectedDescription;
+		this.expectedDefaultValue = expectedDefaultValue;
 	}
 }

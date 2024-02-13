@@ -1,13 +1,13 @@
 package org.frankframework.frankdoc.wrapper;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class FrankExecutableElementletTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.doclet.";
@@ -16,7 +16,7 @@ public class FrankExecutableElementletTest {
 	private FrankClass clazz;
 	private FrankClass innerClass;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws FrankDocException {
 		repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		clazz = repository.findClass(PACKAGE + "Parent");

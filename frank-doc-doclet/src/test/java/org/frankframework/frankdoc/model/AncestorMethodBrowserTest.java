@@ -4,14 +4,14 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 public class AncestorMethodBrowserTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.browse.ancestor.methods.";
@@ -21,7 +21,7 @@ public class AncestorMethodBrowserTest {
 	private AncestorMethodBrowser instanceNoRef;
 	private List<String> ancestorMethodClasses = new ArrayList<>();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		instanceWithRef = new AncestorMethodBrowser(repository, AncestorMethodBrowser.References.WITH_REFERENCES);

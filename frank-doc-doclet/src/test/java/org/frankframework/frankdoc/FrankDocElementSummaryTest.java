@@ -3,14 +3,14 @@ package org.frankframework.frankdoc;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FrankDocElementSummaryTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.element.summary.";
