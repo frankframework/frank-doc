@@ -29,9 +29,6 @@ public class DefaultAndDescriptionTest {
 			{"setTransacted", "controls the use of transactions", null}
 		});
 	}
-	public String methodToTest;
-	public String expectedDescription;
-	public String expectedDefaultValue;
 
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.featurepackage.";
 	private static final String CLASS_NAME = PACKAGE + "Documented";
@@ -40,7 +37,7 @@ public class DefaultAndDescriptionTest {
 
 	// @BeforeEach
 	// Should happen after initDefaultAndDescriptionTest
-	public void setUp() throws Exception {
+	public void setUp(String methodToTest, String expectedDescription, String expectedDefaultValue) throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, "org.frankframework.frankdoc.testtarget.wrapper.variables");
 		FrankClass clazz = repository.findClass(CLASS_NAME);
 		method = Arrays.stream(clazz.getDeclaredMethods())
@@ -52,8 +49,7 @@ public class DefaultAndDescriptionTest {
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0}-{1}-{2}")
 	public void test(String methodToTest, String expectedDescription, String expectedDefaultValue) throws Exception {
-		initDefaultAndDescriptionTest(methodToTest, expectedDescription, expectedDefaultValue);
-		setUp();
+		setUp(methodToTest, expectedDescription, expectedDefaultValue);
 		String description = Description.getInstance().valueOf(method);
 		String defaultValue = Default.getInstance().valueOf(method);
 		if(expectedDescription == null) {
@@ -66,11 +62,5 @@ public class DefaultAndDescriptionTest {
 		} else {
 			assertEquals(expectedDefaultValue, defaultValue);
 		}
-	}
-
-	public void initDefaultAndDescriptionTest(String methodToTest, String expectedDescription, String expectedDefaultValue) {
-		this.methodToTest = methodToTest;
-		this.expectedDescription = expectedDescription;
-		this.expectedDefaultValue = expectedDefaultValue;
 	}
 }
