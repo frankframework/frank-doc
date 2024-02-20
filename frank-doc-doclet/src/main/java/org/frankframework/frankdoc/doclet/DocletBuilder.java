@@ -70,7 +70,7 @@ public class DocletBuilder implements jdk.javadoc.doclet.Doclet {
 
 	public static SourceVersion SourceVersion() {
 		log.trace("Method SourceVersion() called");
-		return SourceVersion.RELEASE_11;
+		return SourceVersion.RELEASE_17;
 	}
 
 	@Override

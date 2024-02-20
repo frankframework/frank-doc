@@ -54,6 +54,7 @@ class Doclet {
 				FrankElementFilters.getExcludeFilter(), FrankElementFilters.getExcludeFiltersForSuperclass());
 
 			model = FrankDocModel.populate(options.getDigesterRulesUrl(), options.getRootClass(), repository);
+			log.info("Found classes: {}", repository.size());
 			File outputBaseDir = new File(options.getOutputDirectory());
 			outputBaseDir.mkdirs();
 			xsdStrictFile = new File(outputBaseDir, options.getXsdStrictPath());

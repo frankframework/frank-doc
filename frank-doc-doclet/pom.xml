@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.ibissource</groupId>
 		<artifactId>frank-doc-parent</artifactId>
-		<version>2.0-SNAPSHOT</version>
+		<version>2.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>frank-doc-doclet</artifactId>
@@ -106,8 +106,6 @@
 						--add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
 						--add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
 						--add-exports jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED
-						--add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
-						--add-exports jdk.javadoc/jdk.javadoc.internal.tool=ALL-UNNAMED
 					</argLine>
 				</configuration>
 			</plugin>
@@ -168,8 +166,6 @@
 							<arg>jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
 							<arg>--add-exports</arg>
 							<arg>jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-							<arg>--add-exports</arg>
-							<arg>jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
 							<arg>--add-exports</arg>
 							<arg>jdk.javadoc/jdk.javadoc.internal.tool=ALL-UNNAMED</arg>
 						</compilerArgs>

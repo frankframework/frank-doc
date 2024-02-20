@@ -1,6 +1,5 @@
 package org.frankframework.frankdoc.wrapper;
 
-import org.frankframework.frankdoc.testdoclet.EasyDoclet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,10 +56,9 @@ public class FilteringSuperclassTest {
 
 	@Before
 	public void setUp() throws FrankDocException {
+		Set<? extends Element> classDocs = TestUtil.getIncludedElements(CHILD_PACKAGE, PARENT_PACKAGE);
 		List<String> packages = Arrays.asList(CHILD_PACKAGE, PARENT_PACKAGE);
-		EasyDoclet easyDoclet = TestUtil.getEasyDoclet(CHILD_PACKAGE, PARENT_PACKAGE);
-		Set<? extends Element> classDocs = TestUtil.getTypeElements(easyDoclet, null);
-		FrankClassRepository repository = new FrankClassRepository(TestUtil.getDocTrees(easyDoclet), classDocs, new HashSet<>(packages), new HashSet<>(), new HashSet<>(Collections.singletonList(superclassFilter)));
+		FrankClassRepository repository = new FrankClassRepository(TestUtil.getDocTrees(), classDocs, new HashSet<>(packages), new HashSet<>(), new HashSet<>(Collections.singletonList(superclassFilter)));
 		childClass = repository.findClass(CHILD_PACKAGE + CHILD_CLASS);
 		assertNotNull(childClass);
 	}
