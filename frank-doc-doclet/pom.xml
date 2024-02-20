@@ -151,29 +151,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.openrewrite.maven</groupId>
-				<artifactId>rewrite-maven-plugin</artifactId>
-				<version>5.22.0</version>
-				<configuration>
-					<activeRecipes>
-						<recipe>org.openrewrite.java.testing.junit5.ParameterizedRunnerToParameterized</recipe>
-						<recipe>org.openrewrite.java.spring.boot2.SpringBoot2JUnit4to5Migration</recipe>
-					</activeRecipes>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.openrewrite.recipe</groupId>
-						<artifactId>rewrite-testing-frameworks</artifactId>
-						<version>2.3.2</version>
-					</dependency>
-					<dependency>
-						<groupId>org.openrewrite.recipe</groupId>
-						<artifactId>rewrite-spring</artifactId>
-						<version>5.4.0</version>
-				</dependency>
-				</dependencies>
-			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
