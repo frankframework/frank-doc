@@ -18,7 +18,6 @@ package org.frankframework.frankdoc;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -90,17 +89,10 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.featurepackage.Documented", "documented.xsd", "documented.json"}
 		});
 	}
-	public XsdVersion xsdVersion;
-	public AttributeTypeStrategy attributeTypeStrategy;
-	public String digesterRulesFileName;
-	public String startClassName;
-	public String expectedXsdFileName;
-	public String expectedJsonFileName;
 
 	private String packageOfClasses;
 
-	@BeforeEach
-	public void setUp() {
+	public void setUp(String startClassName) {
 		int idx = startClassName.lastIndexOf(".");
 		packageOfClasses = startClassName.substring(0, idx);
 	}
@@ -108,12 +100,12 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0}-{1}-{4}-{5}")
 	public void testXsd(XsdVersion xsdVersion, AttributeTypeStrategy attributeTypeStrategy, String digesterRulesFileName, String startClassName, String expectedXsdFileName, String expectedJsonFileName) throws Exception {
-		initDocWriterNewAndJsonGenerationExamplesTest(xsdVersion, attributeTypeStrategy, digesterRulesFileName, startClassName, expectedXsdFileName, expectedJsonFileName);
+		setUp(startClassName);
 		// Skip testing when filename is defined as null
 		if (expectedXsdFileName == null) {
 			return;
 		}
-		FrankDocModel model = createModel();
+		FrankDocModel model = createModel(digesterRulesFileName, startClassName);
 		DocWriterNew docWriter = new DocWriterNew(model, attributeTypeStrategy, "1.2.3-SNAPSHOT");
 		docWriter.init(startClassName, xsdVersion);
 		String actualXsd = docWriter.getSchema();
@@ -123,7 +115,7 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 		TestUtil.assertEqualsIgnoreCRLF(expectedXsd, actualXsd);
 	}
 
-	private FrankDocModel createModel() throws Exception {
+	private FrankDocModel createModel(String digesterRulesFileName, String startClassName) throws Exception {
 		String[] requiredPackages = getAllRequiredPackages(packageOfClasses);
 		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(requiredPackages);
 		return FrankDocModel.populate(getDigesterRulesURL(digesterRulesFileName), startClassName, classRepository);
@@ -146,26 +138,17 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0}-{1}-{4}-{5}")
 	public void testJson(XsdVersion xsdVersion, AttributeTypeStrategy attributeTypeStrategy, String digesterRulesFileName, String startClassName, String expectedXsdFileName, String expectedJsonFileName) throws Exception {
-		initDocWriterNewAndJsonGenerationExamplesTest(xsdVersion, attributeTypeStrategy, digesterRulesFileName, startClassName, expectedXsdFileName, expectedJsonFileName);
+		setUp(startClassName);
 		// Skip JSON testing when filename is defined as null
 		if (expectedJsonFileName == null) {
 			return;
 		}
-		FrankDocModel model = createModel();
+		FrankDocModel model = createModel(digesterRulesFileName, startClassName);
 		FrankDocJsonFactory jsonFactory = new FrankDocJsonFactory(model, "1.2.3-SNAPSHOT");
 		JsonObject jsonObject = jsonFactory.getJson();
 		String actual = jsonObject.toString();
 		System.out.println(Utils.jsonPretty(actual));
 		String expectedJson = TestUtil.getTestFile("/doc/examplesExpected/" + expectedJsonFileName);
 		TestUtil.assertJsonEqual("Comparing JSON", expectedJson, actual);
-	}
-
-	public void initDocWriterNewAndJsonGenerationExamplesTest(XsdVersion xsdVersion, AttributeTypeStrategy attributeTypeStrategy, String digesterRulesFileName, String startClassName, String expectedXsdFileName, String expectedJsonFileName) {
-		this.xsdVersion = xsdVersion;
-		this.attributeTypeStrategy = attributeTypeStrategy;
-		this.digesterRulesFileName = digesterRulesFileName;
-		this.startClassName = startClassName;
-		this.expectedXsdFileName = expectedXsdFileName;
-		this.expectedJsonFileName = expectedJsonFileName;
 	}
 }

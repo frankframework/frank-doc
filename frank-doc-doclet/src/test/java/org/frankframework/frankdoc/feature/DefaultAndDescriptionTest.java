@@ -35,8 +35,7 @@ public class DefaultAndDescriptionTest {
 
 	private FrankMethod method;
 
-	// No @BeforeEach used, because JUnit 5 only supplies the parameters to the test method.
-	public void setUp(String methodToTest, String expectedDescription, String expectedDefaultValue) throws Exception {
+	public void setUp(String methodToTest) throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, "org.frankframework.frankdoc.testtarget.wrapper.variables");
 		FrankClass clazz = repository.findClass(CLASS_NAME);
 		method = Arrays.stream(clazz.getDeclaredMethods())
@@ -48,7 +47,7 @@ public class DefaultAndDescriptionTest {
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0}-{1}-{2}")
 	public void test(String methodToTest, String expectedDescription, String expectedDefaultValue) throws Exception {
-		setUp(methodToTest, expectedDescription, expectedDefaultValue);
+		setUp(methodToTest);
 		String description = Description.getInstance().valueOf(method);
 		String defaultValue = Default.getInstance().valueOf(method);
 		if(expectedDescription == null) {

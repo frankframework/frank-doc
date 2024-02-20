@@ -4,7 +4,6 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -30,29 +29,25 @@ public class ExtendsClassJavadocTest {
 			{"setTransacted", "controls the use of transactions", null}
 		});
 	}
-	public String methodToTest;
-	public String expectedDescription;
-	public String expectedDefaultValue;
 
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.featurepackage.";
 	private static final String CLASS_NAME = PACKAGE + "ExtendsDocumented";
 
 	private FrankMethod method;
 
-	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp(String methodToTest) throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, "org.frankframework.frankdoc.testtarget.wrapper.variables");
 		FrankClass clazz = repository.findClass(CLASS_NAME);
 		method = Arrays.stream(clazz.getDeclaredAndInheritedMethods())
 				.filter(m -> m.getName().equals(methodToTest))
 				.findFirst()
-				.get();
+				.orElseThrow(() -> new IllegalStateException("Method not found"));
 	}
 
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0}-{1}-{2}")
 	public void test(String methodToTest, String expectedDescription, String expectedDefaultValue) throws Exception {
-		initExtendsClassJavadocTest(methodToTest, expectedDescription, expectedDefaultValue);
+		setUp(methodToTest);
 		String description = Description.getInstance().valueOf(method);
 		String defaultValue = Default.getInstance().valueOf(method);
 		if(expectedDescription == null) {
@@ -65,11 +60,5 @@ public class ExtendsClassJavadocTest {
 		} else {
 			assertEquals(expectedDefaultValue, defaultValue);
 		}
-	}
-
-	public void initExtendsClassJavadocTest(String methodToTest, String expectedDescription, String expectedDefaultValue) {
-		this.methodToTest = methodToTest;
-		this.expectedDescription = expectedDescription;
-		this.expectedDefaultValue = expectedDefaultValue;
 	}
 }
