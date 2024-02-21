@@ -8,12 +8,9 @@ import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.util.XmlBuilder;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -30,15 +27,13 @@ import java.util.Collection;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexType;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addElementWithType;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.getXmlSchema;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-@RunWith(Parameterized.class)
 public class AttributeTypeStrategyTest {
 	private String schemaStringAllowAttributeRef;
 	private String schemaStringAllowAttributeRefEnumValuesIgnoreCase;
 
-	@Parameters(name = "{0}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 			{"NormalInteger", getIntTestXml("1"), true, true},
@@ -90,20 +85,9 @@ public class AttributeTypeStrategyTest {
 	private static String getTestXmlActive(String value) {
 		return String.format("<myElement active=\"%s\"/>", value);
 	}
-
-	@Parameter(0)
-	public String title;
-
-	@Parameter(1)
 	public String testXml;
 
-	@Parameter(2)
-	public boolean allowPropertyRefShouldAccept;
-
-	@Parameter(3)
-	public boolean allowPropertyRefEnumValuesIgnoreCaseShouldAccept;
-
-	@Before
+	@BeforeEach
 	public void setUp() throws IOException {
 		String packageOfEnum = "org.frankframework.frankdoc.testtarget.attribute.type.strategy.";
 		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(packageOfEnum);
@@ -127,18 +111,22 @@ public class AttributeTypeStrategyTest {
 		// This test does not test whether use="required" is included. It is about
 		// attribute types. Therefore we take the attribute not to be mandatory.
 		complexType.addSubElement(attributeTypeStrategy.createRestrictedAttribute(enumTypedAttribute, a -> {}));
-		attributeTypeStrategy.createHelperTypes().forEach(h -> schema.addSubElement(h));
+		attributeTypeStrategy.createHelperTypes().forEach(schema::addSubElement);
 		schema.addSubElement(attributeTypeStrategy.createAttributeEnumType(attributeEnum));
 		return schema.toXML(true);
 	}
 
-	@Test
-	public void testAllowPropertyRef() {
+	@MethodSource("data")
+	@ParameterizedTest(name = "{0}")
+	void testAllowPropertyRef(String title, String testXml, boolean allowPropertyRefShouldAccept, boolean allowPropertyRefEnumValuesIgnoreCaseShouldAccept) {
+		this.testXml = testXml;
 		doTest(allowPropertyRefShouldAccept, schemaStringAllowAttributeRef);
 	}
 
-	@Test
-	public void testAllowPropertyRefEnumValuesIgnoreCase() {
+	@MethodSource("data")
+	@ParameterizedTest(name = "{0}")
+	void testAllowPropertyRefEnumValuesIgnoreCase(String title, String testXml, boolean allowPropertyRefShouldAccept, boolean allowPropertyRefEnumValuesIgnoreCaseShouldAccept) {
+		this.testXml = testXml;
 		doTest(allowPropertyRefEnumValuesIgnoreCaseShouldAccept, schemaStringAllowAttributeRefEnumValuesIgnoreCase);
 	}
 
@@ -161,4 +149,5 @@ public class AttributeTypeStrategyTest {
 		SAXSource source = new SAXSource(new InputSource(new StringReader(testXml)));
 		validator.validate(source);
 	}
+
 }

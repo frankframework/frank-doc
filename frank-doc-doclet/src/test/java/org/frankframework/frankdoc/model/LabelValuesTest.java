@@ -1,14 +1,15 @@
 package org.frankframework.frankdoc.model;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LabelValuesTest {
 	private LabelValues instance;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		instance = new LabelValues();
 	}
@@ -49,11 +50,13 @@ public class LabelValuesTest {
 		assertArrayEquals(new String[] {"A", "C", "B"}, instance.getAllValuesOfLabel("LABEL").toArray(new String[] {}));
 	}
 
-	@Test(expected = ClassCastException.class)
+	@Test
 	public void cannotMixEnumAndNonEnumValues() {
-		instance.addValue("LABEL", "value");
-		instance.addEnumValue("LABEL", "enum value", 0);
-		instance.finishInitialization();
+		assertThrows(ClassCastException.class, () -> {
+			instance.addValue("LABEL", "value");
+			instance.addEnumValue("LABEL", "enum value", 0);
+			instance.finishInitialization();
+		});
 	}
 
 	@Test

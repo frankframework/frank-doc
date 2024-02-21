@@ -18,12 +18,8 @@ package org.frankframework.frankdoc.model;
 import lombok.EqualsAndHashCode;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,16 +31,14 @@ import static org.frankframework.frankdoc.model.ElementChild.ALL_NOT_EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.IN_XSD;
 import static org.frankframework.frankdoc.model.ElementChild.REJECT_DEPRECATED;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(Parameterized.class)
 public class NavigationTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.walking";
 
-	@Parameters(name = "{0}")
 	public static Collection<Object[]> data() {
-		return asList(new Object[][] {
-			{"Parent", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "Parent"))},
+		return asList(new Object[][]{
+			{"Parent", IN_XSD, EXCLUDED, List.of(ref(RefKind.DECLARED, "Parent"))},
 			// Attribute childAttribute is not selected, so we do not have a real override.
 			{"Child", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "Child"), ref(RefKind.DECLARED, "Parent"))},
 			// Attribute parentAttributeFirst is overridden. Keep with Child, omit with Parent
@@ -57,12 +51,12 @@ public class NavigationTest {
 			// All children of Child2 are deprecated, so Child2 is ignored in the ancestor hierarchy
 			{"GrandChild2", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild2"), ref(RefKind.DECLARED, "Parent"))},
 			// All attributes of Parent are overridden by deprecated methods and should be de-inherited
-			{"GrandChild3", IN_XSD, REJECT_DEPRECATED, asList()},
+			{"GrandChild3", IN_XSD, REJECT_DEPRECATED, List.of()},
 			// Same as above, but requires the algorithm to work around a technical override
-			{"GrandChild5", IN_XSD, REJECT_DEPRECATED, asList()},
+			{"GrandChild5", IN_XSD, REJECT_DEPRECATED, List.of()},
 			// Below Parent are technical overrides in GrandParent6. We test here that we
 			// dont get Child6 which has no children, but Parent where the children are.
-			{"GrandChild6", IN_XSD, REJECT_DEPRECATED, asList(ref(RefKind.DECLARED, "Parent"))},
+			{"GrandChild6", IN_XSD, REJECT_DEPRECATED, List.of(ref(RefKind.DECLARED, "Parent"))},
 			// Test RefKind.CHILD
 			{"GrandChild7", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild7"), ref(RefKind.CHILD, "childAttributeFirst"), ref(RefKind.DECLARED, "Parent"))},
 			// Test fix of issue: Invalid XSDs generated #100.
@@ -82,8 +76,8 @@ public class NavigationTest {
 
 	@EqualsAndHashCode
 	private static class Ref {
-		private RefKind kind;
-		private String name;
+		private final RefKind kind;
+		private final String name;
 
 		Ref(RefKind kind, String name) {
 			this.kind = kind;
@@ -100,32 +94,15 @@ public class NavigationTest {
 		return new Ref(kind, name);
 	}
 
-	@Parameter(0)
-	public String simpleClassName;
-
-	@Parameter(1)
-	public Predicate<ElementChild> childSelector;
-
-	@Parameter(2)
-	public Predicate<ElementChild> childRejector;
-
-	@Parameter(3)
-	public List<Ref> expectedRefs;
-
-	private List<Ref> actual;
-
-	@Before
-	public void setUp() {
-		actual = new ArrayList<>();
-	}
-
-	@Test
-	public void test() throws Exception {
+	@MethodSource("data")
+	@ParameterizedTest(name = "{0}")
+	void test(String simpleClassName, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, List<Ref> expectedRefs) throws Exception {
 		String rootClassName = PACKAGE + "." + simpleClassName;
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		FrankDocModel model = FrankDocModel.populate(TestUtil.resourceAsURL("doc/empty-digester-rules.xml"), rootClassName, repository);
 		FrankElement walkFrom = model.findFrankElement(rootClassName);
-		walkFrom.walkCumulativeAttributes(new CumulativeChildHandler<FrankAttribute>() {
+		List<Ref> actual = new ArrayList<>();
+		walkFrom.walkCumulativeAttributes(new CumulativeChildHandler<>() {
 			@Override
 			public void handleSelectedChildren(List<FrankAttribute> children, FrankElement owner) {
 				children.forEach(c -> actual.add(ref(RefKind.CHILD, c.getName())));
@@ -149,4 +126,5 @@ public class NavigationTest {
 		}, childSelector, childRejector);
 		assertEquals(expectedRefs, actual);
 	}
+
 }

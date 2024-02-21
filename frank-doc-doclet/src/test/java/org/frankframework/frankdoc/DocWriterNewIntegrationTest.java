@@ -20,10 +20,9 @@ import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.sax.SAXSource;
@@ -43,10 +42,10 @@ public class DocWriterNewIntegrationTest {
 
 	private FrankClassRepository classRepository;
 
-	@ClassRule
-	public static TemporaryFolder testFolder = new TemporaryFolder();
+	@TempDir
+	public static File testFolder;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		classRepository = TestUtil.getFrankClassRepositoryDoclet(EXOTIC_PACKAGE);
 	}
@@ -78,7 +77,7 @@ public class DocWriterNewIntegrationTest {
 		docWriter.init(rootClassName, version);
 		String xsdString = docWriter.getSchema();
 
-		File output = new File(testFolder.getRoot(), outputSchemaFileName);
+		File output = new File(testFolder, outputSchemaFileName);
 		log.info("Output file of test xsd: " + output.getAbsolutePath());
 		Writer writer = new BufferedWriter(new FileWriter(output));
 		try {

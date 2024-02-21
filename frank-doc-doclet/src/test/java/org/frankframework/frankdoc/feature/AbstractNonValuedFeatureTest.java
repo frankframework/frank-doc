@@ -1,15 +1,15 @@
 package org.frankframework.frankdoc.feature;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class AbstractNonValuedFeatureTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.featurepackage.";
@@ -19,7 +19,7 @@ public class AbstractNonValuedFeatureTest {
 	private FrankClass deprecatedByTag;
 	private FrankClass myEnum;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		classes = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		forMethods = classes.findClass(PACKAGE + "ForMethods");

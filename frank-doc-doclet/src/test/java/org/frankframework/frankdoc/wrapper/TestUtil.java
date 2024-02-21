@@ -32,7 +32,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Log4j2
 public final class TestUtil {
@@ -128,7 +128,7 @@ public final class TestUtil {
 	}
 
 	public static void assertJsonEqual(String description, String jsonExp, String jsonAct) {
-		assertEquals(description, Utils.jsonPretty(jsonExp), Utils.jsonPretty(jsonAct));
+		assertEquals(Utils.jsonPretty(jsonExp), Utils.jsonPretty(jsonAct), description);
 	}
 
 	public static String getTestFile(String file) throws IOException {
@@ -175,6 +175,6 @@ public final class TestUtil {
 	}
 
 	static public void assertEqualsIgnoreCRLF(String message, String expected, String actual) {
-		assertEquals(message, expected.trim().replace("\r", ""), actual.trim().replace("\r", ""));
+		assertEquals(expected.trim().replace("\r", ""), actual.trim().replace("\r", ""), message);
 	}
 }

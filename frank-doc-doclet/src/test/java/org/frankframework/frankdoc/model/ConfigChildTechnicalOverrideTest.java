@@ -2,16 +2,16 @@ package org.frankframework.frankdoc.model;
 
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ConfigChildTechnicalOverrideTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.technical.override.";
@@ -19,7 +19,7 @@ public class ConfigChildTechnicalOverrideTest {
 
 	private static FrankDocModel model;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws IOException {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		model = FrankDocModel.populate(TestUtil.resourceAsURL(DIGESTER_RULES), PACKAGE + "Master", repository);

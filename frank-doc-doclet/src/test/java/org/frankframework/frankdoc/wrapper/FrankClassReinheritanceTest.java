@@ -1,11 +1,11 @@
 package org.frankframework.frankdoc.wrapper;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 public class FrankClassReinheritanceTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.wrapper.reinherit.";

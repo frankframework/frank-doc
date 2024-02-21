@@ -17,11 +17,8 @@ package org.frankframework.frankdoc.model;
 
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,13 +30,11 @@ import static org.frankframework.frankdoc.model.ElementChild.ALL_NOT_EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.IN_XSD;
 import static org.frankframework.frankdoc.model.ElementChild.REJECT_DEPRECATED;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(Parameterized.class)
 public class NavigationCumulativeTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.walking";
 
-	@Parameters(name = "{0} with {1} and {2}")
 	public static Collection<Object[]> data() {
 		return asList(new Object[][] {
 			{"Parent", "Parent", IN_XSD, EXCLUDED, asList("parentAttributeFirst", "parentAttributeSecond")},
@@ -51,29 +46,16 @@ public class NavigationCumulativeTest {
 		});
 	}
 
-	@Parameter(0)
-	public String title;
-
-	@Parameter(1)
-	public String simpleClassName;
-
-	@Parameter(2)
-	public Predicate<ElementChild> childSelector;
-
-	@Parameter(3)
-	public Predicate<ElementChild> childRejector;
-
-	@Parameter(4)
-	public List<String> childNames;
-
-	@Test
-	public void test() throws Exception {
+	@MethodSource("data")
+	@ParameterizedTest(name = "{0} with {1} and {2}")
+	void test(String title, String simpleClassName, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, List<String> childNames) throws Exception {
 		String rootClassName = PACKAGE + "." + simpleClassName;
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		FrankDocModel model = FrankDocModel.populate(TestUtil.resourceAsURL("doc/empty-digester-rules.xml"), rootClassName, repository);
 		FrankElement subject = model.findFrankElement(rootClassName);
 		List<String> actual = subject.getCumulativeAttributes(childSelector, childRejector).stream()
-				.map(a -> a.getName()).collect(Collectors.toList());
+				.map(FrankAttribute::getName).collect(Collectors.toList());
 		assertEquals(childNames, actual);
 	}
+
 }

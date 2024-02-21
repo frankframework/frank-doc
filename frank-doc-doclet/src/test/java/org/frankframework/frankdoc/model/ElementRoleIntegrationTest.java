@@ -17,20 +17,20 @@ package org.frankframework.frankdoc.model;
 
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ElementRoleIntegrationTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.role.";
 
 	private FrankDocModel model;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws IOException {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		model = FrankDocModel.populate(TestUtil.resourceAsURL("doc/role-digester-rules.xml"), PACKAGE + "Master", repository);

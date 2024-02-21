@@ -16,23 +16,23 @@ limitations under the License.
 package org.frankframework.frankdoc.model;
 
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ConfigChildSetterDescriptorTest {
 	private FrankDocModel instance;
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.technical.override."; // Doesn't matter which package we choose. This test doesn't depend on a package.
 
-	@Before
+	@BeforeEach
 	public void setUp() throws SAXException, IOException {
 		// No need to set include and exclude filters of the FrankClassRepository, because
 		// we are not asking for the implementations of an interface.

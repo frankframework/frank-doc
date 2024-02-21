@@ -1,23 +1,18 @@
 package org.frankframework.frankdoc.wrapper;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 import static org.frankframework.frankdoc.wrapper.TestUtil.JAVADOC_GROUP_ANNOTATION;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-@RunWith(Parameterized.class)
 public class FrankClassJava5AnnotationTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.doclet.interfaces.java5.annotation.";
 
-	@Parameters(name = "{0}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 			{"ClassWithJava5Annotation", "ClassGroup"},
@@ -29,14 +24,9 @@ public class FrankClassJava5AnnotationTest {
 		});
 	}
 
-	@Parameter(0)
-	public String queriedClass;
-
-	@Parameter(1)
-	public String expectedValue;
-
-	@Test
-	public void testJavaAnnotationValue() throws Exception {
+	@MethodSource("data")
+	@ParameterizedTest(name = "{0}")
+	void testJavaAnnotationValue(String queriedClass, String expectedValue) throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		FrankClass instance = repository.findClass(PACKAGE + queriedClass);
 		// TODO: Will rename this method and give it Java annotation class name as argument.
@@ -45,7 +35,8 @@ public class FrankClassJava5AnnotationTest {
 		if(expectedValue == null) {
 			assertNull(actualGroupAnnotation);
 		} else {
-			assertEquals(expectedValue, (String) actualGroupAnnotation.getValueOf("name"));
+			assertEquals(expectedValue, actualGroupAnnotation.getValueOf("name"));
 		}
 	}
+
 }
