@@ -28,16 +28,13 @@ public class MandatoryStatusTest {
 			{"setOptional", MandatoryStatus.OPTIONAL},
 		});
 	}
-	public String methodName;
-	public MandatoryStatus expectedMandatoryStatus;
 
 	@MethodSource("data")
 	@ParameterizedTest(name = "Test method {0} has status {1}")
-	public void test(String methodName, MandatoryStatus expectedMandatoryStatus) throws Exception {
-		initMandatoryStatusTest(methodName, expectedMandatoryStatus);
+	void test(String methodName, MandatoryStatus expectedMandatoryStatus) throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		FrankClass clazz = repository.findClass(PACKAGE + "Subject");
-		FrankMethod testMethod = Arrays.asList(clazz.getDeclaredMethods()).stream()
+		FrankMethod testMethod = Arrays.stream(clazz.getDeclaredMethods())
 				.filter(m -> m.getName().equals(methodName))
 				.collect(Collectors.toList()).get(0);
 		MandatoryStatus actualMandatoryStatus = null;
@@ -45,8 +42,4 @@ public class MandatoryStatusTest {
 		assertEquals(expectedMandatoryStatus, actualMandatoryStatus);
 	}
 
-	public void initMandatoryStatusTest(String methodName, MandatoryStatus expectedMandatoryStatus) {
-		this.methodName = methodName;
-		this.expectedMandatoryStatus = expectedMandatoryStatus;
-	}
 }

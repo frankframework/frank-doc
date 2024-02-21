@@ -39,32 +39,21 @@ public class FilteringInterfaceImplementationsTest {
 			{"Both packages derived class of implementation excluded", asList(BOTH_PACKAGES), asList(CHILD_OF_FIRST_IMPL_IN_SECOND_PACKAGE_EXCLUDED), new String[] {FIRST_IMPL, SECOND_IMPL, THIRD_IMPL}}
 		});
 	}
-	public String caseName;
-	public List<String> includes;
-	public List<String> excludes;
-	public String[] expectedImplementations;
 
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0}, {1}")
-	public void test(String caseName, List<String> includes, List<String> excludes, String[] expectedImplementations) throws FrankDocException {
-		initFilteringInterfaceImplementationsTest(caseName, includes, excludes, expectedImplementations);
+	void test(String caseName, List<String> includes, List<String> excludes, String[] expectedImplementations) throws FrankDocException {
 		EasyDoclet easyDoclet = TestUtil.getEasyDoclet(BOTH_PACKAGES);
 		Set<? extends Element> classDocs = TestUtil.getTypeElements(easyDoclet, BOTH_PACKAGES);
 		FrankClassRepository repository = new FrankClassRepository(TestUtil.getDocTrees(easyDoclet), classDocs, new HashSet<>(includes), new HashSet<>(excludes), new HashSet<>());
 		FrankClass clazz = repository.findClass(FIRST_PACKAGE + "MyInterface");
 		List<FrankClass> implementations = clazz.getInterfaceImplementations();
 		List<String> actualSimpleNames = implementations.stream()
-				.map(FrankClass::getSimpleName)
-				.sorted()
+			.map(FrankClass::getSimpleName)
+			.sorted()
 			.peek(System.out::println)
-				.collect(Collectors.toList());
-		assertArrayEquals(expectedImplementations, actualSimpleNames.toArray(new String[] {}));
+			.collect(Collectors.toList());
+		assertArrayEquals(expectedImplementations, actualSimpleNames.toArray(new String[]{}));
 	}
 
-	public void initFilteringInterfaceImplementationsTest(String caseName, List<String> includes, List<String> excludes, String[] expectedImplementations) {
-		this.caseName = caseName;
-		this.includes = includes;
-		this.excludes = excludes;
-		this.expectedImplementations = expectedImplementations;
-	}
 }

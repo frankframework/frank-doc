@@ -23,13 +23,10 @@ public class FrankClassJava5AnnotationTest {
 			{"InheriterFromGrandparent", "ClassGroup"}
 		});
 	}
-	public String queriedClass;
-	public String expectedValue;
 
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0}")
-	public void testJavaAnnotationValue(String queriedClass, String expectedValue) throws Exception {
-		initFrankClassJava5AnnotationTest(queriedClass, expectedValue);
+	void testJavaAnnotationValue(String queriedClass, String expectedValue) throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		FrankClass instance = repository.findClass(PACKAGE + queriedClass);
 		// TODO: Will rename this method and give it Java annotation class name as argument.
@@ -38,12 +35,8 @@ public class FrankClassJava5AnnotationTest {
 		if(expectedValue == null) {
 			assertNull(actualGroupAnnotation);
 		} else {
-			assertEquals(expectedValue, (String) actualGroupAnnotation.getValueOf("name"));
+			assertEquals(expectedValue, actualGroupAnnotation.getValueOf("name"));
 		}
 	}
 
-	public void initFrankClassJava5AnnotationTest(String queriedClass, String expectedValue) {
-		this.queriedClass = queriedClass;
-		this.expectedValue = expectedValue;
-	}
 }

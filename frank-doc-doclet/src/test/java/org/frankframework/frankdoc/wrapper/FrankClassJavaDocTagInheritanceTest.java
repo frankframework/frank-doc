@@ -19,21 +19,14 @@ public class FrankClassJavaDocTagInheritanceTest {
 			{"@ff.tagForParentInterface", "ParentInterfaceValue"}
 		});
 	}
-	public String tagNameSearched;
-	public String expectedTagValue;
 
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0}")
-	public void testGetJavaDocTagIncludingInherited(String tagNameSearched, String expectedTagValue) throws Exception {
-		initFrankClassJavaDocTagInheritanceTest(tagNameSearched, expectedTagValue);
+	void testGetJavaDocTagIncludingInherited(String tagNameSearched, String expectedTagValue) throws Exception {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		FrankClass instance = repository.findClass(PACKAGE + "Child");
 		String actualTagValue = instance.getJavaDocTagIncludingInherited(tagNameSearched);
 		assertEquals(expectedTagValue, actualTagValue);
 	}
 
-	public void initFrankClassJavaDocTagInheritanceTest(String tagNameSearched, String expectedTagValue) {
-		this.tagNameSearched = tagNameSearched;
-		this.expectedTagValue = expectedTagValue;
-	}
 }

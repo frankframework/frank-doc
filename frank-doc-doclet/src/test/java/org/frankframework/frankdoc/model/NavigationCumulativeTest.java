@@ -45,30 +45,17 @@ public class NavigationCumulativeTest {
 			{"GrandChild2 reject deprecated", "GrandChild2", IN_XSD, REJECT_DEPRECATED, asList("grandChild2Attribute", "parentAttributeFirst", "parentAttributeSecond")}
 		});
 	}
-	public String title;
-	public String simpleClassName;
-	public Predicate<ElementChild> childSelector;
-	public Predicate<ElementChild> childRejector;
-	public List<String> childNames;
 
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0} with {1} and {2}")
-	public void test(String title, String simpleClassName, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, List<String> childNames) throws Exception {
-		initNavigationCumulativeTest(title, simpleClassName, childSelector, childRejector, childNames);
+	void test(String title, String simpleClassName, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, List<String> childNames) throws Exception {
 		String rootClassName = PACKAGE + "." + simpleClassName;
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		FrankDocModel model = FrankDocModel.populate(TestUtil.resourceAsURL("doc/empty-digester-rules.xml"), rootClassName, repository);
 		FrankElement subject = model.findFrankElement(rootClassName);
 		List<String> actual = subject.getCumulativeAttributes(childSelector, childRejector).stream()
-				.map(a -> a.getName()).collect(Collectors.toList());
+				.map(FrankAttribute::getName).collect(Collectors.toList());
 		assertEquals(childNames, actual);
 	}
 
-	public void initNavigationCumulativeTest(String title, String simpleClassName, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, List<String> childNames) {
-		this.title = title;
-		this.simpleClassName = simpleClassName;
-		this.childSelector = childSelector;
-		this.childRejector = childRejector;
-		this.childNames = childNames;
-	}
 }

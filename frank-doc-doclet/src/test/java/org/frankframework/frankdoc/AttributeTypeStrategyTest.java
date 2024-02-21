@@ -85,10 +85,7 @@ public class AttributeTypeStrategyTest {
 	private static String getTestXmlActive(String value) {
 		return String.format("<myElement active=\"%s\"/>", value);
 	}
-	public String title;
 	public String testXml;
-	public boolean allowPropertyRefShouldAccept;
-	public boolean allowPropertyRefEnumValuesIgnoreCaseShouldAccept;
 
 	@BeforeEach
 	public void setUp() throws IOException {
@@ -114,22 +111,22 @@ public class AttributeTypeStrategyTest {
 		// This test does not test whether use="required" is included. It is about
 		// attribute types. Therefore we take the attribute not to be mandatory.
 		complexType.addSubElement(attributeTypeStrategy.createRestrictedAttribute(enumTypedAttribute, a -> {}));
-		attributeTypeStrategy.createHelperTypes().forEach(h -> schema.addSubElement(h));
+		attributeTypeStrategy.createHelperTypes().forEach(schema::addSubElement);
 		schema.addSubElement(attributeTypeStrategy.createAttributeEnumType(attributeEnum));
 		return schema.toXML(true);
 	}
 
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0}")
-	public void testAllowPropertyRef(String title, String testXml, boolean allowPropertyRefShouldAccept, boolean allowPropertyRefEnumValuesIgnoreCaseShouldAccept) {
-		initAttributeTypeStrategyTest(title, testXml, allowPropertyRefShouldAccept, allowPropertyRefEnumValuesIgnoreCaseShouldAccept);
+	void testAllowPropertyRef(String title, String testXml, boolean allowPropertyRefShouldAccept, boolean allowPropertyRefEnumValuesIgnoreCaseShouldAccept) {
+		this.testXml = testXml;
 		doTest(allowPropertyRefShouldAccept, schemaStringAllowAttributeRef);
 	}
 
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0}")
-	public void testAllowPropertyRefEnumValuesIgnoreCase(String title, String testXml, boolean allowPropertyRefShouldAccept, boolean allowPropertyRefEnumValuesIgnoreCaseShouldAccept) {
-		initAttributeTypeStrategyTest(title, testXml, allowPropertyRefShouldAccept, allowPropertyRefEnumValuesIgnoreCaseShouldAccept);
+	void testAllowPropertyRefEnumValuesIgnoreCase(String title, String testXml, boolean allowPropertyRefShouldAccept, boolean allowPropertyRefEnumValuesIgnoreCaseShouldAccept) {
+		this.testXml = testXml;
 		doTest(allowPropertyRefEnumValuesIgnoreCaseShouldAccept, schemaStringAllowAttributeRefEnumValuesIgnoreCase);
 	}
 
@@ -153,10 +150,4 @@ public class AttributeTypeStrategyTest {
 		validator.validate(source);
 	}
 
-	public void initAttributeTypeStrategyTest(String title, String testXml, boolean allowPropertyRefShouldAccept, boolean allowPropertyRefEnumValuesIgnoreCaseShouldAccept) {
-		this.title = title;
-		this.testXml = testXml;
-		this.allowPropertyRefShouldAccept = allowPropertyRefShouldAccept;
-		this.allowPropertyRefEnumValuesIgnoreCaseShouldAccept = allowPropertyRefEnumValuesIgnoreCaseShouldAccept;
-	}
 }

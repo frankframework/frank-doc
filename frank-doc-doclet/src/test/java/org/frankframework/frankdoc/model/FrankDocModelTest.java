@@ -84,8 +84,8 @@ public class FrankDocModelTest {
 		assertSame(instance.getAllTypes().get(LISTENER), actualListener);
 		assertSame(instance.getAllTypes().get(SIMPLE_CHILD), actualChild);
 		assertSame(instance.getAllElements().get(SIMPLE_CHILD), getMember(actualChild.getMembers(), SIMPLE_CHILD));
-		Assertions.assertTrue(instance.getAllElements().containsKey(SIMPLE_PARENT));
-		Assertions.assertTrue(instance.getAllElements().containsKey(FOR_XSD_ELEMENT_NAME_TEST));
+		assertTrue(instance.getAllElements().containsKey(SIMPLE_PARENT));
+		assertTrue(instance.getAllElements().containsKey(FOR_XSD_ELEMENT_NAME_TEST));
 		List<FrankElement> listenerMembers = actualListener.getMembers();
 		// Tests that AbstractGrandParent is omitted.
 		assertEquals(4, listenerMembers.size());
