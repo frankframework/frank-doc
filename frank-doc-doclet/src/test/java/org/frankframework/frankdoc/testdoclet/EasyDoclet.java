@@ -40,7 +40,7 @@ public class EasyDoclet implements Doclet {
 
 	@Override
 	public SourceVersion getSupportedSourceVersion() {
-		return SourceVersion.RELEASE_11;
+		return SourceVersion.RELEASE_17;
 	}
 
 	@Override
