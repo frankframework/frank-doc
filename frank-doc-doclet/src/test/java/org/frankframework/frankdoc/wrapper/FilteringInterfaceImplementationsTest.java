@@ -1,11 +1,8 @@
 package org.frankframework.frankdoc.wrapper;
 
 import org.frankframework.frankdoc.testdoclet.EasyDoclet;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.lang.model.element.Element;
 import java.util.Arrays;
@@ -16,9 +13,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-@RunWith(Parameterized.class)
 public class FilteringInterfaceImplementationsTest {
 	private static final String PREFIX = "org.frankframework.frankdoc.testtarget.doclet.filtering.";
 	private static final String FIRST = "first.";
@@ -34,7 +30,6 @@ public class FilteringInterfaceImplementationsTest {
 	private static final String[] THIRD_IMPL_EXCLUDED = new String[] {SECOND_PACKAGE + THIRD_IMPL};
 	private static final String[] CHILD_OF_FIRST_IMPL_IN_SECOND_PACKAGE_EXCLUDED = new String[] {SECOND_PACKAGE + CHILD_OF_FIRST_IMPL_IN_SECOND_PACKAGE};
 
-	@Parameters(name = "{0}, {1}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 			{"First package no exclude", List.of(FIRST_PACKAGE), asList(NO_EXCLUDES), new String[] {FIRST_IMPL}},
@@ -45,30 +40,20 @@ public class FilteringInterfaceImplementationsTest {
 		});
 	}
 
-	@Parameter(0)
-	public String caseName;
-
-	@Parameter(1)
-	public List<String> includes;
-
-	@Parameter(2)
-	public List<String> excludes;
-
-	@Parameter(3)
-	public String[] expectedImplementations;
-
-	@Test
-	public void test() throws FrankDocException {
+	@MethodSource("data")
+	@ParameterizedTest(name = "{0}, {1}")
+	void test(String caseName, List<String> includes, List<String> excludes, String[] expectedImplementations) throws FrankDocException {
 		EasyDoclet easyDoclet = TestUtil.getEasyDoclet(BOTH_PACKAGES);
 		Set<? extends Element> classDocs = TestUtil.getTypeElements(easyDoclet, BOTH_PACKAGES);
 		FrankClassRepository repository = new FrankClassRepository(TestUtil.getDocTrees(easyDoclet), classDocs, new HashSet<>(includes), new HashSet<>(excludes), new HashSet<>());
 		FrankClass clazz = repository.findClass(FIRST_PACKAGE + "MyInterface");
 		List<FrankClass> implementations = clazz.getInterfaceImplementations();
 		List<String> actualSimpleNames = implementations.stream()
-				.map(FrankClass::getSimpleName)
-				.sorted()
+			.map(FrankClass::getSimpleName)
+			.sorted()
 			.peek(System.out::println)
-				.collect(Collectors.toList());
-		assertArrayEquals(expectedImplementations, actualSimpleNames.toArray(new String[] {}));
+			.collect(Collectors.toList());
+		assertArrayEquals(expectedImplementations, actualSimpleNames.toArray(new String[]{}));
 	}
+
 }

@@ -4,13 +4,13 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ReferenceTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.featurepackage.";
@@ -20,7 +20,7 @@ public class ReferenceTest {
 	private Reference instance;
 	private FrankClass clazz;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		instance = new Reference(classRepository);

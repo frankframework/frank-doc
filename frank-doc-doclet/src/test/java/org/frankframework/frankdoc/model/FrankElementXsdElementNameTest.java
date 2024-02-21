@@ -17,15 +17,15 @@ package org.frankframework.frankdoc.model;
 
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FrankElementXsdElementNameTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.simple.";
@@ -35,7 +35,7 @@ public class FrankElementXsdElementNameTest {
 	private FrankClassRepository classRepository;
 	private FrankDocModel model;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws IOException {
 		classRepository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
 		model = FrankDocModel.populate(TestUtil.resourceAsURL(DIGESTER_RULES), CONTAINER, classRepository);

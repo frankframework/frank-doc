@@ -26,7 +26,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestAppender extends AbstractAppender {
 	private final List<String> logMessages = new ArrayList<String>();
@@ -84,6 +84,6 @@ public class TestAppender extends AbstractAppender {
 	}
 
 	public void assertLogged(String msg) {
-		assertTrue("Expect log message: " + msg, logMessages.contains(msg));
+		assertTrue(logMessages.contains(msg), "Expect log message: " + msg);
 	}
 }

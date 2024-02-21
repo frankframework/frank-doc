@@ -1,10 +1,10 @@
 package org.frankframework.frankdoc.wrapper;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class VariablesTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.wrapper.variables.";
@@ -13,7 +13,7 @@ public class VariablesTest {
 	private FrankClassRepository repository;
 	private FrankClass instance;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, PACKAGE_ALT);
 	}

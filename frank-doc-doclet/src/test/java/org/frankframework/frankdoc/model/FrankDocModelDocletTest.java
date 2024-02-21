@@ -2,12 +2,12 @@ package org.frankframework.frankdoc.model;
 
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FrankDocModelDocletTest {
 	private static final String SIMPLE = "org.frankframework.frankdoc.testtarget.simple.";
@@ -19,7 +19,7 @@ public class FrankDocModelDocletTest {
 
 	private FrankDocModel instance;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws IOException {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(SIMPLE);
 		instance = FrankDocModel.populate(TestUtil.resourceAsURL("doc/xsd-element-name-digester-rules.xml"), SIMPLE + "Container", repository);

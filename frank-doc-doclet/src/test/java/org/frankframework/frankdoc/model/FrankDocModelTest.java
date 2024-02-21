@@ -19,9 +19,9 @@ import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,13 +30,13 @@ import java.util.stream.Collectors;
 
 import static org.frankframework.frankdoc.model.ElementChild.ALL_NOT_EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.IN_XSD;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FrankDocModelTest {
 	private static final String SIMPLE = "org.frankframework.frankdoc.testtarget.simple";
@@ -56,7 +56,7 @@ public class FrankDocModelTest {
 	private FrankDocModel instance;
 	private FrankElement attributeOwner;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		String[] allPackages = new String[] {SIMPLE, IBISDOCREF, "org.frankframework.frankdoc.testtarget.reflect"};
 		classRepository = TestUtil.getFrankClassRepositoryDoclet(allPackages);
@@ -84,8 +84,8 @@ public class FrankDocModelTest {
 		assertSame(instance.getAllTypes().get(LISTENER), actualListener);
 		assertSame(instance.getAllTypes().get(SIMPLE_CHILD), actualChild);
 		assertSame(instance.getAllElements().get(SIMPLE_CHILD), getMember(actualChild.getMembers(), SIMPLE_CHILD));
-		Assert.assertTrue(instance.getAllElements().containsKey(SIMPLE_PARENT));
-		Assert.assertTrue(instance.getAllElements().containsKey(FOR_XSD_ELEMENT_NAME_TEST));
+		assertTrue(instance.getAllElements().containsKey(SIMPLE_PARENT));
+		assertTrue(instance.getAllElements().containsKey(FOR_XSD_ELEMENT_NAME_TEST));
 		List<FrankElement> listenerMembers = actualListener.getMembers();
 		// Tests that AbstractGrandParent is omitted.
 		assertEquals(4, listenerMembers.size());

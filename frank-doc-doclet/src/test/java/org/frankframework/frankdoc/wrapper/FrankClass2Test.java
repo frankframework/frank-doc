@@ -1,6 +1,6 @@
 package org.frankframework.frankdoc.wrapper;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,12 +10,13 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FrankClass2Test extends TestBase {
 	private static final String JAVA_5_ANNOTATION = "org.frankframework.frankdoc.testtarget.doclet.Java5Annotation";
@@ -95,10 +96,12 @@ public class FrankClass2Test extends TestBase {
 		checkInterfaceImplementations(implementations);
 	}
 
-	@Test(expected = FrankDocException.class)
+	@Test
 	public void nonInterfaceCannotGiveItsImplementations() throws FrankDocException {
-		FrankClass instance = classRepository.findClass(PACKAGE + "Child");
-		instance.getInterfaceImplementations();
+		assertThrows(FrankDocException.class, () -> {
+			FrankClass instance = classRepository.findClass(PACKAGE + "Child");
+			instance.getInterfaceImplementations();
+		});
 	}
 
 	@Test
@@ -150,7 +153,7 @@ public class FrankClass2Test extends TestBase {
 			.filter(m -> methodNames.contains(m.getName()))
 			.collect(Collectors.groupingBy(FrankMethod::getName));
 		for (String name : new String[]{"getInherited", "setInherited"}) {
-			assertEquals(String.format("Duplicate method name [%s]", name), 1, methodsByName.get(name).size());
+			assertEquals(1, methodsByName.get(name).size(), String.format("Duplicate method name [%s]", name));
 		}
 	}
 

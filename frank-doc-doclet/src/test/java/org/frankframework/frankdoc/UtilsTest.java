@@ -20,8 +20,8 @@ import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,16 +29,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import static org.frankframework.frankdoc.Utils.isConfigChildSetter;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UtilsTest {
 	private static final String SIMPLE = "org.frankframework.frankdoc.testtarget.simple";
 	private FrankClassRepository repository;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		repository = TestUtil.getFrankClassRepositoryDoclet(SIMPLE);
 	}
@@ -102,10 +103,12 @@ public class UtilsTest {
 		assertFalse(isConfigChildSetter(getTestMethod("setNotTextConfigChildButAttribute")));
 	}
 
-	@Test(expected = FrankDocException.class)
+	@Test
 	public void whenStringHasUnfinishedJavaDocLinkThenError() throws Exception {
-		// No closing "}"
-		Utils.flattenJavaDocLinksToLastWords("{@link Receiver");
+		assertThrows(FrankDocException.class, () -> {
+			// No closing "}"
+			Utils.flattenJavaDocLinksToLastWords("{@link Receiver");
+		});
 	}
 
 	@Test
