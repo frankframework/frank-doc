@@ -1,5 +1,5 @@
 /*
-Copyright 2021 WeAreFrank!
+Copyright 2021-2024 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,14 +15,16 @@ limitations under the License.
 */
 package org.frankframework.frankdoc.model;
 
+import org.frankframework.frankdoc.TestAppender;
+import org.frankframework.frankdoc.feature.Reference;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +45,8 @@ public class FrankDocModelTest {
 	private static final String LISTENER = SIMPLE + ".IListener";
 	private static final String SIMPLE_PARENT = SIMPLE + ".ListenerParent";
 	private static final String SIMPLE_CHILD = SIMPLE + ".ListenerChild";
-	private static final String SIMPLE_GRNAD_CHILD = SIMPLE + ".ListenerGrandChild";
-	private static final String SIMPLE_GRNAD_PARENT = SIMPLE + ".AbstractGrandParent";
+	private static final String SIMPLE_GRAND_CHILD = SIMPLE + ".ListenerGrandChild";
+	private static final String SIMPLE_GRAND_PARENT = SIMPLE + ".AbstractGrandParent";
 	private static final String FOR_XSD_ELEMENT_NAME_TEST = SIMPLE + ".ParentListener";
 
 	private static final String IBISDOCREF = "org.frankframework.frankdoc.testtarget.ibisdocref";
@@ -91,7 +93,7 @@ public class FrankDocModelTest {
 		assertEquals(4, listenerMembers.size());
 		assertTrue(membersContain(listenerMembers, SIMPLE_PARENT));
 		assertTrue(membersContain(listenerMembers, SIMPLE_CHILD));
-		assertTrue(membersContain(listenerMembers, SIMPLE_GRNAD_CHILD));
+		assertTrue(membersContain(listenerMembers, SIMPLE_GRAND_CHILD));
 		List<FrankElement> childMembers = actualChild.getMembers();
 		assertEquals(1, childMembers.size());
 		assertTrue(membersContain(childMembers, SIMPLE_CHILD));
@@ -125,7 +127,7 @@ public class FrankDocModelTest {
 	public void whenChildElementAddedBeforeParentThenCorrectModel() throws FrankDocException {
 		FrankElement child = instance.findOrCreateFrankElement(SIMPLE_CHILD);
 		FrankElement parent = instance.findOrCreateFrankElement(SIMPLE_PARENT);
-		instance.findOrCreateFrankElement(SIMPLE_GRNAD_CHILD);
+		instance.findOrCreateFrankElement(SIMPLE_GRAND_CHILD);
 		instance.setOverriddenFrom();
 		checkModelAfterChildAndParentAdded(parent, child);
 	}
@@ -134,7 +136,7 @@ public class FrankDocModelTest {
 	public void whenParentElementAddedBeforeChildThenCorrectModel() throws FrankDocException {
 		FrankElement parent = instance.findOrCreateFrankElement(SIMPLE_PARENT);
 		FrankElement child = instance.findOrCreateFrankElement(SIMPLE_CHILD);
-		instance.findOrCreateFrankElement(SIMPLE_GRNAD_CHILD);
+		instance.findOrCreateFrankElement(SIMPLE_GRAND_CHILD);
 		instance.setOverriddenFrom();
 		checkModelAfterChildAndParentAdded(parent, child);
 	}
@@ -145,7 +147,7 @@ public class FrankDocModelTest {
 		assertTrue(actualAllElements.containsKey(actualChild.getFullName()));
 		assertSame(actualAllElements.get(actualParent.getFullName()), actualParent);
 		assertSame(actualAllElements.get(actualChild.getFullName()), actualChild);
-		FrankElement actualGrandParent = actualAllElements.get(SIMPLE_GRNAD_PARENT);
+		FrankElement actualGrandParent = actualAllElements.get(SIMPLE_GRAND_PARENT);
 		assertTrue(actualGrandParent.isAbstract());
 		FrankElement actualObject = actualAllElements.get("java.lang.Object");
 		assertNull(actualObject.getParent());
@@ -178,8 +180,8 @@ public class FrankDocModelTest {
 		actualInheritedAttribute = findAttribute(actualChild, "inheritedAttribute");
 		assertEquals("inheritedAttribute", actualInheritedAttribute.getName());
 		assertSame(actualParent, actualInheritedAttribute.getOverriddenFrom());
-		FrankElement actualGrandChild = actualAllElements.get(SIMPLE_GRNAD_CHILD);
-		assertEquals(SIMPLE_GRNAD_CHILD, actualGrandChild.getFullName());
+		FrankElement actualGrandChild = actualAllElements.get(SIMPLE_GRAND_CHILD);
+		assertEquals(SIMPLE_GRAND_CHILD, actualGrandChild.getFullName());
 		assertEquals(1, actualGrandChild.getAttributes(ALL_NOT_EXCLUDED).size());
 		actualInheritedAttribute = actualGrandChild.getAttributes(ALL_NOT_EXCLUDED).get(0);
 		assertEquals("inheritedAttribute", actualInheritedAttribute.getName());
@@ -518,6 +520,20 @@ public class FrankDocModelTest {
 		assertEquals(MandatoryStatus.OPTIONAL, actual.getMandatoryStatus());
 		assertSame(attributeOwner, actual.getOwningElement());
 		assertEquals("setReferToInheritedDescription description", actual.getDescription());
+	}
+
+	@Test
+	public void testReferToMissingMethod() throws Exception {
+		TestAppender appender = TestAppender.newBuilder().build();
+		TestAppender.addToRootLogger(appender);
+		try {
+			Reference reference = new Reference(classRepository);
+			FrankMethod targetMethod = Arrays.stream(classRepository.findClass(REFERRER).getDeclaredMethods()).filter(frankMethod -> frankMethod.getName().equals("doesNotExistsMethod")).findFirst().get();
+			reference.valueOf(targetMethod);
+			appender.assertLogged("Referred method [org.frankframework.frankdoc.testtarget.ibisdocref.ChildTargetParameterized] does not exist, as specified at location: [Referrer.doesNotExistsMethod]");
+		} finally {
+			TestAppender.removeAppender(appender);
+		}
 	}
 
 	@Test

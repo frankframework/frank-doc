@@ -48,7 +48,7 @@ public class Reference {
 			} else {
 				FrankMethod referred = getReferredMethod(resultAsString, method);
 				if(referred == null) {
-					log.error("Referred method [{}] does not exist", resultAsString);
+					log.error("Referred method [{}] does not exist, as specified at location: [{}]", resultAsString, method);
 				} else {
 					return referred;
 				}

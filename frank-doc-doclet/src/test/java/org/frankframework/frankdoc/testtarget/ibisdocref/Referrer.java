@@ -46,4 +46,8 @@ public class Referrer {
 	@ReferTo(ChildTargetParameterized.class)
 	public void setReferToParameterizedType(String value) {
 	}
+
+	@ReferTo(ChildTargetParameterized.class)
+	public void doesNotExistsMethod(String value) {
+	}
 }
