@@ -1,12 +1,19 @@
 package org.frankframework.frankdoc.wrapper;
 
 import com.sun.source.util.DocTrees;
+import com.sun.tools.javac.file.JavacFileManager;
+import com.sun.tools.javac.util.Context;
+import jdk.javadoc.internal.tool.Start;
+import lombok.extern.log4j.Log4j2;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.testdoclet.EasyDoclet;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.lang.model.element.Element;
+import javax.tools.JavaFileManager;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.sax.SAXSource;
 import java.io.BufferedInputStream;
@@ -19,6 +26,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
@@ -26,6 +34,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Log4j2
 public final class TestUtil {
 	private static final Properties BUILD_PROPERTIES = new TestUtil().loadBuildProperties();
 	private static final File TEST_SOURCE_DIRECTORY = new File(BUILD_PROPERTIES.getProperty("testSourceDirectory"));
@@ -49,25 +58,47 @@ public final class TestUtil {
 	}
 
 	public static FrankClassRepository getFrankClassRepositoryDoclet(String... packages) {
-		EasyDoclet easyDoclet = getEasyDoclet(packages);
-		Set<? extends Element> classes = getTypeElements(easyDoclet, packages);
-		return new FrankClassRepository(getDocTrees(easyDoclet), classes, new HashSet<>(Arrays.asList(packages)), new HashSet<>(), new HashSet<>());
+		Set<? extends Element> classes = getIncludedElements(packages);
+		return new FrankClassRepository(getDocTrees(), classes, new HashSet<>(Arrays.asList(packages)), new HashSet<>(), new HashSet<>());
 	}
 
-	public static Set<? extends Element> getTypeElements(EasyDoclet easyDoclet, String... packages) {
-		if (easyDoclet == null) {
-			easyDoclet = getEasyDoclet(packages);
+	public static Set<? extends Element> getIncludedElements(String... packages) {
+		initEasyDoclet(packages);
+		return EasyDoclet.getIncludedElements();
+	}
+
+	static void initEasyDoclet(String... packages) {
+		// Cache the previous run if the packages are the same. Saves 50% of the time.
+		if (Arrays.equals(packages, EasyDoclet.getPackages())) {
+			return;
 		}
-		return easyDoclet.getDocletEnvironment().getIncludedElements();
+		if (packages == null || packages.length == 0) {
+			throw new IllegalArgumentException("At least one package must be specified");
+		}
+		EasyDoclet.setPackages(packages);
+		log.debug("System property java.home: {}", System.getProperty("java.home"));
+		for (String pack : packages) {
+			log.debug("Package: {}", pack);
+		}
+
+		Start start = new Start(new Context());
+		Iterable<String> options = Arrays.asList("-sourcepath", TEST_SOURCE_DIRECTORY.getAbsolutePath(), "-doclet", EasyDoclet.class.getName(), "-subpackages", String.join(":", packages));
+		ArrayList<JavaFileObject> fileObjects = new ArrayList<>();
+		try (JavaFileManager fileManager = new JavacFileManager(new Context(), true, StandardCharsets.UTF_8)) {
+			for (String pack : packages) {
+				log.debug("Listing source path for package {}", pack);
+				Iterable<JavaFileObject> packageFileObjects = fileManager.list(StandardLocation.SOURCE_PATH, pack, Set.of(JavaFileObject.Kind.SOURCE), true);
+				packageFileObjects.iterator().forEachRemaining(fileObjects::add);
+			}
+			start.begin(EasyDoclet.class, options, fileObjects);
+		} catch (IOException e) {
+			log.error("Cannot create file manager OR cannot process Doclet generation", e);
+			throw new RuntimeException("Cannot create file manager OR cannot process Doclet generation", e);
+		}
 	}
 
-	static EasyDoclet getEasyDoclet(String... packages) {
-		System.out.println("System property java.home: " + System.getProperty("java.home"));
-		return new EasyDoclet(TEST_SOURCE_DIRECTORY, packages);
-	}
-
-	static DocTrees getDocTrees(EasyDoclet easyDoclet) {
-		return easyDoclet.getDocletEnvironment().getDocTrees();
+	static DocTrees getDocTrees() {
+		return EasyDoclet.getDocTrees();
 	}
 
 	private Properties loadBuildProperties() {

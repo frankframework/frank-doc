@@ -226,7 +226,7 @@ public class FrankDocModelTest {
 	private Map<String, FrankAttribute> getAttributesOfClass(final String className) throws FrankDocException {
 		attributeOwner = instance.findOrCreateFrankElement(className);
 		final List<FrankAttribute> attributes = instance.createAttributes(classRepository.findClass(className), attributeOwner, classRepository);
-		return attributes.stream().collect(Collectors.toMap(att -> att.getName(), att -> att));
+		return attributes.stream().collect(Collectors.toMap(FrankAttribute::getName, att -> att));
 	}
 
 	@Test

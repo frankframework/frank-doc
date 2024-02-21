@@ -30,12 +30,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ConfigChildSetterDescriptorTest {
 	private FrankDocModel instance;
+	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.technical.override."; // Doesn't matter which package we choose. This test doesn't depend on a package.
 
 	@BeforeEach
 	public void setUp() throws SAXException, IOException {
 		// No need to set include and exclude filters of the FrankClassRepository, because
 		// we are not asking for the implementations of an interface.
-		instance = new FrankDocModel(TestUtil.getFrankClassRepositoryDoclet(), null);
+		instance = new FrankDocModel(TestUtil.getFrankClassRepositoryDoclet(PACKAGE), null);
 		instance.createConfigChildDescriptorsFrom(TestUtil.resourceAsURL("doc/fake-digester-rules.xml"));
 	}
 

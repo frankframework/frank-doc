@@ -305,7 +305,7 @@ public class FrankDocModel {
 		return result;
 	}
 
-	private void setAttributeFeatures(FrankAttribute attribute, FrankMethod method, FrankClassRepository classRepository) throws FrankDocException {
+	private void setAttributeFeatures(FrankAttribute attribute, FrankMethod method, FrankClassRepository classRepository) {
 		Reference featureReference = new Reference(classRepository);
 		attribute.setDocumented(
 				(Description.getInstance().valueOf(method) != null)

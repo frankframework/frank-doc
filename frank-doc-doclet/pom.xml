@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.ibissource</groupId>
 		<artifactId>frank-doc-parent</artifactId>
-		<version>2.0-SNAPSHOT</version>
+		<version>3.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>frank-doc-doclet</artifactId>
@@ -15,7 +15,7 @@
 	<description>Doclet for the Frank!Doc</description>
 
 	<properties>
-		<log4j2.version>2.20.0</log4j2.version>
+		<log4j2.version>2.22.1</log4j2.version>
 		<argLine /> <!-- add empty default argLine so Surefire won't fail when JaCoCo isn't present -->
 	</properties>
 
@@ -94,7 +94,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.2.3</version>
+				<version>3.2.5</version>
 				<configuration>
 					<redirectTestOutputToFile>true</redirectTestOutputToFile>
 					<reuseForks>true</reuseForks>
@@ -106,20 +106,18 @@
 						--add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
 						--add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
 						--add-exports jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED
-						--add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
-						--add-exports jdk.javadoc/jdk.javadoc.internal.tool=ALL-UNNAMED
 					</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.7</version>
+				<version>3.1.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version>
+				<version>3.0.1</version>
 				<configuration>
 					<tagNameFormat>v@{project.version}</tagNameFormat>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
@@ -138,7 +136,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
+				<version>3.5.2</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -168,8 +166,6 @@
 							<arg>--add-exports</arg>
 							<arg>jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
 							<arg>--add-exports</arg>
-							<arg>jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
-							<arg>--add-exports</arg>
 							<arg>jdk.javadoc/jdk.javadoc.internal.tool=ALL-UNNAMED</arg>
 						</compilerArgs>
 					</configuration>
@@ -177,7 +173,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.3.0</version>
 					<configuration>
 						<archive>
 							<addMavenDescriptor>true</addMavenDescriptor>
@@ -191,7 +187,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>3.2.1</version>
+					<version>3.3.0</version>
 					<executions>
 						<execution>
 							<id>attach-sources</id>
@@ -205,7 +201,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.6.0</version>
+					<version>3.6.3</version>
 					<configuration>
 						<doclint>none</doclint>
 						<useStandardDocletOptions>true</useStandardDocletOptions>
@@ -259,7 +255,7 @@
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.json</artifactId>
-			<version>1.0.4</version>
+			<version>1.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -285,7 +281,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>3.4.5</version>
+				<version>3.5.0</version>
 			</plugin>
 		</plugins>
 	</reporting>

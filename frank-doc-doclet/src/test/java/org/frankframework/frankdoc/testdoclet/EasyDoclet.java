@@ -1,87 +1,54 @@
 package org.frankframework.frankdoc.testdoclet;
 
-import com.sun.tools.javac.file.JavacFileManager;
-import com.sun.tools.javac.util.Context;
+import com.sun.source.util.DocTrees;
+import jdk.javadoc.doclet.Doclet;
 import jdk.javadoc.doclet.DocletEnvironment;
-import jdk.javadoc.internal.tool.AccessKind;
-import jdk.javadoc.internal.tool.JavadocTool;
-import jdk.javadoc.internal.tool.Messager;
-import jdk.javadoc.internal.tool.ToolOption;
+import jdk.javadoc.doclet.Reporter;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
-import javax.tools.StandardLocation;
-import java.io.File;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 
 @Log4j2
-@Getter
-public class EasyDoclet {
-	final private File sourceDirectory;
-	final private String[] packageNames;
-	final private DocletEnvironment docletEnvironment;
+public class EasyDoclet implements Doclet {
+	@Getter
+	private static DocTrees docTrees;
+	@Getter
+	private static Set<? extends Element> includedElements;
+	@Getter @Setter
+	private static String[] packages;
 
-	private static final AccessKind ACCESS_KIND = AccessKind.PUBLIC;
-
-	public EasyDoclet(File sourceDirectory, String[] packageNames) {
-		this.sourceDirectory = sourceDirectory;
-		this.packageNames = packageNames;
-
-		String sourcePath = getSourceDirectory().getAbsolutePath();
-
-		if (getSourceDirectory().exists()) {
-			log.info("Using source path: [{}]", sourcePath);
-//			compOpts.put("-sourcepath", getSourceDirectory().getAbsolutePath());
-		} else {
-			log.error("Ignoring non-existing source path, check your source directory argument. Used: [{}]", sourcePath);
-		}
-
-		try {
-			docletEnvironment = createDocletEnv(sourcePath, List.of(packageNames));
-		} catch (Exception e) {
-			log.error(e);
-			throw new RuntimeException(e);
-		}
+	@Override
+	public void init(Locale locale, Reporter reporter) {
+		log.debug("EasyDoclet.init start");
 	}
 
-	private static DocletEnvironment createDocletEnv(String sourcePath, Collection<String> packageNames) throws Exception {
-
-		// Create a context to hold settings for Javadoc.
-		Context context = new Context();
-
-		// Pre-register a messager for the context. Not needed for Java 17!
-		Messager.preRegister(context, EasyDoclet.class.getName());
-
-		// Set source path option for Javadoc.
-		try (JavacFileManager fileManager = new JavacFileManager(context, true, UTF_8)) {
-
-			fileManager.setLocation(StandardLocation.SOURCE_PATH, List.of(new File(sourcePath)));
-
-//			JavadocLog.preRegister(context, "javadoc"); // Java 17
-
-			// Create an instance of Javadoc.
-			JavadocTool javadocTool = JavadocTool.make0(context);
-
-			// Set up javadoc tool options. Not needed for Java 17!
-//			ToolOption options = new ToolOption(context, log, null); // Java 17 ??
-			Map<ToolOption, Object> options = new EnumMap<>(ToolOption.class);
-			options.put(ToolOption.SHOW_PACKAGES, ACCESS_KIND);
-			options.put(ToolOption.SHOW_TYPES, ACCESS_KIND);
-			options.put(ToolOption.SHOW_MEMBERS, ACCESS_KIND);
-			options.put(ToolOption.SHOW_MODULE_CONTENTS, ACCESS_KIND);
-			options.put(ToolOption.SUBPACKAGES, packageNames);
-
-			// Invoke Javadoc and ask it for a DocletEnvironment containing the specified packages.
-			return javadocTool.getEnvironment(
-				options, // options
-				List.of(), // java names
-				List.of()); // java files
-		}
+	@Override
+	public String getName() {
+		return "EasyDoclet";
 	}
 
+	@Override
+	public Set<? extends Option> getSupportedOptions() {
+		return new HashSet<>();
+	}
+
+	@Override
+	public SourceVersion getSupportedSourceVersion() {
+		return SourceVersion.RELEASE_17;
+	}
+
+	@Override
+	public boolean run(DocletEnvironment environment) {
+		log.debug("EasyDoclet.run start");
+		docTrees = environment.getDocTrees();
+		includedElements = environment.getIncludedElements();
+		log.debug("EasyDoclet.run: includedElements size = {}", includedElements.size());
+		return true;
+	}
 }

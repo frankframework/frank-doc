@@ -43,9 +43,8 @@ public class FilteringInterfaceImplementationsTest {
 	@MethodSource("data")
 	@ParameterizedTest(name = "{0}, {1}")
 	void test(String caseName, List<String> includes, List<String> excludes, String[] expectedImplementations) throws FrankDocException {
-		EasyDoclet easyDoclet = TestUtil.getEasyDoclet(BOTH_PACKAGES);
-		Set<? extends Element> classDocs = TestUtil.getTypeElements(easyDoclet, BOTH_PACKAGES);
-		FrankClassRepository repository = new FrankClassRepository(TestUtil.getDocTrees(easyDoclet), classDocs, new HashSet<>(includes), new HashSet<>(excludes), new HashSet<>());
+		Set<? extends Element> classDocs = TestUtil.getIncludedElements(BOTH_PACKAGES);
+		FrankClassRepository repository = new FrankClassRepository(TestUtil.getDocTrees(), classDocs, new HashSet<>(includes), new HashSet<>(excludes), new HashSet<>());
 		FrankClass clazz = repository.findClass(FIRST_PACKAGE + "MyInterface");
 		List<FrankClass> implementations = clazz.getInterfaceImplementations();
 		List<String> actualSimpleNames = implementations.stream()
