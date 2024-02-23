@@ -1,7 +1,8 @@
 package org.frankframework.frankdoc.testtarget.groups;
 
 import org.frankframework.doc.FrankDocGroup;
+import static org.frankframework.doc.FrankDocGroupValue.LISTENERS;
 
-@FrankDocGroup(order = 10, name = "Listener")
+@FrankDocGroup(LISTENERS)
 public interface IChild {
 }

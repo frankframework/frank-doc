@@ -37,7 +37,7 @@ public class FrankDocModelGroupsTest {
 		assertEquals(2, groups.size());
 
 		FrankDocGroup current = groups.get(0);
-		assertEquals("Listener", current.getName());
+		assertEquals("Listeners", current.getName());
 		List<ElementType> types = current.getElementTypes();
 		assertEquals(1, types.size());
 		assertEquals("IChild", types.get(0).getSimpleName());

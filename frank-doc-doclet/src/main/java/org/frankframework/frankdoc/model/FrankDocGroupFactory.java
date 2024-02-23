@@ -16,17 +16,16 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import org.frankframework.frankdoc.model.FrankDocGroup;
+
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class FrankDocGroupFactory {
 	static final String JAVADOC_GROUP_ANNOTATION = "org.frankframework.doc.FrankDocGroup";
@@ -44,43 +43,30 @@ class FrankDocGroupFactory {
 	}
 
 	FrankDocGroup getGroup(FrankClass clazz) {
-		FrankDocGroup result;
 		try {
 			FrankAnnotation annotation = clazz.getAnnotationIncludingInherited(JAVADOC_GROUP_ANNOTATION);
 			if(annotation == null) {
-				result = getGroup(FrankDocGroup.GROUP_NAME_OTHER);
+				log.trace("Class [{}] belongs to group [{}]", () -> clazz.getName(), () -> FrankDocGroup.GROUP_NAME_OTHER);
+				return allGroups.get(FrankDocGroup.GROUP_NAME_OTHER);
 			} else {
-				String groupName = (String) annotation.getValueOf("name");
-				Integer groupOrder = (Integer) annotation.getValueOf("order");
-				log.trace("FrankDocGroup requested for group name {} with new order {}", () -> groupName, () -> groupOrder);
-				result = getGroup(groupName, groupOrder);
+				FrankEnumConstant enumConstant = (FrankEnumConstant) annotation.getValue();
+				String groupName = new EnumValue(enumConstant).getLabel();
+				if(allGroups.containsKey(groupName)) {
+					FrankDocGroup group = allGroups.get(groupName);
+					log.trace("Class [{}] belongs to found group [{}]", () -> clazz.getName(), () -> group.getName());
+					return group;
+				} else {
+					int groupOrder = enumConstant.getPosition();
+					FrankDocGroup group = new FrankDocGroup(groupName);
+					group.setOrder(groupOrder);
+					log.trace("Class [{}] belongs to new group [{}], order is [{}]", () -> clazz.getName(), () -> group.getName(), () -> group.getOrder());
+					allGroups.put(groupName, group);
+					return group;
+				}
 			}
 		} catch(FrankDocException e) {
 			log.error("Class [{}] has invalid @FrankDocGroup: {}", clazz.getName(), e.getMessage());
-			return getGroup(FrankDocGroup.GROUP_NAME_OTHER);
-		}
-		return result;
-	}
-
-	FrankDocGroup getGroup(String groupName, Integer groupOrder) {
-		FrankDocGroup result;
-		result = getGroup(groupName);
-		if(groupOrder == null) {
-			// The Doclet API does not provide the default value of the @FrankDocGroup annotation.
-			// We need to repeat it here.
-			groupOrder = Integer.MAX_VALUE;
-		}
-		result.setOrder(groupOrder);
-		return result;
-	}
-
-	private FrankDocGroup getGroup(String name) {
-		if(allGroups.containsKey(name)) {
-			return allGroups.get(name);
-		} else {
-			FrankDocGroup group = new FrankDocGroup(name);
-			allGroups.put(name, group);
-			return group;
+			return allGroups.get(FrankDocGroup.GROUP_NAME_OTHER);
 		}
 	}
 

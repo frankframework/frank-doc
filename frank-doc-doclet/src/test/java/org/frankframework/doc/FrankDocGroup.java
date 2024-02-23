@@ -22,6 +22,5 @@ import java.lang.annotation.RetentionPolicy;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FrankDocGroup {
-	String name();
-	int order() default Integer.MAX_VALUE;
+	FrankDocGroupValue value();
 }
