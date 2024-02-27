@@ -3,17 +3,32 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.ibissource</groupId>
+		<groupId>org.frankframework</groupId>
 		<artifactId>frank-doc-parent</artifactId>
-    <version>3.0-SNAPSHOT</version>
+	<version>3.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>frank-doc-frontend</artifactId>
 	<packaging>jar</packaging>
 
 	<name>Frank!Doc Frontend</name>
-	<url>https://ibissource.org</url>
+	<url>https://frankframework.org</url>
 	<description>Angular frontend for the Frank!Doc</description>
+
+	<developers>
+		<developer>
+			<name>Niels Meijer</name>
+			<email>niels@frankframework.org</email>
+			<organization>Frank!Framework</organization>
+			<organizationUrl>https://frankframework.org</organizationUrl>
+		</developer>
+		<developer>
+			<name>Vivy Booman</name>
+			<email>vivy@frankframework.org</email>
+			<organization>Frank!Framework</organization>
+			<organizationUrl>https://frankframework.org</organizationUrl>
+		</developer>
+	</developers>
 
 	<build>
 		<resources>
