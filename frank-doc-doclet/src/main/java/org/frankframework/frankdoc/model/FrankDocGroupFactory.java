@@ -38,14 +38,16 @@ class FrankDocGroupFactory {
 	// is no ElementType without a FrankDocGroup annotation. We always need group
 	// Other because it will contain Configuration and Module.
 	FrankDocGroupFactory() {
-		FrankDocGroup groupOther = new FrankDocGroup(FrankDocGroup.GROUP_NAME_OTHER);
-		allGroups.put(groupOther.getName(), groupOther);
 	}
 
 	FrankDocGroup getGroup(FrankClass clazz) {
 		try {
 			FrankAnnotation annotation = clazz.getAnnotationIncludingInherited(JAVADOC_GROUP_ANNOTATION);
 			if(annotation == null) {
+				if(! allGroups.containsKey(FrankDocGroup.GROUP_NAME_OTHER)) {
+					FrankDocGroup groupOther = new FrankDocGroup(FrankDocGroup.GROUP_NAME_OTHER);
+					allGroups.put(groupOther.getName(), groupOther);
+				}
 				log.trace("Class [{}] belongs to group [{}]", () -> clazz.getName(), () -> FrankDocGroup.GROUP_NAME_OTHER);
 				return allGroups.get(FrankDocGroup.GROUP_NAME_OTHER);
 			} else {
