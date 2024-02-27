@@ -1,7 +1,6 @@
 package org.frankframework.frankdoc.wrapper;
 
 import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.model.FrankElement;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.junit.jupiter.api.Test;
 
