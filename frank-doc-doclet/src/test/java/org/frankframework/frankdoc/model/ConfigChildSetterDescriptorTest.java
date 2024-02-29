@@ -22,6 +22,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -36,7 +37,7 @@ public class ConfigChildSetterDescriptorTest {
 	public void setUp() throws SAXException, IOException {
 		// No need to set include and exclude filters of the FrankClassRepository, because
 		// we are not asking for the implementations of an interface.
-		instance = new FrankDocModel(TestUtil.getFrankClassRepositoryDoclet(PACKAGE), null);
+		instance = new FrankDocModel(TestUtil.getFrankClassRepositoryDoclet(PACKAGE, FRANK_DOC_GROUP_VALUES_PACKAGE), null);
 		instance.createConfigChildDescriptorsFrom(TestUtil.resourceAsURL("doc/fake-digester-rules.xml"));
 	}
 

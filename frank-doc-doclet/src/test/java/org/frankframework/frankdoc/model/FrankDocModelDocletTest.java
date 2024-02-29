@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FrankDocModelDocletTest {
@@ -21,7 +22,7 @@ public class FrankDocModelDocletTest {
 
 	@BeforeEach
 	public void setUp() throws IOException {
-		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(SIMPLE);
+		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(SIMPLE, FRANK_DOC_GROUP_VALUES_PACKAGE);
 		instance = FrankDocModel.populate(TestUtil.resourceAsURL("doc/xsd-element-name-digester-rules.xml"), SIMPLE + "Container", repository);
 	}
 

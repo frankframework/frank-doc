@@ -20,34 +20,44 @@ import org.frankframework.frankdoc.model.FrankDocGroup;
 
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.wrapper.FrankAnnotation;
-import org.frankframework.frankdoc.wrapper.FrankClass;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
+import org.frankframework.frankdoc.wrapper.*;
 
 import java.util.*;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
+
 class FrankDocGroupFactory {
 	static final String JAVADOC_GROUP_ANNOTATION = "org.frankframework.doc.FrankDocGroup";
-
+	static final String FRANK_DOC_GROUP_VALUES_CLASS = FRANK_DOC_GROUP_VALUES_PACKAGE + "FrankDocGroupValue";
 	private static Logger log = LogUtil.getLogger(FrankDocGroupFactory.class);
 
+	private final Map<String, Integer> valuePositions = new HashMap<>();
 	private final Map<String, FrankDocGroup> allGroups = new HashMap<>();
 
 	// This constructor ensures that group Other is always created, also if there
 	// is no ElementType without a FrankDocGroup annotation. We always need group
 	// Other because it will contain Configuration and Module.
-	FrankDocGroupFactory() {
+	FrankDocGroupFactory(FrankClassRepository classes) {
+		try {
+			FrankClass valuesEnum = classes.findClass(FRANK_DOC_GROUP_VALUES_CLASS);
+			if(valuesEnum == null) {
+				log.error("Class [{}] has not been loaded", FRANK_DOC_GROUP_VALUES_CLASS);
+			}
+			int position = 0;
+			for(FrankEnumConstant enumConstant: valuesEnum.getEnumConstants()) {
+				valuePositions.put(enumConstant.getName(), position++);
+			}
+		} catch(FrankDocException e) {
+			log.error("Cannot find value class {} for @FrankDocGroup", FRANK_DOC_GROUP_VALUES_CLASS);
+		}
+		FrankDocGroup groupOther = new FrankDocGroup(FrankDocGroup.GROUP_NAME_OTHER);
+		allGroups.put(groupOther.getName(), groupOther);
 	}
 
 	FrankDocGroup getGroup(FrankClass clazz) {
 		try {
 			FrankAnnotation annotation = clazz.getAnnotationIncludingInherited(JAVADOC_GROUP_ANNOTATION);
 			if(annotation == null) {
-				if(! allGroups.containsKey(FrankDocGroup.GROUP_NAME_OTHER)) {
-					FrankDocGroup groupOther = new FrankDocGroup(FrankDocGroup.GROUP_NAME_OTHER);
-					allGroups.put(groupOther.getName(), groupOther);
-				}
 				log.trace("Class [{}] belongs to group [{}]", () -> clazz.getName(), () -> FrankDocGroup.GROUP_NAME_OTHER);
 				return allGroups.get(FrankDocGroup.GROUP_NAME_OTHER);
 			} else {
@@ -58,7 +68,8 @@ class FrankDocGroupFactory {
 					log.trace("Class [{}] belongs to found group [{}]", () -> clazz.getName(), () -> group.getName());
 					return group;
 				} else {
-					int groupOrder = enumConstant.getPosition();
+					int groupOrder = Optional.of(valuePositions.get(enumConstant.getName())).orElseThrow(
+						() -> new FrankDocException("Programming error: Could not get position of enum constant " + enumConstant.getName(), null));
 					FrankDocGroup group = new FrankDocGroup(groupName);
 					group.setOrder(groupOrder);
 					log.trace("Class [{}] belongs to new group [{}], order is [{}]", () -> clazz.getName(), () -> group.getName(), () -> group.getOrder());

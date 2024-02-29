@@ -30,62 +30,11 @@ import java.util.stream.Collectors;
 public class LabelValues {
 	private static final Logger log = LogUtil.getLogger(LabelValues.class);
 
-	private abstract static class SortableValue implements Comparable<SortableValue> {
-		private @Getter final String value;
-
-		SortableValue(String value) {
-			this.value = value;
-		}
-
-		@Override
-		public String toString() {
-			return value;
-		}
-	}
-
-	private static final class EnumValue extends SortableValue {
-		private final int order;
-
-		EnumValue(String value, int order) {
-			super(value);
-			this.order = order;
-		}
-
-		@Override
-		public int compareTo(SortableValue other) {
-			// It is a programming error if a label has both enum values and
-			// non-enum values. If this happens, a ClassCastException will occur.
-			return Integer.compare(order, ((EnumValue) other).order);
-		}
-	}
-
-	private static final class SimpleValue extends SortableValue {
-		SimpleValue(String value) {
-			super(value);
-		}
-
-		@Override
-		public int compareTo(SortableValue other) {
-			// It is a programming error if a label has both enum values and
-			// non-enum values. If this happens, a ClassCastException will occur.
-			return getValue().compareTo(((SimpleValue) other).getValue());
-		}
-	}
-
 	private boolean isInitialized = false;
-	private final Map<String, List<SortableValue>> data = new HashMap<>();
+	private final Map<String, List<String>> data = new HashMap<>();
 
 	void addValue(String label, String value) {
-		log.trace("Label [{}] can have non-enum value [{}]", label, value);
-		add(label, new SimpleValue(value));
-	}
-
-	void addEnumValue(String label, String value, int order) {
-		log.trace("Label [{}] can have enum value [{}], position is [{}]", label, value, order);
-		add(label, new EnumValue(value, order));
-	}
-
-	private void add(String label, SortableValue value) {
+		log.trace("Label [{}] can have value [{}]", label, value);
 		data.putIfAbsent(label, new ArrayList<>());
 		data.get(label).add(value);
 	}
@@ -114,7 +63,6 @@ public class LabelValues {
 	List<String> getAllValuesOfLabel(String label) {
 		checkInitialized();
 		return data.get(label).stream()
-				.map(SortableValue::getValue)
 				.distinct()
 				.collect(Collectors.toList());
 	}

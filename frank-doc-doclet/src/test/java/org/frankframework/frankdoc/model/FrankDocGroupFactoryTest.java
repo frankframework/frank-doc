@@ -26,13 +26,13 @@ public class FrankDocGroupFactoryTest {
 
 	@Test
 	public void whenClassesHaveSameGroupThenOnlyOneGroupCreated() throws Exception {
-		FrankDocGroupFactory instance = new FrankDocGroupFactory();
+		FrankDocGroupFactory instance = new FrankDocGroupFactory(repository);
 		FrankDocGroup first = instance.getGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
 		Assertions.assertEquals("Listeners", first.getName());
 		FrankDocGroup second = instance.getGroup(repository.findClass(PACKAGE + SECOND_LISTENER));
 		Assertions.assertSame(first, second);
-		// Also test that group Others is omitted when every class has an explicit group
-		Assertions.assertArrayEquals(new String[] {"Listeners"}, getGroupNames(instance));
+		// Also test that group Others is always created
+		Assertions.assertArrayEquals(new String[] {"Listeners", "Other"}, getGroupNames(instance));
 	}
 
 	private static String[] getGroupNames(FrankDocGroupFactory instance) {
@@ -44,7 +44,7 @@ public class FrankDocGroupFactoryTest {
 
 	@Test
 	public void whenClassWithoutGroupThenGroupOther() throws Exception {
-		FrankDocGroupFactory instance = new FrankDocGroupFactory();
+		FrankDocGroupFactory instance = new FrankDocGroupFactory(repository);
 		FrankDocGroup listener = instance.getGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
 		Assertions.assertEquals("Listeners", listener.getName());
 		FrankDocGroup firstOther = instance.getGroup(repository.findClass(PACKAGE + OTHER));
@@ -56,7 +56,7 @@ public class FrankDocGroupFactoryTest {
 
 	@Test
 	public void groupsAreOrderedByEnum() throws Exception {
-		FrankDocGroupFactory instance = new FrankDocGroupFactory();
+		FrankDocGroupFactory instance = new FrankDocGroupFactory(repository);
 		instance.getGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
 		instance.getGroup(repository.findClass(PACKAGE + ASender));
 		instance.getGroup(repository.findClass(PACKAGE + APipe));

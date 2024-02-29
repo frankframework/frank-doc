@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,7 +22,7 @@ public class ConfigChildTechnicalOverrideTest {
 
 	@BeforeAll
 	public static void setUp() throws IOException {
-		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
+		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, FRANK_DOC_GROUP_VALUES_PACKAGE);
 		model = FrankDocModel.populate(TestUtil.resourceAsURL(DIGESTER_RULES), PACKAGE + "Master", repository);
 	}
 

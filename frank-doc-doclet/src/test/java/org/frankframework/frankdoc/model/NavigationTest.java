@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 import static org.frankframework.frankdoc.model.ElementChild.ALL_NOT_EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.IN_XSD;
@@ -98,7 +99,7 @@ public class NavigationTest {
 	@ParameterizedTest(name = "{0}")
 	void test(String simpleClassName, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, List<Ref> expectedRefs) throws Exception {
 		String rootClassName = PACKAGE + "." + simpleClassName;
-		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
+		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, FRANK_DOC_GROUP_VALUES_PACKAGE);
 		FrankDocModel model = FrankDocModel.populate(TestUtil.resourceAsURL("doc/empty-digester-rules.xml"), rootClassName, repository);
 		FrankElement walkFrom = model.findFrankElement(rootClassName);
 		List<Ref> actual = new ArrayList<>();

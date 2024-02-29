@@ -254,7 +254,7 @@ public class FrankElement implements Comparable<FrankElement> {
 			// This considers annotation @EnumLabel
 			EnumValue value = new EnumValue(enumConstant);
 			labels.add(new FrankLabel(label, value.getLabel()));
-			labelValues.addEnumValue(label, value.getLabel(), enumConstant.getPosition());
+			labelValues.addValue(label, value.getLabel());
 		} else {
 			labels.add(new FrankLabel(label, rawValue.toString()));
 			labelValues.addValue(label, rawValue.toString());

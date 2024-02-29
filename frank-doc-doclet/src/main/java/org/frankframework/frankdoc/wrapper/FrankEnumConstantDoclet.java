@@ -31,7 +31,6 @@ class FrankEnumConstantDoclet implements FrankEnumConstant {
 	private final DocCommentTree docCommentTree;
 
 	private final Map<String, FrankAnnotation> annotationsByName;
-	private final @Getter int position = 0;
 
 	public FrankEnumConstantDoclet(VariableElement variableElement, DocCommentTree docCommentTree) {
 		name = variableElement.getSimpleName().toString();

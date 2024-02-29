@@ -27,6 +27,8 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
+
 public class DocWriterNewAndJsonGenerationExamplesTest {
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
@@ -125,9 +127,9 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 	// Adding data there would make the table harder to read.
 	private String[] getAllRequiredPackages(String originalPackage) {
 		if(originalPackage.equals("org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first")) {
-			return new String[] {"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first", "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second"};
+			return new String[] {"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first", "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second", FRANK_DOC_GROUP_VALUES_PACKAGE};
 		} else {
-			return new String[] {originalPackage};
+			return new String[] {originalPackage, FRANK_DOC_GROUP_VALUES_PACKAGE};
 		}
 	}
 

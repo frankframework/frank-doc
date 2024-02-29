@@ -64,7 +64,7 @@ public class FrankDocModel {
 
 	private final @Getter Map<String, List<ConfigChildSetterDescriptor>> configChildDescriptors = new HashMap<>();
 
-	private final FrankDocGroupFactory groupFactory = new FrankDocGroupFactory();
+	private final FrankDocGroupFactory groupFactory;
 	private @Getter List<FrankDocGroup> groups;
 
 	// We want to iterate FrankElement in the order they are created, to be able
@@ -86,6 +86,7 @@ public class FrankDocModel {
 
 	FrankDocModel(FrankClassRepository classRepository, String rootClassName) {
 		this.classRepository = classRepository;
+		this.groupFactory = new FrankDocGroupFactory(classRepository);
 		this.rootClassName = rootClassName;
 	}
 
