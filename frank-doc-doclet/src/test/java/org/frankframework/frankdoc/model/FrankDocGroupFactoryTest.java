@@ -4,9 +4,10 @@ import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
 
-import java.util.stream.Collectors;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class FrankDocGroupFactoryTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.group.factory.";
@@ -28,11 +29,11 @@ public class FrankDocGroupFactoryTest {
 	public void whenClassesHaveSameGroupThenOnlyOneGroupCreated() throws Exception {
 		FrankDocGroupFactory instance = new FrankDocGroupFactory(repository);
 		FrankDocGroup first = instance.getGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
-		Assertions.assertEquals("Listeners", first.getName());
+		assertEquals("Listener", first.getName());
 		FrankDocGroup second = instance.getGroup(repository.findClass(PACKAGE + SECOND_LISTENER));
-		Assertions.assertSame(first, second);
-		// Also test that group Others is always created
-		Assertions.assertArrayEquals(new String[] {"Listeners", "Other"}, getGroupNames(instance));
+		assertSame(first, second);
+		// Test that group Other is always created
+		assertArrayEquals(new String[] {"Listener", "Other"}, getGroupNames(instance));
 	}
 
 	private static String[] getGroupNames(FrankDocGroupFactory instance) {
@@ -46,12 +47,12 @@ public class FrankDocGroupFactoryTest {
 	public void whenClassWithoutGroupThenGroupOther() throws Exception {
 		FrankDocGroupFactory instance = new FrankDocGroupFactory(repository);
 		FrankDocGroup listener = instance.getGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
-		Assertions.assertEquals("Listeners", listener.getName());
+		assertEquals("Listener", listener.getName());
 		FrankDocGroup firstOther = instance.getGroup(repository.findClass(PACKAGE + OTHER));
-		Assertions.assertEquals("Other", firstOther.getName());;
+		assertEquals("Other", firstOther.getName());;
 		FrankDocGroup secondOther = instance.getGroup(repository.findClass(PACKAGE + SECOND_OTHER));
-		Assertions.assertSame(firstOther, secondOther);
-		Assertions.assertArrayEquals(new String[] {"Listeners", "Other"}, getGroupNames(instance));
+		assertSame(firstOther, secondOther);
+		assertArrayEquals(new String[] {"Listener", "Other"}, getGroupNames(instance));
 	}
 
 	@Test
@@ -61,6 +62,6 @@ public class FrankDocGroupFactoryTest {
 		instance.getGroup(repository.findClass(PACKAGE + ASender));
 		instance.getGroup(repository.findClass(PACKAGE + APipe));
 		instance.getGroup(repository.findClass(PACKAGE + OTHER));
-		Assertions.assertArrayEquals(new String[] {"Pipes", "Senders", "Listeners", "Other"}, getGroupNames(instance));
+		assertArrayEquals(new String[] {"Pipe", "Sender", "Listener", "Other"}, getGroupNames(instance));
 	}
 }

@@ -16,20 +16,28 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import org.frankframework.frankdoc.model.FrankDocGroup;
-
+import lombok.NonNull;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.wrapper.*;
+import org.frankframework.frankdoc.wrapper.FrankAnnotation;
+import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 
 class FrankDocGroupFactory {
 	static final String JAVADOC_GROUP_ANNOTATION = "org.frankframework.doc.FrankDocGroup";
 	static final String FRANK_DOC_GROUP_VALUES_CLASS = FRANK_DOC_GROUP_VALUES_PACKAGE + "FrankDocGroupValue";
-	private static Logger log = LogUtil.getLogger(FrankDocGroupFactory.class);
+	private static final Logger log = LogUtil.getLogger(FrankDocGroupFactory.class);
 
 	private final Map<String, Integer> valuePositions = new HashMap<>();
 	private final Map<String, FrankDocGroup> allGroups = new HashMap<>();
@@ -37,7 +45,7 @@ class FrankDocGroupFactory {
 	// This constructor ensures that group Other is always created, also if there
 	// is no ElementType without a FrankDocGroup annotation. We always need group
 	// Other because it will contain Configuration and Module.
-	FrankDocGroupFactory(FrankClassRepository classes) {
+	FrankDocGroupFactory(@NonNull FrankClassRepository classes) {
 		try {
 			FrankClass valuesEnum = classes.findClass(FRANK_DOC_GROUP_VALUES_CLASS);
 			if(valuesEnum == null) {

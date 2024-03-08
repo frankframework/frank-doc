@@ -22,7 +22,7 @@ import org.frankframework.doc.FrankDocGroupValue;
  * The <code>ISender</code> is responsible for sending a message to
  * some destination.
  */
-@FrankDocGroup(FrankDocGroupValue.SENDERS)
+@FrankDocGroup(FrankDocGroupValue.SENDER)
 public interface ISender {
 
 	public void configure();
