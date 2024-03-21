@@ -26,7 +26,7 @@ The XML schema helps Frank developers when they are writing their configs, but t
 
 ![webapp-intro](./picturesForReadme/webapp-intro.jpg)
 
-To the top-left, you see a list of groups (number 1). These groups are controlled by Java annotation [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/iaf-commons/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java). To the bottom-left, you see the Java class names that are members of the chosen group (number 2). When you select a class name, you get information about it (number 3). More explanation of this text follows later.
+To the top-left, you see a list of groups (number 1). These groups are controlled by Java annotation [@FrankDocGroup](https://github.com/frankframework/frankframework/blob/master/commons/src/main/java/org/frankframework/doc/FrankDocGroup.java). To the bottom-left, you see the Java class names that are members of the chosen group (number 2). When you select a class name, you get information about it (number 3). More explanation of this text follows later.
 
 ## Descriptions of classes, child elements and attributes
 
@@ -100,33 +100,15 @@ Frank configs that violate the preferred order can still be parsed by the Frank!
 
 ## Groups in the web application
 
-This section is about the groups shown in the top-left of the Frank!Doc web application:
+This section is about the groups shown in the top-left of the Frank!Doc web application. These groups are managed through Java annotation [@FrankDocGroup](https://github.com/frankframework/frankframework/blob/master/commons/src/main/java/org/frankframework/doc/FrankDocGroup.java). This annotation has a value field that is of an enum type. Each value of the enum should be annotated with [@EnumLabel](https://github.com/frankframework/frankframework/blob/master/commons/src/main/java/org/frankframework/doc/EnumLabel.java) to provide the group name to be shown. The order of the enum constants determines the order of the shown groups.
 
-![webapp-groups-batch](./picturesForReadme/webapp-groups-batch.jpg)
+When [@FrankDocGroup](https://github.com/frankframework/frankframework/blob/master/commons/src/main/java/org/frankframework/doc/FrankDocGroup.java) is placed on a Java class or interface, then all Java classes that implement the interface (or only the class itself in case of a class) are added to the group. 
 
-The overview of all groups is shown as number 1. We have selected group `Batch` (number 2). How does the Frank!Doc know the order of the groups and the elements they contain? First, see the following snippet of [IRecordHandlerManager](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/batch/IRecordHandlerManager.java)
+Java classes that do not have or inherit a [@FrankDocGroup](https://github.com/frankframework/frankframework/blob/master/commons/src/main/java/org/frankframework/doc/FrankDocGroup.java) annotation are put in group `Other`.
 
-![eclipseIRecordHandlerManager](./picturesForReadme/eclipseIRecordHandlerManager.jpg)
+A [@FrankDocGroup](https://github.com/frankframework/frankframework/blob/master/commons/src/main/java/org/frankframework/doc/FrankDocGroup.java) annotation is only processed when it appears on a class or interface that appears as the argument of a config child setter. This means: when it gives rise to an [ElementType](src/main/java/org/frankframework/frankdoc/model/ElementType.java).
 
-The interface has a Java annotation [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/iaf-commons/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java). The annotation has fields `name` and `order`. The `order` is an integer that is used to sort the groups in the shown order.
-
-When [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/iaf-commons/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) is placed on a Java class or interface, then all Java classes that implement the interface (or only the class itself in case of a class) are added to the group. Here is the type hierarchy of [IRecordHandlerManager](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/batch/IRecordHandlerManager.java):
-
-![eclipseTypeHierarchyIRecordHandlerManager](./picturesForReadme/eclipseTypeHierarchyIRecordHandlerManager.jpg)
-
-The Java classes that implement [IRecordHandlerManager](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/batch/IRecordHandlerManager.java) are highlighted. They are annotated in the first figure of this section as number 3.
-
-The annotation on [IRecordHandlerManager](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/batch/IRecordHandlerManager.java) only adds three classes to group `Batch`. The other elements are added by other [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/iaf-commons/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) annotations. These do not have their `order` field set, see for example [RecordHandlingFlow](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/batch/RecordHandlingFlow.java)
-
-![eclipseRecordHandlingFlow](./picturesForReadme/eclipseRecordHandlingFlow.jpg)
-
-The annotation is placed on a class here. Then that class is added to the group in the Frank!Doc web application.
-
-Java classes that do not have or inherit a [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/iaf-commons/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) annotation are put in group `Other`.
-
-A [@FrankDocGroup](https://github.com/ibissource/iaf/blob/master/iaf-commons/src/main/java/nl/nn/adapterframework/doc/FrankDocGroup.java) annotation is only processed when it appears on a class or interface that appears as the argument of a config child setter. This means: when it gives rise to an [ElementType](src/main/java/org/frankframework/frankdoc/model/ElementType.java).
-
-A Java class can extend a Java class or inherit an interface without a functional meaning. For example, class [MessageStoreSender](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/jdbc/MessageStoreSender.java) inherits `ITransactionalStorage`, but that has no functional meaning. Frank configs should not contain elements `MessageStoreSenderMessageLog` or `MessageStoreSenderErrorStorage`. This can be achieved by setting Java annotation `@ExcludeFromType` or JavaDoc tag `@ff.excludeFromType`. Both can take a list of classes as the argument. In case of the JavaDoc tag, do not add `.class` to a class name and separate the classes by a `,`. This annotation is inherited.
+A Java class can extend a Java class or inherit an interface without a functional meaning. For example, class [MessageStoreSender](https://github.com/frankframework/frankframework/blob/master/core/src/main/java/org/frankframework/jdbc/MessageStoreSender.java) inherits `ITransactionalStorage`, but that has no functional meaning. Frank configs should not contain elements `MessageStoreSenderMessageLog` or `MessageStoreSenderErrorStorage`. This can be achieved by setting Java annotation `@ExcludeFromType` or JavaDoc tag `@ff.excludeFromType`. Both can take a list of classes as the argument. In case of the JavaDoc tag, do not add `.class` to a class name and separate the classes by a `,`. This annotation is inherited.
 
 ## Attribute types
 
@@ -282,4 +264,4 @@ The default value is `org.frankframework.pipes.SenderPipe` in this example. The 
 
 **@ff.reintroduce:** JavaDoc tag that does the same as Java annotation `@Reintroduce`.
 
-**@Label:** Java annotation that appears on other Java annotations, e.g <code>@Category</code>. A target annotation that is itself annotated with meta-annotation `@Label` produces a label in the Frank!Doc webapp when it is applied above a class of the Frank!Framework sources. The value of the label comes from the `value()` field of the target annotation. The name of the label comes from the `@Label` meta-annotation within the definition of the target annotation; attribute `name`. Labels only apply to classes, not child elements and not attributes. You can have enum-valued label values. In this case, the @EnumLabel annotation is supported. The JSON file that feeds the Frank!Doc webapp provides for each label an overview of all possible values. The label values are sorted alphabetically for non-enum values. Enum values are sorted by the order in the enum type.
+**@Label:** Java annotation that appears on other Java annotations, e.g <code>@Category</code>. A target annotation that is itself annotated with meta-annotation `@Label` produces a label in the Frank!Doc webapp when it is applied above a class of the Frank!Framework sources. The value of the label comes from the `value()` field of the target annotation. The name of the label comes from the `@Label` meta-annotation within the definition of the target annotation; attribute `name`. Labels only apply to classes, not child elements and not attributes. You can have enum-valued label values. In this case, the @EnumLabel annotation is supported. The JSON file that feeds the Frank!Doc webapp provides for each label an overview of all possible values. The label values are sorted alphabetically. If values are of an enum type, the order of the enum constants is NOT used.

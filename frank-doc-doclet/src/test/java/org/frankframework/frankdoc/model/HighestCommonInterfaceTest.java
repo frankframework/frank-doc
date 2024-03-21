@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -36,7 +37,7 @@ public class HighestCommonInterfaceTest {
 
 	@BeforeEach
 	public void setUp() throws IOException {
-		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
+		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, FRANK_DOC_GROUP_VALUES_PACKAGE);
 		model = FrankDocModel.populate(TestUtil.resourceAsURL("doc/role-inherit-digester-rules.xml"), PACKAGE + "Master", repository);
 		founder = model.findElementType(PACKAGE + "IFounder");
 		interfaceParent = model.findElementType(PACKAGE + "IInterfaceParent");

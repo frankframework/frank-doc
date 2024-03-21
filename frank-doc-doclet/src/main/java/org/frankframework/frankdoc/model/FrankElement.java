@@ -1,5 +1,5 @@
 /*
-Copyright 2020 - 2023 WeAreFrank!
+Copyright 2020 - 2024 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -254,7 +254,7 @@ public class FrankElement implements Comparable<FrankElement> {
 			// This considers annotation @EnumLabel
 			EnumValue value = new EnumValue(enumConstant);
 			labels.add(new FrankLabel(label, value.getLabel()));
-			labelValues.addEnumValue(label, value.getLabel(), enumConstant.getPosition());
+			labelValues.addValue(label, value.getLabel());
 		} else {
 			labels.add(new FrankLabel(label, rawValue.toString()));
 			labelValues.addValue(label, rawValue.toString());

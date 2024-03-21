@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FrankDocElementSummaryTest {
@@ -23,7 +24,7 @@ public class FrankDocElementSummaryTest {
 
 	@Test
 	public void testElementSummary() throws IOException {
-		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
+		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, FRANK_DOC_GROUP_VALUES_PACKAGE);
 		FrankDocModel model = FrankDocModel.populate(getDigesterRulesURL(DIGESTER_RULES_FILE_NAME), PACKAGE + "Master", classRepository);
 		FrankDocElementSummaryFactory instance = new FrankDocElementSummaryFactory(model);
 		String actual = instance.getText();

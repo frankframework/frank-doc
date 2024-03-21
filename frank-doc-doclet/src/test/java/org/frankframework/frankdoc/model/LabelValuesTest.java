@@ -17,7 +17,7 @@ public class LabelValuesTest {
 	@Test
 	public void valuesAreCorrectlyStoredWithNames() {
 		instance.addValue("FIRST", "valueOfFirst");
-		instance.addEnumValue("SECOND", "SOME_VALUE", 0);
+		instance.addValue("SECOND", "SOME_VALUE");
 		instance.finishInitialization();
 		assertArrayEquals(new String[] {"valueOfFirst"}, instance.getAllValuesOfLabel("FIRST").toArray(new String[] {}));
 		assertArrayEquals(new String[] {"SOME_VALUE"}, instance.getAllValuesOfLabel("SECOND").toArray(new String[] {}));
@@ -42,21 +42,12 @@ public class LabelValuesTest {
 	}
 
 	@Test
-	public void enumValuesAreSortedByOrder() {
-		instance.addEnumValue("LABEL", "A", 1);
-		instance.addEnumValue("LABEL", "B", 3);
-		instance.addEnumValue("LABEL", "C", 2);
+	public void enumValuesAreSortedAlphabetically() {
+		instance.addValue("LABEL", "A");
+		instance.addValue("LABEL", "C");
+		instance.addValue("LABEL", "B");
 		instance.finishInitialization();
-		assertArrayEquals(new String[] {"A", "C", "B"}, instance.getAllValuesOfLabel("LABEL").toArray(new String[] {}));
-	}
-
-	@Test
-	public void cannotMixEnumAndNonEnumValues() {
-		assertThrows(ClassCastException.class, () -> {
-			instance.addValue("LABEL", "value");
-			instance.addEnumValue("LABEL", "enum value", 0);
-			instance.finishInitialization();
-		});
+		assertArrayEquals(new String[] {"A", "B", "C"}, instance.getAllValuesOfLabel("LABEL").toArray(new String[] {}));
 	}
 
 	@Test

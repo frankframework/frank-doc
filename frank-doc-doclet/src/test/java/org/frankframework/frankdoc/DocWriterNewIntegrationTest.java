@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
+
 public class DocWriterNewIntegrationTest {
 	private static Logger log = LogUtil.getLogger(DocWriterNewIntegrationTest.class);
 	private static final String EXOTIC_PACKAGE = "org.frankframework.frankdoc.testtarget.exotic.";
@@ -47,7 +49,7 @@ public class DocWriterNewIntegrationTest {
 
 	@BeforeEach
 	public void setUp() {
-		classRepository = TestUtil.getFrankClassRepositoryDoclet(EXOTIC_PACKAGE);
+		classRepository = TestUtil.getFrankClassRepositoryDoclet(EXOTIC_PACKAGE, FRANK_DOC_GROUP_VALUES_PACKAGE);
 	}
 
 	private void validate(Schema schema, String testConfigurationFileName) throws Exception {

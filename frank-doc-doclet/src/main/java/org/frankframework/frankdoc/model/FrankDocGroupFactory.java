@@ -1,5 +1,5 @@
 /*
-Copyright 2021 WeAreFrank!
+Copyright 2021, 2024 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,71 +16,78 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import lombok.NonNull;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 
 class FrankDocGroupFactory {
 	static final String JAVADOC_GROUP_ANNOTATION = "org.frankframework.doc.FrankDocGroup";
+	static final String FRANK_DOC_GROUP_VALUES_CLASS = FRANK_DOC_GROUP_VALUES_PACKAGE + "FrankDocGroupValue";
+	private static final Logger log = LogUtil.getLogger(FrankDocGroupFactory.class);
 
-	private static Logger log = LogUtil.getLogger(FrankDocGroupFactory.class);
-
+	private final Map<String, Integer> valuePositions = new HashMap<>();
 	private final Map<String, FrankDocGroup> allGroups = new HashMap<>();
 
 	// This constructor ensures that group Other is always created, also if there
 	// is no ElementType without a FrankDocGroup annotation. We always need group
 	// Other because it will contain Configuration and Module.
-	FrankDocGroupFactory() {
+	FrankDocGroupFactory(@NonNull FrankClassRepository classes) {
+		try {
+			FrankClass valuesEnum = classes.findClass(FRANK_DOC_GROUP_VALUES_CLASS);
+			if(valuesEnum == null) {
+				log.error("Class [{}] has not been loaded", FRANK_DOC_GROUP_VALUES_CLASS);
+			}
+			int position = 0;
+			for(FrankEnumConstant enumConstant: valuesEnum.getEnumConstants()) {
+				valuePositions.put(enumConstant.getName(), position++);
+			}
+		} catch(FrankDocException e) {
+			log.error("Cannot find value class {} for @FrankDocGroup", FRANK_DOC_GROUP_VALUES_CLASS);
+		}
 		FrankDocGroup groupOther = new FrankDocGroup(FrankDocGroup.GROUP_NAME_OTHER);
 		allGroups.put(groupOther.getName(), groupOther);
 	}
 
 	FrankDocGroup getGroup(FrankClass clazz) {
-		FrankDocGroup result;
 		try {
 			FrankAnnotation annotation = clazz.getAnnotationIncludingInherited(JAVADOC_GROUP_ANNOTATION);
 			if(annotation == null) {
-				result = getGroup(FrankDocGroup.GROUP_NAME_OTHER);
+				log.trace("Class [{}] belongs to group [{}]", () -> clazz.getName(), () -> FrankDocGroup.GROUP_NAME_OTHER);
+				return allGroups.get(FrankDocGroup.GROUP_NAME_OTHER);
 			} else {
-				String groupName = (String) annotation.getValueOf("name");
-				Integer groupOrder = (Integer) annotation.getValueOf("order");
-				log.trace("FrankDocGroup requested for group name {} with new order {}", () -> groupName, () -> groupOrder);
-				result = getGroup(groupName, groupOrder);
+				FrankEnumConstant enumConstant = (FrankEnumConstant) annotation.getValue();
+				String groupName = new EnumValue(enumConstant).getLabel();
+				if(allGroups.containsKey(groupName)) {
+					FrankDocGroup group = allGroups.get(groupName);
+					log.trace("Class [{}] belongs to found group [{}]", () -> clazz.getName(), () -> group.getName());
+					return group;
+				} else {
+					int groupOrder = Optional.of(valuePositions.get(enumConstant.getName())).orElseThrow(
+						() -> new FrankDocException("Programming error: Could not get position of enum constant " + enumConstant.getName(), null));
+					FrankDocGroup group = new FrankDocGroup(groupName);
+					group.setOrder(groupOrder);
+					log.trace("Class [{}] belongs to new group [{}], order is [{}]", () -> clazz.getName(), () -> group.getName(), () -> group.getOrder());
+					allGroups.put(groupName, group);
+					return group;
+				}
 			}
 		} catch(FrankDocException e) {
 			log.error("Class [{}] has invalid @FrankDocGroup: {}", clazz.getName(), e.getMessage());
-			return getGroup(FrankDocGroup.GROUP_NAME_OTHER);
-		}
-		return result;
-	}
-
-	FrankDocGroup getGroup(String groupName, Integer groupOrder) {
-		FrankDocGroup result;
-		result = getGroup(groupName);
-		if(groupOrder == null) {
-			// The Doclet API does not provide the default value of the @FrankDocGroup annotation.
-			// We need to repeat it here.
-			groupOrder = Integer.MAX_VALUE;
-		}
-		result.setOrder(groupOrder);
-		return result;
-	}
-
-	private FrankDocGroup getGroup(String name) {
-		if(allGroups.containsKey(name)) {
-			return allGroups.get(name);
-		} else {
-			FrankDocGroup group = new FrankDocGroup(name);
-			allGroups.put(name, group);
-			return group;
+			return allGroups.get(FrankDocGroup.GROUP_NAME_OTHER);
 		}
 	}
 

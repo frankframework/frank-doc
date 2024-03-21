@@ -1,5 +1,5 @@
 /*
-Copyright 2021, 2022 WeAreFrank!
+Copyright 2021, 2022, 2024 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ class FrankEnumConstantDoclet implements FrankEnumConstant {
 	private final DocCommentTree docCommentTree;
 
 	private final Map<String, FrankAnnotation> annotationsByName;
-	private final @Getter int position = 0;
 
 	public FrankEnumConstantDoclet(VariableElement variableElement, DocCommentTree docCommentTree) {
 		name = variableElement.getSimpleName().toString();

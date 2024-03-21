@@ -16,12 +16,13 @@ package org.frankframework.frankdoc.testtarget.featurepackage;
    limitations under the License.
 */
 import org.frankframework.doc.FrankDocGroup;
+import org.frankframework.doc.FrankDocGroupValue;
 
 /**
  * The <code>ISender</code> is responsible for sending a message to
  * some destination.
  */
-@FrankDocGroup(order = 20, name = "Senders")
+@FrankDocGroup(FrankDocGroupValue.SENDER)
 public interface ISender {
 
 	public void configure();

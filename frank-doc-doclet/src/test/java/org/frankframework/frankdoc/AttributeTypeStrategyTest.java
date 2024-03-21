@@ -24,6 +24,7 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexType;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addElementWithType;
 import static org.frankframework.frankdoc.DocWriterNewXmlUtils.getXmlSchema;
@@ -90,7 +91,7 @@ public class AttributeTypeStrategyTest {
 	@BeforeEach
 	public void setUp() throws IOException {
 		String packageOfEnum = "org.frankframework.frankdoc.testtarget.attribute.type.strategy.";
-		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(packageOfEnum);
+		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(packageOfEnum, FRANK_DOC_GROUP_VALUES_PACKAGE);
 		String digesterRulesFileName = "doc/empty-digester-rules.xml";
 		FrankDocModel model = FrankDocModel.populate(TestUtil.resourceAsURL(digesterRulesFileName), packageOfEnum + "Container", classRepository);
 		FrankAttribute attribute = model.findFrankElement(packageOfEnum + "Container").getAttributes(ElementChild.ALL_NOT_EXCLUDED).get(0);

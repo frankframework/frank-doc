@@ -4,7 +4,7 @@
     },
   "groups": [
     {
-      "name": "Child",
+      "name": "Sender",
       "types": ["org.frankframework.frankdoc.testtarget.examples.simple.IChild"]
     },
     {

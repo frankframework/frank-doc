@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 import static org.frankframework.frankdoc.model.ElementChild.ALL_NOT_EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.IN_XSD;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -45,7 +46,7 @@ public class FrankDocModelConfigChildrenTest {
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		classRepository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE);
+		classRepository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, FRANK_DOC_GROUP_VALUES_PACKAGE);
 		instance = new FrankDocModel(classRepository, null);
 		instance.createConfigChildDescriptorsFrom(TestUtil.resourceAsURL("doc/simple-digester-rules.xml"));
 		instance.findOrCreateRootFrankElement(CONTAINER);

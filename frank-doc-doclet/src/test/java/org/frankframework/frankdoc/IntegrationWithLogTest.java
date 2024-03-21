@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.net.URL;
 import java.util.Arrays;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -21,7 +22,7 @@ public class IntegrationWithLogTest {
 		try {
 			String thePackage = "org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.";
 			String startClassName = thePackage + "Master";
-			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage);
+			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel model = FrankDocModel.populate(digesterRulesUrl, startClassName, classRepository);
 			DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "1.2.3-SNAPSHOT");
@@ -43,7 +44,7 @@ public class IntegrationWithLogTest {
 		try {
 			String thePackage = "org.frankframework.frankdoc.testtarget.attribute.overload.";
 			String startClassName = thePackage + "Master";
-			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage);
+			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel.populate(digesterRulesUrl, startClassName, classRepository);
 
@@ -70,7 +71,7 @@ public class IntegrationWithLogTest {
 		try {
 			String thePackage = "org.frankframework.frankdoc.testtarget.attributeDefault.";
 			String startClassName = thePackage + "Master";
-			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage);
+			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel model = FrankDocModel.populate(digesterRulesUrl, startClassName, classRepository);
 			DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "1.2.3-SNAPSHOT");
@@ -92,7 +93,7 @@ public class IntegrationWithLogTest {
 		try {
 			String thePackage = "org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.";
 			String startClassName = thePackage + "Master";
-			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage);
+			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel.populate(digesterRulesUrl, startClassName, classRepository);
 			appender.assertLogged("FrankElement [org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.Master] has a [@ff.parameter] tag without a value: [myParamWithoutDescription]");
@@ -108,7 +109,7 @@ public class IntegrationWithLogTest {
 		try {
 			String thePackage = "org.frankframework.frankdoc.testtarget.tag.not.unique.";
 			String startClassName = thePackage + "Master";
-			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage);
+			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel.populate(digesterRulesUrl, startClassName, classRepository);
 			appender.assertLogged("FrankElement [org.frankframework.frankdoc.testtarget.tag.not.unique.Master] has multiple values for tag [myTag]");
@@ -124,7 +125,7 @@ public class IntegrationWithLogTest {
 		try {
 			String thePackage = "org.frankframework.frankdoc.testtarget.tag.no.name.";
 			String startClassName = thePackage + "Master";
-			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage);
+			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel.populate(digesterRulesUrl, startClassName, classRepository);
 			appender.assertLogged("Error parsing a [@ff.parameter] tag of class [org.frankframework.frankdoc.testtarget.tag.no.name.Master]");

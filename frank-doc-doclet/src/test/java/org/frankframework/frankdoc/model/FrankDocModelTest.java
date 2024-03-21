@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 import static org.frankframework.frankdoc.model.ElementChild.ALL_NOT_EXCLUDED;
 import static org.frankframework.frankdoc.model.ElementChild.IN_XSD;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -60,7 +61,7 @@ public class FrankDocModelTest {
 
 	@BeforeEach
 	public void setUp() {
-		String[] allPackages = new String[] {SIMPLE, IBISDOCREF, "org.frankframework.frankdoc.testtarget.reflect"};
+		String[] allPackages = new String[] {SIMPLE, IBISDOCREF, "org.frankframework.frankdoc.testtarget.reflect", FRANK_DOC_GROUP_VALUES_PACKAGE};
 		classRepository = TestUtil.getFrankClassRepositoryDoclet(allPackages);
 		instance = new FrankDocModel(classRepository, null);
 		attributeOwner = null;

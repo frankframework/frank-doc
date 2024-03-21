@@ -1,98 +1,67 @@
 package org.frankframework.frankdoc.model;
 
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class FrankDocGroupFactoryTest {
-	private FrankDocGroupFactory instance;
+	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.group.factory.";
+	private static final String FIRST_LISTENER = "FirstListener";
+	private static final String SECOND_LISTENER = "SecondListener";
+	private static final String APipe = "APipe";
+	private static final String ASender = "ASender";
+	private static final String OTHER = "Other";
+	private static final String SECOND_OTHER = "SecondOther";
+
+	private FrankClassRepository repository;
 
 	@BeforeEach
 	public void setUp() {
-		instance = new FrankDocGroupFactory();
+		repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, "org.frankframework.doc.");
 	}
 
 	@Test
-	public void whenSameGroupNameRequestedThenSameGroupReturned() throws Exception {
-		FrankDocGroup first = instance.getGroup("MyGroup", Integer.MAX_VALUE);
-		FrankDocGroup second = instance.getGroup("MyGroup", Integer.MAX_VALUE);
-		assertSame(second, first);
-		assertEquals("MyGroup", first.getName());
+	public void whenClassesHaveSameGroupThenOnlyOneGroupCreated() throws Exception {
+		FrankDocGroupFactory instance = new FrankDocGroupFactory(repository);
+		FrankDocGroup first = instance.getGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
+		assertEquals("Listener", first.getName());
+		FrankDocGroup second = instance.getGroup(repository.findClass(PACKAGE + SECOND_LISTENER));
+		assertSame(first, second);
+		// Test that group Other is always created
+		assertArrayEquals(new String[] {"Listener", "Other"}, getGroupNames(instance));
+	}
+
+	private static String[] getGroupNames(FrankDocGroupFactory instance) {
+		return instance.getAllGroups().stream()
+			.map(FrankDocGroup::getName)
+			.toList()
+			.toArray(new String[] {});
 	}
 
 	@Test
-	public void whenAnnotationWithOrderDefaultThenGroupWithoutOrder() throws Exception {
-		FrankDocGroup group = instance.getGroup("MyGroup", Integer.MAX_VALUE);
-		assertEquals("MyGroup", group.getName());
-		assertEquals(Integer.MAX_VALUE, group.getOrder());
+	public void whenClassWithoutGroupThenGroupOther() throws Exception {
+		FrankDocGroupFactory instance = new FrankDocGroupFactory(repository);
+		FrankDocGroup listener = instance.getGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
+		assertEquals("Listener", listener.getName());
+		FrankDocGroup firstOther = instance.getGroup(repository.findClass(PACKAGE + OTHER));
+		assertEquals("Other", firstOther.getName());;
+		FrankDocGroup secondOther = instance.getGroup(repository.findClass(PACKAGE + SECOND_OTHER));
+		assertSame(firstOther, secondOther);
+		assertArrayEquals(new String[] {"Listener", "Other"}, getGroupNames(instance));
 	}
 
 	@Test
-	public void whenAnnotationWithOneValueThenGroupWithoutOrder() throws Exception {
-		FrankDocGroup group = instance.getGroup("MyGroup", null);
-		assertEquals("MyGroup", group.getName());
-		assertEquals(Integer.MAX_VALUE, group.getOrder());
-	}
-
-	@Test
-	public void whenAnnotationWithTwoValuesThenGroupWithOrder() throws Exception {
-		FrankDocGroup group = instance.getGroup("MyGroup", 3);
-		assertEquals("MyGroup", group.getName());
-		assertEquals(3, group.getOrder());
-	}
-
-	@Test
-	public void whenGroupRequestedWithAndWithoutOrderThenOrderRemains() {
-		FrankDocGroup group = instance.getGroup("MyGroup", 3);
-		group = instance.getGroup("MyGroup", Integer.MAX_VALUE);
-		assertEquals("MyGroup", group.getName());
-		assertEquals(3, group.getOrder());
-	}
-
-	@Test
-	public void whenGroupRequestedWithoutAndWithOrderThenOrderRemains() {
-		// Integer.MAX_VALUE is the default value for the groupOrder in the @FrankDocGroup annotation.
-		FrankDocGroup group = instance.getGroup("MyGroup", Integer.MAX_VALUE);
-		group = instance.getGroup("MyGroup", 3);
-		assertEquals("MyGroup", group.getName());
-		assertEquals(3, group.getOrder());
-	}
-
-	@Test
-	public void whenConflictingOrdersThenMinimumTaken() throws Exception {
-		FrankDocGroup first = instance.getGroup("MyGroup", 3);
-		FrankDocGroup second = instance.getGroup("MyGroup", 2);
-		assertSame(second, first);
-		assertEquals("MyGroup", first.getName());
-		assertEquals(2, first.getOrder());
-	}
-
-	@Test
-	public void whenSameOrderSetTwiceThenThatOrder() throws Exception {
-		FrankDocGroup first = instance.getGroup("MyGroup", 3);
-		FrankDocGroup second = instance.getGroup("MyGroup", 3);
-		assertSame(second, first);
-		assertEquals("MyGroup", first.getName());
-		assertEquals(3, first.getOrder());
-	}
-
-	@Test
-	public void whenAllGroupsRequestedThenSortedGroupsReturned() throws Exception {
-		instance.getGroup("A", 30);
-		instance.getGroup("B", 20);
-		instance.getGroup("C", 40);
-		instance.getGroup("D", 10);
-		List<FrankDocGroup> allGroups = instance.getAllGroups();
-		List<String> actualGroupNames = allGroups.stream().map(FrankDocGroup::getName).collect(Collectors.toList());
-		// Group Other is always added to support a corner case. It may be that Configuration is the
-		// only element in group Other. Configuration is not the argument of a config child setter, so
-		// it is not created along with creating the ElementType objects.
-		assertArrayEquals(new String[] {"D", "B", "A", "C", FrankDocGroup.GROUP_NAME_OTHER}, actualGroupNames.toArray(new String[] {}));
+	public void groupsAreOrderedByEnum() throws Exception {
+		FrankDocGroupFactory instance = new FrankDocGroupFactory(repository);
+		instance.getGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
+		instance.getGroup(repository.findClass(PACKAGE + ASender));
+		instance.getGroup(repository.findClass(PACKAGE + APipe));
+		instance.getGroup(repository.findClass(PACKAGE + OTHER));
+		assertArrayEquals(new String[] {"Pipe", "Sender", "Listener", "Other"}, getGroupNames(instance));
 	}
 }
