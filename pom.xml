@@ -4,7 +4,7 @@
 
 	<groupId>org.frankframework</groupId>
 	<artifactId>frank-doc-parent</artifactId>
-	<version>3.0-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
 
 	<name>Frank!Doc Parent</name>
@@ -12,6 +12,7 @@
 	<url>https://github.com/frankframework/frank-doc</url>
 
 	<properties>
+		<revision>3.1-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
@@ -61,6 +62,21 @@
 		<developerConnection>scm:git:https://github.com/frankframework/frank-doc.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.frankframework</groupId>
+				<artifactId>frank-doc-doclet</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.frankframework</groupId>
+				<artifactId>frank-doc-frontend</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<defaultGoal>install</defaultGoal>

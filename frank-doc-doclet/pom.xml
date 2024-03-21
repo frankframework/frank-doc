@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.frankframework</groupId>
 		<artifactId>frank-doc-parent</artifactId>
-		<version>3.0-SNAPSHOT</version>
+		<version>${revision}</version>
 	</parent>
 
 	<artifactId>frank-doc-doclet</artifactId>
@@ -214,6 +214,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.30</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
