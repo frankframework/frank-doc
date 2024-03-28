@@ -80,6 +80,12 @@
 
 	<build>
 		<defaultGoal>install</defaultGoal>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -119,7 +125,7 @@
 						</execution>
 					</executions>
 				</plugin>
-				
+
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
@@ -159,6 +165,31 @@
 						<skip>true</skip>
 						<skipDeploy>true</skipDeploy>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>flatten-maven-plugin</artifactId>
+					<version>1.6.0</version>
+					<configuration>
+						<updatePomFile>true</updatePomFile>
+						<flattenMode>resolveCiFriendliesOnly</flattenMode>
+					</configuration>
+					<executions>
+						<execution>
+							<id>flatten</id>
+							<phase>initialize</phase>
+							<goals>
+								<goal>flatten</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>clean</id>
+							<phase>clean</phase>
+							<goals>
+								<goal>clean</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
