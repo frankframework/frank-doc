@@ -114,38 +114,6 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>${maven.compiler.source}</source>
-						<target>${maven.compiler.target}</target>
-						<compilerArgs>
-							<arg>--add-exports</arg>
-							<arg>jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
-							<arg>--add-exports</arg>
-							<arg>jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
-							<arg>--add-exports</arg>
-							<arg>jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-							<arg>--add-exports</arg>
-							<arg>jdk.javadoc/jdk.javadoc.internal.tool=ALL-UNNAMED</arg>
-						</compilerArgs>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<configuration>
-						<doclint>none</doclint>
-						<useStandardDocletOptions>true</useStandardDocletOptions>
-						<additionalOptions>
-							<additionalOption>--add-exports</additionalOption>
-							<additionalOption>jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</additionalOption>
-							<additionalOption>--add-exports</additionalOption>
-							<additionalOption>jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</additionalOption>
-						</additionalOptions>
-					</configuration>
-				</plugin>
 				<!-- This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
