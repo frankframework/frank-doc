@@ -109,13 +109,15 @@ public final class Utils {
 			&& (method.getParameterTypes()[0].isPrimitive()
 			|| JAVA_BOXED.contains(method.getParameterTypes()[0].getName())
 			|| method.getParameterTypes()[0].isEnum());
-		boolean isGetter = (
+		if (isSetter) {
+			return true;
+		}
+		// Check getter too.
+		return ((method.getParameterTypes().length == 0) &&
 			(method.getReturnType().isPrimitive()
-				&& !method.getReturnType().getName().equals("void"))
-				|| JAVA_BOXED.contains(method.getReturnType().getName())
-				|| method.getReturnType().isEnum()
-		) && (method.getParameterTypes().length == 0);
-		return isSetter || isGetter;
+			&& !method.getReturnType().getName().equals("void"))
+			|| JAVA_BOXED.contains(method.getReturnType().getName())
+			|| method.getReturnType().isEnum());
 	}
 
 	public static boolean isConfigChildSetter(FrankMethod method) {
@@ -129,7 +131,7 @@ public final class Utils {
 		boolean objectConfigChild = (!parameterType.isPrimitive())
 			&& (!JAVA_BOXED.contains(parameterType.getName()));
 		// A ConfigChildSetterDescriptor for a TextConfigChild should not start with "set".
-		// If that would be allowed then we would have confusing with attribute setters.
+		// If that was allowed, then we would have confusing with attribute setters.
 		boolean textConfigChild = (!methodName.startsWith("set")) && parameterType.getName().equals(JAVA_STRING);
 		return objectConfigChild || textConfigChild;
 	}

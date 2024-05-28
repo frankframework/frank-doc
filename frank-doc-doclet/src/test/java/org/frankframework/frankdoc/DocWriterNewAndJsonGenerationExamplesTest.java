@@ -111,9 +111,7 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 		DocWriterNew docWriter = new DocWriterNew(model, attributeTypeStrategy, "1.2.3-SNAPSHOT");
 		docWriter.init(startClassName, xsdVersion);
 		String actualXsd = docWriter.getSchema();
-		System.out.println(actualXsd);
 		String expectedXsd = TestUtil.getTestFile("/doc/examplesExpected/" + expectedXsdFileName);
-		System.out.println("Jacobjob: " + "/doc/examplesExpected/" + expectedXsdFileName);
 		TestUtil.assertEqualsIgnoreCRLF(expectedXsd, actualXsd);
 	}
 
