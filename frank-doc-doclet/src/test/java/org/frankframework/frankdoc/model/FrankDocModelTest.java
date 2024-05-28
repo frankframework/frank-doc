@@ -344,8 +344,8 @@ public class FrankDocModelTest {
 		attributeOwner = instance.findOrCreateFrankElement(className);
 		List<String> actualAttributeNames = instance.createAttributes(classRepository.findClass(className), attributeOwner, classRepository).stream()
 				.map(FrankAttribute::getName)
-				.collect(Collectors.toList());
-		String[] expectedAttributeNames = new String[] {"attributeSetterGetter", "attributeSetterIs", "attributeOnlySetter", "attributeOnlySetterInt",
+				.toList();
+		String[] expectedAttributeNames = new String[] {"attributeSetterGetter", "attributeSetterIs", "attributeOnlySetter", "attributeVararg", "attributeOnlySetterInt",
 				"attributeOnlySetterIntBoxed", "attributeOnlySetterBoolBoxed", "attributeOnlySetterLongBoxed", "attributeOnlySetterByteBoxed",
 				"attributeOnlySetterShortBoxed", "ibisDockedOnlyDescription", "ibisDockedOrderDescription", "ibisDockedDescriptionDefault",
 				"ibisDockedOrderDescriptionDefault", "ibisDockedDeprecated", "attributeWithJavaDoc",

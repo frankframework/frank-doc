@@ -105,7 +105,6 @@ public final class Utils {
 		boolean isSetter = method.getReturnType().isPrimitive()
 			&& method.getReturnType().getName().equals("void")
 			&& (method.getParameterTypes().length == 1)
-			&& (!method.isVarargs())
 			&& (method.getParameterTypes()[0].isPrimitive()
 			|| JAVA_BOXED.contains(method.getParameterTypes()[0].getName())
 			|| method.getParameterTypes()[0].isEnum());
