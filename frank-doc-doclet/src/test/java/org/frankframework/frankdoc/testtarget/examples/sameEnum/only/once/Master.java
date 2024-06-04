@@ -9,4 +9,7 @@ public class Master {
 	 */
 	public void setSecondAttribute(MyEnum value) {
 	}
+
+	public void setThirdAttribute(MyEnum... varArgsValue) {
+	}
 }

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,9 +38,9 @@ public class FrankClassTest {
 	public void testMethodSequenceIsPreserved() {
 		List<String> actualMethodNames = Arrays.asList(instance.getDeclaredMethods()).stream()
 				.map(FrankMethod::getName)
-				.collect(Collectors.toList());
-		assertEquals(6, actualMethodNames.size());
-		String[] expectedMethodNames = new String[] {"setInherited", "setVarargMethod", "getMyInnerEnum", "myAnnotatedMethod", "methodWithoutAnnotations", "getProtectedStuff"};
+				.toList();
+		assertEquals(7, actualMethodNames.size());
+		String[] expectedMethodNames = new String[] {"setInherited", "setVarargStringMethod", "setVarargEnumMethod", "getMyInnerEnum", "myAnnotatedMethod", "methodWithoutAnnotations", "getProtectedStuff"};
 		assertArrayEquals(expectedMethodNames, actualMethodNames.toArray(new String[] {}));
 	}
 

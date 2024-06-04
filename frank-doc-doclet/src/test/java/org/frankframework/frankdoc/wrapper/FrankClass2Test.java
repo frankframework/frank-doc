@@ -126,8 +126,8 @@ public class FrankClass2Test extends TestBase {
 		final Set<String> actualMethodNames = new TreeSet<>();
 		Arrays.asList(declaredMethods).forEach(m -> actualMethodNames.add(m.getName()));
 		List<String> sortedActualMethodNames = new ArrayList<>(actualMethodNames);
-		sortedActualMethodNames = sortedActualMethodNames.stream().filter(name -> !name.contains("jacoco")).collect(Collectors.toList());
-		assertArrayEquals(new String[]{"getMyInnerEnum", "getProtectedStuff", "methodWithoutAnnotations", "myAnnotatedMethod", "setInherited", "setVarargMethod"}, sortedActualMethodNames.toArray());
+		sortedActualMethodNames = sortedActualMethodNames.stream().filter(name -> !name.contains("jacoco")).toList();
+		assertArrayEquals(new String[]{"getMyInnerEnum", "getProtectedStuff", "methodWithoutAnnotations", "myAnnotatedMethod", "setInherited", "setVarargEnumMethod", "setVarargStringMethod"}, sortedActualMethodNames.toArray());
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class FrankClass2Test extends TestBase {
 			.map(FrankMethod::getName)
 			.filter(name -> !name.contains("jacoco"))
 			.forEach(methodNames::add);
-		assertArrayEquals(new String[]{"equals", "getClass", "getInherited", "getMyInnerEnum", "hashCode", "methodWithoutAnnotations", "myAnnotatedMethod", "myMethod", "notify", "notifyAll", "setInherited", "setVarargMethod", "toString", "wait", "withClassValuedAnnotation"}, new ArrayList<>(methodNames).toArray());
+		assertArrayEquals(new String[]{"equals", "getClass", "getInherited", "getMyInnerEnum", "hashCode", "methodWithoutAnnotations", "myAnnotatedMethod", "myMethod", "notify", "notifyAll", "setInherited", "setVarargEnumMethod", "setVarargStringMethod", "toString", "wait", "withClassValuedAnnotation"}, new ArrayList<>(methodNames).toArray());
 		// Test we have no duplicates
 		Map<String, List<FrankMethod>> methodsByName = Arrays.stream(methods)
 			.filter(m -> methodNames.contains(m.getName()))

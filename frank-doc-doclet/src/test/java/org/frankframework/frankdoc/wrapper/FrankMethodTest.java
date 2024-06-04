@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -95,15 +94,15 @@ public class FrankMethodTest extends TestBase {
 		FrankMethod[] methods = clazz.getDeclaredAndInheritedMethods();
 		List<FrankMethod> getters = Arrays.asList(methods).stream()
 				.filter(m -> m.getName().equals(methodName))
-				.collect(Collectors.toList());
+				.toList();
 		assertEquals(1, getters.size());
 		return getters.get(0);
 	}
 
 	@Test
-	public void whenMethodHasVarargsThenIsVarargs() throws FrankDocException {
+	public void whenMethodHasStringVarargsThenIsVarargs() throws FrankDocException {
 		FrankClass clazz = classRepository.findClass(PACKAGE + "Child");
-		FrankMethod method = TestUtil.getDeclaredMethodOf(clazz, "setVarargMethod");
+		FrankMethod method = TestUtil.getDeclaredMethodOf(clazz, "setVarargStringMethod");
 		assertTrue(method.isVarargs());
 		assertEquals(1, method.getParameterCount());
 		FrankType parameter = method.getParameterTypes()[0];
@@ -112,6 +111,16 @@ public class FrankMethodTest extends TestBase {
 		// In this case the exact type of the parameter is not needed.
 		Set<String> stringOrStringArray = new HashSet<>(Arrays.asList(FrankDocletConstants.STRING, FrankDocletConstants.STRING + "[]"));
 		assertTrue(stringOrStringArray.contains(parameter.getName()));
+	}
+
+	@Test
+	public void whenMethodHasEnumVarargsThenIsVarargs() throws FrankDocException {
+		FrankClass clazz = classRepository.findClass(PACKAGE + "Child");
+		FrankMethod method = TestUtil.getDeclaredMethodOf(clazz, "setVarargEnumMethod");
+		assertTrue(method.isVarargs());
+		assertEquals(1, method.getParameterCount());
+		FrankType parameter = method.getParameterTypes()[0];
+		assertEquals("org.frankframework.frankdoc.testtarget.doclet.MyEnum", parameter.getName());
 	}
 
 	@Test

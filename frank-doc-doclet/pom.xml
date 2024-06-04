@@ -15,7 +15,7 @@
 	<description>Doclet for the Frank!Doc</description>
 
 	<properties>
-		<log4j2.version>2.22.1</log4j2.version>
+		<log4j2.version>2.23.1</log4j2.version>
 		<argLine /> <!-- add empty default argLine so Surefire won't fail when JaCoCo isn't present -->
 	</properties>
 
@@ -98,7 +98,7 @@
 
 			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.5.2</version>
+				<version>3.5.3</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -181,7 +181,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.30</version>
+			<version>1.18.32</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

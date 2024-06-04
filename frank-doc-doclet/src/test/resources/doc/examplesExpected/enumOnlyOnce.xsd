@@ -31,6 +31,11 @@
         <xs:union memberTypes="MyEnumAttributeValuesType variableRef" />
       </xs:simpleType>
     </xs:attribute>
+    <xs:attribute name="thirdAttribute">
+      <xs:simpleType>
+        <xs:union memberTypes="MyEnumAttributeValuesType variableRef" />
+      </xs:simpleType>
+    </xs:attribute>
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>

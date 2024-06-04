@@ -21,7 +21,10 @@ public class Child<M> extends Parent<M> implements MyInterface {
 	private void privateMethod() {
 	}
 
-	public void setVarargMethod(String ...value) {
+	public void setVarargStringMethod(String... value) {
+	}
+
+	public void setVarargEnumMethod(MyEnum... value) {
 	}
 
 	public enum MyInnerEnum {
