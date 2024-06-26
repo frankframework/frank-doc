@@ -45,3 +45,6 @@ Thumbs.db
 # Maven
 node/
 target/
+
+# Frank!Doc
+/src/js/frankdoc.json
