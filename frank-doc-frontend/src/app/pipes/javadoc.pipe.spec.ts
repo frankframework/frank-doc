@@ -1,9 +1,10 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AppService } from '../app.service';
 import { Elements } from '../app.types';
 import { JavadocPipe } from './javadoc.pipe';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('JavadocPipe', () => {
   let appService: AppService;
@@ -12,17 +13,19 @@ describe('JavadocPipe', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         AppService,
         {
-          provide: DomSanitizer,
-          useValue: {
-            bypassSecurityTrustHtml: (html: string): string => html,
-          },
+            provide: DomSanitizer,
+            useValue: {
+                bypassSecurityTrustHtml: (html: string): string => html,
+            },
         },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     appService = TestBed.inject(AppService);
     domSanitizer = TestBed.inject(DomSanitizer);
     pipe = new JavadocPipe(appService, domSanitizer);

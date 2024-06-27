@@ -1,9 +1,10 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { SidebarComponent } from './sidebar.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @Component({ selector: 'sidebar-elements', template: '' })
 class SidebarElementsStubComponent {
@@ -21,9 +22,10 @@ describe('SidebarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, FormsModule],
-      declarations: [SidebarComponent, SidebarElementsStubComponent],
-    }).compileComponents();
+    declarations: [SidebarComponent, SidebarElementsStubComponent],
+    imports: [FormsModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
     fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;
