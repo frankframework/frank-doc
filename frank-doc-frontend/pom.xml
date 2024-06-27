@@ -59,49 +59,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- <plugin>
-				<groupId>com.github.eirslett</groupId>
-				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.15.0</version>
-				<configuration>
-					<workingDirectory>.</workingDirectory>
-					<installDirectory>.</installDirectory>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>generate-resources</phase>
-						<id>Install node and npm</id>
-						<goals>
-							<goal>install-node-and-npm</goal>
-						</goals>
-						<configuration>
-							<nodeVersion>v18.19.0</nodeVersion>
-						</configuration>
-					</execution>
-
-					<execution>
-						<phase>generate-resources</phase>
-						<id>Download node modules</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>ci</arguments>
-						</configuration>
-					</execution>
-
-					<execution>
-						<phase>generate-resources</phase>
-						<id>Angular build production</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>run build</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin> -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
