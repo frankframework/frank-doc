@@ -26,7 +26,9 @@ export class AppService {
   constructor(private http: HttpClient) {}
 
   private getFrankDoc(): Observable<FrankDoc> {
-    return this.http.get<FrankDoc>(environment.frankDocUrl);
+    return this.http.get<FrankDoc>(
+      `${environment.frankDocUrl}?cache=${Date.now()}`
+    );
   }
 
   showHideDeprecated(): void {
