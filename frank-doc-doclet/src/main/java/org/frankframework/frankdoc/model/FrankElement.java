@@ -196,7 +196,11 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	private void handlePossibleParameters(FrankClass clazz) {
-		this.meaningOfParameters = clazz.getJavaDocTag(JAVADOC_PARAMETERS);
+		try {
+			this.meaningOfParameters = Utils.replaceClassFieldValue(clazz.getJavaDocTag(JAVADOC_PARAMETERS), clazz);
+		} catch(FrankDocException e) {
+			log.error("Error parsing the meaning of parameters", e);
+		}
 		assembleParsedJavaDocTags(clazz, JAVADOC_PARAMETER, p -> this.specificParameters.add(p));
 	}
 
@@ -221,7 +225,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		for (String arguments : clazz.getAllJavaDocTagsOf(tagName)) {
 			ParsedJavaDocTag parsed;
 			try {
-				parsed = ParsedJavaDocTag.getInstance(arguments);
+				parsed = ParsedJavaDocTag.getInstance(arguments, s -> Utils.replaceClassFieldValue(s, clazz));
 			} catch (FrankDocException e) {
 				log.error("Error parsing a [{}] tag of class [{}]", tagName, fullName, e);
 				continue;

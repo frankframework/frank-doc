@@ -72,8 +72,8 @@ public final class Utils {
 	private static final String JAVA_SHORT = "java.lang.Short";
 
 	private static final String JAVADOC_LINK_START_DELIMITER = "{@link";
-	private static final String JAVADOC_VALUE_START_DELIMITER = "{@value";
-	private static final String JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER = "}";
+	public static final String JAVADOC_VALUE_START_DELIMITER = "{@value";
+	public static final String JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER = "}";
 
 	private static Map<String, String> primitiveToBoxed = new HashMap<>();
 
