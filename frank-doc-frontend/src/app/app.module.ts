@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,24 +18,20 @@ import { AsTextPipe } from './pipes/as-text.pipe';
 import { JavadocPipe } from './pipes/javadoc.pipe';
 import { MatchElementPipe } from './pipes/match-element.pipe';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    OverviewComponent,
-    SidebarComponent,
-    SidebarElementsComponent,
-    ElementComponent,
-    ElementChildrenComponent,
-    ElementParametersComponent,
-    ElementForwardsComponent,
-    ElementAttributesComponent,
-    AttributeDescriptionComponent,
-    AsTextPipe,
-    JavadocPipe,
-    MatchElementPipe,
-  ],
-  imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
-  providers: [],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [
+        AppComponent,
+        OverviewComponent,
+        SidebarComponent,
+        SidebarElementsComponent,
+        ElementComponent,
+        ElementChildrenComponent,
+        ElementParametersComponent,
+        ElementForwardsComponent,
+        ElementAttributesComponent,
+        AttributeDescriptionComponent,
+        AsTextPipe,
+        JavadocPipe,
+        MatchElementPipe,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule, FormsModule, AppRoutingModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule {}

@@ -54,6 +54,12 @@
 			<organization>Frank!Framework</organization>
 			<organizationUrl>https://frankframework.org</organizationUrl>
 		</developer>
+		<developer>
+			<name>Vivy Booman</name>
+			<email>vivy@frankframework.org</email>
+			<organization>Frank!Framework</organization>
+			<organizationUrl>https://frankframework.org</organizationUrl>
+		</developer>
 	</developers>
 
 	<scm>

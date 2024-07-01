@@ -1,9 +1,10 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, Input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @Component({ selector: 'sidebar', template: '' })
 class SidebarStubComponent {
@@ -18,10 +19,10 @@ class SidebarStubComponent {
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [AppService],
-      declarations: [AppComponent, SidebarStubComponent],
-    }).compileComponents();
+    declarations: [AppComponent, SidebarStubComponent],
+    imports: [RouterTestingModule],
+    providers: [AppService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
   });
 
   it('should create the app', () => {
