@@ -1,5 +1,5 @@
 /*
-Copyright 2021 WeAreFrank!
+Copyright 2021, 2024 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,29 +19,42 @@ package org.frankframework.frankdoc.model;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.util.FrankDocThrowingFunction;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+
 public class ParsedJavaDocTag {
-	private static Logger log = LogUtil.getLogger(ParsedJavaDocTag.class);
+	private static final Logger log = LogUtil.getLogger(ParsedJavaDocTag.class);
 
 	private static final String QUOTE = "\"";
 
 	private final @Getter String name;
 	private final @Getter String description;
 
-	static ParsedJavaDocTag getInstance(String javaDocTagParameter) throws FrankDocException {
+	static ParsedJavaDocTag getInstance(String javaDocTagParameter, FrankDocThrowingFunction valueSubstitutor) throws FrankDocException {
 		if(StringUtils.isAllBlank(javaDocTagParameter)) {
 			throw new FrankDocException("Tag has no arguments", null);
 		}
+		ParsedJavaDocTag raw = null;
 		// The doclet API already trimmed the argument. We do not have to care about leading spaces.
 		if(javaDocTagParameter.startsWith(QUOTE)) {
-			return getInstanceQuoteDelimited(javaDocTagParameter);
+			raw = getInstanceQuoteDelimited(javaDocTagParameter);
+		} else {
+			raw = getInstanceSpaceDelimited(javaDocTagParameter);
 		}
-		return getInstanceSpaceDelimited(javaDocTagParameter);
+		if (raw.description == null) {
+			return new ParsedJavaDocTag(valueSubstitutor.apply(raw.name), null);
+		} else {
+			return new ParsedJavaDocTag(valueSubstitutor.apply(raw.name), valueSubstitutor.apply(raw.description));
+		}
 	}
 
-	private static ParsedJavaDocTag getInstanceQuoteDelimited(String javaDocTagParameter) {
+	private static ParsedJavaDocTag getInstanceQuoteDelimited(String javaDocTagParameter) throws FrankDocException {
 		int startQuoteIdx = javaDocTagParameter.indexOf(QUOTE);
 		int endQuoteIdx = javaDocTagParameter.indexOf(QUOTE, startQuoteIdx+1);
 		if(endQuoteIdx < 0) {
@@ -56,8 +69,8 @@ public class ParsedJavaDocTag {
 		return new ParsedJavaDocTag(name, description);
 	}
 
-	private static ParsedJavaDocTag getInstanceSpaceDelimited(String javaDocTagParameter) {
-		int idx = javaDocTagParameter.indexOf(" ");
+	private static ParsedJavaDocTag getInstanceSpaceDelimited(String javaDocTagParameter) throws FrankDocException {
+		int idx = ParsedJavaDocTag.getNameDescriptionSplitIndex(javaDocTagParameter);
 		if(idx < 0) {
 			return new ParsedJavaDocTag(javaDocTagParameter, null);
 		}
@@ -67,6 +80,39 @@ public class ParsedJavaDocTag {
 			return new ParsedJavaDocTag(name, null);
 		}
 		return new ParsedJavaDocTag(name, description);
+	}
+
+	private static int getNameDescriptionSplitIndex(String javadocTagParameter) throws FrankDocException {
+		int idx = 0;
+		while (idx < javadocTagParameter.length()) {
+			idx = ParsedJavaDocTag.getIndexFirstMatchFromIndex(javadocTagParameter, idx, " ", Utils.JAVADOC_VALUE_START_DELIMITER);
+			if (idx < 0) {
+				// Not found
+				return idx;
+			}
+			if (javadocTagParameter.charAt(idx) == ' ') {
+				// Found the first space
+				return idx;
+			}
+			// We do not have the space that splits the name and the description, but a {@value ... } pattern
+			// Skip that.
+			idx = javadocTagParameter.indexOf(Utils.JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, idx);
+			if (idx == -1) {
+				throw new FrankDocException(String.format("Value substitution pattern %s not finished by %s",
+					Utils.JAVADOC_VALUE_START_DELIMITER,
+					Utils.JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER), null);
+			}
+			idx = idx + 1;
+		}
+		return -1;
+	}
+
+	private static int getIndexFirstMatchFromIndex(String subject, int fromIndex, String ...searchItemsArg) {
+		List<String> searchItems = Arrays.asList(searchItemsArg);
+		return searchItems.stream().map(item -> subject.indexOf(item, fromIndex))
+			.filter(i -> i >= 0)
+			.min(Integer::compare)
+			.orElse(-1);
 	}
 
 	private ParsedJavaDocTag(String name, String description) {
