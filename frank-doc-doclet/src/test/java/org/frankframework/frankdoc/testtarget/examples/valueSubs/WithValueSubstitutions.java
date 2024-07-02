@@ -17,4 +17,7 @@ public class WithValueSubstitutions {
 	 */
 	public void setMyAttribute(String value) {
 	}
+
+	public void registerA(Other child) {
+	}
 }
