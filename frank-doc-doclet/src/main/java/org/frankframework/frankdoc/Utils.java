@@ -73,6 +73,7 @@ public final class Utils {
 
 	private static final String JAVADOC_LINK_START_DELIMITER = "{@link";
 	public static final String JAVADOC_VALUE_START_DELIMITER = "{@value";
+	public static final String JAVADOC_CODE_START_DELIMITER = "{@code";
 	public static final String JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER = "}";
 
 	private static Map<String, String> primitiveToBoxed = new HashMap<>();
@@ -247,7 +248,8 @@ public final class Utils {
 			result.append(text.substring(currentIndex, nextStartIdx));
 			int endIdx = text.indexOf(patternStop, nextStartIdx);
 			if (endIdx < 0) {
-				throw new FrankDocException(String.format("Unfinished JavaDoc {@ ...} pattern text [%s] at index [%d]", text, nextStartIdx), null);
+				log.warn("Unfinished JavaDoc {@ ...} pattern text [%s] at index [%d]", text, nextStartIdx);
+				return text;
 			}
 			String replacedText = text.substring(nextStartIdx + patternStart.length(), endIdx);
 			result.append(substitution.apply(replacedText));
@@ -267,6 +269,10 @@ public final class Utils {
 		}
 		String[] words = linkBody.trim().split("[ \\t]");
 		return words[words.length - 1];
+	}
+
+	public static String replaceClassCodeValue(String text) throws FrankDocException {
+		return replacePattern(text, JAVADOC_CODE_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, s -> s.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 	}
 
 	public static String replaceClassFieldValue(String text, FrankClass context) throws FrankDocException {
