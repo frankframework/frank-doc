@@ -270,7 +270,7 @@ public final class Utils {
 	}
 
 	public static String replaceClassFieldValue(String text, FrankClass context) throws FrankDocException {
-		return replacePattern(text, JAVADOC_VALUE_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, s -> getClassFieldValueReplacement(s, context));
+		return replacePattern(text, JAVADOC_VALUE_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, s -> "<code>" + getClassFieldValueReplacement(s, context) + "</code>");
 	}
 
 	private static String getClassFieldValueReplacement(String ref, FrankClass context) {
