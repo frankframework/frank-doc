@@ -51,7 +51,7 @@ public class Description {
 			result = method.getJavaDoc();
 		}
 		try {
-			return Utils.replaceClassFieldValue(result, method.getDeclaringClass());
+			return Utils.substituteJavadocTags(result, method.getDeclaringClass());
 		} catch(FrankDocException e) {
 			log.error("Could not replace {@value ...} in [{}]", result);
 			return result;
@@ -61,7 +61,7 @@ public class Description {
 	public String valueOf(FrankClass clazz) {
 		String result = clazz.getJavaDoc();
 		try {
-			return Utils.replaceClassCodeValue(Utils.replaceClassFieldValue(result, clazz));
+			return Utils.substituteJavadocTags(result, clazz);
 		} catch(FrankDocException e) {
 			log.error("Could not replace {@value ...} in [{}]", result);
 			return result;
