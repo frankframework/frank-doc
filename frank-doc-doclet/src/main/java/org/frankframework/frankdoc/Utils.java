@@ -270,7 +270,7 @@ public final class Utils {
 	}
 
 	public static String replaceClassFieldValue(String text, FrankClass context) throws FrankDocException {
-		return replacePattern(text, JAVADOC_VALUE_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, s -> "<code>" + getClassFieldValueReplacement(s, context) + "</code>");
+		return replacePattern(text, JAVADOC_VALUE_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, s -> getClassFieldValueReplacement(s, context));
 	}
 
 	private static String getClassFieldValueReplacement(String ref, FrankClass context) {
@@ -296,7 +296,7 @@ public final class Utils {
 			logValueSubstitutionError(ref, String.format("Found field owner class [%s], but not the referenced field or enum constant", fieldOwner));
 			return ref;
 		}
-		return result;
+		return "<code>" + result + "</code>";
 	}
 
 	private static void logValueSubstitutionError(String ref, String specificError) {
