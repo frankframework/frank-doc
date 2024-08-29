@@ -296,7 +296,7 @@ public final class Utils {
 			logValueSubstitutionError(ref, String.format("Found field owner class [%s], but not the referenced field or enum constant", fieldOwner));
 			return ref;
 		}
-		return result;
+		return "<code>" + result + "</code>";
 	}
 
 	private static void logValueSubstitutionError(String ref, String specificError) {
