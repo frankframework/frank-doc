@@ -39,7 +39,7 @@ public class Description {
 	public String valueOf(FrankMethod method) {
 		String result = null;
 		FrankAnnotation annotation = method.getAnnotation(FrankDocletConstants.IBISDOC);
-		if(annotation != null) {
+		if (annotation != null) {
 			try {
 				ParsedIbisDocAnnotation ibisDoc = new ParsedIbisDocAnnotation(annotation);
 				result = ibisDoc.getDescription();
@@ -47,8 +47,23 @@ public class Description {
 				log.error("Could not parse annotation [{}] on method [{}]", FrankDocletConstants.IBISDOC, method.toString());
 			}
 		}
-		if(result == null) {
+		if (result == null) {
 			result = method.getJavaDoc();
+
+			// Recursively searches for a method with the same signature to use as this method's javadoc.
+			if (result != null && result.contains("{@inheritDoc}")) {
+				FrankClass clazz = method.getDeclaringClass();
+
+				FrankClass superClazz = clazz.getSuperclass();
+				if (superClazz != null) {
+					for (FrankMethod superClassMethod : superClazz.getDeclaredMethods()) {
+						if (superClassMethod.getSignature().equals(method.getSignature())) {
+							result = valueOf(superClassMethod);
+							break;
+						}
+					}
+				}
+			}
 		}
 		try {
 			return Utils.substituteJavadocTags(result, method.getDeclaringClass());
