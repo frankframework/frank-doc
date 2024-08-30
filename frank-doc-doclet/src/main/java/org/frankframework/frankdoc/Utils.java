@@ -307,20 +307,24 @@ public final class Utils {
 	public static String substituteJavadocTags(String text, FrankClass context) throws FrankDocException {
 		// Order matters here. {@literal}, {@value} and {@link} can be used inside {@code ...} blocks.
 		String step = replaceLiteralValue(text);
-		step = replaceClassFieldValue(step, context);
-		return replaceClassCodeValue(step);
+		step = replaceFieldValue(step, context);
+		return replaceCodeValue(step);
 	}
 
 	private static String replaceLiteralValue(String text) throws FrankDocException {
 		return replacePattern(text, JAVADOC_LITERAL_START_DELIMITER, StringEscapeUtils::escapeHtml4);
 	}
 
-	private static String replaceClassCodeValue(String text) throws FrankDocException {
-		return replacePattern(text, JAVADOC_CODE_START_DELIMITER, StringEscapeUtils::escapeHtml4);
+	private static String replaceCodeValue(String text) throws FrankDocException {
+		return replacePattern(text, JAVADOC_CODE_START_DELIMITER, Utils::getCodeValueReplacement);
 	}
 
-	private static String replaceClassFieldValue(String text, FrankClass context) throws FrankDocException {
+	private static String replaceFieldValue(String text, FrankClass context) throws FrankDocException {
 		return replacePattern(text, JAVADOC_VALUE_START_DELIMITER, s -> getClassFieldValueReplacement(s, context));
+	}
+
+	private static String getCodeValueReplacement(String codeBlock) {
+		return "<code>" + StringEscapeUtils.escapeHtml4(codeBlock) + "</code>";
 	}
 
 	private static String getClassFieldValueReplacement(String ref, FrankClass context) {
