@@ -1159,8 +1159,16 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		if(StringUtils.isNotEmpty(elementChild.getDescription())) {
 			result.append(elementChild.getDescription());
 		}
-		if(StringUtils.isNotEmpty(elementChild.getDefaultValue())) {
-			if(result.length() >= 1) {
+
+		if (elementChild.isUnsafe()) {
+			if(!result.isEmpty()) {
+				result.append(" ");
+			}
+			result.append("Note: This attribute is unsafe and should not be used in a production environment.");
+		}
+
+		if (StringUtils.isNotEmpty(elementChild.getDefaultValue())) {
+			if(!result.isEmpty()) {
 				result.append(" ");
 			}
 			result.append("Default: ");

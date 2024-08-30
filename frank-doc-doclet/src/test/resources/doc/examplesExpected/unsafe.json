@@ -55,10 +55,12 @@
 			"attributes": [
 				{
 					"name": "unsafeAttribute",
-					"unsafe": true
+					"unsafe": true,
+					"description": "Documentation for this unsafe attribute."
 				},
 				{
-					"name": "safeAttribute"
+					"name": "safeAttribute",
+					"description": "Documentation for this safe attribute."
 				},
 				{
 					"name": "active",
