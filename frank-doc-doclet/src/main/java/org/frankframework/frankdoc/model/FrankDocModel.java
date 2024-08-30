@@ -284,7 +284,8 @@ public class FrankDocModel {
 			if(getterAttributes.containsKey(attributeName)) {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
-			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
+			boolean unsafe = method.getAnnotation("org.frankframework.doc.Unsafe") != null;
+			FrankAttribute attribute = new FrankAttribute(attributeName, unsafe, attributeOwner);
 			if(method.getParameterTypes()[0].isEnum()) {
 				log.trace("Attribute [{}] has setter that takes enum: [{}]", attribute::getName, () -> method.getParameterTypes()[0].toString());
 				attribute.setAttributeType(AttributeType.STRING);

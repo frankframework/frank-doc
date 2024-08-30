@@ -47,6 +47,7 @@ public class FrankAttribute extends ElementChild {
 	}
 
 	private final @Getter String name;
+	private final @Getter boolean unsafe;
 
 	private @Getter @Setter AttributeType attributeType;
 
@@ -55,9 +56,10 @@ public class FrankAttribute extends ElementChild {
 	 */
 	private @Getter @Setter AttributeEnum attributeEnum;
 
-	public FrankAttribute(String name, FrankElement attributeOwner) {
+	public FrankAttribute(String name, boolean unsafe, FrankElement attributeOwner) {
 		super(attributeOwner);
 		this.name = name;
+		this.unsafe = unsafe;
 	}
 
 	@Override
