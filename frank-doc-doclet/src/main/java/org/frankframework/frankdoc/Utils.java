@@ -284,7 +284,8 @@ public final class Utils {
 				currentIndex = stopIndex;
 			}
 
-			final String substitute = substitution.apply(match.substring(patternStart.length(), match.length() - 1));
+			final String innerContent = match.substring(patternStart.length(), match.length() - 1).trim();
+			final String substitute = substitution.apply(innerContent);
 			result.append(substitute);
 
 			startIndex = text.indexOf(patternStart, stopIndex);
@@ -328,6 +329,10 @@ public final class Utils {
 	}
 
 	private static String getClassFieldValueReplacement(String ref, FrankClass context) {
+		if (context == null) {
+			return ref;
+		}
+
 		String[] refComponents = ref.trim().split("#");
 		if (refComponents.length != 2) {
 			logValueSubstitutionError(ref, "wrong syntax");
