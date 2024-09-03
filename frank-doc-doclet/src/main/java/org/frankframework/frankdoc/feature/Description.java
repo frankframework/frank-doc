@@ -66,12 +66,13 @@ public class Description {
 	}
 
 	public String valueOf(FrankEnumConstant enumConstant) {
-		String javaDoc = enumConstant.getJavaDoc();
-		if (!StringUtils.isBlank(javaDoc)) {
+		String result = enumConstant.getJavaDoc();
+		if (!StringUtils.isBlank(result)) {
 			try {
-				return Utils.substituteJavadocTags(javaDoc, null);
+				return Utils.substituteJavadocTags(result, null);
 			} catch (FrankDocException e) {
-				throw new RuntimeException(e);
+				log.error("Could not replace javaDoc tags in [{}]", result);
+				return result;
 			}
 		}
 
