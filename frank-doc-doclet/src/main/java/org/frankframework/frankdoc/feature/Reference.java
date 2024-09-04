@@ -65,11 +65,7 @@ public class Reference {
 	private String getReferToAnnotation(FrankMethod method) {
 		FrankAnnotation referTo = method.getAnnotation(REFER_TO);
 		if(referTo != null) {
-			try {
-				return (String) referTo.getValue();
-			} catch(FrankDocException e) {
-				log.error("Could not get value of annotation [{}] on method [{}]", referTo.getName(), method.toString(), e);
-			}
+			return (String) referTo.getValue();
 		}
 		return null;
 	}
