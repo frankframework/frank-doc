@@ -22,6 +22,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankType;
 
@@ -47,6 +48,7 @@ public class FrankAttribute extends ElementChild {
 	}
 
 	private final @Getter String name;
+	private final @Getter DeprecationInfo deprecationInfo;
 
 	private @Getter @Setter AttributeType attributeType;
 
@@ -55,9 +57,10 @@ public class FrankAttribute extends ElementChild {
 	 */
 	private @Getter @Setter AttributeEnum attributeEnum;
 
-	public FrankAttribute(String name, FrankElement attributeOwner) {
+	public FrankAttribute(String name, FrankElement attributeOwner, DeprecationInfo deprecationInfo) {
 		super(attributeOwner);
 		this.name = name;
+		this.deprecationInfo = deprecationInfo;
 	}
 
 	@Override

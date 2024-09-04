@@ -16,7 +16,7 @@ export interface Element {
   attributes?: Attribute[];
   children?: Child[];
   forwards?: ParsedTag[];
-  deprecated?: boolean;
+  deprecated?: DeprecationInfo;
   parameters?: ParsedTag[];
   parametersDescription?: string;
 }
@@ -28,7 +28,7 @@ export interface Attribute {
   description?: string;
   type?: DataType;
   default?: string;
-  deprecated?: boolean;
+  deprecated?: DeprecationInfo;
   enum?: string;
 }
 
@@ -74,4 +74,10 @@ export interface Metadata {
 export interface TypeElement {
   name: string;
   members: string[];
+}
+
+export interface DeprecationInfo {
+  forRemoval: boolean;
+  since?: string;
+  description?: string;
 }

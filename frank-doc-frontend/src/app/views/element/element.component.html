@@ -20,6 +20,13 @@
         target="_blank"
         rel="noreferrer"
       ><code>{{tag}}</code></a><span *ngIf="!isLast">, </span></span></p>
+    <div *ngIf="element.deprecated">
+      <b *ngIf="element.deprecated.forRemoval">
+        This element is subject to removal.
+        <span *ngIf="element.deprecated.since"> Deprecated since: {{element.deprecated.since}}</span>
+      </b>
+      <p *ngIf="element.deprecated.description">{{element.deprecated.description}}</p>
+    </div>
   </ng-template>
   <ng-template #parentInfo>
     <h3 class="element__name">{{element.name}}<span *ngIf="element.deprecated"
