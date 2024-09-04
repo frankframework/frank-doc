@@ -9,7 +9,7 @@
           <ApiListener uriPattern="myurl" />
       </Receiver>
       <Pipeline firstPipe="myPipe">
-          <EchoPipe name="myPipe" getinputfromfixedvalue="Hello World!"></EchoPipe>
+          <EchoPipe name="myPipe" getInputFromFixedValue="Hello World!"></EchoPipe>
       </Pipeline>
   </Adapter>
 </Configuration>
