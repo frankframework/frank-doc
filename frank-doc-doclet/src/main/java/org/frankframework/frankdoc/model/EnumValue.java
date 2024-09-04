@@ -19,7 +19,9 @@ package org.frankframework.frankdoc.model;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Deprecated;
+import org.frankframework.frankdoc.feature.Description;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
@@ -52,10 +54,7 @@ public class EnumValue {
 			this.explicitLabel = true;
 			this.label = annotationValue;
 		}
-		String javaDoc = c.getJavaDoc();
-		if(! StringUtils.isBlank(javaDoc)) {
-			this.description = javaDoc;
-		}
+		this.description = Description.getInstance().valueOf(c);
 		if(Deprecated.getInstance().isSetOn(c)) {
 			this.deprecated = true;
 		}

@@ -22,18 +22,16 @@ import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import static org.frankframework.frankdoc.Utils.isConfigChildSetter;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.frankframework.frankdoc.Utils.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UtilsTest {
 	private static final String SIMPLE = "org.frankframework.frankdoc.testtarget.simple";
@@ -158,4 +156,19 @@ public class UtilsTest {
 		List<String> actual = Utils.getHtmlTags("With <code>MyCode</code> and a <a href=\"http://myDomain\">Link</a>.");
 		assertArrayEquals(new String[] {"code", "a"}, actual.toArray(new String[] {}));
 	}
+
+	@Test
+	@Timeout(value=25, unit=TimeUnit.MILLISECONDS)
+	public void testReplacePattern() throws FrankDocException {
+		String result1 = replacePattern("start{@code aaaa{bbbb}cccc}end{@code dddd}end", JAVADOC_CODE_START_DELIMITER, s -> "<tag>" + s + "</tag>");
+		String result2 = replacePattern("start{@code {@value value} {@link link} }end", JAVADOC_CODE_START_DELIMITER, s -> "<tag>" + s + "</tag>");
+		String result3 = replacePattern("start{@code {}{{{{{{{}{{}}{{{}}}}}}}}} }end", JAVADOC_CODE_START_DELIMITER, s -> "<tag>" + s + "</tag>");
+		String result4 = replacePattern("start{@code\t\n code \n block\t\n }end", JAVADOC_CODE_START_DELIMITER, s -> "<tag>" + s + "</tag>");
+
+		assertEquals("start<tag>aaaa{bbbb}cccc</tag>end<tag>dddd</tag>end", result1);
+		assertEquals("start<tag>{@value value} {@link link}</tag>end", result2);
+		assertEquals("start<tag>{}{{{{{{{}{{}}{{{}}}}}}}}}</tag>end", result3);
+		assertEquals("start<tag>code \n block</tag>end", result4);
+	}
+
 }

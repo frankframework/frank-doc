@@ -47,7 +47,7 @@ public class Default {
 			result = method.getJavaDocTag(TAG_DEFAULT);
 		}
 		try {
-			return Utils.replaceClassFieldValue(result, method.getDeclaringClass());
+			return Utils.substituteJavadocTags(result, method.getDeclaringClass());
 		} catch(FrankDocException e) {
 			log.error("Could not replace {@value ...} in [{}]", result);
 			return result;
