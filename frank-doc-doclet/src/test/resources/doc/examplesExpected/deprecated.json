@@ -64,10 +64,7 @@
                     "type":"Module"
                 },
                 {
-					"deprecated":{
-						"forRemoval":false,
-						"since":""
-					},
+					"deprecated":true,
                     "multiple":true,
                     "roleName":"roleNameTChild",
                     "type":"org.frankframework.frankdoc.testtarget.examples.deprecated.TChild"
