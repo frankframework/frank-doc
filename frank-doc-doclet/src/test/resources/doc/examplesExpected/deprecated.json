@@ -36,15 +36,21 @@
         {
             "name":"Master",
             "fullName":"org.frankframework.frankdoc.testtarget.examples.deprecated.Master",
-            "deprecated":true,
+            "deprecated":{
+				"forRemoval":false,
+				"since":""
+			},
             "elementNames":[
                 "Master"
             ],
             "attributes":[
                 {
                     "name":"value",
-                    "deprecated":true
-                },
+					"deprecated":{
+						"forRemoval":false,
+						"since":""
+					}
+				},
                 {
         			"name":"active",
         			"description":"If defined and empty or false, then this element and all its children are ignored"
@@ -58,7 +64,10 @@
                     "type":"Module"
                 },
                 {
-                    "deprecated":true,
+					"deprecated":{
+						"forRemoval":false,
+						"since":""
+					},
                     "multiple":true,
                     "roleName":"roleNameTChild",
                     "type":"org.frankframework.frankdoc.testtarget.examples.deprecated.TChild"
@@ -86,7 +95,10 @@
         {
             "name":"RoleNameTChild",
             "fullName":"org.frankframework.frankdoc.testtarget.examples.deprecated.TChild",
-            "deprecated":true,
+			"deprecated":{
+				"forRemoval":false,
+				"since":""
+			},
             "elementNames":[
                 "RoleNameTChild"
             ],
