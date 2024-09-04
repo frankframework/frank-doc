@@ -17,6 +17,7 @@ limitations under the License.
 package org.frankframework.frankdoc;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.EnumValue;
 import org.frankframework.frankdoc.util.LogUtil;
@@ -73,6 +74,10 @@ public final class Utils {
 
 	private static final String JAVADOC_LINK_START_DELIMITER = "{@link";
 	public static final String JAVADOC_VALUE_START_DELIMITER = "{@value";
+	public static final String JAVADOC_CODE_START_DELIMITER = "{@code";
+	public static final String JAVADOC_LITERAL_START_DELIMITER = "{@literal";
+
+	public static final String JAVADOC_SUBSTITUTION_PATTERN_START_DELIMITER = "{";
 	public static final String JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER = "}";
 
 	private static Map<String, String> primitiveToBoxed = new HashMap<>();
@@ -233,31 +238,61 @@ public final class Utils {
 	}
 
 	public static String flattenJavaDocLinksToLastWords(String text) throws FrankDocException {
-		return replacePattern(text, JAVADOC_LINK_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, Utils::getLinkReplacement);
+		return replacePattern(text, JAVADOC_LINK_START_DELIMITER, Utils::getLinkReplacement);
 	}
 
-	private static String replacePattern(String text, String patternStart, String patternStop, Function<String, String> substitution) throws FrankDocException {
+	/**
+	 * Replaces all instances of {@code patternStart}...} with a provided substitution. Allows for curly braces between
+	 * the text as long as they are evenly matched (same amount of opening braces and closing braces).
+	 */
+	public static String replacePattern(String text, String patternStart, Function<String, String> substitution) throws FrankDocException {
 		if (text == null) {
 			return null;
 		}
+
 		StringBuilder result = new StringBuilder();
+
 		int currentIndex = 0;
-		int nextStartIdx = text.indexOf(patternStart, currentIndex);
-		while (nextStartIdx >= 0) {
-			result.append(text.substring(currentIndex, nextStartIdx));
-			int endIdx = text.indexOf(patternStop, nextStartIdx);
-			if (endIdx < 0) {
-				throw new FrankDocException(String.format("Unfinished JavaDoc {@ ...} pattern text [%s] at index [%d]", text, nextStartIdx), null);
+		int startIndex = text.indexOf(patternStart);
+		while (startIndex >= 0) {
+			int stopIndex = text.indexOf(JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, startIndex);
+
+			if (stopIndex < 0) {
+				throw new FrankDocException(String.format("Unfinished JavaDoc {@ ...} pattern text [%s] at index [%d]", text, startIndex), null);
 			}
-			String replacedText = text.substring(nextStartIdx + patternStart.length(), endIdx);
-			result.append(substitution.apply(replacedText));
-			currentIndex = endIdx + 1;
-			if (currentIndex >= text.length()) {
-				return result.toString();
+
+			result.append(text, currentIndex, startIndex);
+
+			String match = text.substring(startIndex, stopIndex);
+
+			int openingBracketsCount = StringUtils.countMatches(match, JAVADOC_SUBSTITUTION_PATTERN_START_DELIMITER);
+			int closingBracketsCount = StringUtils.countMatches(match, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER);
+
+			while (openingBracketsCount != closingBracketsCount) {
+				final int nextStopIndex = text.indexOf(JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, stopIndex) + 1;
+
+				if (nextStopIndex == stopIndex) {
+					break;
+				}
+
+				match = match + text.substring(stopIndex, nextStopIndex);
+
+				openingBracketsCount = StringUtils.countMatches(match, JAVADOC_SUBSTITUTION_PATTERN_START_DELIMITER);
+				closingBracketsCount = StringUtils.countMatches(match, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER);
+
+				stopIndex = nextStopIndex;
+				currentIndex = stopIndex;
 			}
-			nextStartIdx = text.indexOf(patternStart, currentIndex);
+
+			final String innerContent = match.substring(patternStart.length(), match.length() - 1).trim();
+			final String substitute = substitution.apply(innerContent);
+			result.append(substitute);
+
+			startIndex = text.indexOf(patternStart, stopIndex);
 		}
+
 		result.append(text.substring(currentIndex));
+
 		return result.toString();
 	}
 
@@ -269,11 +304,35 @@ public final class Utils {
 		return words[words.length - 1];
 	}
 
-	public static String replaceClassFieldValue(String text, FrankClass context) throws FrankDocException {
-		return replacePattern(text, JAVADOC_VALUE_START_DELIMITER, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, s -> getClassFieldValueReplacement(s, context));
+
+	public static String substituteJavadocTags(String text, FrankClass context) throws FrankDocException {
+		// Order matters here. {@literal}, {@value} and {@link} can be used inside {@code ...} blocks.
+		String step = replaceLiteralValue(text);
+		step = replaceFieldValue(step, context);
+		return replaceCodeValue(step);
+	}
+
+	private static String replaceLiteralValue(String text) throws FrankDocException {
+		return replacePattern(text, JAVADOC_LITERAL_START_DELIMITER, StringEscapeUtils::escapeHtml4);
+	}
+
+	private static String replaceCodeValue(String text) throws FrankDocException {
+		return replacePattern(text, JAVADOC_CODE_START_DELIMITER, Utils::getCodeValueReplacement);
+	}
+
+	private static String replaceFieldValue(String text, FrankClass context) throws FrankDocException {
+		return replacePattern(text, JAVADOC_VALUE_START_DELIMITER, s -> getClassFieldValueReplacement(s, context));
+	}
+
+	private static String getCodeValueReplacement(String codeBlock) {
+		return "<code>" + StringEscapeUtils.escapeHtml4(codeBlock) + "</code>";
 	}
 
 	private static String getClassFieldValueReplacement(String ref, FrankClass context) {
+		if (context == null) {
+			return ref;
+		}
+
 		String[] refComponents = ref.trim().split("#");
 		if (refComponents.length != 2) {
 			logValueSubstitutionError(ref, "wrong syntax");
