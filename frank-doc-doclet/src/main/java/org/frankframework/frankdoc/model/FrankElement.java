@@ -112,11 +112,7 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	FrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory, LabelValues labelValues) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
-		try {
-			deprecationInfo = Deprecated.getInstance().getInfo(clazz);
-		} catch (FrankDocException e) {
-			log.error("FrankDocException while trying to get the deprecation info for [{}]", clazz.getName(), e);
-		}
+		deprecationInfo = Deprecated.getInstance().getInfo(clazz);
 		configChildSets = new LinkedHashMap<>();
 		this.completeFrankElement(clazz);
 		handleConfigChildSetterCandidates(clazz);

@@ -24,11 +24,10 @@ package org.frankframework.frankdoc.wrapper;
 public interface FrankAnnotation extends FrankProgramElement {
 	/**
 	 * Get the "value" field of the annotation.
-	 * @throws FrankDocException
 	 */
-	Object getValue() throws FrankDocException;
+	Object getValue();
 
-	Object getValueOf(String fieldName) throws FrankDocException;
+	Object getValueOf(String fieldName);
 
 	FrankAnnotation getAnnotation(String name);
 

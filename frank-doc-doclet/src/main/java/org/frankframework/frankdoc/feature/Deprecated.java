@@ -35,21 +35,21 @@ public class Deprecated extends AbstractNonValuedFeature {
 		super(DEPRECATED_ANNOTATION_CLASSNAME, "@deprecated");
 	}
 
-	public DeprecationInfo getInfo(FrankClass clazz) throws FrankDocException {
+	public DeprecationInfo getInfo(FrankClass clazz) {
 		FrankAnnotation deprecationAnnotation = clazz.getAnnotation(DEPRECATED_ANNOTATION_CLASSNAME);
 		FrankAnnotation configWarningAnnotation = clazz.getAnnotation(CONFIG_WARNING_ANNOTATION_CLASSNAME);
 
 		return getInfo(deprecationAnnotation, configWarningAnnotation);
 	}
 
-	public DeprecationInfo getInfo(FrankMethod method) throws FrankDocException {
+	public DeprecationInfo getInfo(FrankMethod method) {
 		FrankAnnotation deprecationAnnotation = method.getAnnotation(DEPRECATED_ANNOTATION_CLASSNAME);
 		FrankAnnotation configWarningAnnotation = method.getAnnotation(CONFIG_WARNING_ANNOTATION_CLASSNAME);
 
 		return getInfo(deprecationAnnotation, configWarningAnnotation);
 	}
 
-	private DeprecationInfo getInfo(FrankAnnotation deprecationAnnotation, FrankAnnotation configWarningAnnotation) throws FrankDocException {
+	private DeprecationInfo getInfo(FrankAnnotation deprecationAnnotation, FrankAnnotation configWarningAnnotation) {
 		if (deprecationAnnotation != null) {
 			boolean forRemoval = false;
 			String since = null;

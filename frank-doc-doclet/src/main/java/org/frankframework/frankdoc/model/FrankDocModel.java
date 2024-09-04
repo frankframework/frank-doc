@@ -265,7 +265,7 @@ public class FrankDocModel {
 		return allElements.get(fullName);
 	}
 
-	List<FrankAttribute> createAttributes(FrankClass clazz, FrankElement attributeOwner, FrankClassRepository classRepository) throws FrankDocException {
+	List<FrankAttribute> createAttributes(FrankClass clazz, FrankElement attributeOwner, FrankClassRepository classRepository) {
 		log.trace("Creating attributes for FrankElement [{}]", attributeOwner::getFullName);
 		checkForAttributeSetterOverloads(clazz);
 		FrankMethod[] methods = clazz.getDeclaredMethodsAndMultiplyInheritedPlaceholders();

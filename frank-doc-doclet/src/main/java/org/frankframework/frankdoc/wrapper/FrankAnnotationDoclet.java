@@ -72,7 +72,7 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 	}
 
 	@Override
-	public Object getValue() throws FrankDocException {
+	public Object getValue() {
 		return getValueOf("value");
 	}
 
@@ -138,11 +138,7 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 
 	@Override
 	public String toString() {
-		String value = null;
-		try {
-			value = getValue() == null ? "null" : getValue().toString();
-		} catch (FrankDocException ignored) {
-		}
+		final String value = getValue() == null ? "null" : getValue().toString();
 		return "FrankAnnotationDoclet name: [" + getName() + "], value: [" + value + "] annotations size: " + getAnnotationCount();
 	}
 }
