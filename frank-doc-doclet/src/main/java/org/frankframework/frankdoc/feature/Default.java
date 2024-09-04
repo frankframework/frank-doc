@@ -59,12 +59,7 @@ public class Default {
 		if(annotation == null) {
 			return null;
 		}
-		try {
-			return annotation.getValue().toString();
-		} catch(FrankDocException e) {
-			log.error("Failed to parse annotation [{}] on method [{}]", ANNOTATION_DEFAULT, method.toString());
-			return null;
-		}
+		return annotation.getValue().toString();
 	}
 
 	private String fromIbisDocAnnotation(FrankMethod method) {

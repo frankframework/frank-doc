@@ -78,12 +78,7 @@ public class Reference {
 		ParsedIbisDocRef result = new ParsedIbisDocRef();
 		result.setHasOrder(false);
 		String[] values = null;
-		try {
-			values = (String[]) ibisDocRef.getValue();
-		} catch(FrankDocException e) {
-			log.error("IbisDocRef annotation did not have a value", e);
-			return result;
-		}
+		values = (String[]) ibisDocRef.getValue();
 		String methodString = null;
 		if (values.length == 1) {
 			methodString = values[0];

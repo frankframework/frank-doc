@@ -44,11 +44,7 @@ public class EnumValue {
 		FrankAnnotation annotation = c.getAnnotation(ENUM_LABEL);
 		String annotationValue = null;
 		if(annotation != null) {
-			try {
-				annotationValue = (String) annotation.getValue();
-			} catch(FrankDocException e) {
-				log.error("Could not parse annotation value of {}", ENUM_LABEL, e);
-			}
+			annotationValue = (String) annotation.getValue();
 		}
 		if(! StringUtils.isBlank(annotationValue)) {
 			this.explicitLabel = true;
