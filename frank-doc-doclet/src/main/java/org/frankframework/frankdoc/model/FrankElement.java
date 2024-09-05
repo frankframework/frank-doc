@@ -238,19 +238,12 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	private void handleLabels(FrankClass clazz, LabelValues labelValues) {
-		List<FrankAnnotation> annotationsForLabels = Arrays.stream(clazz.getAnnotations())
+		Arrays.stream(clazz.getAnnotations())
 			.filter(a -> a.getAnnotation(LABEL) != null)
-			.toList();
-		for (FrankAnnotation a : annotationsForLabels) {
-			try {
-				handleSpecificLabel(a, labelValues);
-			} catch (FrankDocException e) {
-				log.error("Could not parse label [{}] of [{}]", a.getName(), toString());
-			}
-		}
+			.forEach(a -> handleSpecificLabel(a, labelValues));
 	}
 
-	void handleSpecificLabel(FrankAnnotation labelAddingAnnotation, LabelValues labelValues) throws FrankDocException {
+	void handleSpecificLabel(FrankAnnotation labelAddingAnnotation, LabelValues labelValues) {
 		String label = labelAddingAnnotation.getAnnotation(LABEL).getValueOf(LABEL_NAME).toString();
 		Object rawValue = labelAddingAnnotation.getValue();
 		if (rawValue instanceof FrankEnumConstant enumConstant) {
