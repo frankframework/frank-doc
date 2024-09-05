@@ -284,7 +284,8 @@ public final class Utils {
 				currentIndex = stopIndex;
 			}
 
-			final String substitute = substitution.apply(match.substring(patternStart.length(), match.length() - 1));
+			final String innerContent = match.substring(patternStart.length(), match.length() - 1).trim();
+			final String substitute = substitution.apply(innerContent);
 			result.append(substitute);
 
 			startIndex = text.indexOf(patternStart, stopIndex);
@@ -307,23 +308,31 @@ public final class Utils {
 	public static String substituteJavadocTags(String text, FrankClass context) throws FrankDocException {
 		// Order matters here. {@literal}, {@value} and {@link} can be used inside {@code ...} blocks.
 		String step = replaceLiteralValue(text);
-		step = replaceClassFieldValue(step, context);
-		return replaceClassCodeValue(step);
+		step = replaceFieldValue(step, context);
+		return replaceCodeValue(step);
 	}
 
 	private static String replaceLiteralValue(String text) throws FrankDocException {
 		return replacePattern(text, JAVADOC_LITERAL_START_DELIMITER, StringEscapeUtils::escapeHtml4);
 	}
 
-	private static String replaceClassCodeValue(String text) throws FrankDocException {
-		return replacePattern(text, JAVADOC_CODE_START_DELIMITER, StringEscapeUtils::escapeHtml4);
+	private static String replaceCodeValue(String text) throws FrankDocException {
+		return replacePattern(text, JAVADOC_CODE_START_DELIMITER, Utils::getCodeValueReplacement);
 	}
 
-	private static String replaceClassFieldValue(String text, FrankClass context) throws FrankDocException {
+	private static String replaceFieldValue(String text, FrankClass context) throws FrankDocException {
 		return replacePattern(text, JAVADOC_VALUE_START_DELIMITER, s -> getClassFieldValueReplacement(s, context));
 	}
 
+	private static String getCodeValueReplacement(String codeBlock) {
+		return "<code>" + StringEscapeUtils.escapeHtml4(codeBlock) + "</code>";
+	}
+
 	private static String getClassFieldValueReplacement(String ref, FrankClass context) {
+		if (context == null) {
+			return ref;
+		}
+
 		String[] refComponents = ref.trim().split("#");
 		if (refComponents.length != 2) {
 			logValueSubstitutionError(ref, "wrong syntax");
@@ -346,7 +355,7 @@ public final class Utils {
 			logValueSubstitutionError(ref, String.format("Found field owner class [%s], but not the referenced field or enum constant", fieldOwner));
 			return ref;
 		}
-		return result;
+		return "<code>" + result + "</code>";
 	}
 
 	private static void logValueSubstitutionError(String ref, String specificError) {

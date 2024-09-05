@@ -36,31 +36,31 @@
 		{
 			"name": "A",
 			"fullName": "org.frankframework.frankdoc.testtarget.examples.valueSubs.Other",
-			"description": "In the class description, we substitute my-constant",
+			"description": "In the class description, we substitute <code>my-constant</code>",
 			"elementNames": [
 				"A"
 			],
 			"attributes": [
 				{
 					"name": "myAttribute",
-					"description": "Attribute description that cites my-constant"
+					"description": "Attribute description that cites <code>my-constant</code>"
 				},
 				{
 					"name": "active",
 					"description": "If defined and empty or false, then this element and all its children are ignored"
 				}
 			],
-			"parametersDescription": "In the text that defines the meaning of parameters, we substitute my-constant",
+			"parametersDescription": "In the text that defines the meaning of parameters, we substitute <code>my-constant</code>",
 			"parameters": [
 				{
-					"name": "my-constant",
-					"description": "Description of this parameter is my-constant"
+					"name": "<code>my-constant</code>",
+					"description": "Description of this parameter is <code>my-constant</code>"
 				}
 			],
 			"forwards": [
 				{
-					"name": "my-constant",
-					"description": "Forward description my-constant"
+					"name": "<code>my-constant</code>",
+					"description": "Forward description <code>my-constant</code>"
 				}
 			]
 		},
@@ -87,14 +87,14 @@
 		{
 			"name": "WithValueSubstitutions",
 			"fullName": "org.frankframework.frankdoc.testtarget.examples.valueSubs.WithValueSubstitutions",
-			"description": "In the class description, we substitute my-constant",
+			"description": "In the class description, we substitute <code>my-constant</code>",
 			"elementNames": [
 				"WithValueSubstitutions"
 			],
 			"attributes": [
 				{
 					"name": "myAttribute",
-					"description": "In an attribute description, we substitute my-constant"
+					"description": "In an attribute description, we substitute <code>my-constant</code>"
 				},
 				{
 					"name": "active",
@@ -114,17 +114,17 @@
 					"type": "org.frankframework.frankdoc.testtarget.examples.valueSubs.Other"
 				}
 			],
-			"parametersDescription": "In the text that defines the meaning of parameters, we substitute my-constant",
+			"parametersDescription": "In the text that defines the meaning of parameters, we substitute <code>my-constant</code>",
 			"parameters": [
 				{
-					"name": "my-constant",
-					"description": "Description of this parameter is my-constant"
+					"name": "<code>my-constant</code>",
+					"description": "Description of this parameter is <code>my-constant</code>"
 				}
 			],
 			"forwards": [
 				{
-					"name": "my-constant",
-					"description": "Forward description my-constant"
+					"name": "<code>my-constant</code>",
+					"description": "Forward description <code>my-constant</code>"
 				}
 			]
 		}

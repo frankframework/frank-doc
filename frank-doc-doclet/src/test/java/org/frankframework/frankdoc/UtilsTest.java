@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.frankframework.frankdoc.Utils.isConfigChildSetter;
 import static org.frankframework.frankdoc.Utils.replacePattern;
+import static org.frankframework.frankdoc.Utils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UtilsTest {
@@ -161,13 +162,15 @@ public class UtilsTest {
 	@Test
 	@Timeout(value=25, unit=TimeUnit.MILLISECONDS)
 	public void testReplacePattern() throws FrankDocException {
-		String result1 = replacePattern("start{@codeaaaa{bbbb}cccc}end{@codedddd}end", "{@code", s -> "<tag>" + s + "</tag>");
-		String result2 = replacePattern("start{@code {@value value} {@link link} }end", "{@code", s -> "<tag>" + s + "</tag>");
-		String result3 = replacePattern("start{@code {}{{{{{{{}{{}}{{{}}}}}}}}} }end", "{@code", s -> "<tag>" + s + "</tag>");
+		String result1 = replacePattern("start{@code aaaa{bbbb}cccc}end{@code dddd}end", JAVADOC_CODE_START_DELIMITER, s -> "<tag>" + s + "</tag>");
+		String result2 = replacePattern("start{@code {@value value} {@link link} }end", JAVADOC_CODE_START_DELIMITER, s -> "<tag>" + s + "</tag>");
+		String result3 = replacePattern("start{@code {}{{{{{{{}{{}}{{{}}}}}}}}} }end", JAVADOC_CODE_START_DELIMITER, s -> "<tag>" + s + "</tag>");
+		String result4 = replacePattern("start{@code\t\n code \n block\t\n }end", JAVADOC_CODE_START_DELIMITER, s -> "<tag>" + s + "</tag>");
 
 		assertEquals("start<tag>aaaa{bbbb}cccc</tag>end<tag>dddd</tag>end", result1);
-		assertEquals("start<tag> {@value value} {@link link} </tag>end", result2);
-		assertEquals("start<tag> {}{{{{{{{}{{}}{{{}}}}}}}}} </tag>end", result3);
+		assertEquals("start<tag>{@value value} {@link link}</tag>end", result2);
+		assertEquals("start<tag>{}{{{{{{{}{{}}{{{}}}}}}}}}</tag>end", result3);
+		assertEquals("start<tag>code \n block</tag>end", result4);
 	}
 
 }

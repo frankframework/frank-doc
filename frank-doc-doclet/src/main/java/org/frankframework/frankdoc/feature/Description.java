@@ -16,14 +16,11 @@ limitations under the License.
 
 package org.frankframework.frankdoc.feature;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.wrapper.FrankAnnotation;
-import org.frankframework.frankdoc.wrapper.FrankClass;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
+import org.frankframework.frankdoc.wrapper.*;
 
 public class Description {
 	private static Logger log = LogUtil.getLogger(Description.class);
@@ -68,7 +65,7 @@ public class Description {
 		try {
 			return Utils.substituteJavadocTags(result, method.getDeclaringClass());
 		} catch(FrankDocException e) {
-			log.error("Could not replace {@value ...} in [{}]", result);
+			log.error("Could not replace javaDoc tags in [{}]", result);
 			return result;
 		}
 	}
@@ -78,8 +75,23 @@ public class Description {
 		try {
 			return Utils.substituteJavadocTags(result, clazz);
 		} catch(FrankDocException e) {
-			log.error("Could not replace {@value ...} in [{}]", result);
+			log.error("Could not replace javaDoc tags in [{}]", result);
 			return result;
 		}
 	}
+
+	public String valueOf(FrankEnumConstant enumConstant) {
+		String result = enumConstant.getJavaDoc();
+		if (!StringUtils.isBlank(result)) {
+			try {
+				return Utils.substituteJavadocTags(result, null);
+			} catch (FrankDocException e) {
+				log.error("Could not replace javaDoc tags in [{}]", result);
+				return result;
+			}
+		}
+
+		return null;
+	}
+
 }
