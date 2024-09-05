@@ -51,7 +51,7 @@ public abstract class ConfigChild extends ElementChild {
 	ConfigChild(FrankElement owningElement, FrankMethod method) {
 		super(owningElement);
 		setDocumented(Description.getInstance().valueOf(method) != null);
-		setDeprecated(Deprecated.getInstance().isSetOn(method));
+		setDeprecationInfo(Deprecated.getInstance().getInfo(method));
 		setReintroduced(Reintroduce.getInstance().isSetOn(method));
 		log.trace("ConfigChild of method {} has documented={}, deprecated={}, reintroduced={}", () -> method.toString(), () -> isDocumented(), () -> isDeprecated(), () -> isReintroduced());
 		this.methodName = method.getName();

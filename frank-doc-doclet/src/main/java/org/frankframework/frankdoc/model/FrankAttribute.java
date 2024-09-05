@@ -48,7 +48,6 @@ public class FrankAttribute extends ElementChild {
 	}
 
 	private final @Getter String name;
-	private final @Getter DeprecationInfo deprecationInfo;
 
 	private @Getter @Setter AttributeType attributeType;
 
@@ -57,10 +56,9 @@ public class FrankAttribute extends ElementChild {
 	 */
 	private @Getter @Setter AttributeEnum attributeEnum;
 
-	public FrankAttribute(String name, FrankElement attributeOwner, DeprecationInfo deprecationInfo) {
+	public FrankAttribute(String name, FrankElement attributeOwner) {
 		super(attributeOwner);
 		this.name = name;
-		this.deprecationInfo = deprecationInfo;
 	}
 
 	@Override

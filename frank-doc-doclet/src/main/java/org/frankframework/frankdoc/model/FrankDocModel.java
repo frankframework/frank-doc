@@ -284,8 +284,7 @@ public class FrankDocModel {
 			if(getterAttributes.containsKey(attributeName)) {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
-			final DeprecationInfo deprecationInfo = Deprecated.getInstance().getInfo(method);
-			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner, deprecationInfo);
+			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
 			if(method.getParameterTypes()[0].isEnum()) {
 				log.trace("Attribute [{}] has setter that takes enum: [{}]", attribute::getName, () -> method.getParameterTypes()[0].toString());
 				attribute.setAttributeType(AttributeType.STRING);
@@ -315,7 +314,8 @@ public class FrankDocModel {
 				|| (Default.getInstance().valueOf(method) != null)
 				|| (Mandatory.getInstance().valueOf(method) != null)
 				|| Optional.getInstance().isSetOn(method));
-		attribute.setDeprecated(Deprecated.getInstance().isSetOn(method));
+
+		attribute.setDeprecationInfo(Deprecated.getInstance().getInfo(method));
 		attribute.setReintroduced(Reintroduce.getInstance().isSetOn(method));
 		log.trace("Attribute: deprecated = [{}], documented = [{}], reintroduced = [{}]",
 			attribute::isDeprecated, attribute::isDocumented, attribute::isReintroduced);

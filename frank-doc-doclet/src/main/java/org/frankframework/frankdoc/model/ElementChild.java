@@ -48,7 +48,7 @@ public abstract class ElementChild {
 	/**
 	 * The value is inherited from ElementChild corresponding to superclass.
 	 */
-	private @Getter @Setter boolean deprecated = false;
+	private @Getter @Setter DeprecationInfo deprecationInfo;
 
 	/**
 	 * This field supports the PROTECTED feature, which causes an attribute or config child to be excluded.
@@ -189,4 +189,9 @@ public abstract class ElementChild {
 	 * This function has the same purpose for config children.
 	 */
 	abstract AbstractKey getKey();
+
+	public boolean isDeprecated() {
+		return this.deprecationInfo != null;
+	}
+
 }
