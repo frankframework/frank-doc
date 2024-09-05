@@ -309,18 +309,21 @@ public class FrankDocJsonFactory {
 			JsonObject deprecationInfoJsonObject = getDeprecated(deprecationInfo);
 			result.add("deprecated", deprecationInfoJsonObject);
 		}
-		if(frankAttribute.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
+		if (frankAttribute.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
 			result.add("mandatory", true);
 		}
-		if(frankAttribute.isReintroduced()) {
+		if (frankAttribute.isReintroduced()) {
 			result.add("reintroduced", true);
+		}
+		if (frankAttribute.isUnsafe()) {
+			result.add("unsafe", true);
 		}
 		addIfNotNull(result, "description", frankAttribute.getDescription());
 		addIfNotNull(result, "default", frankAttribute.getDefaultValue());
-		if(! frankAttribute.getAttributeType().equals(AttributeType.STRING)) {
+		if (!frankAttribute.getAttributeType().equals(AttributeType.STRING)) {
 			result.add("type", frankAttribute.getAttributeType().name().toLowerCase());
 		}
-		if(frankAttribute.getAttributeEnum() != null) {
+		if (frankAttribute.getAttributeEnum() != null) {
 			result.add("enum", frankAttribute.getAttributeEnum().getFullName());
 		}
 		return result.build();
