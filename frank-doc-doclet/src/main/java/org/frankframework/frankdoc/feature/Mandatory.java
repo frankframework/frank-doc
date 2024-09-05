@@ -59,11 +59,7 @@ public class Mandatory {
 		FrankAnnotation annotation = method.getAnnotation(ANNOTATION_NAME);
 		if(annotation != null) {
 			boolean annotationValue = false;
-			try {
-				annotationValue = (Boolean) annotation.getValueOf(IGNORE_COMPATIBILITY_MODE);
-			} catch(FrankDocException e) {
-				log.error("Method [{}] has Java annotation [{}] but cannot get value", method.toString(), ANNOTATION_NAME);
-			}
+			annotationValue = (Boolean) annotation.getValueOf(IGNORE_COMPATIBILITY_MODE);
 			if(annotationValue) {
 				return Value.IGNORE_COMPATIBILITY;
 			} else {

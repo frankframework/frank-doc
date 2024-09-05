@@ -26,11 +26,7 @@ class ParsedIbisDocAnnotation {
 
 	ParsedIbisDocAnnotation(FrankAnnotation ibisDoc) throws FrankDocException {
 		String[] ibisDocValues = null;
-		try {
-			ibisDocValues = (String[]) ibisDoc.getValue();
-		} catch(FrankDocException e) {
-			throw new FrankDocException("Could not parse FrankAnnotation of @IbisDoc", e);
-		}
+		ibisDocValues = (String[]) ibisDoc.getValue();
 		boolean isIbisDocHasOrder = false;
 		try {
 			Integer.parseInt(ibisDocValues[0]);

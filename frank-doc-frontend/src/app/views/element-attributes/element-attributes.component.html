@@ -35,6 +35,13 @@
                     [showDeprecatedElements]="showDeprecatedElements"
                   ></attribute-description>
                 </div>
+                <div *ngIf="attr.deprecated">
+                  <b *ngIf="attr.deprecated.forRemoval">
+                    This attribute is subject to removal.
+                    <span *ngIf="attr.deprecated.since"> Deprecated since: {{attr.deprecated.since}}</span>
+                  </b>
+                  <p *ngIf="attr.deprecated.description">{{attr.deprecated.description}}</p>
+                </div>
               </div>
             </td>
             <td [innerHtml]="attr.default"></td>

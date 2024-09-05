@@ -16,14 +16,68 @@ limitations under the License.
 
 package org.frankframework.frankdoc.feature;
 
+import org.frankframework.frankdoc.model.DeprecationInfo;
+import org.frankframework.frankdoc.wrapper.FrankAnnotation;
+import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
+
 public class Deprecated extends AbstractNonValuedFeature {
 	private static final Deprecated INSTANCE = new Deprecated();
+	private static final String DEPRECATED_ANNOTATION_CLASSNAME = "java.lang.Deprecated";
+	private static final String CONFIG_WARNING_ANNOTATION_CLASSNAME = "org.frankframework.configuration.ConfigurationWarning";
 
 	public static Deprecated getInstance() {
 		return INSTANCE;
 	}
 
 	private Deprecated() {
-		super("java.lang.Deprecated", "@deprecated");
+		super(DEPRECATED_ANNOTATION_CLASSNAME, "@deprecated");
 	}
+
+	public DeprecationInfo getInfo(FrankClass clazz) {
+		FrankAnnotation deprecationAnnotation = clazz.getAnnotation(DEPRECATED_ANNOTATION_CLASSNAME);
+		FrankAnnotation configWarningAnnotation = clazz.getAnnotation(CONFIG_WARNING_ANNOTATION_CLASSNAME);
+
+		return getInfo(deprecationAnnotation, configWarningAnnotation);
+	}
+
+	public DeprecationInfo getInfo(FrankMethod method) {
+		FrankAnnotation deprecationAnnotation = method.getAnnotation(DEPRECATED_ANNOTATION_CLASSNAME);
+		FrankAnnotation configWarningAnnotation = method.getAnnotation(CONFIG_WARNING_ANNOTATION_CLASSNAME);
+
+		return getInfo(deprecationAnnotation, configWarningAnnotation);
+	}
+
+	private DeprecationInfo getInfo(FrankAnnotation deprecationAnnotation, FrankAnnotation configWarningAnnotation) {
+		if (deprecationAnnotation != null) {
+			boolean forRemoval = false;
+			String since = null;
+
+			Object forRemovalObject = deprecationAnnotation.getValueOf("forRemoval");
+			Object sinceObject = deprecationAnnotation.getValueOf("since");
+
+			if (forRemovalObject instanceof Boolean value) {
+				forRemoval = value;
+			}
+
+			if (sinceObject instanceof String value) {
+				since = value;
+			}
+
+			String configurationWarning = null;
+			if (configWarningAnnotation != null) {
+				Object valueObject = configWarningAnnotation.getValue();
+
+				if (valueObject instanceof String value) {
+					configurationWarning = value;
+				}
+			}
+
+			return new DeprecationInfo(forRemoval, since, configurationWarning);
+		}
+
+		return null;
+	}
+
 }

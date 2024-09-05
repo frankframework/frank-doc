@@ -266,7 +266,7 @@ public class FrankDocModel {
 		return allElements.get(fullName);
 	}
 
-	List<FrankAttribute> createAttributes(FrankClass clazz, FrankElement attributeOwner, FrankClassRepository classRepository) throws FrankDocException {
+	List<FrankAttribute> createAttributes(FrankClass clazz, FrankElement attributeOwner, FrankClassRepository classRepository) {
 		log.trace("Creating attributes for FrankElement [{}]", attributeOwner::getFullName);
 		checkForAttributeSetterOverloads(clazz);
 		FrankMethod[] methods = clazz.getDeclaredMethodsAndMultiplyInheritedPlaceholders();
@@ -316,7 +316,8 @@ public class FrankDocModel {
 				|| (Default.getInstance().valueOf(method) != null)
 				|| (Mandatory.getInstance().valueOf(method) != null)
 				|| Optional.getInstance().isSetOn(method));
-		attribute.setDeprecated(Deprecated.getInstance().isSetOn(method));
+
+		attribute.setDeprecationInfo(Deprecated.getInstance().getInfo(method));
 		attribute.setReintroduced(Reintroduce.getInstance().isSetOn(method));
 		log.trace("Attribute: deprecated = [{}], documented = [{}], reintroduced = [{}]",
 			attribute::isDeprecated, attribute::isDocumented, attribute::isReintroduced);

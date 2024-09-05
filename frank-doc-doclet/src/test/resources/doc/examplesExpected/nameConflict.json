@@ -75,7 +75,10 @@
         {
             "name":"Member",
             "fullName":"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second.Member",
-            "deprecated":true,
+			"deprecated":{
+				"forRemoval":false,
+				"since":""
+			},
             "elementNames":[
             ],
             "attributes":[

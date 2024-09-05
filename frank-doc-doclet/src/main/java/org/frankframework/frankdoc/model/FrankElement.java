@@ -81,7 +81,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	private @Setter int typeNameSeq = 1;
 
 	private final @Getter boolean isAbstract;
-	private @Getter boolean isDeprecated = false;
+	private @Getter DeprecationInfo deprecationInfo;
 
 	// True if this FrankElement corresponds to a class that implements a Java interface
 	// that we model with an ElementType. This means: The Java interface only counts
@@ -112,7 +112,7 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	FrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory, LabelValues labelValues) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
-		isDeprecated = Deprecated.getInstance().isSetOn(clazz);
+		deprecationInfo = Deprecated.getInstance().getInfo(clazz);
 		configChildSets = new LinkedHashMap<>();
 		this.completeFrankElement(clazz);
 		handleConfigChildSetterCandidates(clazz);
@@ -238,23 +238,15 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	private void handleLabels(FrankClass clazz, LabelValues labelValues) {
-		List<FrankAnnotation> annotationsForLabels = Arrays.asList(clazz.getAnnotations()).stream()
+		Arrays.stream(clazz.getAnnotations())
 			.filter(a -> a.getAnnotation(LABEL) != null)
-			.collect(Collectors.toList());
-		for (FrankAnnotation a : annotationsForLabels) {
-			try {
-				handleSpecificLabel(a, labelValues);
-			} catch (FrankDocException e) {
-				log.error("Could not parse label [{}] of [{}]", a.getName(), toString());
-			}
-		}
+			.forEach(a -> handleSpecificLabel(a, labelValues));
 	}
 
-	void handleSpecificLabel(FrankAnnotation labelAddingAnnotation, LabelValues labelValues) throws FrankDocException {
+	void handleSpecificLabel(FrankAnnotation labelAddingAnnotation, LabelValues labelValues) {
 		String label = labelAddingAnnotation.getAnnotation(LABEL).getValueOf(LABEL_NAME).toString();
 		Object rawValue = labelAddingAnnotation.getValue();
-		if (rawValue instanceof FrankEnumConstant) {
-			FrankEnumConstant enumConstant = (FrankEnumConstant) rawValue;
+		if (rawValue instanceof FrankEnumConstant enumConstant) {
 			// This considers annotation @EnumLabel
 			EnumValue value = new EnumValue(enumConstant);
 			labels.add(new FrankLabel(label, value.getLabel()));
@@ -546,6 +538,10 @@ public class FrankElement implements Comparable<FrankElement> {
 		result.addAll(s1);
 		result.addAll(s2);
 		return result;
+	}
+
+	public boolean isDeprecated() {
+		return this.deprecationInfo != null;
 	}
 
 	@Override

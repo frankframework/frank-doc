@@ -73,11 +73,7 @@ public final class ExcludeFromTypeFeature {
 		String[] classNames = null;
 		FrankAnnotation annotation = testClass.getAnnotation(ANNOTATION_NAME);
 		if(annotation != null) {
-			try {
-				classNames = (String[]) annotation.getValue();
-			} catch(FrankDocException e) {
-				log.error("Class [{}] has annotation [{}], but could not parse the value", testClass.getName(), ANNOTATION_NAME, e);
-			}
+			classNames = (String[]) annotation.getValue();
 		} else {
 			String tagValue = testClass.getJavaDocTag(TAG_NAME);
 			if(tagValue != null) {

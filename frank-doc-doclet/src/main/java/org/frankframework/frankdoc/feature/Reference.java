@@ -65,11 +65,7 @@ public class Reference {
 	private String getReferToAnnotation(FrankMethod method) {
 		FrankAnnotation referTo = method.getAnnotation(REFER_TO);
 		if(referTo != null) {
-			try {
-				return (String) referTo.getValue();
-			} catch(FrankDocException e) {
-				log.error("Could not get value of annotation [{}] on method [{}]", referTo.getName(), method.toString(), e);
-			}
+			return (String) referTo.getValue();
 		}
 		return null;
 	}
@@ -78,12 +74,7 @@ public class Reference {
 		ParsedIbisDocRef result = new ParsedIbisDocRef();
 		result.setHasOrder(false);
 		String[] values = null;
-		try {
-			values = (String[]) ibisDocRef.getValue();
-		} catch(FrankDocException e) {
-			log.error("IbisDocRef annotation did not have a value", e);
-			return result;
-		}
+		values = (String[]) ibisDocRef.getValue();
 		String methodString = null;
 		if (values.length == 1) {
 			methodString = values[0];

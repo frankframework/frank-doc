@@ -16,11 +16,13 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
+import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.AttributeType;
 import org.frankframework.frankdoc.model.ConfigChild;
+import org.frankframework.frankdoc.model.DeprecationInfo;
 import org.frankframework.frankdoc.model.ElementChild;
 import org.frankframework.frankdoc.model.ElementType;
 import org.frankframework.frankdoc.model.EnumValue;
@@ -154,7 +156,7 @@ public class FrankDocJsonFactory {
 
 	private JsonArray getElements() throws JsonException {
 		Map<String, List<FrankElement>> elementsByName = model.getAllElements().values().stream()
-				.collect(Collectors.groupingBy(f -> getElementNameForJson(f)));
+				.collect(Collectors.groupingBy(this::getElementNameForJson));
 		List<String> sortKeys = new ArrayList<>(elementsByName.keySet());
 		sortKeys.add(Constants.MODULE_ELEMENT_NAME);
 		Collections.sort(sortKeys);
@@ -164,7 +166,7 @@ public class FrankDocJsonFactory {
 				result.add(getElementReferencedEntityRoot());
 			} else {
 				elementsByName.get(sortKey).stream()
-						.map(f -> getElement(f))
+						.map(this::getElement)
 						.forEach(result::add);
 			}
 		}
@@ -191,56 +193,71 @@ public class FrankDocJsonFactory {
 		return result.build();
 	}
 
+	private JsonObject getDeprecated(@NonNull DeprecationInfo deprecationInfo) {
+		JsonObjectBuilder builder = bf.createObjectBuilder();
+		builder.add("forRemoval", deprecationInfo.forRemoval());
+		if (deprecationInfo.since() != null) {
+			builder.add("since", deprecationInfo.since());
+		}
+		if (deprecationInfo.description() != null) {
+			builder.add("description", deprecationInfo.description());
+		}
+		return builder.build();
+	}
+
 	private JsonObject getElement(FrankElement frankElement) throws JsonException {
 		JsonObjectBuilder result = bf.createObjectBuilder();
 		result.add("name", getElementNameForJson(frankElement));
 		result.add("fullName", frankElement.getFullName());
-		if(frankElement.isAbstract()) {
-			result.add("abstract", frankElement.isAbstract());
+		if (frankElement.isAbstract()) {
+			result.add("abstract", true);
 		}
-		if(frankElement.isDeprecated()) {
-			result.add("deprecated", frankElement.isDeprecated());
+		DeprecationInfo deprecationInfo = frankElement.getDeprecationInfo();
+		if (deprecationInfo != null) {
+			JsonObject deprecationInfoJsonObject = getDeprecated(deprecationInfo);
+			result.add("deprecated", deprecationInfoJsonObject);
 		}
+
 		addDescription(result, frankElement.getDescription());
 		addIfNotNull(result, "parent", getParentOrNull(frankElement));
 		JsonArrayBuilder xmlElementNames = bf.createArrayBuilder();
 		frankElement.getXmlElementNames().forEach(xmlElementNames::add);
 		result.add("elementNames", xmlElementNames);
 		JsonArray attributes = getAttributes(frankElement, getParentOrNull(frankElement) == null);
-		if(! attributes.isEmpty()) {
+		if (!attributes.isEmpty()) {
 			result.add("attributes", attributes);
 		}
 		List<FrankAttribute> nonInheritedAttributes = frankElement.getChildrenOfKind(ElementChild.JSON_NOT_INHERITED, FrankAttribute.class);
-		if(! nonInheritedAttributes.isEmpty()) {
+		if (!nonInheritedAttributes.isEmpty()) {
 			JsonArrayBuilder b = bf.createArrayBuilder();
 			nonInheritedAttributes.forEach(nia -> b.add(nia.getName()));
 			result.add("nonInheritedAttributes", b.build());
 		}
 		JsonArray configChildren = getConfigChildren(frankElement);
-		if(! configChildren.isEmpty()) {
+		if (!configChildren.isEmpty()) {
 			result.add("children", configChildren);
 		}
-		if(frankElement.getMeaningOfParameters() != null) {
+		if (frankElement.getMeaningOfParameters() != null) {
 			result.add("parametersDescription", frankElement.getMeaningOfParameters());
 		}
-		if(frankElement.getSpecificParameters().size() >= 1) {
+		if (!frankElement.getSpecificParameters().isEmpty()) {
 			JsonArrayBuilder b = bf.createArrayBuilder();
 			frankElement.getSpecificParameters().forEach(sp -> b.add(getParsedJavaDocTag(sp)));
 			result.add("parameters", b.build());
 		}
-		if(frankElement.getForwards().size() >= 1) {
+		if(!frankElement.getForwards().isEmpty()) {
 			JsonArrayBuilder b = bf.createArrayBuilder();
 			frankElement.getForwards().forEach(fw -> b.add(getParsedJavaDocTag(fw)));
 			result.add("forwards", b.build());
 		}
-		if(! frankElement.getTags().isEmpty()) {
+		if (!frankElement.getTags().isEmpty()) {
 			JsonObjectBuilder b = bf.createObjectBuilder();
 			for(ParsedJavaDocTag tag: frankElement.getTags()) {
 				b.add(tag.getName(), tag.getDescription());
 			}
 			result.add("tags", b.build());
 		}
-		if(! frankElement.getLabels().isEmpty()) {
+		if (!frankElement.getLabels().isEmpty()) {
 			JsonArrayBuilder b = bf.createArrayBuilder();
 			for(FrankLabel lab: frankElement.getLabels()) {
 				JsonObjectBuilder ob = bf.createObjectBuilder();
@@ -287,8 +304,10 @@ public class FrankDocJsonFactory {
 	private JsonObject getAttribute(FrankAttribute frankAttribute) throws JsonException {
 		JsonObjectBuilder result = bf.createObjectBuilder();
 		result.add("name", frankAttribute.getName());
-		if(frankAttribute.isDeprecated()) {
-			result.add("deprecated", true);
+		DeprecationInfo deprecationInfo = frankAttribute.getDeprecationInfo();
+		if (deprecationInfo != null) {
+			JsonObject deprecationInfoJsonObject = getDeprecated(deprecationInfo);
+			result.add("deprecated", deprecationInfoJsonObject);
 		}
 		if (frankAttribute.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
 			result.add("mandatory", true);
