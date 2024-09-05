@@ -1154,25 +1154,28 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		return (! StringUtils.isEmpty(elementChild.getDescription())) || (! StringUtils.isEmpty(elementChild.getDefaultValue()));
 	}
 
-	private String getDocumentationText(ElementChild elementChild) {
+	private String getDocumentationText(FrankAttribute attribute) {
 		StringBuilder result = new StringBuilder();
-		if(StringUtils.isNotEmpty(elementChild.getDescription())) {
-			result.append(elementChild.getDescription());
+		if(StringUtils.isNotEmpty(attribute.getDescription())) {
+			result.append(attribute.getDescription());
 		}
 
-		if (elementChild.isUnsafe()) {
+		if (attribute.isUnsafe()) {
+			if (!result.isEmpty() && result.charAt(result.length() - 1) != '.') {
+				result.append(".");
+			}
 			if(!result.isEmpty()) {
 				result.append(" ");
 			}
 			result.append("Note: This attribute is unsafe and should not be used in a production environment.");
 		}
 
-		if (StringUtils.isNotEmpty(elementChild.getDefaultValue())) {
+		if (StringUtils.isNotEmpty(attribute.getDefaultValue())) {
 			if(!result.isEmpty()) {
 				result.append(" ");
 			}
 			result.append("Default: ");
-			result.append(elementChild.getDefaultValue());
+			result.append(attribute.getDefaultValue());
 		}
 		return result.toString();
 	}

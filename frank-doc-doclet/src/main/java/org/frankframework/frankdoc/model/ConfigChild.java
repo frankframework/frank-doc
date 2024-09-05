@@ -49,7 +49,7 @@ public abstract class ConfigChild extends ElementChild {
 	private @Getter(AccessLevel.PACKAGE) String methodName;
 
 	ConfigChild(FrankElement owningElement, FrankMethod method) {
-		super(owningElement, false);
+		super(owningElement);
 		setDocumented(Description.getInstance().valueOf(method) != null);
 		setDeprecated(Deprecated.getInstance().isSetOn(method));
 		setReintroduced(Reintroduce.getInstance().isSetOn(method));

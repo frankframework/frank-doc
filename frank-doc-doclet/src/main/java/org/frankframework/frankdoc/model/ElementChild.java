@@ -92,7 +92,6 @@ public abstract class ElementChild {
 	private @Getter(AccessLevel.PACKAGE) @Setter(AccessLevel.PACKAGE) int order = Integer.MAX_VALUE;
 	private @Getter @Setter String description;
 	private @Getter @Setter String defaultValue;
-	private @Getter boolean unsafe;
 
 	public static Predicate<ElementChild> IN_XSD = c ->
 		(! c.isExcluded())
@@ -120,9 +119,8 @@ public abstract class ElementChild {
 	abstract static class AbstractKey {
 	}
 
-	ElementChild(final FrankElement owningElement, boolean unsafe) {
+	ElementChild(final FrankElement owningElement) {
 		this.owningElement = owningElement;
-		this.unsafe = unsafe;
 	}
 
 	void clearDefaultValue() {

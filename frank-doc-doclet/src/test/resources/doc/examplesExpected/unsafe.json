@@ -59,6 +59,11 @@
 					"description": "Documentation for this unsafe attribute."
 				},
 				{
+					"name": "unsafeAttributeWithoutADot",
+					"unsafe": true,
+					"description": "Documentation for this unsafe attribute without a dot"
+				},
+				{
 					"name": "safeAttribute",
 					"description": "Documentation for this safe attribute."
 				},

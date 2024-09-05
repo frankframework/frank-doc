@@ -26,6 +26,11 @@
         <xs:documentation>Documentation for this unsafe attribute. Note: This attribute is unsafe and should not be used in a production environment.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="unsafeAttributeWithoutADot" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Documentation for this unsafe attribute without a dot. Note: This attribute is unsafe and should not be used in a production environment.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute name="safeAttribute" type="xs:string">
       <xs:annotation>
         <xs:documentation>Documentation for this safe attribute.</xs:documentation>
