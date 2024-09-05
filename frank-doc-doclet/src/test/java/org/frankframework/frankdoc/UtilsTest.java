@@ -30,6 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static org.frankframework.frankdoc.Utils.isConfigChildSetter;
+import static org.frankframework.frankdoc.Utils.replacePattern;
 import static org.frankframework.frankdoc.Utils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
