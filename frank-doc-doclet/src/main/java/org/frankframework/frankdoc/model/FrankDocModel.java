@@ -59,6 +59,7 @@ public class FrankDocModel {
 	private static final Logger log = LogUtil.getLogger(FrankDocModel.class);
 	private static final String ENUM = "Enum";
 	private static final List<String> EXPECTED_HTML_TAGS = Arrays.asList("a", "b", "br", "code", "h1", "h2", "h3", "h4", "i", "li", "ol", "p", "pre", "strong", "table", "td", "th", "tr", "ul");
+	private static final String UNSAFE_ANNOTATION_CLASSNAME = "org.frankframework.doc.Unsafe";
 
 	private final FrankClassRepository classRepository;
 
@@ -284,7 +285,8 @@ public class FrankDocModel {
 			if(getterAttributes.containsKey(attributeName)) {
 				checkForTypeConflict(method, getterAttributes.get(attributeName), attributeOwner);
 			}
-			FrankAttribute attribute = new FrankAttribute(attributeName, attributeOwner);
+			boolean unsafe = method.getAnnotation(UNSAFE_ANNOTATION_CLASSNAME) != null;
+			FrankAttribute attribute = new FrankAttribute(attributeName, unsafe, attributeOwner);
 			if(method.getParameterTypes()[0].isEnum()) {
 				log.trace("Attribute [{}] has setter that takes enum: [{}]", attribute::getName, () -> method.getParameterTypes()[0].toString());
 				attribute.setAttributeType(AttributeType.STRING);

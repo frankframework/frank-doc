@@ -49,15 +49,17 @@ public class FrankAttribute extends ElementChild {
 	private final @Getter String name;
 
 	private @Getter @Setter AttributeType attributeType;
+	private @Getter boolean unsafe;
 
 	/**
 	 * Null if there is no restriction to the allowed attribute values. Should only be set if attributeType == {@link AttributeType#STRING}.
 	 */
 	private @Getter @Setter AttributeEnum attributeEnum;
 
-	public FrankAttribute(String name, FrankElement attributeOwner) {
+	public FrankAttribute(String name, boolean unsafe, FrankElement attributeOwner) {
 		super(attributeOwner);
 		this.name = name;
+		this.unsafe = unsafe;
 	}
 
 	@Override
