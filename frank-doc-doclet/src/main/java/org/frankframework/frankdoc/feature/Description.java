@@ -26,6 +26,8 @@ public class Description {
 	private static Logger log = LogUtil.getLogger(Description.class);
 	private static final Description INSTANCE = new Description();
 
+	private static final String INHERIT_DOC_TAG = "{@inheritDoc}";
+
 	public static Description getInstance() {
 		return INSTANCE;
 	}
@@ -48,18 +50,22 @@ public class Description {
 			result = method.getJavaDoc();
 
 			// Recursively searches for a method with the same signature to use as this method's javadoc.
-			if (result != null && result.contains("{@inheritDoc}")) {
+			if (result != null && result.contains(INHERIT_DOC_TAG)) {
 				FrankClass clazz = method.getDeclaringClass();
+
+				String parentDoc = null;
 
 				FrankClass superClazz = clazz.getSuperclass();
 				if (superClazz != null) {
 					for (FrankMethod superClassMethod : superClazz.getDeclaredMethods()) {
 						if (superClassMethod.getSignature().equals(method.getSignature())) {
-							result = valueOf(superClassMethod);
+							parentDoc = valueOf(superClassMethod);
 							break;
 						}
 					}
 				}
+
+				result = result.replace(INHERIT_DOC_TAG, parentDoc == null ? "" : parentDoc).strip();
 			}
 		}
 		try {
