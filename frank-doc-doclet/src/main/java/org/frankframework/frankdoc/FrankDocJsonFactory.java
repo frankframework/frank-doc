@@ -34,6 +34,10 @@ import org.frankframework.frankdoc.model.FrankLabel;
 import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.ParsedJavaDocTag;
+import org.frankframework.frankdoc.properties.Group;
+import org.frankframework.frankdoc.properties.IPropertyParser;
+import org.frankframework.frankdoc.properties.Property;
+import org.frankframework.frankdoc.properties.PropertyParser;
 import org.frankframework.frankdoc.util.LogUtil;
 
 import javax.json.Json;
@@ -43,11 +47,7 @@ import javax.json.JsonBuilderFactory;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FrankDocJsonFactory {
@@ -79,6 +79,7 @@ public class FrankDocJsonFactory {
 			result.add("elements", getElements());
 			result.add("enums", getEnums());
 			getLabels().ifPresent(l -> result.add("labels", l));
+			getProperties().ifPresent(p -> result.add("properties", p));
 			return result.build();
 		} catch(JsonException e) {
 			log.error("Error producing JSON", e);
@@ -439,4 +440,77 @@ public class FrankDocJsonFactory {
 		}
 		return Optional.of(result.build());
 	}
+
+	// The properties are optional, so they can be omitted from unit tests.
+	private Optional<JsonArray> getProperties() {
+		String content = """
+! This will be ignored
+! This is just a comment.
+
+#### Piet pat
+## The name of this instance of the AdapterFramework
+instance.name=Frank
+
+## [Generated] The lowercase version of ${instance.name}
+#instance.name.lc
+
+## ${project.version} of the instance
+instance.version=
+
+## timestamp in YYYYMMDD-HHMM format
+instance.timestamp=
+
+## [Deprecated] should be automatically determined by the instance.version and instance.timestamp properties (typically automatically generated and stored in BuildInfo.properties)
+instance.build_id=not-used
+####
+
+####
+## With comment
+## [Deprecated] [Generated] Another comment
+## A third line
+another.block=10
+
+! Random ignored comment in the middle of nowhere
+
+no.comment=true
+####""";
+
+		IPropertyParser parser = new PropertyParser();
+		List<Group> groups = parser.parse(content);
+
+		var b = bf.createArrayBuilder();
+		groups.stream().map(this::groupToJson).forEach(b::add);
+
+		return Optional.of(b.build());
+	}
+
+	private JsonObject propertyToJson(Property property) {
+		JsonObjectBuilder b = bf.createObjectBuilder();
+
+		b.add("name", property.getName());
+		if (property.getDescription() != null) {
+			b.add("description", property.getDescription());
+		}
+		if (property.getDefaultValue() != null) {
+			b.add("defaultValue", property.getDefaultValue());
+		}
+		b.add("flags", bf.createArrayBuilder(Collections.singletonList(property.getFlags())));
+
+		return b.build();
+	}
+
+	private JsonObject groupToJson(Group group) {
+		JsonObjectBuilder b = bf.createObjectBuilder();
+
+		if (group.getName() != null) {
+			b.add("name", group.getName());
+		}
+
+		var ab = bf.createArrayBuilder();
+		group.getProperties().stream().map(this::propertyToJson).forEach(ab::add);
+		b.add("properties", ab);
+
+		return b.build();
+	}
+
 }
