@@ -1,5 +1,7 @@
 package org.frankframework.frankdoc.testtarget.examples.forwards;
 
+import org.frankframework.doc.Forward;
+
 /**
  * @ff.forward success
  *
@@ -11,5 +13,7 @@ package org.frankframework.frankdoc.testtarget.examples.forwards;
  * @author martijn
  *
  */
-public class Master {
+@Forward(name = "continue", description = "Description of the continue forward")
+@Forward(name = "break")
+public class Master extends Parent {
 }

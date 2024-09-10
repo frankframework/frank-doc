@@ -28,6 +28,7 @@ import javax.lang.model.element.TypeElement;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -91,7 +92,12 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 	}
 
 	private Object parseAnnotationValue(AnnotationValue raw) {
-		if (raw instanceof Attribute.Array) {
+		if (raw instanceof Attribute.Array array) {
+			if (array.values.length > 0 && array.values[0].getValue() instanceof AnnotationMirror) {
+				List<AnnotationMirror> annotations = (List<AnnotationMirror>) raw.getValue();
+				return annotations.stream().map(FrankAnnotationDoclet::new).toArray(FrankAnnotation[]::new);
+			}
+
 			return parseAnnotationValueAsStringArray(((Attribute.Array) raw).getValue());
 		}
 		if (raw instanceof Attribute.Class) {

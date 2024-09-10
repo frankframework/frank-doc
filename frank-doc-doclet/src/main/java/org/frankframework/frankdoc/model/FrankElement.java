@@ -60,6 +60,8 @@ public class FrankElement implements Comparable<FrankElement> {
 	static final String JAVADOC_PARAMETERS = "@ff.parameters";
 	public static final String JAVADOC_PARAMETER = "@ff.parameter";
 	public static final String JAVADOC_FORWARD = "@ff.forward";
+	public static final String JAVADOC_FORWARD_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forward";
+	public static final String JAVADOC_FORWARDS_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forwards";
 	public static final String JAVADOC_TAG = "@ff.tag";
 	public static final String LABEL = "org.frankframework.doc.Label";
 	public static final String LABEL_NAME = "name";
@@ -105,7 +107,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	private @Getter @Setter String descriptionHeader;
 	private @Getter String meaningOfParameters;
 	private @Getter List<ParsedJavaDocTag> specificParameters = new ArrayList<>();
-	private @Getter List<ParsedJavaDocTag> forwards = new ArrayList<>();
+	private @Getter List<Forward> forwards = new ArrayList<>();
 	private @Getter List<ParsedJavaDocTag> tags = new ArrayList<>();
 
 	private @Getter List<FrankLabel> labels = new ArrayList<>();
@@ -205,7 +207,33 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	private void handlePossibleForwards(FrankClass clazz) {
-		assembleParsedJavaDocTags(clazz, JAVADOC_FORWARD, p -> this.forwards.add(p));
+		// The following line can be removed when ff.forward should no longer be supported.
+		assembleParsedJavaDocTags(clazz, JAVADOC_FORWARD, p -> this.forwards.add(new Forward(p.getName(), p.getDescription())));
+
+		// The Forwards annotation contains an array of Forward annotation (repeatable annotation).
+		// The Forwards annotation will not exist when the class has only one Forward annotation.
+		FrankAnnotation forwardsAnnotation = clazz.getAnnotation(JAVADOC_FORWARDS_ANNOTATION_CLASSNAME);
+		if (forwardsAnnotation != null) {
+			FrankAnnotation[] forwards = (FrankAnnotation[]) forwardsAnnotation.getValue();
+			Arrays.stream(forwards).forEach(this::addForwardAnnotation);
+			return;
+		}
+
+		FrankAnnotation forwardAnnotation = clazz.getAnnotation(JAVADOC_FORWARD_ANNOTATION_CLASSNAME);
+		if (forwardAnnotation != null) {
+			addForwardAnnotation(forwardAnnotation);
+		}
+	}
+
+	private void addForwardAnnotation(FrankAnnotation annotation) {
+		String name = (String) annotation.getValueOf("name");
+		String description = (String) annotation.getValueOf("description");
+
+		if (description.isEmpty()) {
+			description = null;
+		}
+
+		this.forwards.add(new Forward(name, description));
 	}
 
 	private void handlePossibleTags(FrankClass clazz) {
