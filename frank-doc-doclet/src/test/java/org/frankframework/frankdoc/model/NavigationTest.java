@@ -100,7 +100,7 @@ public class NavigationTest {
 	void test(String simpleClassName, Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, List<Ref> expectedRefs) throws Exception {
 		String rootClassName = PACKAGE + "." + simpleClassName;
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, FRANK_DOC_GROUP_VALUES_PACKAGE);
-		FrankDocModel model = FrankDocModel.populate(TestUtil.resourceAsURL("doc/empty-digester-rules.xml"), rootClassName, repository);
+		FrankDocModel model = FrankDocModel.populate(TestUtil.resourceAsURL("doc/empty-digester-rules.xml"), null, rootClassName, repository);
 		FrankElement walkFrom = model.findFrankElement(rootClassName);
 		List<Ref> actual = new ArrayList<>();
 		walkFrom.walkCumulativeAttributes(new CumulativeChildHandler<>() {

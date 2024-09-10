@@ -30,6 +30,9 @@ import org.frankframework.frankdoc.feature.Protected;
 import org.frankframework.frankdoc.feature.Reference;
 import org.frankframework.frankdoc.feature.Reintroduce;
 import org.frankframework.frankdoc.model.AncestorMethodBrowser.References;
+import org.frankframework.frankdoc.properties.Group;
+import org.frankframework.frankdoc.properties.IPropertyParser;
+import org.frankframework.frankdoc.properties.PropertyParser;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
@@ -67,6 +70,7 @@ public class FrankDocModel {
 
 	private final FrankDocGroupFactory groupFactory;
 	private @Getter List<FrankDocGroup> groups;
+	private @Getter List<Group> propertyGroups = new ArrayList<>();
 
 	// We want to iterate FrankElement in the order they are created, to be able
 	// to create the ElementRole objects in the right order.
@@ -91,11 +95,11 @@ public class FrankDocModel {
 		this.rootClassName = rootClassName;
 	}
 
-	public static FrankDocModel populate(final URL digesterRules, final String rootClassName, FrankClassRepository classRepository) {
+	public static FrankDocModel populate(final URL digestRulesUrl, final URL appConstantsPropertiesUrl, final String rootClassName, FrankClassRepository classRepository) {
 		FrankDocModel result = new FrankDocModel(classRepository, rootClassName);
 		try {
 			log.trace("Populating FrankDocModel");
-			result.createConfigChildDescriptorsFrom(digesterRules);
+			result.createConfigChildDescriptorsFrom(digestRulesUrl);
 			result.findOrCreateRootFrankElement(rootClassName);
 			result.buildDescendants();
 			result.allElements.values().forEach(result::finishConfigChildrenFor);
@@ -109,6 +113,7 @@ public class FrankDocModel {
 			result.createConfigChildSets();
 			result.setElementNamesOfFrankElements(rootClassName);
 			result.buildGroups();
+			result.parsePropertyGroups(appConstantsPropertiesUrl, new PropertyParser());
 		} catch(Exception e) {
 			log.fatal("Could not populate FrankDocModel", e);
 			return null;
@@ -903,6 +908,21 @@ public class FrankDocModel {
 				.filter(f -> ! f.getXmlElementNames().isEmpty())
 				.sorted()
 				.collect(Collectors.toList());
+	}
+
+	public void parsePropertyGroups(URL url, IPropertyParser parser) {
+		if (url == null) {
+			return;
+		}
+
+		String content = null;
+		try {
+			content = Utils.readResourceFile(url);
+		} catch (IOException e) {
+			log.error("Unable to read url [{}] for properties", url, e);
+		}
+
+		this.propertyGroups = parser.parse(content);
 	}
 
 	public List<String> getAllLabels() {

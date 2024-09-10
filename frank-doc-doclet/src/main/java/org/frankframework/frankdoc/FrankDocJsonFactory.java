@@ -35,9 +35,7 @@ import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.ParsedJavaDocTag;
 import org.frankframework.frankdoc.properties.Group;
-import org.frankframework.frankdoc.properties.IPropertyParser;
 import org.frankframework.frankdoc.properties.Property;
-import org.frankframework.frankdoc.properties.PropertyParser;
 import org.frankframework.frankdoc.util.LogUtil;
 
 import javax.json.Json;
@@ -47,7 +45,11 @@ import javax.json.JsonBuilderFactory;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class FrankDocJsonFactory {
@@ -443,43 +445,12 @@ public class FrankDocJsonFactory {
 
 	// The properties are optional, so they can be omitted from unit tests.
 	private Optional<JsonArray> getProperties() {
-		String content = """
-! This will be ignored
-! This is just a comment.
-
-#### Piet pat
-## The name of this instance of the AdapterFramework
-instance.name=Frank
-
-## [Generated] The lowercase version of ${instance.name}
-#instance.name.lc
-
-## ${project.version} of the instance
-instance.version=
-
-## timestamp in YYYYMMDD-HHMM format
-instance.timestamp=
-
-## [Deprecated] should be automatically determined by the instance.version and instance.timestamp properties (typically automatically generated and stored in BuildInfo.properties)
-instance.build_id=not-used
-####
-
-####
-## With comment
-## [Deprecated] [Generated] Another comment
-## A third line
-another.block=10
-
-! Random ignored comment in the middle of nowhere
-
-no.comment=true
-####""";
-
-		IPropertyParser parser = new PropertyParser();
-		List<Group> groups = parser.parse(content);
+		if (model.getPropertyGroups().isEmpty()) {
+			return Optional.empty();
+		}
 
 		var b = bf.createArrayBuilder();
-		groups.stream().map(this::groupToJson).forEach(b::add);
+		model.getPropertyGroups().stream().map(this::groupToJson).forEach(b::add);
 
 		return Optional.of(b.build());
 	}

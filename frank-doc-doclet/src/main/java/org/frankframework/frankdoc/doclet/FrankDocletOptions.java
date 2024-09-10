@@ -41,6 +41,7 @@ public class FrankDocletOptions {
 	private String jsonOutputFilePath = "js/frankdoc.json";
 	private String elementSummaryPath = "txt/elementSummary.txt";
 	private URL digesterRulesUrl;
+	private URL appConstantsPropertiesUrl;
 	private String rootClass = "org.frankframework.configuration.Configuration";
 	private String frankFrameworkVersion;
 
@@ -72,7 +73,7 @@ public class FrankDocletOptions {
 			@Override
 			public boolean process(String option, List<String> arguments) {
 				try {
-					digesterRulesUrl = createDigesterRulesURL(arguments.get(0));
+					digesterRulesUrl = createURLFromPath(arguments.get(0));
 					return OK;
 				} catch (FrankDocException e) {
 					log.error("Error: {}", e.getMessage());
@@ -80,6 +81,20 @@ public class FrankDocletOptions {
 				}
 			}
 		},
+		new Option("-appConstantsPropertiesPath", true, "appConstantsPropertiesPath", STRING) {
+			@Override
+			public boolean process(String option, List<String> arguments) {
+				try {
+					appConstantsPropertiesUrl = createURLFromPath(arguments.get(0));
+					return OK;
+				} catch (FrankDocException e) {
+					log.error("Error: {}", e.getMessage());
+					return FAILED;
+				}
+			}
+		},
+
+
 		new Option("-jsonFilePath", true, "File path to write JSON output to", STRING) {
 			@Override
 			public boolean process(String option, List<String> arguments) {
@@ -110,12 +125,12 @@ public class FrankDocletOptions {
 		}
 	);
 
-	private URL createDigesterRulesURL(String value) throws FrankDocException {
+	private URL createURLFromPath(String value) throws FrankDocException {
 		try {
 			File f = new File(value);
 			return f.toURI().toURL();
 		} catch (MalformedURLException e) {
-			throw new FrankDocException(String.format("Invalid path to digester rules file: [%s]", value), e);
+			throw new FrankDocException(String.format("Unable to create an URL from path: [%s]", value), e);
 		}
 	}
 
