@@ -39,27 +39,26 @@ public class Reference {
 
 	public FrankMethod valueOf(FrankMethod method) {
 		String resultAsString = method.getJavaDocTag(JAVADOC_ATTRIBUTE_REF);
-		if(resultAsString == null) {
+		if (resultAsString == null) {
 			resultAsString = getReferToAnnotation(method);
 		}
-		if(resultAsString != null) {
-			if(StringUtils.isBlank(resultAsString)) {
-				log.error("JavaDoc tag {} should have a full class name or full method name as argument", JAVADOC_ATTRIBUTE_REF);
-			} else {
-				FrankMethod referred = getReferredMethod(resultAsString, method);
-				if(referred == null) {
-					log.error("Referred method [{}] does not exist, as specified at location: [{}]", resultAsString, method);
-				} else {
-					return referred;
-				}
-			}
+
+		if (resultAsString == null) {
+			return null;
 		}
-		FrankAnnotation ibisDocRef = method.getAnnotation(FrankDocletConstants.IBISDOCREF);
-		if(ibisDocRef != null) {
-			ParsedIbisDocRef parsedIbisDocRef = parseIbisDocRef(ibisDocRef, method);
-			return parsedIbisDocRef.getReferredMethod();
+
+		if (StringUtils.isBlank(resultAsString)) {
+			log.error("JavaDoc tag {} should have a full class name or full method name as argument", JAVADOC_ATTRIBUTE_REF);
+			return null;
 		}
-		return null;
+
+		FrankMethod referred = getReferredMethod(resultAsString, method);
+		if (referred == null) {
+			log.error("Referred method [{}] does not exist, as specified at location: [{}]", resultAsString, method);
+			return null;
+		}
+
+		return referred;
 	}
 
 	private String getReferToAnnotation(FrankMethod method) {
@@ -68,38 +67,6 @@ public class Reference {
 			return (String) referTo.getValue();
 		}
 		return null;
-	}
-
-	private ParsedIbisDocRef parseIbisDocRef(FrankAnnotation ibisDocRef, FrankMethod originalMethod) {
-		ParsedIbisDocRef result = new ParsedIbisDocRef();
-		result.setHasOrder(false);
-		String[] values = null;
-		values = (String[]) ibisDocRef.getValue();
-		String methodString = null;
-		if (values.length == 1) {
-			methodString = values[0];
-		} else if (values.length == 2) {
-			methodString = values[1];
-			try {
-				result.setOrder(Integer.parseInt(values[0]));
-				result.setHasOrder(true);
-			} catch (Throwable t) {
-				final String[] finalValues = values;
-				log.error("Could not parse order in @IbisDocRef annotation: [{}]", () -> finalValues[0]);
-			}
-		}
-		else {
-			log.error("Too many or zero parameters in @IbisDocRef annotation on method: [{}].[{}]", () -> originalMethod.getDeclaringClass().getName(), () -> originalMethod.getName());
-			return null;
-		}
-		try {
-			result.setReferredMethod(getReferredMethod(methodString, originalMethod));
-		} catch(Exception e) {
-			log.error("@IbisDocRef on [{}].[{}] annotation references invalid method [{}], ignoring @IbisDocRef annotation",
-					originalMethod.getDeclaringClass().getName(), originalMethod.getName(), methodString);
-			return null;
-		}
-		return result;
 	}
 
 	private FrankMethod getReferredMethod(String methodString, FrankMethod originalMethod) {

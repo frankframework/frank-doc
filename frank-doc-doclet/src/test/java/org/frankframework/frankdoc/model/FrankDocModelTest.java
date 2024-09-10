@@ -52,7 +52,6 @@ public class FrankDocModelTest {
 
 	private static final String IBISDOCREF = "org.frankframework.frankdoc.testtarget.ibisdocref";
 	private static final String REFERRER = "org.frankframework.frankdoc.testtarget.ibisdocref.Referrer";
-	private static final String REFERRER_CHILD = "org.frankframework.frankdoc.testtarget.ibisdocref.ReferrerChild";
 
 	FrankClassRepository classRepository;
 
@@ -450,14 +449,6 @@ public class FrankDocModelTest {
 		assertEquals("JavaDoc for description that is selected because IbisDoc annotation lacks description.", actual.getDescription());
 	}
 
-	@Test
-	public void testIbisDocRefAddsFrankElementsForReferredClassHierarchy() throws FrankDocException {
-		checkIbisdocrefInvestigatedFrankAttribute("ibisDocRefClassNoOrderRefersIbisDocOrderDescriptionDefault");
-		assertEquals(2, instance.getAllElements().size());
-		assertTrue(instance.getAllElements().containsKey(REFERRER));
-		assertTrue(instance.getAllElements().containsKey("java.lang.Object"));
-	}
-
 	private FrankAttribute checkIbisdocrefInvestigatedFrankAttribute(String attributeName) throws FrankDocException {
 		return checkIbisdocrefInvestigatedFrankAttribute(attributeName, REFERRER);
 	}
@@ -466,42 +457,6 @@ public class FrankDocModelTest {
 		Map<String, FrankAttribute> attributeMap = getAttributesOfClass(targetClassName);
 		assertTrue(attributeMap.containsKey(attributeName));
 		return attributeMap.get(attributeName);
-	}
-
-	@Test
-	public void testReferredIbisDocDescriptionAppearsInFrankAttribute() throws FrankDocException {
-		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("ibisDocRefClassNoOrderRefersIbisDocOrderDescriptionDefault");
-		assertTrue(actual.isDocumented());
-		assertEquals("Description of ibisDocRefClassNoOrderRefersIbisDocOrderDescriptionDefault", actual.getDescription());
-	}
-
-	@Test
-	public void testReferredJavaDocDefaultAppearsInFrankAttribute() throws FrankDocException {
-		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("ibisDocRefRefersJavaDocDefault");
-		assertTrue(actual.isDocumented());
-		assertEquals("setIbisDocRefRefersJavaDocDefault default value", actual.getDefaultValue());
-	}
-
-	@Test
-	public void testReferredIbisDocDescriptionOtherMethodAppearsInFrankAttribute() throws FrankDocException {
-		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("ibisDocReffMethodNoOrderRefersIbisDocOrderDescriptionDefault");
-		assertTrue(actual.isDocumented());
-		assertEquals("Description of otherMethod", actual.getDescription());
-	}
-
-	@Test
-	public void testReferredIbisDocDescriptiondWithOrderAndInheritance() throws FrankDocException {
-		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("ibisDocRefClassWithOrderRefersIbisDocOrderDescriptionDefaultInherited");
-		assertTrue(actual.isDocumented());
-		// We do not use the order, because the order of the Java methods is used.
-		assertEquals("Description of ibisDocRefClassWithOrderRefersIbisDocOrderDescriptionDefaultInherited", actual.getDescription());
-	}
-
-	@Test
-	public void whenIbisDocRefThenDescribingElementAdjusted() throws FrankDocException {
-		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("ibisDocRefClassWithOrderRefersIbisDocOrderDescriptionDefaultInherited");
-		assertTrue(actual.isDocumented());
-		assertSame(attributeOwner, actual.getOwningElement());
 	}
 
 	@Test
@@ -547,37 +502,10 @@ public class FrankDocModelTest {
 	}
 
 	@Test
-	public void whenMethodOverriddenWithoutDocThenDocumentedFalseButIbisDocRefInfoInherited() throws FrankDocException {
-		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("ibisDocRefClassNoOrderRefersIbisDocOrderDescriptionDefault", REFERRER_CHILD);
-		assertFalse(actual.isDocumented());
-		assertEquals("Description of ibisDocRefClassNoOrderRefersIbisDocOrderDescriptionDefault", actual.getDescription());
-	}
-
-	@Test
 	public void testFrankElementDeprecatedAttribute() throws Exception {
 		FrankElement element = instance.findOrCreateFrankElement(SIMPLE + ".NonDeprecatedDescendant");
 		assertNotNull(element);
 		assertFalse(element.isDeprecated());
 		assertTrue(element.getParent().isDeprecated());
-	}
-
-	@Test
-	public void whenIbisDocRefRefersMethodWithJavadocThenJavadocInDescription() throws Exception {
-		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("attributeWithIbisDocRefReferringJavadoc");
-		assertEquals("IbisDocRef'd JavaDoc of setAttributeWithIbisDocRefReferringJavadoc", actual.getDescription());
-	}
-
-	@Test
-	public void whenIbisDocRefRefersMethodWithJavaDocAndIbisDocThenDescriptionComesFromIbisDoc() throws Exception {
-		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("attributeWithIbisDocRefThatGivesPreferenceToIbisDocDescriptionOverJavadoc");
-		String expected = "IbisDoc description of setAttributeWithIbisDocRefThatGivesPreferenceToIbisDocDescriptionOverJavadoc";
-		assertEquals(expected, actual.getDescription());
-	}
-
-	@Test
-	public void whenIbisDocRefRefersMethodWithIbisDocWithoutDescriptionThenDescriptionFromJavadoc() throws Exception {
-		FrankAttribute actual = checkIbisdocrefInvestigatedFrankAttribute("attributeWithIbisDocRefReferringIbisDocWithoutDescriptionButWithJavadoc");
-		String expected = "This Javadoc is the description, because the IbisDoc annotation lacks a description.";
-		assertEquals(expected, actual.getDescription());
 	}
 }

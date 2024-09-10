@@ -3,10 +3,6 @@ package org.frankframework.frankdoc.testtarget.attributeDefault;
 import org.frankframework.doc.IbisDoc;
 
 public class Master {
-	// No default, because "null"
-	@IbisDoc({"10", "Description setBooleanExplicitNull()", "null"})
-	public void setBooleanExplicitNull(Boolean b) {
-	}
 
 	// No default, because blank
 	/**
@@ -24,10 +20,6 @@ public class Master {
 	public void setByteWithDefault(Byte b) {
 	}
 
-	// Should produce a warning
-	@IbisDoc({"20", "Description setExplicitNullOnPrimitive()", "null"})
-	public void setExplicitNullOnPrimitive(short s) {
-	}
 
 	/**
 	 * @ff.mandatory
