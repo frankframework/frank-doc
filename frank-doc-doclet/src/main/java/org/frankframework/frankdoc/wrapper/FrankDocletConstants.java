@@ -17,7 +17,6 @@ limitations under the License.
 package org.frankframework.frankdoc.wrapper;
 
 public class FrankDocletConstants {
-	public static final String IBISDOC = "org.frankframework.doc.IbisDoc";
 	public static final String OBJECT = "java.lang.Object";
 	public static final String STRING = "java.lang.String";
 

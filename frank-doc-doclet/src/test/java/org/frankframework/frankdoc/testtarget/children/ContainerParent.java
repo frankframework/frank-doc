@@ -1,9 +1,6 @@
 package org.frankframework.frankdoc.testtarget.children;
 
-import org.frankframework.doc.IbisDoc;
-
 public class ContainerParent {
-	@IbisDoc("50")
 	protected void registerInheritedChilds(InheritedChild inheritedChild) {
 	}
 
@@ -13,16 +10,13 @@ public class ContainerParent {
 	public void setInheritedWithoutOverride(InheritedWithoutOverride child) {
 	}
 
-	@IbisDoc("Description of ContainerParent.setInheritedChildDocWithDescriptionOverride")
 	public void setInheritedChildDocWithDescriptionOverride(InheritedChildDocWithDescriptionOverride child) {
 	}
 
-	@IbisDoc("120")
 	public void setInheritedChildNonSelected(InheritedChildNonSelected child) {
 	}
 
 	@Deprecated
-	@IbisDoc("Description of ContainerParent.setChildOverriddenOnlyParentAnnotated")
 	public void setChildOverriddenOnlyParentAnnotated(ChildOverriddenOnlyParentAnnotated child) {
 	}
 }

@@ -1,7 +1,5 @@
 package org.frankframework.frankdoc.testtarget.attributeDefault;
 
-import org.frankframework.doc.IbisDoc;
-
 public class Master {
 
 	// No default, because blank

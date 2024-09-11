@@ -37,7 +37,6 @@ public class FrankDocModelConfigChildrenTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.children.";
 	private static String CONTAINER = PACKAGE + "Container";
 	private static String CONTAINER_DERIVED = PACKAGE + "ContainerDerived";
-	private static String CONTAINER_OTHER = PACKAGE + "ContainerOther";
 
 	private FrankDocModel instance;
 	private FrankClassRepository classRepository;
@@ -51,11 +50,8 @@ public class FrankDocModelConfigChildrenTest {
 		instance.createConfigChildDescriptorsFrom(TestUtil.resourceAsURL("doc/simple-digester-rules.xml"));
 		instance.findOrCreateRootFrankElement(CONTAINER);
 		instance.findOrCreateRootFrankElement(CONTAINER_DERIVED);
-		instance.findOrCreateRootFrankElement(CONTAINER_OTHER);
 		instance.findOrCreateRootFrankElement(PACKAGE + "ContainerForConfigChildDescriptionJavadoc");
 		instance.findOrCreateRootFrankElement(PACKAGE + "ContainerForConfigChildDescriptionJavadocDerived");
-		instance.findOrCreateRootFrankElement(PACKAGE + "ContainerForConfigChildDescriptionJavadocOverruled");
-		instance.findOrCreateRootFrankElement(PACKAGE + "ContainerForConfigChildDescriptionIbisDocOmitsDescriptionJavadocTaken");
 		instance.buildDescendants();
 		instance.getAllElements().values().forEach(f -> instance.finishConfigChildrenFor(f));
 		instance.setOverriddenFrom();
@@ -146,13 +142,8 @@ public class FrankDocModelConfigChildrenTest {
 		assertEquals("roleNameInheritedChildDocWithDescriptionOverride", actual.getRoleName());
 		assertEquals("Container", actual.getOwningElement().getSimpleName());
 		assertEquals("InheritedChildDocWithDescriptionOverride", actual.getElementType().getSimpleName());
-		assertEquals("Description of Container.setInheritedChildDocWithDescriptionOverride", actual.getDescription());
-		assertTrue(actual.isDocumented());
 		assertFalse(actual.isDeprecated());
 		assertEquals("ContainerParent", actual.getOverriddenFrom().getSimpleName());
-		// The description has changed. Not a technical override
-		assertFalse(actual.isTechnicalOverride());
-		assertTrue(IN_XSD.test(actual));
 	}
 
 	@Test
@@ -221,18 +212,11 @@ public class FrankDocModelConfigChildrenTest {
 		assertEquals("roleNameChildOverriddenOnlyParentAnnotated", actual.getRoleName());
 		assertEquals("Container", actual.getOwningElement().getSimpleName());
 		assertEquals("ChildOverriddenOnlyParentAnnotated", actual.getElementType().getSimpleName());
-		assertEquals("Description of ContainerParent.setChildOverriddenOnlyParentAnnotated", actual.getDescription());
 		assertFalse(actual.isDocumented());
 		assertFalse(actual.isDeprecated());
 		assertEquals("ContainerParent", actual.getOverriddenFrom().getSimpleName());
 		// Not selected because deprecated
 		assertFalse(IN_XSD.test(actual));
-	}
-
-	@Test
-	public void whenInheritedConfigChildNotDeprecatedInheritedFromDeprecatedThenNotDeprecated() throws Exception {
-		ConfigChild theConfigChild = instance.findFrankElement(CONTAINER_OTHER).getConfigChildren(ElementChild.ALL_NOT_EXCLUDED).get(0);
-		assertFalse(theConfigChild.isDeprecated());
 	}
 
 	@Test
@@ -249,15 +233,4 @@ public class FrankDocModelConfigChildrenTest {
 		assertEquals("JavaDoc of ContainerForConfigChildDescriptionJavadoc.setChild", configChild.getDescription());
 	}
 
-	@Test
-	public void whenConfigChildHasIbisDocDescriptionThenJavadocOverruled() throws Exception {
-		ConfigChild configChild = instance.findFrankElement(PACKAGE + "ContainerForConfigChildDescriptionJavadocOverruled").getConfigChildren(ElementChild.ALL_NOT_EXCLUDED).get(0);
-		assertEquals("Description of ContainerForConfigChildDescriptionJavadocOverruled.setChild", configChild.getDescription());
-	}
-
-	@Test
-	public void whenConfigChildHasIbisDocWithoutDescriptionThenJavadocTaken() throws Exception {
-		ConfigChild configChild = instance.findFrankElement(PACKAGE + "ContainerForConfigChildDescriptionIbisDocOmitsDescriptionJavadocTaken").getConfigChildren(ElementChild.ALL_NOT_EXCLUDED).get(0);
-		assertEquals("Description of ContainerForConfigChildDescriptionIbisDocOmitsDescriptionJavadocTaken.setChild", configChild.getDescription());
-	}
 }

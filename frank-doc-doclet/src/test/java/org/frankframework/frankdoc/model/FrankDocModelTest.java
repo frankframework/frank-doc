@@ -346,10 +346,9 @@ public class FrankDocModelTest {
 				.toList();
 		String[] expectedAttributeNames = new String[] {"attributeSetterGetter", "attributeSetterIs", "attributeOnlySetter", "attributeVararg", "attributeOnlySetterInt",
 				"attributeOnlySetterIntBoxed", "attributeOnlySetterBoolBoxed", "attributeOnlySetterLongBoxed", "attributeOnlySetterByteBoxed",
-				"attributeOnlySetterShortBoxed", "ibisDockedOnlyDescription", "ibisDockedOrderDescription", "ibisDockedDescriptionDefault",
-				"ibisDockedOrderDescriptionDefault", "ibisDockedDeprecated", "attributeWithJavaDoc",
-				"attributeWithInheritedJavaDoc", "attributeWithIbisDocThatOverrulesJavadocDescription",
-				"attributeWithIbisDocLackingDescription", "attributeWithJavaDocDefault",
+				"attributeOnlySetterShortBoxed", "ibisDockedOnlyDescription",
+				"ibisDockedDeprecated", "attributeWithJavaDoc", "attributeWithInheritedJavaDoc",
+				"attributeWithJavaDocDefault",
 				"attributeWithInheritedJavaDocDefault", "attributeWithIbisDocThatOverrulesJavadocDefault",
 				"attributeSetterTakingEnum"};
 		assertArrayEquals(expectedAttributeNames, actualAttributeNames.toArray(new String[] {}));
@@ -358,47 +357,14 @@ public class FrankDocModelTest {
 	@Test
 	public void testIbisDockedOnlyDescription() throws FrankDocException {
 		FrankAttribute actual = checkReflectAttributeCreated("ibisDockedOnlyDescription");
-		assertTrue(actual.isDocumented());
-		assertEquals("Description of ibisDockedOnlyDescription", actual.getDescription());
+		assertFalse(actual.isDocumented());
 		assertNull(actual.getDefaultValue());
-		assertFalse(actual.isDeprecated());
-	}
-
-	@Test
-	public void testIbisDockedOrderDescription() throws FrankDocException {
-		FrankAttribute actual = checkReflectAttributeCreated("ibisDockedOrderDescription");
-		assertTrue(actual.isDocumented());
-		// We do not use the order obtained from the annotation. We use the order of the Java methods instead.
-		assertEquals("Description of ibisDockedOrderDescription", actual.getDescription());
-		assertNull(actual.getDefaultValue());
-		assertFalse(actual.isDeprecated());
-	}
-
-	@Test
-	public void testIbisDockedDescriptionDefault() throws FrankDocException {
-		FrankAttribute actual = checkReflectAttributeCreated("ibisDockedDescriptionDefault");
-		assertTrue(actual.isDocumented());
-		assertEquals("Description of ibisDockedDescriptionDefault", actual.getDescription());
-		assertEquals("Default of ibisDockedDescriptionDefault", actual.getDefaultValue());
-		assertFalse(actual.isDeprecated());
-		assertTrue(IN_XSD.test(actual));
-	}
-
-	@Test
-	public void testIbisDockedOrderDescriptionDefault() throws FrankDocException {
-		FrankAttribute actual = checkReflectAttributeCreated("ibisDockedOrderDescriptionDefault");
-		assertTrue(actual.isDocumented());
-		// We do not use the order from the annotation. We use the order of the Java methods instead.
-		assertEquals("Description of ibisDockedOrderDescriptionDefault", actual.getDescription());
-		assertEquals("Default of ibisDockedOrderDescriptionDefault", actual.getDefaultValue());
 		assertFalse(actual.isDeprecated());
 	}
 
 	@Test
 	public void testIbisDockedDeprecated() throws FrankDocException {
 		FrankAttribute actual = checkReflectAttributeCreated("ibisDockedDeprecated");
-		assertTrue(actual.isDocumented());
-		assertEquals("Description of ibisDockedDeprecated", actual.getDescription());
 		assertTrue(actual.isDeprecated());
 		assertFalse(IN_XSD.test(actual));
 	}
@@ -429,24 +395,6 @@ public class FrankDocModelTest {
 		FrankAttribute actual = checkReflectAttributeCreated("attributeWithInheritedJavaDocDefault");
 		assertFalse(actual.isDocumented());
 		assertEquals("My inherited default value", actual.getDefaultValue());
-	}
-
-	@Test
-	public void whenIbisDocHasDescriptionThenJavadocOverruled() throws Exception {
-		FrankAttribute actual = checkReflectAttributeCreated("attributeWithIbisDocThatOverrulesJavadocDescription");
-		assertEquals("IbisDoc description that overrules JavaDoc", actual.getDescription());
-	}
-
-	@Test
-	public void whenIbisDocHasDefaultThenJavadocDefaultOverruled() throws Exception {
-		FrankAttribute actual = checkReflectAttributeCreated("attributeWithIbisDocThatOverrulesJavadocDefault");
-		assertEquals("The default from the IbisDoc annotation", actual.getDefaultValue());
-	}
-
-	@Test
-	public void whenIbisDocLacksDescriptionThenDescriptionFromJavadoc() throws Exception {
-		FrankAttribute actual = checkReflectAttributeCreated("attributeWithIbisDocLackingDescription");
-		assertEquals("JavaDoc for description that is selected because IbisDoc annotation lacks description.", actual.getDescription());
 	}
 
 	private FrankAttribute checkIbisdocrefInvestigatedFrankAttribute(String attributeName) throws FrankDocException {

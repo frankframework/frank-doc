@@ -2,7 +2,6 @@ package org.frankframework.frankdoc.testtarget.featurepackage;
 
 import org.frankframework.doc.Category;
 import org.frankframework.doc.Default;
-import org.frankframework.doc.IbisDoc;
 import org.frankframework.doc.Reintroduce;
 import org.frankframework.frankdoc.testtarget.wrapper.variables.IMailFileSystem;
 
@@ -33,22 +32,6 @@ public class Documented extends DocumentedParent implements IMailFileSystem<Stri
 	 * My description
 	 */
 	public void withJavaDoc() {
-	}
-
-	@IbisDoc({"1", "My description", "default value"})
-	public void withFullIbisDoc() {
-	}
-
-	@IbisDoc({"My description", "default value"})
-	public void withIbisDocNoOrder() {
-	}
-
-	@IbisDoc({"1", "My description"})
-	public void withIbisDocNoDefault() {
-	}
-
-	@IbisDoc("My description")
-	public void withIbisDocNoDefaultNoOrder() {
 	}
 
 	/**
