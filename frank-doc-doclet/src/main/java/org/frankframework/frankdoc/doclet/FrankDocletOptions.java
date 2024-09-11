@@ -41,7 +41,7 @@ public class FrankDocletOptions {
 	private String jsonOutputFilePath = "js/frankdoc.json";
 	private String elementSummaryPath = "txt/elementSummary.txt";
 	private URL digesterRulesUrl;
-	private URL appConstantsPropertiesUrl;
+	private URL propertyFileUrl;
 	private String rootClass = "org.frankframework.configuration.Configuration";
 	private String frankFrameworkVersion;
 
@@ -81,11 +81,11 @@ public class FrankDocletOptions {
 				}
 			}
 		},
-		new Option("-appConstantsPropertiesPath", true, "appConstantsPropertiesPath", STRING) {
+		new Option("-propertyFilePath", true, "propertyFile", STRING) {
 			@Override
 			public boolean process(String option, List<String> arguments) {
 				try {
-					appConstantsPropertiesUrl = createURLFromPath(arguments.get(0));
+					propertyFileUrl = createURLFromPath(arguments.get(0));
 					return OK;
 				} catch (FrankDocException e) {
 					log.error("Error: {}", e.getMessage());

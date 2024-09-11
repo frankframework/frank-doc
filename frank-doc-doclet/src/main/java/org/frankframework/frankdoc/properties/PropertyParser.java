@@ -19,7 +19,7 @@ package org.frankframework.frankdoc.properties;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PropertyParser implements IPropertyParser {
+public class PropertyParser {
 
 	private static final String START_OR_END_GROUP_TOKEN = "####";
 	private static final String COMMENT_TOKEN = "##";

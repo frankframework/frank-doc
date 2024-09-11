@@ -449,10 +449,12 @@ public class FrankDocJsonFactory {
 			return Optional.empty();
 		}
 
-		var b = bf.createArrayBuilder();
-		model.getPropertyGroups().stream().map(this::groupToJson).forEach(b::add);
+		final var builder = bf.createArrayBuilder();
+		model.getPropertyGroups().stream()
+			.map(this::groupToJson)
+			.forEach(builder::add);
 
-		return Optional.of(b.build());
+		return Optional.of(builder.build());
 	}
 
 	private JsonObject propertyToJson(Property property) {

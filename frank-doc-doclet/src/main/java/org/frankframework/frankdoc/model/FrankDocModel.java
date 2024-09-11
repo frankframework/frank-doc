@@ -31,7 +31,6 @@ import org.frankframework.frankdoc.feature.Reference;
 import org.frankframework.frankdoc.feature.Reintroduce;
 import org.frankframework.frankdoc.model.AncestorMethodBrowser.References;
 import org.frankframework.frankdoc.properties.Group;
-import org.frankframework.frankdoc.properties.IPropertyParser;
 import org.frankframework.frankdoc.properties.PropertyParser;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClass;
@@ -113,7 +112,7 @@ public class FrankDocModel {
 			result.createConfigChildSets();
 			result.setElementNamesOfFrankElements(rootClassName);
 			result.buildGroups();
-			result.parsePropertyGroups(appConstantsPropertiesUrl, new PropertyParser());
+			result.parsePropertyGroups(appConstantsPropertiesUrl);
 		} catch(Exception e) {
 			log.fatal("Could not populate FrankDocModel", e);
 			return null;
@@ -910,7 +909,7 @@ public class FrankDocModel {
 				.collect(Collectors.toList());
 	}
 
-	public void parsePropertyGroups(URL url, IPropertyParser parser) {
+	public void parsePropertyGroups(URL url) {
 		if (url == null) {
 			return;
 		}
@@ -922,6 +921,7 @@ public class FrankDocModel {
 			log.error("Unable to read url [{}] for properties", url, e);
 		}
 
+		PropertyParser parser = new PropertyParser();
 		this.propertyGroups = parser.parse(content);
 	}
 
