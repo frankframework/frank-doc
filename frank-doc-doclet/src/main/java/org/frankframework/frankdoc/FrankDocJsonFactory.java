@@ -281,12 +281,12 @@ public class FrankDocJsonFactory {
 	}
 
 	private JsonObject getJsonForForward(Forward forward) {
-		JsonObjectBuilder b = bf.createObjectBuilder();
-		b.add("name", forward.name());
+		final var builder = bf.createObjectBuilder();
+		builder.add("name", forward.name());
 		if(forward.description() != null) {
-			b.add("description", forward.description());
+			builder.add("description", forward.description());
 		}
-		return b.build();
+		return builder.build();
 	}
 
 	private static String getParentOrNull(FrankElement frankElement) {

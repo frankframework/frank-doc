@@ -215,7 +215,8 @@ public class FrankElement implements Comparable<FrankElement> {
 		FrankAnnotation forwardsAnnotation = clazz.getAnnotation(JAVADOC_FORWARDS_ANNOTATION_CLASSNAME);
 		if (forwardsAnnotation != null) {
 			FrankAnnotation[] forwards = (FrankAnnotation[]) forwardsAnnotation.getValue();
-			Arrays.stream(forwards).forEach(this::addForwardAnnotation);
+			Arrays.stream(forwards)
+				.forEach(this::addForwardAnnotation);
 			return;
 		}
 
