@@ -72,6 +72,7 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.unsafe.Unsafe", "unsafe.xsd", "unsafe.json"},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Child", "inheritdoc.xsd", "inheritdoc.json"},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.see.See", null, "see.json"},
+			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.notes.Note", "notes.xsd", "notes.json"},
 			// Classes in package "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second" are also added although that package is not shown in this table.
 			// See method getAllRequiredPackages().
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master", "nameConflictStrict.xsd", "nameConflict.json"},
