@@ -279,6 +279,18 @@ public class FrankDocJsonFactory {
 			});
 			result.add("quickLinks", builder.build());
 		}
+		if (!frankElement.getNotes().isEmpty()) {
+			final var builder = bf.createArrayBuilder();
+			frankElement.getNotes().forEach(note -> {
+				final var noteBuilder = bf.createObjectBuilder();
+
+				noteBuilder.add("type", note.type().name());
+				noteBuilder.add("value", note.value());
+
+				builder.add(noteBuilder);
+			});
+			result.add("notes", builder.build());
+		}
 		return result.build();
 	}
 

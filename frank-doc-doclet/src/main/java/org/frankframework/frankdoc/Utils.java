@@ -237,7 +237,7 @@ public final class Utils {
 		return sw.toString().trim();
 	}
 
-	public static String flattenJavaDocLinksToLastWords(String text) throws FrankDocException {
+	public static String flattenJavaDocLinksToLastWords(String text) {
 		return replacePattern(text, JAVADOC_LINK_START_DELIMITER, Utils::getLinkReplacement);
 	}
 
@@ -245,7 +245,7 @@ public final class Utils {
 	 * Replaces all instances of {@code patternStart}...} with a provided substitution. Allows for curly braces between
 	 * the text as long as they are evenly matched (same amount of opening braces and closing braces).
 	 */
-	public static String replacePattern(String text, String patternStart, Function<String, String> substitution) throws FrankDocException {
+	public static String replacePattern(String text, String patternStart, Function<String, String> substitution) {
 		if (text == null) {
 			return null;
 		}
@@ -258,7 +258,8 @@ public final class Utils {
 			int stopIndex = text.indexOf(JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER, startIndex);
 
 			if (stopIndex < 0) {
-				throw new FrankDocException(String.format("Unfinished JavaDoc {@ ...} pattern text [%s] at index [%d]", text, startIndex), null);
+				log.warn("Unfinished JavaDoc {@ ...} pattern text [{}] at index [{}]", text, startIndex);
+				break;
 			}
 
 			result.append(text, currentIndex, startIndex);
@@ -305,22 +306,22 @@ public final class Utils {
 	}
 
 
-	public static String substituteJavadocTags(String text, FrankClass context) throws FrankDocException {
+	public static String substituteJavadocTags(String text, FrankClass context) {
 		// Order matters here. {@literal}, {@value} and {@link} can be used inside {@code ...} blocks.
 		String step = replaceLiteralValue(text);
 		step = replaceFieldValue(step, context);
 		return replaceCodeValue(step);
 	}
 
-	private static String replaceLiteralValue(String text) throws FrankDocException {
+	private static String replaceLiteralValue(String text) {
 		return replacePattern(text, JAVADOC_LITERAL_START_DELIMITER, StringEscapeUtils::escapeHtml4);
 	}
 
-	private static String replaceCodeValue(String text) throws FrankDocException {
+	private static String replaceCodeValue(String text) {
 		return replacePattern(text, JAVADOC_CODE_START_DELIMITER, Utils::getCodeValueReplacement);
 	}
 
-	private static String replaceFieldValue(String text, FrankClass context) throws FrankDocException {
+	private static String replaceFieldValue(String text, FrankClass context) {
 		return replacePattern(text, JAVADOC_VALUE_START_DELIMITER, s -> getClassFieldValueReplacement(s, context));
 	}
 
