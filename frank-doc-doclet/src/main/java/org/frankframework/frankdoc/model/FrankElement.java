@@ -28,7 +28,6 @@ import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
@@ -45,8 +44,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -60,9 +59,12 @@ public class FrankElement implements Comparable<FrankElement> {
 	static final String JAVADOC_PARAMETERS = "@ff.parameters";
 	public static final String JAVADOC_PARAMETER = "@ff.parameter";
 	public static final String JAVADOC_FORWARD = "@ff.forward";
+	public static final String JAVADOC_SEE = "@see";
 	public static final String JAVADOC_TAG = "@ff.tag";
 	public static final String LABEL = "org.frankframework.doc.Label";
 	public static final String LABEL_NAME = "name";
+
+	private static final Pattern JAVADOC_SEE_PATTERN = Pattern.compile("<a href=[\"'](.*?)[\"']>(.*?)<\\/a>");
 
 	private static Logger log = LogUtil.getLogger(FrankElement.class);
 
@@ -106,19 +108,22 @@ public class FrankElement implements Comparable<FrankElement> {
 	private @Getter String meaningOfParameters;
 	private @Getter List<ParsedJavaDocTag> specificParameters = new ArrayList<>();
 	private @Getter List<ParsedJavaDocTag> forwards = new ArrayList<>();
+	private @Getter List<QuickLink> quickLinks = new ArrayList<>();
 	private @Getter List<ParsedJavaDocTag> tags = new ArrayList<>();
 
 	private @Getter List<FrankLabel> labels = new ArrayList<>();
 
-	FrankElement(FrankClass clazz, FrankClassRepository repository, FrankDocGroupFactory groupFactory, LabelValues labelValues) {
+	FrankElement(FrankClass clazz, LabelValues labelValues) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
 		deprecationInfo = Deprecated.getInstance().getInfo(clazz);
 		configChildSets = new LinkedHashMap<>();
 		this.completeFrankElement(clazz);
 		handleConfigChildSetterCandidates(clazz);
-		handlePossibleParameters(clazz);
-		handlePossibleForwards(clazz);
-		handlePossibleTags(clazz);
+		this.meaningOfParameters = parseParametersJavadocTag(clazz);
+		this.specificParameters = parseParameterJavadocTags(clazz);
+		this.forwards = parseForwardJavadocTags(clazz);
+		this.quickLinks = parseSeeJavadocTags(clazz);
+		this.tags = parseTagJavadocTags(clazz);
 		handleLabels(clazz, labelValues);
 	}
 
@@ -195,46 +200,73 @@ public class FrankElement implements Comparable<FrankElement> {
 		}
 	}
 
-	private void handlePossibleParameters(FrankClass clazz) {
+	private List<ParsedJavaDocTag> parseParameterJavadocTags(FrankClass clazz) {
+		return parseJavadocTags(clazz, JAVADOC_PARAMETER);
+	}
+
+	private String parseParametersJavadocTag(FrankClass clazz) {
 		try {
-			this.meaningOfParameters = Utils.substituteJavadocTags(clazz.getJavaDocTag(JAVADOC_PARAMETERS), clazz);
+			return Utils.substituteJavadocTags(clazz.getJavaDocTag(JAVADOC_PARAMETERS), clazz);
 		} catch(FrankDocException e) {
 			log.error("Error parsing the meaning of parameters", e);
 		}
-		assembleParsedJavaDocTags(clazz, JAVADOC_PARAMETER, p -> this.specificParameters.add(p));
+
+		return null;
 	}
 
-	private void handlePossibleForwards(FrankClass clazz) {
-		assembleParsedJavaDocTags(clazz, JAVADOC_FORWARD, p -> this.forwards.add(p));
+	private List<ParsedJavaDocTag> parseForwardJavadocTags(FrankClass clazz) {
+		return parseJavadocTags(clazz, JAVADOC_FORWARD);
 	}
 
-	private void handlePossibleTags(FrankClass clazz) {
-		assembleParsedJavaDocTags(clazz, JAVADOC_TAG, p -> this.tags.add(p));
-		Map<String, Long> tagCounts = tags.stream().collect(Collectors.groupingBy(ParsedJavaDocTag::getName, Collectors.counting()));
-		List<String> duplicates = tagCounts.entrySet().stream()
+	private List<QuickLink> parseSeeJavadocTags(FrankClass clazz) {
+		return clazz.getAllJavaDocTagsOf(JAVADOC_SEE).stream()
+			.map(value -> {
+				final var matcher = JAVADOC_SEE_PATTERN.matcher(value);
+
+				if (!matcher.matches()) {
+					return null;
+				}
+
+				String label = matcher.group(2);
+				String url = matcher.group(1);
+
+				return new QuickLink(label, url);
+			})
+			.filter(Objects::nonNull)
+			.toList();
+	}
+
+	private List<ParsedJavaDocTag> parseTagJavadocTags(FrankClass clazz) {
+		List<ParsedJavaDocTag> tags = parseJavadocTags(clazz, JAVADOC_TAG);
+		tags.stream()
+			.collect(Collectors.groupingBy(ParsedJavaDocTag::getName, Collectors.counting()))
+			.entrySet().stream()
 			.filter(e -> e.getValue() >= 2L)
 			.map(Entry::getKey)
 			.sorted()
-			.collect(Collectors.toList());
-		for (String duplicate : duplicates) {
-			log.error("FrankElement [{}] has multiple values for tag [{}]", fullName, duplicate);
-		}
+			.forEach(duplicate -> log.error("FrankElement [{}] has multiple values for tag [{}]", fullName, duplicate));
+
+		return tags;
 	}
 
-	private void assembleParsedJavaDocTags(FrankClass clazz, String tagName, Consumer<ParsedJavaDocTag> acceptor) {
-		for (String arguments : clazz.getAllJavaDocTagsOf(tagName)) {
-			ParsedJavaDocTag parsed;
-			try {
-				parsed = ParsedJavaDocTag.getInstance(arguments, s -> Utils.substituteJavadocTags(s, clazz));
-			} catch (FrankDocException e) {
-				log.error("Error parsing a [{}] tag of class [{}]", tagName, fullName, e);
-				continue;
-			}
-			if (parsed.getDescription() == null) {
-				log.warn("FrankElement [{}] has a [{}] tag without a value: [{}]", fullName, tagName, arguments);
-			}
-			acceptor.accept(parsed);
-		}
+	private List<ParsedJavaDocTag> parseJavadocTags(FrankClass clazz, String tagName) {
+		return clazz.getAllJavaDocTagsOf(tagName).stream()
+			.map(arguments -> {
+				ParsedJavaDocTag parsed;
+				try {
+					parsed = ParsedJavaDocTag.getInstance(arguments, s -> Utils.substituteJavadocTags(s, clazz));
+				} catch (FrankDocException e) {
+					log.error("Error parsing a [{}] tag of class [{}]", tagName, fullName, e);
+					return null;
+				}
+				if (parsed.getDescription() == null) {
+					log.warn("FrankElement [{}] has a [{}] tag without a value: [{}]", fullName, tagName, arguments);
+				}
+
+				return parsed;
+			})
+			.filter(Objects::nonNull)
+			.toList();
 	}
 
 	private void handleLabels(FrankClass clazz, LabelValues labelValues) {

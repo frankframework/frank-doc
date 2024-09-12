@@ -1,5 +1,5 @@
 /*
-Copyright 2021, 2022 WeAreFrank!
+Copyright 2020 - 2024 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,19 +16,5 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import org.frankframework.frankdoc.wrapper.FrankClass;
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-
-/**
- * A FrankElement that can appear as the root element in a Frank configuration. Such elements are not
- * part of a config child, but they have a role name that matches rules in digester-rules.xml.
- */
-class RootFrankElement extends FrankElement {
-	RootFrankElement(FrankClass clazz, LabelValues labelValues) {
-		super(clazz, labelValues);
-	}
-
-	public String getRoleName() {
-		return getSimpleName().toLowerCase();
-	}
+public record QuickLink(String label, String url) {
 }

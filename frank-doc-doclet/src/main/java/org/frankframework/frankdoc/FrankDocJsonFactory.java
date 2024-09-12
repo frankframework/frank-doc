@@ -229,9 +229,9 @@ public class FrankDocJsonFactory {
 		}
 		List<FrankAttribute> nonInheritedAttributes = frankElement.getChildrenOfKind(ElementChild.JSON_NOT_INHERITED, FrankAttribute.class);
 		if (!nonInheritedAttributes.isEmpty()) {
-			JsonArrayBuilder b = bf.createArrayBuilder();
-			nonInheritedAttributes.forEach(nia -> b.add(nia.getName()));
-			result.add("nonInheritedAttributes", b.build());
+			final var builder = bf.createArrayBuilder();
+			nonInheritedAttributes.forEach(nia -> builder.add(nia.getName()));
+			result.add("nonInheritedAttributes", builder.build());
 		}
 		JsonArray configChildren = getConfigChildren(frankElement);
 		if (!configChildren.isEmpty()) {
@@ -241,31 +241,43 @@ public class FrankDocJsonFactory {
 			result.add("parametersDescription", frankElement.getMeaningOfParameters());
 		}
 		if (!frankElement.getSpecificParameters().isEmpty()) {
-			JsonArrayBuilder b = bf.createArrayBuilder();
-			frankElement.getSpecificParameters().forEach(sp -> b.add(getParsedJavaDocTag(sp)));
-			result.add("parameters", b.build());
+			final var builder = bf.createArrayBuilder();
+			frankElement.getSpecificParameters().forEach(sp -> builder.add(getParsedJavaDocTag(sp)));
+			result.add("parameters", builder.build());
 		}
-		if(!frankElement.getForwards().isEmpty()) {
-			JsonArrayBuilder b = bf.createArrayBuilder();
-			frankElement.getForwards().forEach(fw -> b.add(getParsedJavaDocTag(fw)));
-			result.add("forwards", b.build());
+		if (!frankElement.getForwards().isEmpty()) {
+			final var builder = bf.createArrayBuilder();
+			frankElement.getForwards().forEach(fw -> builder.add(getParsedJavaDocTag(fw)));
+			result.add("forwards", builder.build());
 		}
 		if (!frankElement.getTags().isEmpty()) {
-			JsonObjectBuilder b = bf.createObjectBuilder();
-			for(ParsedJavaDocTag tag: frankElement.getTags()) {
-				b.add(tag.getName(), tag.getDescription());
+			final var builder = bf.createObjectBuilder();
+			for (ParsedJavaDocTag tag: frankElement.getTags()) {
+				builder.add(tag.getName(), tag.getDescription());
 			}
-			result.add("tags", b.build());
+			result.add("tags", builder.build());
 		}
 		if (!frankElement.getLabels().isEmpty()) {
-			JsonArrayBuilder b = bf.createArrayBuilder();
-			for(FrankLabel lab: frankElement.getLabels()) {
+			final var builder = bf.createArrayBuilder();
+			for (FrankLabel lab: frankElement.getLabels()) {
 				JsonObjectBuilder ob = bf.createObjectBuilder();
 				ob.add("label", lab.getName());
 				ob.add("value", lab.getValue());
-				b.add(ob.build());
+				builder.add(ob.build());
 			}
-			result.add("labels", b.build());
+			result.add("labels", builder.build());
+		}
+		if (!frankElement.getQuickLinks().isEmpty()) {
+			final var builder = bf.createArrayBuilder();
+			frankElement.getQuickLinks().forEach(quickLink -> {
+				final var quickLinkBuilder = bf.createObjectBuilder();
+
+				quickLinkBuilder.add("label", quickLink.label());
+				quickLinkBuilder.add("url", quickLink.url());
+
+				builder.add(quickLinkBuilder);
+			});
+			result.add("quickLinks", builder.build());
 		}
 		return result.build();
 	}
