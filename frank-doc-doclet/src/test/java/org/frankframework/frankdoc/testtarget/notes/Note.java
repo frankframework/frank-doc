@@ -8,6 +8,13 @@ package org.frankframework.frankdoc.testtarget.notes;
  * Second line
  * Third line
  *
+ * @ff.info First line
+ * <pre>{@code
+ * 	<Element>
+ * 	  <Param />
+ * 	</Element
+ * }</pre>
+ *
  * @ff.tip First line
  * @ff.warning First line
  * Second line

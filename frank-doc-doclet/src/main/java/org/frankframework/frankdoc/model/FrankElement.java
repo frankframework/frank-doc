@@ -266,7 +266,7 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private List<Note> parseNoteJavadocTags(FrankClass clazz, String tagName, NoteType type) {
 		return clazz.getAllJavaDocTagsOf(tagName).stream()
-			.map(value -> new Note(type, value))
+			.map(value -> new Note(type, Utils.substituteJavadocTags(value, clazz)))
 			.toList();
 	}
 

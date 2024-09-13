@@ -64,6 +64,10 @@
 					"value": "First line\n Second line\n Third line"
 				},
 				{
+					"type": "INFO",
+					"value": "First line\n <pre><code>&lt;Element&gt;\n \t  &lt;Param /&gt;\n \t&lt;/Element</code></pre>"
+				},
+				{
 					"type": "TIP",
 					"value": "First line"
 				},
