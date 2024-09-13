@@ -45,6 +45,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
@@ -387,14 +388,8 @@ public final class Utils {
 		return result;
 	}
 
-	public static String readResourceFile(URL resource) throws IOException {
-		try (InputStream is = resource.openStream()) {
-			if (is == null) return null;
-			try (InputStreamReader isr = new InputStreamReader(is);
-				 BufferedReader reader = new BufferedReader(isr)) {
-				return reader.lines().collect(Collectors.joining(System.lineSeparator()));
-			}
-		}
+	public static Reader readResourceFile(URL resource) throws IOException {
+		return new InputStreamReader(resource.openStream());
 	}
 
 }

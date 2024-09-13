@@ -16,6 +16,9 @@ limitations under the License.
 
 package org.frankframework.frankdoc.properties;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,65 +30,71 @@ public class PropertyParser {
 
 	private static final String[] ALLOWED_FLAGS = new String[]{"Deprecated", "Generated"};
 
-	public List<Group> parse(String fileContent) {
-		ArrayList<Group> groups = new ArrayList<>();
+	private final ArrayList<Group> groups = new ArrayList<>();
 
-		Group currentGroup = new Group();
-		Property currentProperty = new Property();
+	private Group currentGroup = new Group();
+	private Property currentProperty = new Property();
 
-		final String[] lines = fileContent.split("\n");
-		for (String line : lines) {
-			line = line.trim();
-
-			if (line.isEmpty() || line.charAt(0) == '!') {
-				continue;
+	public List<Group> parse(Reader reader) {
+		try (BufferedReader br = new BufferedReader(reader)) {
+			while (br.ready()) {
+				String line = br.readLine().trim();
+				parseLine(line);
 			}
-
-			if (line.startsWith(START_OR_END_GROUP_TOKEN)) {
-				if (!currentGroup.getProperties().isEmpty()) {
-					groups.add(currentGroup);
-				}
-
-				currentGroup = new Group();
-				currentGroup.setName(line.substring(START_OR_END_GROUP_TOKEN.length()).trim());
-				continue;
-			}
-
-			if (line.startsWith(COMMENT_TOKEN)) {
-				String description = line.substring(COMMENT_TOKEN.length()).trim();
-
-				for (String flag : ALLOWED_FLAGS) {
-					final String match = "[" + flag + "]";
-
-					if (description.contains(match)) {
-						currentProperty.getFlags().add(flag);
-						description = description.replace(match, "").trim();
-					}
-				}
-
-				if (currentProperty.getDescription() != null && !currentProperty.getDescription().isEmpty()) {
-					currentProperty.setDescription(currentProperty.getDescription() + "\n" + description);
-				} else {
-					currentProperty.setDescription(description);
-				}
-				continue;
-			}
-
-			if (line.startsWith(PROPERTY_TOKEN)) {
-				line = line.substring(PROPERTY_TOKEN.length()).trim();
-			}
-
-			final String[] keyValue = line.split("=");
-
-			currentProperty.setName(keyValue[0]);
-			if (keyValue.length > 1) {
-				currentProperty.setDefaultValue(keyValue[1]);
-			}
-			currentGroup.addProperty(currentProperty);
-			currentProperty = new Property();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 
 		return groups;
+	}
+
+	private void parseLine(String line) {
+		if (line.isEmpty() || line.charAt(0) == '!') {
+			return;
+		}
+
+		if (line.startsWith(START_OR_END_GROUP_TOKEN)) {
+			if (!currentGroup.getProperties().isEmpty()) {
+				groups.add(currentGroup);
+			}
+
+			currentGroup = new Group();
+			currentGroup.setName(line.substring(START_OR_END_GROUP_TOKEN.length()).trim());
+			return;
+		}
+
+		if (line.startsWith(COMMENT_TOKEN)) {
+			String description = line.substring(COMMENT_TOKEN.length()).trim();
+
+			for (String flag : ALLOWED_FLAGS) {
+				final String match = "[" + flag + "]";
+
+				if (description.contains(match)) {
+					currentProperty.getFlags().add(flag);
+					description = description.replace(match, "").trim();
+				}
+			}
+
+			if (currentProperty.getDescription() != null && !currentProperty.getDescription().isEmpty()) {
+				currentProperty.setDescription(currentProperty.getDescription() + "\n" + description);
+			} else {
+				currentProperty.setDescription(description);
+			}
+			return;
+		}
+
+		if (line.startsWith(PROPERTY_TOKEN)) {
+			line = line.substring(PROPERTY_TOKEN.length()).trim();
+		}
+
+		final String[] keyValue = line.split("=");
+
+		currentProperty.setName(keyValue[0]);
+		if (keyValue.length > 1) {
+			currentProperty.setDefaultValue(keyValue[1]);
+		}
+		currentGroup.addProperty(currentProperty);
+		currentProperty = new Property();
 	}
 
 }

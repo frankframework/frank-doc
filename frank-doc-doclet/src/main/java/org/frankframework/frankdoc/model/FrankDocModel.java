@@ -41,6 +41,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -914,15 +915,15 @@ public class FrankDocModel {
 			return;
 		}
 
-		String content = null;
+		Reader reader = null;
 		try {
-			content = Utils.readResourceFile(url);
+			reader = Utils.readResourceFile(url);
 		} catch (IOException e) {
 			log.error("Unable to read url [{}] for properties", url, e);
 		}
 
 		PropertyParser parser = new PropertyParser();
-		this.propertyGroups = parser.parse(content);
+		this.propertyGroups = parser.parse(reader);
 	}
 
 	public List<String> getAllLabels() {
