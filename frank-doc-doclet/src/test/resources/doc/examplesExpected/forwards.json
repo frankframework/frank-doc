@@ -53,11 +53,18 @@
                 {
                     "name":"failure",
                     "description":"When something goes wrong."
-                }
+                },
+				{
+					"name":"continue",
+					"description":"Description of the continue forward"
+				},
+				{
+					"name":"break"
+				}
             ],
             "tags":{
             	"myTag":"myValue",
-            	"myOtherTag":"myOtherValue" 
+            	"myOtherTag":"myOtherValue"
             }
         },
         {
@@ -79,8 +86,26 @@
                     "description":"If defined and empty or false, then this element and all its children are ignored"
                 }
             ]
-        }
-    ],
+        },
+		{
+			"name": "Parent",
+			"fullName": "org.frankframework.frankdoc.testtarget.examples.forwards.Parent",
+			"elementNames": [
+			],
+			"attributes": [
+				{
+					"name": "active",
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			],
+			"forwards": [
+				{
+					"name": "parent-forward",
+					"description": "This forward comes from the parent"
+				}
+			]
+		}
+	],
     "enums":[
     ]
 }

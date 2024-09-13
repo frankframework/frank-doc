@@ -34,6 +34,7 @@ import org.frankframework.frankdoc.model.FrankLabel;
 import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.ParsedJavaDocTag;
+import org.frankframework.frankdoc.model.Forward;
 import org.frankframework.frankdoc.util.LogUtil;
 
 import javax.json.Json;
@@ -247,7 +248,7 @@ public class FrankDocJsonFactory {
 		}
 		if(!frankElement.getForwards().isEmpty()) {
 			JsonArrayBuilder b = bf.createArrayBuilder();
-			frankElement.getForwards().forEach(fw -> b.add(getParsedJavaDocTag(fw)));
+			frankElement.getForwards().forEach(f -> b.add(getJsonForForward(f)));
 			result.add("forwards", b.build());
 		}
 		if (!frankElement.getTags().isEmpty()) {
@@ -277,6 +278,15 @@ public class FrankDocJsonFactory {
 			b.add("description", parsedJavaDocTag.getDescription());
 		}
 		return b.build();
+	}
+
+	private JsonObject getJsonForForward(Forward forward) {
+		final var builder = bf.createObjectBuilder();
+		builder.add("name", forward.name());
+		if(forward.description() != null) {
+			builder.add("description", forward.description());
+		}
+		return builder.build();
 	}
 
 	private static String getParentOrNull(FrankElement frankElement) {
