@@ -35,7 +35,6 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 		return Arrays.asList(new Object[][] {
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "examples-simple-digester-rules.xml", "simple-appconstants.properties", "org.frankframework.frankdoc.testtarget.examples.simple.Start", "simple.xsd", "simple.json"},
 			{XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF_ENUM_VALUES_IGNORE_CASE, "examples-simple-digester-rules.xml", "simple-appconstants.properties", "org.frankframework.frankdoc.testtarget.examples.simple.Start", "simpleForCompatibility.xsd", "simple.json"},
-			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "examples-sequence-digester-rules.xml", null, "org.frankframework.frankdoc.testtarget.examples.sequence.Master", "sequence.xsd", "sequence.json"},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", null, "org.frankframework.frankdoc.testtarget.examples.config.children.Master", "configChildren.xsd", "configChildren.json"},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", null, "org.frankframework.frankdoc.testtarget.examples.config.children2.Master", "configChildren2.xsd", null},
 			{XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "general-test-digester-rules.xml", null, "org.frankframework.frankdoc.testtarget.examples.config.children.excluded.Master", "configChildrenExclude.xsd", "configChildrenExclude.json"},

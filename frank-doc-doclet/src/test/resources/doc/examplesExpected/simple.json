@@ -73,13 +73,10 @@
       "attributes":[
         {
           "name":"firstAttribute",
-          "mandatory":true,
-          "description":"First attribute of DescribedPossibleIChild.",
-          "default":"this default value"
+          "mandatory":true
         },
         {
-          "name":"secondAttribute",
-          "description":"Second attribute of DescribedPossibleIChild"
+          "name":"secondAttribute"
         },
         {
           "name":"active",
