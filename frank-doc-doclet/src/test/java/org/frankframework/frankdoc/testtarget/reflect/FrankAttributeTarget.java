@@ -1,7 +1,4 @@
 package org.frankframework.frankdoc.testtarget.reflect;
-
-import org.frankframework.doc.IbisDoc;
-
 import java.util.List;
 
 public class FrankAttributeTarget extends FrankAttributeTargetParent {
@@ -66,24 +63,10 @@ public class FrankAttributeTarget extends FrankAttributeTargetParent {
 	public void setInvalidSetterNoParams() {
 	}
 
-	@IbisDoc("Description of ibisDockedOnlyDescription")
 	public void setIbisDockedOnlyDescription(String value) {
 	}
 
-	@IbisDoc({"3", "Description of ibisDockedOrderDescription"})
-	public void setIbisDockedOrderDescription(String value) {
-	}
-
-	@IbisDoc({"Description of ibisDockedDescriptionDefault", "Default of ibisDockedDescriptionDefault"})
-	public void setIbisDockedDescriptionDefault(String value) {
-	}
-
-	@IbisDoc({"5", "Description of ibisDockedOrderDescriptionDefault", "Default of ibisDockedOrderDescriptionDefault"})
-	public void setIbisDockedOrderDescriptionDefault(String value) {
-	}
-
 	@Deprecated
-	@IbisDoc("Description of ibisDockedDeprecated")
 	public void setIbisDockedDeprecated(String value) {
 	}
 
@@ -95,22 +78,6 @@ public class FrankAttributeTarget extends FrankAttributeTargetParent {
 
 	@Override
 	public void setAttributeWithInheritedJavaDoc(String value) {
-	}
-
-	/**
-	 * Superseeded Javadoc
-	 * @param value
-	 */
-	@IbisDoc({"100", "IbisDoc description that overrules JavaDoc"})
-	public void setAttributeWithIbisDocThatOverrulesJavadocDescription(String value) {
-	}
-
-	/**
-	 * JavaDoc for description that is selected because IbisDoc annotation lacks description.
-	 * @param value
-	 */
-	@IbisDoc("120")
-	public void setAttributeWithIbisDocLackingDescription(String value) {
 	}
 
 	/**
@@ -126,7 +93,6 @@ public class FrankAttributeTarget extends FrankAttributeTargetParent {
 	/**
 	 * @ff.default My overruled default value
 	 */
-	@IbisDoc({"50", "Dummy description", "The default from the IbisDoc annotation"})
 	public void setAttributeWithIbisDocThatOverrulesJavadocDefault(String value) {
 	}
 

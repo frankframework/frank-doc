@@ -1,5 +1,5 @@
 /*
-Copyright 2021, 2022 WeAreFrank!
+Copyright 2024 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,13 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+package org.frankframework.frankdoc.model;
 
-package org.frankframework.frankdoc.wrapper;
-
-public class FrankDocletConstants {
-	public static final String OBJECT = "java.lang.Object";
-	public static final String STRING = "java.lang.String";
-
-	private FrankDocletConstants() {
-	}
+public record Forward(String name, String description) {
 }

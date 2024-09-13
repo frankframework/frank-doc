@@ -1,7 +1,5 @@
 package org.frankframework.frankdoc.testtarget.simple;
 
-import org.frankframework.doc.IbisDoc;
-
 public class ListenerChild extends ListenerParent {
 	@Override
 	public void setChildAttribute(String value) {
@@ -29,7 +27,6 @@ public class ListenerChild extends ListenerParent {
 		return null;
 	}
 
-	@IbisDoc({"10", "Dummy description"})
 	@Override
 	public void setDeprecatedInParentAttribute(String value) {
 	}

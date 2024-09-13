@@ -1,5 +1,5 @@
 /*
-Copyright 2022 WeAreFrank!
+Copyright 2024 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,15 +13,23 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+package org.frankframework.doc;
 
-package org.frankframework.frankdoc.feature;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Repeatable;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
+import static java.lang.annotation.ElementType.TYPE;
 
-class ParsedIbisDocRef {
-	private @Getter @Setter boolean hasOrder;
-	private @Getter @Setter int order;
-	private @Getter @Setter FrankMethod referredMethod;
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({TYPE})
+@Inherited
+@Repeatable(Forwards.class)
+public @interface Forward {
+	String name();
+	String description() default "";
 }

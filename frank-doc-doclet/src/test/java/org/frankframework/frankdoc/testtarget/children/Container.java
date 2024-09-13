@@ -1,14 +1,10 @@
 package org.frankframework.frankdoc.testtarget.children;
 
-import org.frankframework.doc.IbisDoc;
-
 public class Container extends ContainerParent {
-	@IbisDoc("100")
 	public void setChild(Child child) {
 	}
 
 	@Deprecated
-	@IbisDoc("200")
 	public void setDeprecatedChild(Child child) {
 	}
 
@@ -18,7 +14,6 @@ public class Container extends ContainerParent {
 	}
 
 	@Override
-	@IbisDoc("70")
 	public void setInheritedChildDocOnDerived(InheritedChildDocOnDerived child) {
 		super.setInheritedChildDocOnDerived(child);
 	}
@@ -29,7 +24,6 @@ public class Container extends ContainerParent {
 	public void setAttribute(String attributeValue) {
 	}
 
-	@IbisDoc("Description of Container.setInheritedChildDocWithDescriptionOverride")
 	@Override
 	public void setInheritedChildDocWithDescriptionOverride(InheritedChildDocWithDescriptionOverride child) {
 	}

@@ -1,7 +1,5 @@
 package org.frankframework.frankdoc.testtarget.doclet;
 
-import org.frankframework.doc.IbisDoc;
-
 import java.util.List;
 
 /** @ff.myTag */
@@ -24,7 +22,6 @@ public class Parent<M> {
 	 * @param value
 	 * @ff.default   Default
 	 */
-	@IbisDoc("50")
 	public void setInherited(String value, Parent<M> parent, Parent<?> clas, Parent<?>[] parameterTypes) {
 	}
 

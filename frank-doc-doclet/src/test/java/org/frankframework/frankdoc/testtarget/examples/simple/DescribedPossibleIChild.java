@@ -1,6 +1,5 @@
 package org.frankframework.frankdoc.testtarget.examples.simple;
 
-import org.frankframework.doc.IbisDoc;
 import org.frankframework.doc.Mandatory;
 
 /**
@@ -11,12 +10,10 @@ import org.frankframework.doc.Mandatory;
  *
  */
 public class DescribedPossibleIChild implements IChild {
-	@IbisDoc({"10", "First attribute of DescribedPossibleIChild.", "this default value"})
 	@Mandatory
 	public void setFirstAttribute(String value) {
 	}
 
-	@IbisDoc({"20", "Second attribute of DescribedPossibleIChild"})
 	public void setSecondAttribute(String value) {
 	}
 }

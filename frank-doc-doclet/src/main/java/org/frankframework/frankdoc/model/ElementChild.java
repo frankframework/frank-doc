@@ -58,16 +58,6 @@ public abstract class ElementChild {
 
 	private @Getter @Setter(AccessLevel.PACKAGE) MandatoryStatus mandatoryStatus = MandatoryStatus.OPTIONAL;
 
-	/**
-	 * Only set to true if there is an IbisDoc or IbisDocRef annotation for
-	 * this specific ElementChild, excluding inheritance. This property is
-	 * intended to detect Java Override annotations that are only there for
-	 * technical reasons, without relevance to the Frank developer.
-	 *
-	 * But values inside IbisDoc or IbisDocRef annotations are inherited.
-	 * That is the case to allow documentation information to be stored more
-	 * centrally.
-	 */
 	private @Getter @Setter boolean documented;
 	private @Getter FrankElement overriddenFrom;
 
