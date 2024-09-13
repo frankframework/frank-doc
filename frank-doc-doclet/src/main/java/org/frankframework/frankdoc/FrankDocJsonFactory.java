@@ -278,7 +278,7 @@ public class FrankDocJsonFactory {
 
 				builder.add(quickLinkBuilder);
 			});
-			result.add("quickLinks", builder.build());
+			result.add("links", builder.build());
 		}
 		return result.build();
 	}
