@@ -254,20 +254,22 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private List<QuickLink> parseSeeJavadocTags(FrankClass clazz) {
 		return clazz.getAllJavaDocTagsOf(JAVADOC_SEE).stream()
-			.map(value -> {
-				final var matcher = JAVADOC_SEE_PATTERN.matcher(value);
-
-				if (!matcher.matches()) {
-					return null;
-				}
-
-				String label = matcher.group(2);
-				String url = matcher.group(1);
-
-				return new QuickLink(label, url);
-			})
+			.map(this::tryParseQuickLink)
 			.filter(Objects::nonNull)
 			.toList();
+	}
+
+	private QuickLink tryParseQuickLink(String value) {
+		final var matcher = JAVADOC_SEE_PATTERN.matcher(value);
+
+		if (!matcher.matches()) {
+			return null;
+		}
+
+		String label = matcher.group(2);
+		String url = matcher.group(1);
+
+		return new QuickLink(label, url);
 	}
 
 	private List<ParsedJavaDocTag> parseTagJavadocTags(FrankClass clazz) {
