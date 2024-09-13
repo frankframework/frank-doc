@@ -42,10 +42,6 @@ public final class FrankElementFilters {
 
 		// Exclude classes that cannot be used directly in configurations
 		excludeFilters.add("org.frankframework.pipes.MessageSendingPipe");
-
-		// Exclude classes that should only be used in internal configurations
-		excludeFilters.add("org.frankframework.doc.IbisDocPipe");
-		excludeFilters.add("org.frankframework.pipes.CreateRestViewPipe");
 		return excludeFilters;
 	}
 
