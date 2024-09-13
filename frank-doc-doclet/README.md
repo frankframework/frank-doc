@@ -86,7 +86,7 @@ First, everything declared in the [EchoSender](https://github.com/ibissource/iaf
 
 ## Preferred order of attributes and child elements
 
-The order of config child setters and attribute setters in the Java code is important for the Frank!Doc. With the old IbisDoc documentation, this is not the case because the value fields in [@IbisDoc](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/IbisDoc.java) and [@IbisDocRef](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/IbisDocRef.java) annotations can hold the order. In the Frank!Doc, the order kept in [@IbisDoc](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/IbisDoc.java) and [@IbisDocRef](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/IbisDocRef.java) annotations is ignored and the method order is used.
+The order of config child setters and attribute setters in the Java code is important for the Frank!Doc. This determines how they will be displayed to the end-user.
 
 In the Frank!Doc web application, the order of the attributes follows the order of the methods. This order is not enforced in any way in Frank configurations, because XML schemas in general do not prescribe the order of XML attributes.
 
@@ -158,12 +158,12 @@ Here is again how restricted string attributes are shown, this time with `@EnumL
 
 ![webappAttributeOperation](./picturesForReadme/webappAttributeOperation.jpg)
 
-You see the description in the JavaDoc comment (or [@IbisDoc](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/IbisDoc.java) Java annotation) of the attribute setter (number 1). Enum-restricted string attributes do not show a type (number 2) as said earlier (you may have to scroll to the right to see this), but it is shown for Boolean and integer attributes. Each enum value (number 3) is shown with its description (number 4) that comes from the JavaDoc comment of the enum value.
+You see the description in the JavaDoc comment of the attribute setter (number 1). Enum-restricted string attributes do not show a type (number 2) as said earlier (you may have to scroll to the right to see this), but it is shown for Boolean and integer attributes. Each enum value (number 3) is shown with its description (number 4) that comes from the JavaDoc comment of the enum value.
 
 ## Attribute default value (or Java annotation @Default)
 
 You can document a default value for attributes. The preferred way to do this is using JavaDoc tag `@ff.default` or using
-Java annotation `org.frankframework.doc.Default`. Using the [@IbisDoc](https://github.com/ibissource/iaf/blob/master/core/src/main/java/nl/nn/adapterframework/doc/IbisDoc.java) Java annotation is deprecated. You document here what value is assumed if the attribute is not set. Only document this value if this default is applied already by the F!F source code. The `@ff.default` JavaDoc annotation does not alter the behavior of the Frank!Framework.
+Java annotation `org.frankframework.doc.Default`. You document here what value is assumed if the attribute is not set. Only document this value if this default is applied already by the F!F source code. The `@ff.default` JavaDoc annotation does not alter the behavior of the Frank!Framework.
 
 Here is how it looks like in the Java source code:
 

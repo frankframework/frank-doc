@@ -1,5 +1,5 @@
 /*
-Copyright 2021, 2022 WeAreFrank!
+Copyright 2024 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,13 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+package org.frankframework.doc;
 
-package org.frankframework.frankdoc.wrapper;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.Inherited;
 
-public class FrankDocletConstants {
-	public static final String OBJECT = "java.lang.Object";
-	public static final String STRING = "java.lang.String";
+import static java.lang.annotation.ElementType.TYPE;
 
-	private FrankDocletConstants() {
-	}
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({TYPE})
+@Inherited
+public @interface Forwards {
+	Forward[] value();
 }

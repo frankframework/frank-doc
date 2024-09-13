@@ -51,7 +51,7 @@
       "fullName":"org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart",
       "abstract":true,
       "elementNames":[
-        
+
       ],
       "attributes":[
         {
@@ -123,7 +123,7 @@
       "name":"Object",
       "fullName":"java.lang.Object",
       "elementNames":[
-        
+
       ],
       "attributes":[
         {
@@ -203,7 +203,7 @@
           "defaultValue":"Value",
           "flags":[
             [
-              
+
             ]
           ]
         },
@@ -228,7 +228,7 @@
           "defaultValue":"10",
           "flags":[
             [
-              
+
             ]
           ]
         },
@@ -237,7 +237,7 @@
           "defaultValue":"true",
           "flags":[
             [
-              
+
             ]
           ]
         }

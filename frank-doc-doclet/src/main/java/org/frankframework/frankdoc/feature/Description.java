@@ -36,37 +36,25 @@ public class Description {
 	}
 
 	public String valueOf(FrankMethod method) {
-		String result = null;
-		FrankAnnotation annotation = method.getAnnotation(FrankDocletConstants.IBISDOC);
-		if (annotation != null) {
-			try {
-				ParsedIbisDocAnnotation ibisDoc = new ParsedIbisDocAnnotation(annotation);
-				result = ibisDoc.getDescription();
-			} catch(FrankDocException e) {
-				log.error("Could not parse annotation [{}] on method [{}]", FrankDocletConstants.IBISDOC, method.toString());
-			}
-		}
-		if (result == null) {
-			result = method.getJavaDoc();
+		String result =  method.getJavaDoc();
 
-			// Recursively searches for a method with the same signature to use as this method's javadoc.
-			if (result != null && result.contains(INHERIT_DOC_TAG)) {
-				FrankClass clazz = method.getDeclaringClass();
+		// Recursively searches for a method with the same signature to use as this method's javadoc.
+		if (result != null && result.contains(INHERIT_DOC_TAG)) {
+			FrankClass clazz = method.getDeclaringClass();
 
-				String parentDoc = null;
+			String parentDoc = null;
 
-				FrankClass superClazz = clazz.getSuperclass();
-				if (superClazz != null) {
-					for (FrankMethod superClassMethod : superClazz.getDeclaredMethods()) {
-						if (superClassMethod.getSignature().equals(method.getSignature())) {
-							parentDoc = valueOf(superClassMethod);
-							break;
-						}
+			FrankClass superClazz = clazz.getSuperclass();
+			if (superClazz != null) {
+				for (FrankMethod superClassMethod : superClazz.getDeclaredMethods()) {
+					if (superClassMethod.getSignature().equals(method.getSignature())) {
+						parentDoc = valueOf(superClassMethod);
+						break;
 					}
 				}
-
-				result = result.replace(INHERIT_DOC_TAG, parentDoc == null ? "" : parentDoc).strip();
 			}
+
+			result = result.replace(INHERIT_DOC_TAG, parentDoc == null ? "" : parentDoc).strip();
 		}
 		try {
 			return Utils.substituteJavadocTags(result, method.getDeclaringClass());

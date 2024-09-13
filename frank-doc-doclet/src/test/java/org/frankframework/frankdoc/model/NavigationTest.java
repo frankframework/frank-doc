@@ -47,7 +47,6 @@ public class NavigationTest {
 			// All attributes of Parent were overridden. Nothing to reference for Parent.
 			{"GrandChild", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild"), ref(RefKind.DECLARED, "Child"))},
 			// The override of parentAttributeSecond counts, in Child parentAttributeFirst is ignored as child
-			{"GrandChild", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild"), ref(RefKind.DECLARED, "Child"), ref(RefKind.CHILD_TOP_LEVEL, "parentAttributeFirst"))},
 			{"GrandChild2", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild2"), ref(RefKind.CUMULATIVE, "Child2"))},
 			// All children of Child2 are deprecated, so Child2 is ignored in the ancestor hierarchy
 			{"GrandChild2", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild2"), ref(RefKind.DECLARED, "Parent"))},

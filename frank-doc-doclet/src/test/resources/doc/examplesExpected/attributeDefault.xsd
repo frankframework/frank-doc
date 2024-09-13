@@ -21,21 +21,11 @@
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.attributeDefault.Master" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="MasterDeclaredAttributeGroup">
-    <xs:attribute name="booleanExplicitNull" type="frankBoolean">
-      <xs:annotation>
-        <xs:documentation>Description setBooleanExplicitNull()</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
     <xs:attribute name="stringExplicitNull" type="xs:string" />
     <xs:attribute name="integerNoDefault" type="frankInt" />
     <xs:attribute name="byteWithDefault" type="frankInt">
       <xs:annotation>
         <xs:documentation>Default: 50</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
-    <xs:attribute name="explicitNullOnPrimitive" type="frankInt">
-      <xs:annotation>
-        <xs:documentation>Description setExplicitNullOnPrimitive() Default: null</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="mandatory" type="frankBoolean" use="required" />

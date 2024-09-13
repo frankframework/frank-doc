@@ -20,10 +20,6 @@ public class ExtendsClassJavadocTest {
 			{"withDefaultAnnotation", null, "default value"},
 			{"withDefaultTag", null, "child default value"},
 			{"withJavaDoc", "My description", null},
-			{"withFullIbisDoc", "My description", "default value"},
-			{"withIbisDocNoOrder", "My description", "default value"},
-			{"withIbisDocNoDefault", "My description", null},
-			{"withIbisDocNoDefaultNoOrder", "My description", null},
 			{"withReferencedValue", "Description with <code>my value</code>", "<code>my value</code>"},
 			{"withReferencedInterfaceValue", "Description with <code>replyAddressFieldsDefault</code>", "<code>replyAddressFieldsDefault</code>"},
 			{"setTransacted", "controls the use of transactions", null}
