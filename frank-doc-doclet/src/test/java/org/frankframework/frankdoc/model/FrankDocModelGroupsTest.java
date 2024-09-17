@@ -33,7 +33,7 @@ public class FrankDocModelGroupsTest {
 	public void testGroups() throws IOException {
 		String thePackage = "org.frankframework.frankdoc.testtarget.groups.";
 		FrankClassRepository r = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
-		instance = FrankDocModel.populate(TestUtil.resourceAsURL("doc/fake-group-digester-rules.xml"), thePackage + "Container", r);
+		instance = FrankDocModel.populate(TestUtil.resourceAsURL("doc/fake-group-digester-rules.xml"), null, thePackage + "Container", r);
 		List<FrankDocGroup> groups = instance.getGroups();
 		assertEquals(2, groups.size());
 

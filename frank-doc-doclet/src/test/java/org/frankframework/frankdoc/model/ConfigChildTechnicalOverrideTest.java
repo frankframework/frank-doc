@@ -23,7 +23,7 @@ public class ConfigChildTechnicalOverrideTest {
 	@BeforeAll
 	public static void setUp() throws IOException {
 		FrankClassRepository repository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, FRANK_DOC_GROUP_VALUES_PACKAGE);
-		model = FrankDocModel.populate(TestUtil.resourceAsURL(DIGESTER_RULES), PACKAGE + "Master", repository);
+		model = FrankDocModel.populate(TestUtil.resourceAsURL(DIGESTER_RULES), null, PACKAGE + "Master", repository);
 	}
 
 	@Test

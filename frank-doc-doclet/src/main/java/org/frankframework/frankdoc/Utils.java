@@ -41,7 +41,11 @@ import javax.json.stream.JsonGenerator;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
@@ -56,6 +60,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Utility methods for the Frank!Doc.
@@ -382,4 +387,9 @@ public final class Utils {
 		}
 		return result;
 	}
+
+	public static Reader readResourceFile(URL resource) throws IOException {
+		return new InputStreamReader(resource.openStream());
+	}
+
 }
