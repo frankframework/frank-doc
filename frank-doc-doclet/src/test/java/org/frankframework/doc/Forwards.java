@@ -13,8 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+package org.frankframework.doc;
 
-package org.frankframework.frankdoc.model;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.Inherited;
 
-public record QuickLink(String label, String url) {
+import static java.lang.annotation.ElementType.TYPE;
+
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({TYPE})
+@Inherited
+public @interface Forwards {
+	Forward[] value();
 }

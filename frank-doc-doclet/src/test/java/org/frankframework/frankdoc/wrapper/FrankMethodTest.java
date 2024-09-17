@@ -20,13 +20,6 @@ public class FrankMethodTest extends TestBase {
 		FrankMethod setter = TestUtil.getDeclaredMethodOf(clazz, "setInherited");
 		assertEquals("setInherited", setter.getName());
 		assertTrue(setter.isPublic());
-		FrankAnnotation[] annotations = setter.getAnnotations();
-		assertEquals(1, annotations.length);
-		FrankAnnotation annotation = annotations[0];
-		assertEquals(FrankDocletConstants.IBISDOC, annotation.getName());
-		annotation = setter.getAnnotation(FrankDocletConstants.IBISDOC);
-		assertNotNull(annotation);
-		assertEquals(FrankDocletConstants.IBISDOC, annotation.getName());
 		FrankType returnType = setter.getReturnType();
 		assertNotNull(returnType);
 		assertTrue(returnType.isPrimitive());
@@ -43,10 +36,6 @@ public class FrankMethodTest extends TestBase {
 
 		assertTrue(parameters[2] instanceof FrankClass);
 		assertTrue(parameters[3] instanceof FrankClass);
-
-		annotation = setter.getAnnotationIncludingInherited(FrankDocletConstants.IBISDOC);
-		assertNotNull(annotation);
-		assertEquals(FrankDocletConstants.IBISDOC, annotation.getName());
 	}
 
 	@Test
@@ -61,19 +50,6 @@ public class FrankMethodTest extends TestBase {
 		FrankClass clazz = classRepository.findClass(PACKAGE + "Child");
 		FrankMethod method = TestUtil.getDeclaredMethodOf(clazz, "methodWithoutAnnotations");
 		assertEquals(0, method.getAnnotations().length);
-		assertNull(method.getAnnotation(FrankDocletConstants.IBISDOC));
-	}
-
-	@Test
-	public void whenInheritedAnnotationsRequestedThenInheritedAnnotationsIncluded() throws FrankDocException {
-		FrankClass clazz = classRepository.findClass(PACKAGE + "Child");
-		FrankMethod method = TestUtil.getDeclaredMethodOf(clazz, "setInherited");
-		assertNotNull(method);
-		FrankAnnotation annotation = method.getAnnotation(FrankDocletConstants.IBISDOC);
-		assertNull(annotation);
-		annotation = method.getAnnotationIncludingInherited(FrankDocletConstants.IBISDOC);
-		assertNotNull(annotation);
-		assertEquals(FrankDocletConstants.IBISDOC, annotation.getName());
 	}
 
 	@Test

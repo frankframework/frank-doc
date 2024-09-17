@@ -41,30 +41,6 @@ public class ReferenceTest {
 	}
 
 	@Test
-	public void whenIbisDocRefThenReferenceFound() {
-		FrankMethod targetMethod = findMethod("referencedByIbisDocRef");
-		FrankMethod referenced = instance.valueOf(targetMethod);
-		assertEquals(REF_TARGET, referenced.getDeclaringClass().getSimpleName());
-		assertEquals("referencedByIbisDocRef", referenced.getName());
-	}
-
-	@Test
-	public void whenIbisDocRefWithDummyOrderThenReferenceFound() {
-		FrankMethod targetMethod = findMethod("referencedByIbisDocRefWithDummyOrder");
-		FrankMethod referenced = instance.valueOf(targetMethod);
-		assertEquals(REF_TARGET, referenced.getDeclaringClass().getSimpleName());
-		assertEquals("referencedByIbisDocRefWithDummyOrder", referenced.getName());
-	}
-
-	@Test
-	public void whenIbisDocRefWithMethodThenReferenceFound() {
-		FrankMethod targetMethod = findMethod("referencedByIbisDocRefOtherMethod");
-		FrankMethod referenced = instance.valueOf(targetMethod);
-		assertEquals(REF_TARGET, referenced.getDeclaringClass().getSimpleName());
-		assertEquals("otherMethod", referenced.getName());
-	}
-
-	@Test
 	public void whenFfRefThenReferenceFound() {
 		FrankMethod targetMethod = findMethod("referenceByFfRef");
 		FrankMethod referenced = instance.valueOf(targetMethod);

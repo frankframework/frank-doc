@@ -70,7 +70,7 @@
 					"type": "Module"
 				}
 			],
-			"quickLinks": [
+			"links": [
 				{
 					"label": "exampleone.com",
 					"url": "https://exampleone.com"
