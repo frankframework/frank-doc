@@ -227,7 +227,7 @@ public class FrankDocModel {
 	private class FrankElementCreationStrategyRoot extends FrankElementCreationStrategy{
 		@Override
 		FrankElement createFromClass(FrankClass clazz) {
-			return new RootFrankElement(clazz, classRepository, groupFactory, labelValues);
+			return new RootFrankElement(clazz, labelValues);
 		}
 
 		@Override
@@ -239,7 +239,7 @@ public class FrankDocModel {
 	private class FrankElementCreationStrategyNonRoot extends FrankElementCreationStrategy {
 		@Override
 		FrankElement createFromClass(FrankClass clazz) {
-			return new FrankElement(clazz, classRepository, groupFactory, labelValues);
+			return new FrankElement(clazz, labelValues);
 		}
 
 		@Override
