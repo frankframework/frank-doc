@@ -766,6 +766,9 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 			if (!StringUtils.isBlank(frankElement.getDescription())) {
 				StringBuilder description = new StringBuilder(frankElement.getDescription());
 
+				if (!frankElement.getNotes().isEmpty()) {
+					description.append("<br>");
+				}
 				for (Note note : frankElement.getNotes()) {
 					description.append("<br><b>")
 						.append(note.type().name())

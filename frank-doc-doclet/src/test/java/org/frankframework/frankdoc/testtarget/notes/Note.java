@@ -12,7 +12,7 @@ package org.frankframework.frankdoc.testtarget.notes;
  * <pre>{@code
  * 	<Element>
  * 	  <Param />
- * 	</Element
+ * 	</Element>
  * }</pre>
  *
  * @ff.tip First line
