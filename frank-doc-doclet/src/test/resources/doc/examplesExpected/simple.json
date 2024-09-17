@@ -197,21 +197,14 @@
         {
           "name":"property.first",
           "description":"This is a description",
-          "defaultValue":"Value",
-          "flags":[
-            [
-
-            ]
-          ]
+          "defaultValue":"Value"
         },
         {
           "name":"propery.second",
           "description":"First line\nSecond line",
           "flags":[
-            [
-              "Deprecated",
-              "Generated"
-            ]
+		    "Deprecated",
+		    "Generated"
           ]
         }
       ]
@@ -222,21 +215,11 @@
         {
           "name":"property.third",
           "description":"First line\nSecond line\nThird line",
-          "defaultValue":"10",
-          "flags":[
-            [
-
-            ]
-          ]
+          "defaultValue":"10"
         },
         {
           "name":"property.fourth",
-          "defaultValue":"true",
-          "flags":[
-            [
-
-            ]
-          ]
+          "defaultValue":"true"
         }
       ]
     }

@@ -477,7 +477,12 @@ public class FrankDocJsonFactory {
 		if (property.getDefaultValue() != null) {
 			b.add("defaultValue", property.getDefaultValue());
 		}
-		b.add("flags", bf.createArrayBuilder(Collections.singletonList(property.getFlags())));
+
+		if (!property.getFlags().isEmpty()) {
+			final var flagsBuilder = bf.createArrayBuilder();
+			property.getFlags().forEach(flagsBuilder::add);
+			b.add("flags", flagsBuilder);
+		}
 
 		return b.build();
 	}
