@@ -26,7 +26,7 @@ public class Description {
 	private static Logger log = LogUtil.getLogger(Description.class);
 	private static final Description INSTANCE = new Description();
 
-	private static final String INHERIT_DOC_TAG = "{@inheritDoc}";
+	public static final String INHERIT_DOC_TAG = "{@inheritDoc}";
 
 	public static Description getInstance() {
 		return INSTANCE;
@@ -41,7 +41,6 @@ public class Description {
 		// Recursively searches for a method with the same signature to use as this method's javadoc.
 		if (result != null && result.contains(INHERIT_DOC_TAG)) {
 			FrankClass clazz = method.getDeclaringClass();
-
 			String parentDoc = null;
 
 			FrankClass superClazz = clazz.getSuperclass();
@@ -60,7 +59,20 @@ public class Description {
 	}
 
 	public String valueOf(FrankClass clazz) {
-		return Utils.substituteJavadocTags(clazz.getJavaDoc(), clazz);
+		String result = clazz.getJavaDoc();
+
+		if (result != null && result.contains(INHERIT_DOC_TAG)) {
+			String parentDoc = null;
+			FrankClass superClazz = clazz.getSuperclass();
+
+			if (superClazz != null) {
+				parentDoc = valueOf(superClazz);
+			}
+
+			result = result.replace(INHERIT_DOC_TAG, parentDoc == null ? "" : parentDoc).strip();
+		}
+
+		return Utils.substituteJavadocTags(result, clazz);
 	}
 
 	public String valueOf(FrankEnumConstant enumConstant) {

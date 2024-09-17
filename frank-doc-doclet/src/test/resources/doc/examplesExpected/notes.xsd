@@ -9,7 +9,7 @@
  &lt;pre&gt;&lt;code&gt;&amp;lt;Element&amp;gt;
  	  &amp;lt;Param /&amp;gt;
  	&amp;lt;/Element&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;br&gt;&lt;b&gt;TIP&lt;/b&gt;&lt;p&gt;First line&lt;/p&gt;&lt;br&gt;&lt;b&gt;WARNING&lt;/b&gt;&lt;p&gt;First line
- Second line&lt;/p&gt;&lt;br&gt;&lt;b&gt;DANGER&lt;/b&gt;&lt;p&gt;First line&lt;/p&gt;</xs:documentation>
+ Second line&lt;/p&gt;&lt;br&gt;&lt;b&gt;DANGER&lt;/b&gt;&lt;p&gt;First line&lt;/p&gt;&lt;br&gt;&lt;b&gt;INFO&lt;/b&gt;&lt;p&gt;Description from the parent.&lt;/p&gt;</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>

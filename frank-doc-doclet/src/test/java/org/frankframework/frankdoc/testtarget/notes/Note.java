@@ -3,6 +3,7 @@ package org.frankframework.frankdoc.testtarget.notes;
 /**
  * First line of documentation.
  * Second line of documentation.
+ * {@inheritDoc}
  *
  * @ff.info First line
  * Second line
@@ -20,7 +21,7 @@ package org.frankframework.frankdoc.testtarget.notes;
  * Second line
  * @ff.danger First line
  */
-public class Note {
+public class Note extends Parent {
 
 	public void setAttribute(String attribute) {
 	}

@@ -116,7 +116,7 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 		docWriter.init(startClassName, xsdVersion);
 		String actualXsd = docWriter.getSchema();
 		String expectedXsd = TestUtil.getTestFile("/doc/examplesExpected/" + expectedXsdFileName);
-		TestUtil.assertEqualsIgnoreCRLF(expectedXsd, actualXsd);
+		TestUtil.assertEqualsIgnoreCRLF("Comparing XSD: " + expectedXsdFileName, expectedXsd, actualXsd);
 	}
 
 	private FrankDocModel createModel(String digesterRulesFileName, String startClassName) throws Exception {
@@ -153,6 +153,6 @@ public class DocWriterNewAndJsonGenerationExamplesTest {
 		String actual = jsonObject.toString();
 		System.out.println(Utils.jsonPretty(actual));
 		String expectedJson = TestUtil.getTestFile("/doc/examplesExpected/" + expectedJsonFileName);
-		TestUtil.assertJsonEqual("Comparing JSON", expectedJson, actual);
+		TestUtil.assertJsonEqual("Comparing JSON: " + expectedJsonFileName, expectedJson, actual);
 	}
 }

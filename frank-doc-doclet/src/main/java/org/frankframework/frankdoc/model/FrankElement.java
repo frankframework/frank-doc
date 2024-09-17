@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.feature.Description;
+import org.frankframework.frankdoc.feature.Notes;
 import org.frankframework.frankdoc.feature.Protected;
 import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
 import org.frankframework.frankdoc.util.LogUtil;
@@ -64,10 +65,6 @@ public class FrankElement implements Comparable<FrankElement> {
 	public static final String JAVADOC_FORWARDS_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forwards";
 	public static final String JAVADOC_SEE = "@see";
 	public static final String JAVADOC_TAG = "@ff.tag";
-	public static final String JAVADOC_INFO_NOTE_TAG = "@ff.info";
-	public static final String JAVADOC_TIP_NOTE_TAG = "@ff.tip";
-	public static final String JAVADOC_WARNING_NOTE_TAG = "@ff.warning";
-	public static final String JAVADOC_DANGER_NOTE_TAG = "@ff.danger";
 	public static final String LABEL = "org.frankframework.doc.Label";
 	public static final String LABEL_NAME = "name";
 
@@ -132,7 +129,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		forwards = parseForwardJavadocTags(clazz);
 		quickLinks = parseSeeJavadocTags(clazz);
 		tags = parseTagJavadocTags(clazz);
-		notes = parseNotesJavadocTags(clazz);
+		notes = Notes.getInstance().valueOf(clazz);
 		handleLabels(clazz, labelValues);
 
 		description = Description.getInstance().valueOf(clazz);
@@ -286,22 +283,6 @@ public class FrankElement implements Comparable<FrankElement> {
 			.forEach(duplicate -> log.error("FrankElement [{}] has multiple values for tag [{}]", fullName, duplicate));
 
 		return tags;
-	}
-
-	private List<Note> parseNotesJavadocTags(FrankClass clazz) {
-		return Stream.of(
-			parseNoteJavadocTags(clazz, JAVADOC_INFO_NOTE_TAG, NoteType.INFO),
-			parseNoteJavadocTags(clazz, JAVADOC_TIP_NOTE_TAG, NoteType.TIP),
-			parseNoteJavadocTags(clazz, JAVADOC_WARNING_NOTE_TAG, NoteType.WARNING),
-			parseNoteJavadocTags(clazz, JAVADOC_DANGER_NOTE_TAG, NoteType.DANGER)
-		).flatMap(Collection::stream)
-		.toList();
-	}
-
-	private List<Note> parseNoteJavadocTags(FrankClass clazz, String tagName, NoteType type) {
-		return clazz.getAllJavaDocTagsOf(tagName).stream()
-			.map(value -> new Note(type, Utils.substituteJavadocTags(value, clazz)))
-			.toList();
 	}
 
 	private List<ParsedJavaDocTag> parseJavadocTags(FrankClass clazz, String tagName) {
