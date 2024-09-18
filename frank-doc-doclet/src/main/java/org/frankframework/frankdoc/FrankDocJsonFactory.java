@@ -34,6 +34,8 @@ import org.frankframework.frankdoc.model.FrankLabel;
 import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.ParsedJavaDocTag;
+import org.frankframework.frankdoc.properties.Group;
+import org.frankframework.frankdoc.properties.Property;
 import org.frankframework.frankdoc.model.Forward;
 import org.frankframework.frankdoc.util.LogUtil;
 
@@ -80,6 +82,7 @@ public class FrankDocJsonFactory {
 			result.add("elements", getElements());
 			result.add("enums", getEnums());
 			getLabels().ifPresent(l -> result.add("labels", l));
+			getProperties().ifPresent(p -> result.add("properties", p));
 			return result.build();
 		} catch(JsonException e) {
 			log.error("Error producing JSON", e);
@@ -473,4 +476,53 @@ public class FrankDocJsonFactory {
 		}
 		return Optional.of(result.build());
 	}
+
+	// The properties are optional, so they can be omitted from unit tests.
+	private Optional<JsonArray> getProperties() {
+		if (model.getPropertyGroups().isEmpty()) {
+			return Optional.empty();
+		}
+
+		final var builder = bf.createArrayBuilder();
+		model.getPropertyGroups().stream()
+			.map(this::groupToJson)
+			.forEach(builder::add);
+
+		return Optional.of(builder.build());
+	}
+
+	private JsonObject propertyToJson(Property property) {
+		JsonObjectBuilder b = bf.createObjectBuilder();
+
+		b.add("name", property.getName());
+		if (property.getDescription() != null) {
+			b.add("description", property.getDescription());
+		}
+		if (property.getDefaultValue() != null) {
+			b.add("defaultValue", property.getDefaultValue());
+		}
+
+		if (!property.getFlags().isEmpty()) {
+			final var flagsBuilder = bf.createArrayBuilder();
+			property.getFlags().forEach(flagsBuilder::add);
+			b.add("flags", flagsBuilder);
+		}
+
+		return b.build();
+	}
+
+	private JsonObject groupToJson(Group group) {
+		JsonObjectBuilder b = bf.createObjectBuilder();
+
+		if (group.getName() != null) {
+			b.add("name", group.getName());
+		}
+
+		var ab = bf.createArrayBuilder();
+		group.getProperties().stream().map(this::propertyToJson).forEach(ab::add);
+		b.add("properties", ab);
+
+		return b.build();
+	}
+
 }

@@ -93,7 +93,7 @@ public class AttributeTypeStrategyTest {
 		String packageOfEnum = "org.frankframework.frankdoc.testtarget.attribute.type.strategy.";
 		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(packageOfEnum, FRANK_DOC_GROUP_VALUES_PACKAGE);
 		String digesterRulesFileName = "doc/empty-digester-rules.xml";
-		FrankDocModel model = FrankDocModel.populate(TestUtil.resourceAsURL(digesterRulesFileName), packageOfEnum + "Container", classRepository);
+		FrankDocModel model = FrankDocModel.populate(TestUtil.resourceAsURL(digesterRulesFileName), null, packageOfEnum + "Container", classRepository);
 		FrankAttribute attribute = model.findFrankElement(packageOfEnum + "Container").getAttributes(ElementChild.ALL_NOT_EXCLUDED).get(0);
 		AttributeEnum attributeEnum = model.findAttributeEnum(packageOfEnum + "Container.TestType");
 		schemaStringAllowAttributeRef = getXsd(AttributeTypeStrategy.ALLOW_PROPERTY_REF, attributeEnum, attribute);
