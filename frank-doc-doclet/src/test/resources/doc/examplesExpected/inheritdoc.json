@@ -29,6 +29,7 @@
 		{
 			"name": "Child",
 			"fullName": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Child",
+			"description": "Description of child.\n Description of parent.\n Description of parent of parent.",
 			"parent": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Parent",
 			"elementNames": [
 				"Child"
@@ -75,7 +76,7 @@
 		{
 			"name": "Parent",
 			"fullName": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Parent",
-			"abstract": true,
+			"description": "Description of parent.\n Description of parent of parent.",
 			"elementNames": [
 			],
 			"attributes": [
@@ -90,6 +91,20 @@
 				{
 					"name": "hasNoJavaDocAttribute"
 				},
+				{
+					"name": "active",
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			]
+		},
+		{
+			"name": "ParentOfParent",
+			"fullName": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.ParentOfParent",
+			"abstract": true,
+			"description": "Description of parent of parent.",
+			"elementNames": [
+			],
+			"attributes": [
 				{
 					"name": "active",
 					"description": "If defined and empty or false, then this element and all its children are ignored"

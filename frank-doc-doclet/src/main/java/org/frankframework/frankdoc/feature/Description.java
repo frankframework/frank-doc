@@ -41,35 +41,38 @@ public class Description {
 		// Recursively searches for a method with the same signature to use as this method's javadoc.
 		if (result != null && result.contains(INHERIT_DOC_TAG)) {
 			FrankClass clazz = method.getDeclaringClass();
-			String parentDoc = null;
+			String parentJavadoc = null;
 
 			FrankClass superClazz = clazz.getSuperclass();
 			if (superClazz != null) {
 				for (FrankMethod superClassMethod : superClazz.getDeclaredMethods()) {
 					if (superClassMethod.getSignature().equals(method.getSignature())) {
-						parentDoc = valueOf(superClassMethod);
+						parentJavadoc = valueOf(superClassMethod);
 						break;
 					}
 				}
 			}
 
-			result = result.replace(INHERIT_DOC_TAG, parentDoc == null ? "" : parentDoc).strip();
+			result = result.replace(INHERIT_DOC_TAG, parentJavadoc == null ? "" : parentJavadoc).strip();
 		}
 		return Utils.substituteJavadocTags(result, method.getDeclaringClass());
+	}
+
+	private String replaceInheritDocInResult(FrankClass superClazz, String childJavaDoc) {
+		if (superClazz == null) {
+			return childJavaDoc;
+		}
+
+		String parentJavaDoc = valueOf(superClazz);
+		return childJavaDoc.replace(INHERIT_DOC_TAG, parentJavaDoc == null ? "" : parentJavaDoc).strip();
 	}
 
 	public String valueOf(FrankClass clazz) {
 		String result = clazz.getJavaDoc();
 
 		if (result != null && result.contains(INHERIT_DOC_TAG)) {
-			String parentDoc = null;
 			FrankClass superClazz = clazz.getSuperclass();
-
-			if (superClazz != null) {
-				parentDoc = valueOf(superClazz);
-			}
-
-			result = result.replace(INHERIT_DOC_TAG, parentDoc == null ? "" : parentDoc).strip();
+			result = replaceInheritDocInResult(superClazz, result);
 		}
 
 		return Utils.substituteJavadocTags(result, clazz);

@@ -1,6 +1,10 @@
 package org.frankframework.frankdoc.testtarget.examples.inheritdoc;
 
-public abstract class Parent {
+/**
+ * Description of parent.
+ * {@inheritDoc}
+ */
+public class Parent extends ParentOfParent {
 
 	/**
 	 * Documentation of the inherited attribute from the parent.
