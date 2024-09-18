@@ -42,12 +42,7 @@ public class Default {
 		if(result == null) {
 			result = method.getJavaDocTag(TAG_DEFAULT);
 		}
-		try {
-			return Utils.substituteJavadocTags(result, method.getDeclaringClass());
-		} catch(FrankDocException e) {
-			log.error("Could not replace {@value ...} in [{}]", result);
-			return result;
-		}
+		return Utils.substituteJavadocTags(result, method.getDeclaringClass());
 	}
 
 	private String fromDefaultAnnotation(FrankMethod method) {

@@ -29,6 +29,7 @@ import org.frankframework.frankdoc.model.ElementType;
 import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.model.FrankElement;
+import org.frankframework.frankdoc.model.Note;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.TextConfigChild;
 import org.frankframework.frankdoc.util.LogUtil;
@@ -762,9 +763,22 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 
 	private void addDocumentationFrom(XmlBuilder element, FrankElement frankElement) {
 		if(version == XsdVersion.STRICT) {
-			String elementDescription = frankElement.getDescription();
-			if(! StringUtils.isBlank(elementDescription)) {
-				addDocumentation(element, elementDescription);
+			if (!StringUtils.isBlank(frankElement.getDescription())) {
+				StringBuilder description = new StringBuilder(frankElement.getDescription());
+
+				if (!frankElement.getNotes().isEmpty()) {
+					description.append("<br>");
+				}
+				for (Note note : frankElement.getNotes()) {
+					description.append("<br><b>")
+						.append(note.type().name())
+						.append("</b>")
+						.append("<p>")
+						.append(note.value())
+						.append("</p>");
+				}
+
+				addDocumentation(element, description.toString());
 			}
 		}
 	}

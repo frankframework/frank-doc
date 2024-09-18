@@ -249,7 +249,7 @@ class DocWriterNewXmlUtils {
 	}
 
 	static void addDocumentation(XmlBuilder context, String description) {
-		description = checkedFlatten(description);
+		description = Utils.flattenJavaDocLinksToLastWords(description);
 		XmlBuilder annotation = addAnnotation(context);
 		XmlBuilder documentation = new XmlBuilder("documentation", "xs", XML_SCHEMA_URI);
 		annotation.addSubElement(documentation);
@@ -260,15 +260,6 @@ class DocWriterNewXmlUtils {
 		XmlBuilder annotation = new XmlBuilder("annotation", "xs", XML_SCHEMA_URI);
 		context.addSubElement(annotation);
 		return annotation;
-	}
-
-	private static String checkedFlatten(String text) {
-		try {
-			return Utils.flattenJavaDocLinksToLastWords(text);
-		} catch(FrankDocException e) {
-			log.error("Error flattening JavaDoc link in [{}]", text, e);
-			return text;
-		}
 	}
 
 	static XmlBuilder addGroup(XmlBuilder context, String name) {

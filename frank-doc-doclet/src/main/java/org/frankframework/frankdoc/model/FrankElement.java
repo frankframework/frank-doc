@@ -49,6 +49,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Models a Java class that can be referred to in a Frank configuration.
@@ -63,6 +64,10 @@ public class FrankElement implements Comparable<FrankElement> {
 	public static final String JAVADOC_FORWARDS_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forwards";
 	public static final String JAVADOC_SEE = "@see";
 	public static final String JAVADOC_TAG = "@ff.tag";
+	public static final String JAVADOC_INFO_NOTE_TAG = "@ff.info";
+	public static final String JAVADOC_TIP_NOTE_TAG = "@ff.tip";
+	public static final String JAVADOC_WARNING_NOTE_TAG = "@ff.warning";
+	public static final String JAVADOC_DANGER_NOTE_TAG = "@ff.danger";
 	public static final String LABEL = "org.frankframework.doc.Label";
 	public static final String LABEL_NAME = "name";
 
@@ -105,13 +110,14 @@ public class FrankElement implements Comparable<FrankElement> {
 	private @Getter List<String> xmlElementNames;
 	private @Getter FrankElementStatistics statistics;
 	private LinkedHashMap<String, ConfigChildSet> configChildSets;
-	private @Getter @Setter String description;
-	private @Getter @Setter String descriptionHeader;
+	private @Getter String description;
+	private @Getter String descriptionHeader;
 	private @Getter String meaningOfParameters;
 	private @Getter List<ParsedJavaDocTag> specificParameters = new ArrayList<>();
 	private @Getter List<Forward> forwards = new ArrayList<>();
 	private @Getter List<QuickLink> quickLinks = new ArrayList<>();
 	private @Getter List<ParsedJavaDocTag> tags = new ArrayList<>();
+	private @Getter List<Note> notes = new ArrayList<>();
 
 	private @Getter List<FrankLabel> labels = new ArrayList<>();
 
@@ -119,21 +125,26 @@ public class FrankElement implements Comparable<FrankElement> {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
 		deprecationInfo = Deprecated.getInstance().getInfo(clazz);
 		configChildSets = new LinkedHashMap<>();
-		this.completeFrankElement(clazz);
+
 		handleConfigChildSetterCandidates(clazz);
-		this.meaningOfParameters = parseParametersJavadocTag(clazz);
-		this.specificParameters = parseParameterJavadocTags(clazz);
-		this.forwards = parseForwardJavadocTags(clazz);
-		this.quickLinks = parseSeeJavadocTags(clazz);
-		this.tags = parseTagJavadocTags(clazz);
+		meaningOfParameters = parseParametersJavadocTag(clazz);
+		specificParameters = parseParameterJavadocTags(clazz);
+		forwards = parseForwardJavadocTags(clazz);
+		quickLinks = parseSeeJavadocTags(clazz);
+		tags = parseTagJavadocTags(clazz);
+		notes = parseNotesJavadocTags(clazz);
 		handleLabels(clazz, labelValues);
+
+		description = Description.getInstance().valueOf(clazz);
+		descriptionHeader = renderDescriptionHeader();
 	}
 
-	private void completeFrankElement(FrankClass clazz) {
-		setDescription(Description.getInstance().valueOf(clazz));
+	private String renderDescriptionHeader() {
 		if (getDescription() != null) {
-			setDescriptionHeader(calculateDescriptionHeader(getDescription()));
+			return calculateDescriptionHeader(getDescription());
 		}
+
+		return null;
 	}
 
 	static String calculateDescriptionHeader(String description) {
@@ -207,13 +218,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	private String parseParametersJavadocTag(FrankClass clazz) {
-		try {
-			return Utils.substituteJavadocTags(clazz.getJavaDocTag(JAVADOC_PARAMETERS), clazz);
-		} catch(FrankDocException e) {
-			log.error("Error parsing the meaning of parameters", e);
-		}
-
-		return null;
+		return Utils.substituteJavadocTags(clazz.getJavaDocTag(JAVADOC_PARAMETERS), clazz);
 	}
 
 	private List<Forward> parseForwardJavadocTags(FrankClass clazz) {
@@ -254,22 +259,20 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private List<QuickLink> parseSeeJavadocTags(FrankClass clazz) {
 		return clazz.getAllJavaDocTagsOf(JAVADOC_SEE).stream()
-			.map(this::tryParseQuickLink)
+			.map(value -> {
+				final var matcher = JAVADOC_SEE_PATTERN.matcher(value);
+
+				if (!matcher.matches()) {
+					return null;
+				}
+
+				String label = matcher.group(2);
+				String url = matcher.group(1);
+
+				return new QuickLink(label, url);
+			})
 			.filter(Objects::nonNull)
 			.toList();
-	}
-
-	private QuickLink tryParseQuickLink(String value) {
-		final var matcher = JAVADOC_SEE_PATTERN.matcher(value);
-
-		if (!matcher.matches()) {
-			return null;
-		}
-
-		String label = matcher.group(2);
-		String url = matcher.group(1);
-
-		return new QuickLink(label, url);
 	}
 
 	private List<ParsedJavaDocTag> parseTagJavadocTags(FrankClass clazz) {
@@ -283,6 +286,22 @@ public class FrankElement implements Comparable<FrankElement> {
 			.forEach(duplicate -> log.error("FrankElement [{}] has multiple values for tag [{}]", fullName, duplicate));
 
 		return tags;
+	}
+
+	private List<Note> parseNotesJavadocTags(FrankClass clazz) {
+		return Stream.of(
+			parseNoteJavadocTags(clazz, JAVADOC_INFO_NOTE_TAG, NoteType.INFO),
+			parseNoteJavadocTags(clazz, JAVADOC_TIP_NOTE_TAG, NoteType.TIP),
+			parseNoteJavadocTags(clazz, JAVADOC_WARNING_NOTE_TAG, NoteType.WARNING),
+			parseNoteJavadocTags(clazz, JAVADOC_DANGER_NOTE_TAG, NoteType.DANGER)
+		).flatMap(Collection::stream)
+		.toList();
+	}
+
+	private List<Note> parseNoteJavadocTags(FrankClass clazz, String tagName, NoteType type) {
+		return clazz.getAllJavaDocTagsOf(tagName).stream()
+			.map(value -> new Note(type, Utils.substituteJavadocTags(value, clazz)))
+			.toList();
 	}
 
 	private List<ParsedJavaDocTag> parseJavadocTags(FrankClass clazz, String tagName) {

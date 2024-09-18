@@ -56,33 +56,17 @@ public class Description {
 
 			result = result.replace(INHERIT_DOC_TAG, parentDoc == null ? "" : parentDoc).strip();
 		}
-		try {
-			return Utils.substituteJavadocTags(result, method.getDeclaringClass());
-		} catch(FrankDocException e) {
-			log.error("Could not replace javaDoc tags in [{}]", result);
-			return result;
-		}
+		return Utils.substituteJavadocTags(result, method.getDeclaringClass());
 	}
 
 	public String valueOf(FrankClass clazz) {
-		String result = clazz.getJavaDoc();
-		try {
-			return Utils.substituteJavadocTags(result, clazz);
-		} catch(FrankDocException e) {
-			log.error("Could not replace javaDoc tags in [{}]", result);
-			return result;
-		}
+		return Utils.substituteJavadocTags(clazz.getJavaDoc(), clazz);
 	}
 
 	public String valueOf(FrankEnumConstant enumConstant) {
 		String result = enumConstant.getJavaDoc();
 		if (!StringUtils.isBlank(result)) {
-			try {
-				return Utils.substituteJavadocTags(result, null);
-			} catch (FrankDocException e) {
-				log.error("Could not replace javaDoc tags in [{}]", result);
-				return result;
-			}
+			return Utils.substituteJavadocTags(result, null);
 		}
 
 		return null;
