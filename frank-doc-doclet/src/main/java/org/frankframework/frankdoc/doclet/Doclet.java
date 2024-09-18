@@ -53,7 +53,7 @@ class Doclet {
 			FrankClassRepository repository = new FrankClassRepository(docTrees, classes, FrankElementFilters.getIncludeFilter(),
 				FrankElementFilters.getExcludeFilter(), FrankElementFilters.getExcludeFiltersForSuperclass());
 
-			model = FrankDocModel.populate(options.getDigesterRulesUrl(), options.getRootClass(), repository);
+			model = FrankDocModel.populate(options.getDigesterRulesUrl(), options.getPropertyFileUrl(), options.getRootClass(), repository);
 			log.info("Found classes: {}", repository.size());
 			File outputBaseDir = new File(options.getOutputDirectory());
 			outputBaseDir.mkdirs();
