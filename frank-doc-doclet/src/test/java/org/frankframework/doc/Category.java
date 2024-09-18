@@ -24,5 +24,5 @@ import static java.lang.annotation.ElementType.TYPE;
 @Label(name="Category")
 @Documented
 public @interface Category {
-	@LabelValue String value();
+	@LabelValue CategoryType value();
 }

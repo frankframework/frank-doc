@@ -39,11 +39,11 @@ class FrankDocGroupFactory {
 	static final String FRANK_DOC_GROUP_VALUES_CLASS = FRANK_DOC_GROUP_VALUES_PACKAGE + "FrankDocGroupValue";
 	private static final Logger log = LogUtil.getLogger(FrankDocGroupFactory.class);
 
-	private final Map<String, Integer> valuePositions = new HashMap<>();
-	private final Map<String, FrankDocGroup> allGroups = new HashMap<>();
+	private final Map<String, Integer> groupValuesWithPositions = new HashMap<>();
+	private final Map<String, FrankDocGroup> groups = new HashMap<>();
 
 	// This constructor ensures that group Other is always created, also if there
-	// is no ElementType without a FrankDocGroup annotation. We always need group
+	// is no ElementType without a FrankDocGroup annotation. We always need group\
 	// Other because it will contain Configuration and Module.
 	FrankDocGroupFactory(@NonNull FrankClassRepository classes) {
 		try {
@@ -53,46 +53,46 @@ class FrankDocGroupFactory {
 			}
 			int position = 0;
 			for(FrankEnumConstant enumConstant: valuesEnum.getEnumConstants()) {
-				valuePositions.put(enumConstant.getName(), position++);
+				groupValuesWithPositions.put(enumConstant.getName(), position++);
 			}
 		} catch(FrankDocException e) {
 			log.error("Cannot find value class {} for @FrankDocGroup", FRANK_DOC_GROUP_VALUES_CLASS);
 		}
 		FrankDocGroup groupOther = new FrankDocGroup(FrankDocGroup.GROUP_NAME_OTHER);
-		allGroups.put(groupOther.getName(), groupOther);
+		groups.put(groupOther.getName(), groupOther);
 	}
 
-	FrankDocGroup getGroup(FrankClass clazz) {
+	FrankDocGroup findOrCreateGroup(FrankClass clazz) {
 		try {
 			FrankAnnotation annotation = clazz.getAnnotationIncludingInherited(JAVADOC_GROUP_ANNOTATION);
-			if(annotation == null) {
+			if (annotation == null) {
 				log.trace("Class [{}] belongs to group [{}]", () -> clazz.getName(), () -> FrankDocGroup.GROUP_NAME_OTHER);
-				return allGroups.get(FrankDocGroup.GROUP_NAME_OTHER);
-			} else {
-				FrankEnumConstant enumConstant = (FrankEnumConstant) annotation.getValue();
-				String groupName = new EnumValue(enumConstant).getLabel();
-				if(allGroups.containsKey(groupName)) {
-					FrankDocGroup group = allGroups.get(groupName);
-					log.trace("Class [{}] belongs to found group [{}]", () -> clazz.getName(), () -> group.getName());
-					return group;
-				} else {
-					int groupOrder = Optional.of(valuePositions.get(enumConstant.getName())).orElseThrow(
-						() -> new FrankDocException("Programming error: Could not get position of enum constant " + enumConstant.getName(), null));
-					FrankDocGroup group = new FrankDocGroup(groupName);
-					group.setOrder(groupOrder);
-					log.trace("Class [{}] belongs to new group [{}], order is [{}]", () -> clazz.getName(), () -> group.getName(), () -> group.getOrder());
-					allGroups.put(groupName, group);
-					return group;
-				}
+				return groups.get(FrankDocGroup.GROUP_NAME_OTHER);
 			}
+
+			FrankEnumConstant enumConstant = (FrankEnumConstant) annotation.getValue();
+			String groupName = new EnumValue(enumConstant).getLabel();
+			if (groups.containsKey(groupName)) {
+				FrankDocGroup group = groups.get(groupName);
+				log.trace("Class [{}] belongs to found group [{}]", () -> clazz.getName(), () -> group.getName());
+				return group;
+			}
+
+			int groupOrder = Optional.of(groupValuesWithPositions.get(enumConstant.getName())).orElseThrow(
+				() -> new FrankDocException("Programming error: Could not get position of enum constant " + enumConstant.getName(), null));
+			FrankDocGroup group = new FrankDocGroup(groupName);
+			group.setOrder(groupOrder);
+			log.trace("Class [{}] belongs to new group [{}], order is [{}]", () -> clazz.getName(), () -> group.getName(), () -> group.getOrder());
+			groups.put(groupName, group);
+			return group;
 		} catch(FrankDocException e) {
 			log.error("Class [{}] has invalid @FrankDocGroup: {}", clazz.getName(), e.getMessage());
-			return allGroups.get(FrankDocGroup.GROUP_NAME_OTHER);
+			return groups.get(FrankDocGroup.GROUP_NAME_OTHER);
 		}
 	}
 
 	List<FrankDocGroup> getAllGroups() {
-		List<FrankDocGroup> result = new ArrayList<>(allGroups.values());
+		List<FrankDocGroup> result = new ArrayList<>(groups.values());
 		Collections.sort(result);
 		return result;
 	}

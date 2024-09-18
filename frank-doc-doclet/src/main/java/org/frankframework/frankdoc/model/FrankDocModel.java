@@ -586,7 +586,7 @@ public class FrankDocModel {
 			log.trace("Already present");
 			return allTypes.get(clazz.getName());
 		}
-		FrankDocGroup group = groupFactory.getGroup(clazz);
+		FrankDocGroup group = groupFactory.findOrCreateGroup(clazz);
 		log.trace("Creating ElementType [{}] with group [{}]", clazz::getName, group::getName);
 		final ElementType result = new ElementType(clazz, group, classRepository);
 		// If a containing FrankElement contains the type being created, we do not

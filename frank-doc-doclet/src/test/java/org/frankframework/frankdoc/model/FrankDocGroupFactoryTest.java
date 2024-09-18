@@ -28,9 +28,9 @@ public class FrankDocGroupFactoryTest {
 	@Test
 	public void whenClassesHaveSameGroupThenOnlyOneGroupCreated() throws Exception {
 		FrankDocGroupFactory instance = new FrankDocGroupFactory(repository);
-		FrankDocGroup first = instance.getGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
+		FrankDocGroup first = instance.findOrCreateGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
 		assertEquals("Listener", first.getName());
-		FrankDocGroup second = instance.getGroup(repository.findClass(PACKAGE + SECOND_LISTENER));
+		FrankDocGroup second = instance.findOrCreateGroup(repository.findClass(PACKAGE + SECOND_LISTENER));
 		assertSame(first, second);
 		// Test that group Other is always created
 		assertArrayEquals(new String[] {"Listener", "Other"}, getGroupNames(instance));
@@ -46,11 +46,11 @@ public class FrankDocGroupFactoryTest {
 	@Test
 	public void whenClassWithoutGroupThenGroupOther() throws Exception {
 		FrankDocGroupFactory instance = new FrankDocGroupFactory(repository);
-		FrankDocGroup listener = instance.getGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
+		FrankDocGroup listener = instance.findOrCreateGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
 		assertEquals("Listener", listener.getName());
-		FrankDocGroup firstOther = instance.getGroup(repository.findClass(PACKAGE + OTHER));
+		FrankDocGroup firstOther = instance.findOrCreateGroup(repository.findClass(PACKAGE + OTHER));
 		assertEquals("Other", firstOther.getName());;
-		FrankDocGroup secondOther = instance.getGroup(repository.findClass(PACKAGE + SECOND_OTHER));
+		FrankDocGroup secondOther = instance.findOrCreateGroup(repository.findClass(PACKAGE + SECOND_OTHER));
 		assertSame(firstOther, secondOther);
 		assertArrayEquals(new String[] {"Listener", "Other"}, getGroupNames(instance));
 	}
@@ -58,10 +58,10 @@ public class FrankDocGroupFactoryTest {
 	@Test
 	public void groupsAreOrderedByEnum() throws Exception {
 		FrankDocGroupFactory instance = new FrankDocGroupFactory(repository);
-		instance.getGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
-		instance.getGroup(repository.findClass(PACKAGE + ASender));
-		instance.getGroup(repository.findClass(PACKAGE + APipe));
-		instance.getGroup(repository.findClass(PACKAGE + OTHER));
+		instance.findOrCreateGroup(repository.findClass(PACKAGE + FIRST_LISTENER));
+		instance.findOrCreateGroup(repository.findClass(PACKAGE + ASender));
+		instance.findOrCreateGroup(repository.findClass(PACKAGE + APipe));
+		instance.findOrCreateGroup(repository.findClass(PACKAGE + OTHER));
 		assertArrayEquals(new String[] {"Pipe", "Sender", "Listener", "Other"}, getGroupNames(instance));
 	}
 }

@@ -50,7 +50,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Models a Java class that can be referred to in a Frank configuration.
@@ -65,10 +64,6 @@ public class FrankElement implements Comparable<FrankElement> {
 	public static final String JAVADOC_FORWARDS_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forwards";
 	public static final String JAVADOC_SEE = "@see";
 	public static final String JAVADOC_TAG = "@ff.tag";
-	public static final String JAVADOC_INFO_NOTE_TAG = "@ff.info";
-	public static final String JAVADOC_TIP_NOTE_TAG = "@ff.tip";
-	public static final String JAVADOC_WARNING_NOTE_TAG = "@ff.warning";
-	public static final String JAVADOC_DANGER_NOTE_TAG = "@ff.danger";
 	public static final String LABEL = "org.frankframework.doc.Label";
 	public static final String LABEL_NAME = "name";
 
@@ -134,7 +129,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		quickLinks = parseSeeJavadocTags(clazz);
 		tags = parseTagJavadocTags(clazz);
 		notes = Notes.getInstance().valueOf(clazz);
-		handleLabels(clazz, labelValues);
+		labels = parseLabelAnnotations(clazz, labelValues);
 
 		description = Description.getInstance().valueOf(clazz);
 		descriptionHeader = renderDescriptionHeader();
@@ -309,24 +304,27 @@ public class FrankElement implements Comparable<FrankElement> {
 			.toList();
 	}
 
-	private void handleLabels(FrankClass clazz, LabelValues labelValues) {
-		Arrays.stream(clazz.getAnnotations())
+	private List<FrankLabel> parseLabelAnnotations(FrankClass clazz, LabelValues labelValues) {
+		return Arrays.stream(clazz.getAnnotations())
 			.filter(a -> a.getAnnotation(LABEL) != null)
-			.forEach(a -> handleSpecificLabel(a, labelValues));
+			.map(a -> parseLabelAnnotation(a, labelValues))
+			.toList();
 	}
 
-	void handleSpecificLabel(FrankAnnotation labelAddingAnnotation, LabelValues labelValues) {
+	// This function adds the label, and it's corresponding value to the global LabelValues as a side effect.
+	private FrankLabel parseLabelAnnotation(FrankAnnotation labelAddingAnnotation, LabelValues labelValues) {
 		String label = labelAddingAnnotation.getAnnotation(LABEL).getValueOf(LABEL_NAME).toString();
 		Object rawValue = labelAddingAnnotation.getValue();
+
 		if (rawValue instanceof FrankEnumConstant enumConstant) {
 			// This considers annotation @EnumLabel
 			EnumValue value = new EnumValue(enumConstant);
-			labels.add(new FrankLabel(label, value.getLabel()));
 			labelValues.addValue(label, value.getLabel());
-		} else {
-			labels.add(new FrankLabel(label, rawValue.toString()));
-			labelValues.addValue(label, rawValue.toString());
+			return new FrankLabel(label, value.getLabel());
 		}
+
+		labelValues.addValue(label, rawValue.toString());
+		return new FrankLabel(label, rawValue.toString());
 	}
 
 	/**
