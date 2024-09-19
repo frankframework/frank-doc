@@ -431,10 +431,10 @@ public class FrankDocModelTest {
 		TestAppender appender = TestAppender.newBuilder().build();
 		TestAppender.addToRootLogger(appender);
 		try {
-			Thread.sleep(500);
 			Reference reference = new Reference(classRepository);
 			FrankMethod targetMethod = Arrays.stream(classRepository.findClass(REFERRER).getDeclaredMethods()).filter(frankMethod -> frankMethod.getName().equals("doesNotExistsMethod")).findFirst().get();
 			reference.valueOf(targetMethod);
+			Thread.sleep(500);
 			appender.assertLogged("Referred method [org.frankframework.frankdoc.testtarget.ibisdocref.ChildTargetParameterized] does not exist, as specified at location: [Referrer.doesNotExistsMethod]");
 		} finally {
 			TestAppender.removeAppender(appender);
