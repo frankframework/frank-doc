@@ -15,7 +15,6 @@ limitations under the License.
 */
 package org.frankframework.frankdoc.model;
 
-import org.awaitility.Awaitility;
 import org.frankframework.frankdoc.TestAppender;
 import org.frankframework.frankdoc.feature.Reference;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
@@ -29,7 +28,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
@@ -430,19 +428,11 @@ public class FrankDocModelTest {
 
 	@Test
 	public void testReferToMissingMethod() throws Exception {
-		TestAppender appender = TestAppender.newBuilder().build();
-		TestAppender.addToRootLogger(appender);
-		try {
+		try (TestAppender appender = TestAppender.newBuilder().build()) {
 			Reference reference = new Reference(classRepository);
 			FrankMethod targetMethod = Arrays.stream(classRepository.findClass(REFERRER).getDeclaredMethods()).filter(frankMethod -> frankMethod.getName().equals("doesNotExistsMethod")).findFirst().get();
 			reference.valueOf(targetMethod);
-
-			Awaitility.await().atMost(10000, TimeUnit.MILLISECONDS).until(() -> appender.getLogLines().contains("Referred method [org.frankframework.frankdoc.testtarget.ibisdocref.ChildTargetParameterized] does not exist, as specified at location: [Referrer.doesNotExistsMethod]"));
-
-			assertEquals(1, appender.getLogLines().size());
-//			appender.assertLogged("Referred method [org.frankframework.frankdoc.testtarget.ibisdocref.ChildTargetParameterized] does not exist, as specified at location: [Referrer.doesNotExistsMethod]");
-		} finally {
-			TestAppender.removeAppender(appender);
+			appender.assertLogged("Referred method [org.frankframework.frankdoc.testtarget.ibisdocref.ChildTargetParameterized] does not exist, as specified at location: [Referrer.doesNotExistsMethod]");
 		}
 	}
 

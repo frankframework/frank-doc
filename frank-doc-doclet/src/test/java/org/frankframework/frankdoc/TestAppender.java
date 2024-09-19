@@ -28,7 +28,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestAppender extends AbstractAppender {
+public class TestAppender extends AbstractAppender implements AutoCloseable {
 	private final List<String> logMessages = new ArrayList<String>();
 
 	public static <B extends Builder<B>> B newBuilder() {
@@ -44,6 +44,12 @@ public class TestAppender extends AbstractAppender {
 	private TestAppender(String name, Filter filter, Layout<? extends Serializable> layout) {
 		super(name, filter, layout, false, null);
 		start();
+		addToRootLogger(this);
+	}
+
+	@Override
+	public void close() {
+		removeFromRootLogger(this);
 	}
 
 	@Override
@@ -63,12 +69,12 @@ public class TestAppender extends AbstractAppender {
 		return (Logger) LogUtil.getRootLogger();
 	}
 
-	public static void addToRootLogger(TestAppender appender) {
+	private void addToRootLogger(TestAppender appender) {
 		Logger logger = getRootLogger();
 		logger.addAppender(appender);
 	}
 
-	public static void removeAppender(TestAppender appender) {
+	private void removeFromRootLogger(TestAppender appender) {
 		Logger logger = getRootLogger();
 		logger.removeAppender(appender);
 	}
