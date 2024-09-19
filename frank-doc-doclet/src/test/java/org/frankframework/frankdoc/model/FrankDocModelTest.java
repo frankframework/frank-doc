@@ -429,6 +429,7 @@ public class FrankDocModelTest {
 	@Test
 	public void testReferToMissingMethod() throws Exception {
 		TestAppender appender = TestAppender.newBuilder().build();
+		appender.start();
 		TestAppender.addToRootLogger(appender);
 		try {
 			Reference reference = new Reference(classRepository);
