@@ -90,3 +90,15 @@ jobs:
           frank-doc/frank-doc-doclet/target/frank-doc-doclet-$FRANKDOC_VERSION.jar \
           frank-doc/.github/workflows/validConfig.xml \
           iaf/target/frankdoc/xml/xsd/FrankConfig-compatibility.xsd
+
+    - name: Store FrankDoc.xsd (Strict and compatibility)
+      uses: actions/upload-artifact@v3
+      with:
+        name: FrankDoc.xsd
+        path: iaf/target/frankdoc/js/*.json
+
+    - name: Store FrankDoc.json
+      uses: actions/upload-artifact@v3
+      with:
+        name: FrankDoc.json
+        path: iaf/target/frankdoc/xml/xsd/*.xsd
