@@ -84,6 +84,6 @@ public class TestAppender extends AbstractAppender {
 	}
 
 	public void assertLogged(String msg) {
-		assertTrue(logMessages.contains(msg), "Log messages: " + logMessages);
+		assertTrue(logMessages.contains(msg), "Log messages: " + toString());
 	}
 }

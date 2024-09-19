@@ -431,6 +431,7 @@ public class FrankDocModelTest {
 		TestAppender appender = TestAppender.newBuilder().build();
 		TestAppender.addToRootLogger(appender);
 		try {
+			Thread.sleep(500);
 			Reference reference = new Reference(classRepository);
 			FrankMethod targetMethod = Arrays.stream(classRepository.findClass(REFERRER).getDeclaredMethods()).filter(frankMethod -> frankMethod.getName().equals("doesNotExistsMethod")).findFirst().get();
 			reference.valueOf(targetMethod);
