@@ -51,7 +51,7 @@ jobs:
         TZ: Europe/Amsterdam
         JAVA_OPTS: "-Xms1G"
       run: mvn -B -V -Pibissource,codecoverage -Dmaven.javadoc.skip=true install
-      working-directory: frank-doc
+#      working-directory: frank-doc
 
     - name: Store Test Results
       if: failure()
