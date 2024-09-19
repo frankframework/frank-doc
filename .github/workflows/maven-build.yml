@@ -58,7 +58,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: Surefire
-        path: ${{ github.workspace }}/../*/target/surefire-reports/*
+        path: /*/target/surefire-reports/*
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
