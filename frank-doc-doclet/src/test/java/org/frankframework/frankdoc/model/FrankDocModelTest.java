@@ -437,10 +437,9 @@ public class FrankDocModelTest {
 			FrankMethod targetMethod = Arrays.stream(classRepository.findClass(REFERRER).getDeclaredMethods()).filter(frankMethod -> frankMethod.getName().equals("doesNotExistsMethod")).findFirst().get();
 			reference.valueOf(targetMethod);
 
-			var result = Awaitility.await().atMost(5000, TimeUnit.MILLISECONDS).until(appender::getLogLines, (log) -> log.contains("Referred method [org.frankframework.frankdoc.testtarget.ibisdocref.ChildTargetParameterized] does not exist, as specified at location: [Referrer.doesNotExistsMethod]"));
+			Awaitility.await().atMost(10000, TimeUnit.MILLISECONDS).until(() -> appender.getLogLines().contains("Referred method [org.frankframework.frankdoc.testtarget.ibisdocref.ChildTargetParameterized] does not exist, as specified at location: [Referrer.doesNotExistsMethod]"));
 
-			assertEquals(result.size(), 1);
-
+			assertEquals(1, appender.getLogLines().size());
 //			appender.assertLogged("Referred method [org.frankframework.frankdoc.testtarget.ibisdocref.ChildTargetParameterized] does not exist, as specified at location: [Referrer.doesNotExistsMethod]");
 		} finally {
 			TestAppender.removeAppender(appender);
