@@ -8,7 +8,7 @@ public class CompatibilityTest extends BaseIntegrationTest {
 
 	private final String FOR_TYPE_START_CLASS_NAME = "org.frankframework.frankdoc.testtarget.examples.compatibility.fortype.Start";
 	private final String MULTIPLE_START_CLASS_NAME = "org.frankframework.frankdoc.testtarget.examples.compatibility.multiple.Start";
-	private final String START_CLASS_NAME = "org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Master";
+	private final String IGNORE_START_CLASS_NAME = "org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Master";
 
 
 	@Test
@@ -64,7 +64,7 @@ public class CompatibilityTest extends BaseIntegrationTest {
 		var model = createModel(
 			GENERAL_DIGEST_RULES_FILE,
 			null,
-			START_CLASS_NAME
+			IGNORE_START_CLASS_NAME
 		);
 		var actual = convertModelToXsd(model, XsdVersion.STRICT, AttributeTypeStrategy.ALLOW_PROPERTY_REF);
 
@@ -76,7 +76,7 @@ public class CompatibilityTest extends BaseIntegrationTest {
 		var model = createModel(
 			GENERAL_DIGEST_RULES_FILE,
 			null,
-			START_CLASS_NAME
+			IGNORE_START_CLASS_NAME
 		);
 		var actual = convertModelToXsd(model, XsdVersion.COMPATIBILITY, AttributeTypeStrategy.ALLOW_PROPERTY_REF);
 
@@ -88,7 +88,7 @@ public class CompatibilityTest extends BaseIntegrationTest {
 		var model = createModel(
 			GENERAL_DIGEST_RULES_FILE,
 			null,
-			START_CLASS_NAME
+			IGNORE_START_CLASS_NAME
 		);
 		var actual = convertModelToJson(model);
 
