@@ -53,6 +53,13 @@ jobs:
       run: mvn -B -V -Pibissource,codecoverage -Dmaven.javadoc.skip=true install
       working-directory: frank-doc
 
+    - name: Store Test Results
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: Surefire
+        path: ${{ github.workspace }}/*/target/surefire-reports/*
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
