@@ -38,8 +38,8 @@ import java.net.URL;
 
 import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 
-public class DocWriterNewIntegrationTest {
-	private static Logger log = LogUtil.getLogger(DocWriterNewIntegrationTest.class);
+public class FrankDocXsdFactoryIntegrationTest {
+	private static Logger log = LogUtil.getLogger(FrankDocXsdFactoryIntegrationTest.class);
 	private static final String EXOTIC_PACKAGE = "org.frankframework.frankdoc.testtarget.exotic.";
 
 	private FrankClassRepository classRepository;
@@ -75,9 +75,8 @@ public class DocWriterNewIntegrationTest {
 	private String generateXsd(
 			XsdVersion version, final String digesterRulesFileName, final String rootClassName, String outputSchemaFileName, AttributeTypeStrategy attributeTypeStrategy) throws IOException {
 		FrankDocModel model = FrankDocModel.populate(TestUtil.resourceAsURL(digesterRulesFileName), null, rootClassName, classRepository);
-		DocWriterNew docWriter = new DocWriterNew(model, attributeTypeStrategy, "1.2.3-SNAPSHOT");
-		docWriter.init(rootClassName, version);
-		String xsdString = docWriter.getSchema();
+		FrankDocXsdFactory factory = new FrankDocXsdFactory(model, attributeTypeStrategy, "1.2.3-SNAPSHOT", rootClassName, version);
+		String xsdString = factory.getSchema();
 
 		File output = new File(testFolder, outputSchemaFileName);
 		log.info("Output file of test xsd: " + output.getAbsolutePath());

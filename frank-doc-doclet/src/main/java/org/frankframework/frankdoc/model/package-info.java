@@ -14,9 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * This package contains a set of model classes that is used by {@link org.frankframework.frankdoc.DocWriterNew} to generate the
- * XML configuration schema used by Frank developers. Please note that {@link org.frankframework.frankdoc.DocWriterNew} is
- * presently not used; this class is under development.
+ * This package contains a set of model classes that is used by {@link org.frankframework.frankdoc.FrankDocXsdFactory} to generate the
+ * XML configuration schema used by Frank developers.
  *
  * <h1>The model</h1>
  *
@@ -55,7 +54,7 @@ limitations under the License.
  * <p>
  * There is no direct relation between {@link org.frankframework.frankdoc.model.FrankElement} an {@link org.frankframework.frankdoc.model.ElementRole}, because the
  * relation between a parent tag and a child tag requires some additional information.
- * {@link org.frankframework.frankdoc.DocWriterNew} requires information on how often a child tag can appear, whether
+ * {@link org.frankframework.frankdoc.FrankDocXsdFactory} requires information on how often a child tag can appear, whether
  * usage of the child tag is deprecated, and some other information. This additional information
  * is included in class {@link org.frankframework.frankdoc.model.ConfigChild}, which also references the {@link org.frankframework.frankdoc.model.FrankElement} of
  * the parent tag and the {@link org.frankframework.frankdoc.model.ElementRole} for a set of allowed child tags.
@@ -294,7 +293,7 @@ limitations under the License.
  * will stop because the recursion will find sets of element roles that correspond
  * to existing {@link org.frankframework.frankdoc.model.ElementRoleSet} objects.
  * <p>
- * Omitting syntax 2 elements for these conflicts is also done in {@link org.frankframework.frankdoc.DocWriterNew}.
+ * Omitting syntax 2 elements for these conflicts is also done in {@link org.frankframework.frankdoc.FrankDocXsdFactory}.
  * The example shows that the contents of a generic element option does not
  * necessarily correspond to a {@link org.frankframework.frankdoc.model.ConfigChildSet}.
  * To fill a generic element option, we need to get a {@link java.util.Set} of
@@ -303,7 +302,7 @@ limitations under the License.
  * recursively from these element role sets. The model provides static method
  * {@link org.frankframework.frankdoc.model.ConfigChildSet#getMemberChildren(java.util.List, java.util.function.Predicate, java.util.function.Predicate, java.util.function.Predicate)}
  * to support this. We cannot use {@link org.frankframework.frankdoc.model.ElementRoleSet}
- * for this in {@link org.frankframework.frankdoc.DocWriterNew}, because {@link org.frankframework.frankdoc.DocWriterNew}
+ * for this in {@link org.frankframework.frankdoc.FrankDocXsdFactory}, because {@link org.frankframework.frankdoc.FrankDocXsdFactory}
  * has to filter roles for the chosen version of the XML schema. Class {@link org.frankframework.frankdoc.model.ElementRoleSet}
  * works without filtering role. That class has to find conflicting {@link org.frankframework.frankdoc.model.FrankElement},
  * the conflicts not being affected by the version of the XML schema being created.
