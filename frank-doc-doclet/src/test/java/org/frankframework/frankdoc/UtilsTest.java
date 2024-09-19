@@ -107,11 +107,14 @@ public class UtilsTest {
 	public void whenStringHasUnfinishedJavaDocLinkThenWarn() {
 		TestAppender appender = TestAppender.newBuilder().build();
 		TestAppender.addToRootLogger(appender);
+		try {
+			// No closing "}"
+			Utils.flattenJavaDocLinksToLastWords("{@link Receiver");
 
-		// No closing "}"
-		Utils.flattenJavaDocLinksToLastWords("{@link Receiver");
-
-		appender.assertLogged("Unfinished JavaDoc {@ ...} pattern text [{@link Receiver] at index [0]");
+			appender.assertLogged("Unfinished JavaDoc {@ ...} pattern text [{@link Receiver] at index [0]");
+		} finally {
+			TestAppender.removeAppender(appender);
+		}
 	}
 
 	@Test
