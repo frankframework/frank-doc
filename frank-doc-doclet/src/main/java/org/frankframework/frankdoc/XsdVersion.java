@@ -17,7 +17,7 @@ package org.frankframework.frankdoc;
 
 import lombok.Getter;
 import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.DocWriterNewXmlUtils.AttributeUse;
+import org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeUse;
 import org.frankframework.frankdoc.model.ConfigChild;
 import org.frankframework.frankdoc.model.ElementChild;
 import org.frankframework.frankdoc.model.FrankAttribute;
@@ -28,8 +28,8 @@ import org.frankframework.frankdoc.util.XmlBuilder;
 
 import java.util.function.Predicate;
 
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addChoice;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addSequence;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addChoice;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSequence;
 
 public enum XsdVersion {
 	STRICT(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED, f -> ! f.isDeprecated(), new DelegateStrict()),

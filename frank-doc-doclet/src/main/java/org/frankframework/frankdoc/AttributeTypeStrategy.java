@@ -31,17 +31,17 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.frankframework.frankdoc.DocWriterNew.ATTRIBUTE_VALUES_TYPE;
-import static org.frankframework.frankdoc.DocWriterNew.VARIABLE_REFERENCE;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.XML_SCHEMA_URI;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addDocumentation;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addEnumeration;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addPattern;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addRestriction;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addSimpleType;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addUnion;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createAttributeWithType;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.createSimpleType;
+import static org.frankframework.frankdoc.FrankDocXsdFactory.ATTRIBUTE_VALUES_TYPE;
+import static org.frankframework.frankdoc.FrankDocXsdFactory.VARIABLE_REFERENCE;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.XML_SCHEMA_URI;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addDocumentation;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addEnumeration;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addPattern;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addRestriction;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSimpleType;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addUnion;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAttributeWithType;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createSimpleType;
 
 public enum AttributeTypeStrategy {
 	// Also excludes deprecated enum values
@@ -78,7 +78,7 @@ public enum AttributeTypeStrategy {
 	}
 
 	static XmlBuilder createAttributeActive() {
-		return DocWriterNewXmlUtils.createAttributeRef(ATTRIBUTE_ACTIVE_NAME);
+		return FrankDocXsdFactoryXmlUtils.createAttributeRef(ATTRIBUTE_ACTIVE_NAME);
 	}
 
 	List<XmlBuilder> createHelperTypes() {
@@ -92,8 +92,8 @@ public enum AttributeTypeStrategy {
 	private static abstract class Delegate {
 		// This method ensures that references are still allowed for integer and boolean attributes.
 		// For example, an integer attribute can still be set like "${someIdentifier}".
-		// This method expects that methods DocWriterNewXmlUtils.createTypeFrankBoolean() and
-		// DocWriterNewXmlUtils.createTypeFrankInteger() are used to define the referenced XSD types.
+		// This method expects that methods FrankDocXsdFactoryXmlUtils.createTypeFrankBoolean() and
+		// FrankDocXsdFactoryXmlUtils.createTypeFrankInteger() are used to define the referenced XSD types.
 		XmlBuilder createAttribute(String name, AttributeType modelAttributeType) {
 			return createAttribute(name, modelAttributeType, FRANK_BOOLEAN, FRANK_INT);
 		}
@@ -171,10 +171,10 @@ public enum AttributeTypeStrategy {
 		private XmlBuilder createAttributeForAttributeActive() {
 			XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
 			attribute.addAttribute("name", ATTRIBUTE_ACTIVE_NAME);
-			DocWriterNewXmlUtils.addDocumentation(attribute, "If defined and empty or false, then this element and all its children are ignored");
-			XmlBuilder simpleType = DocWriterNewXmlUtils.addSimpleType(attribute);
-			XmlBuilder restriction = DocWriterNewXmlUtils.addRestriction(simpleType, "xs:string");
-			DocWriterNewXmlUtils.addPattern(restriction, getPattern());
+			FrankDocXsdFactoryXmlUtils.addDocumentation(attribute, "If defined and empty or false, then this element and all its children are ignored");
+			XmlBuilder simpleType = FrankDocXsdFactoryXmlUtils.addSimpleType(attribute);
+			XmlBuilder restriction = FrankDocXsdFactoryXmlUtils.addRestriction(simpleType, "xs:string");
+			FrankDocXsdFactoryXmlUtils.addPattern(restriction, getPattern());
 			return attribute;
 		}
 

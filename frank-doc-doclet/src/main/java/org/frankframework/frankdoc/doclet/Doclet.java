@@ -19,7 +19,7 @@ package org.frankframework.frankdoc.doclet;
 import com.sun.source.util.DocTrees;
 import lombok.extern.log4j.Log4j2;
 import org.frankframework.frankdoc.AttributeTypeStrategy;
-import org.frankframework.frankdoc.DocWriterNew;
+import org.frankframework.frankdoc.FrankDocXsdFactory;
 import org.frankframework.frankdoc.FrankDocElementSummaryFactory;
 import org.frankframework.frankdoc.FrankDocJsonFactory;
 import org.frankframework.frankdoc.Utils;
@@ -40,6 +40,9 @@ import java.util.Set;
 
 @Log4j2
 class Doclet {
+
+	private static final String CONFIGURATION_CLASS_NAME = "org.frankframework.configuration.Configuration";
+
 	private final FrankDocModel model;
 	private final File xsdStrictFile;
 	private final File xsdCompatibilityFile;
@@ -71,7 +74,7 @@ class Doclet {
 		}
 	}
 
-	void run() throws FrankDocException {
+	void generate() throws FrankDocException {
 		if (frankFrameworkVersion == null) {
 			log.error("No Frank!Framework version set; please configure it in your pom.xml as argument -frankFrameworkVersion");
 		}
@@ -83,15 +86,14 @@ class Doclet {
 
 	void writeStrictXsd() throws FrankDocException {
 		log.info("Calculating XSD without deprecated items that allows property references");
-		DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF, frankFrameworkVersion);
-		docWriter.init(XsdVersion.STRICT);
-		String schemaText = docWriter.getSchema();
+		FrankDocXsdFactory factory = new FrankDocXsdFactory(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF, frankFrameworkVersion, CONFIGURATION_CLASS_NAME, XsdVersion.STRICT);
+		String schemaText = factory.getSchema();
 		log.info("Done calculating XSD without deprecated items that allows property references, writing it to file {}", xsdStrictFile.getAbsolutePath());
 		writeStringToFile(schemaText, xsdStrictFile);
 		log.info("Writing output file done");
 	}
 
-	void writeStringToFile(String text, File file) throws FrankDocException {
+	private void writeStringToFile(String text, File file) throws FrankDocException {
 		try (Writer w = new BufferedWriter(new FileWriter(file))) {
 			w.append(text);
 			w.flush();
@@ -102,9 +104,8 @@ class Doclet {
 
 	void writeCompatibilityXsd() throws FrankDocException {
 		log.info("Calculating XSD with deprecated items that does not allow property references");
-		DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF_ENUM_VALUES_IGNORE_CASE, frankFrameworkVersion);
-		docWriter.init(XsdVersion.COMPATIBILITY);
-		String schemaText = docWriter.getSchema();
+		FrankDocXsdFactory factory = new FrankDocXsdFactory(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF_ENUM_VALUES_IGNORE_CASE, frankFrameworkVersion, CONFIGURATION_CLASS_NAME, XsdVersion.COMPATIBILITY);
+		String schemaText = factory.getSchema();
 		log.info("Done calculating XSD with deprecated items that does not allow property references, writing it to file {}", xsdCompatibilityFile.getAbsolutePath());
 		writeStringToFile(schemaText, xsdCompatibilityFile);
 		log.info("Writing output file done");
@@ -112,8 +113,8 @@ class Doclet {
 
 	void writeJson() throws FrankDocException {
 		log.info("Calculating JSON file with documentation of the F!F");
-		FrankDocJsonFactory jsonFactory = new FrankDocJsonFactory(model, frankFrameworkVersion);
-		JsonObject jsonObject = jsonFactory.getJson();
+		FrankDocJsonFactory factory = new FrankDocJsonFactory(model, frankFrameworkVersion);
+		JsonObject jsonObject = factory.getJson();
 		String jsonText = Utils.jsonPretty(jsonObject.toString());
 		log.info("Done calculating JSON file with documentation of the F!F, writing the text to file {}", jsonFile.getAbsolutePath());
 		writeStringToFile(jsonText, jsonFile);
