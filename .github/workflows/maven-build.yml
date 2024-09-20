@@ -94,11 +94,11 @@ jobs:
     - name: Store FrankDoc.xsd (Strict and compatibility)
       uses: actions/upload-artifact@v3
       with:
-        name: FrankDoc.xsd
+        name: FrankDoc.json
         path: iaf/target/frankdoc/js/*.json
 
     - name: Store FrankDoc.json
       uses: actions/upload-artifact@v3
       with:
-        name: FrankDoc.json
+        name: FrankDoc.xsd
         path: iaf/target/frankdoc/xml/xsd/*.xsd
