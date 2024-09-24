@@ -112,6 +112,7 @@ public class UtilsTest {
 		Utils.flattenJavaDocLinksToLastWords("{@link Receiver");
 
 		appender.assertLogged("Unfinished JavaDoc {@ ...} pattern text [{@link Receiver] at index [0]");
+		TestAppender.removeAppender(appender);
 	}
 
 	@Test
