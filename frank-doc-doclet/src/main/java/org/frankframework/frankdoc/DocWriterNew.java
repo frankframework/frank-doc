@@ -176,7 +176,7 @@ public class DocWriterNew implements AttributeReuseManagerCallback {
 		init(CONFIGURATION, version);
 	}
 
-	void init(String startClassName, XsdVersion version) {
+	public void init(String startClassName, XsdVersion version) {
 		this.startClassName = startClassName;
 		this.version = version;
 		log.trace("Initialized DocWriterNew with start element name [{}], version [{}] and output file [{}]",
