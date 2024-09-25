@@ -1,5 +1,6 @@
 package org.frankframework.frankdoc;
 
+import org.frankframework.frankdoc.integration.BaseIntegrationTest;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
@@ -15,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FrankDocElementSummaryTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.element.summary.";
-	private static final String DIGESTER_RULES_FILE_NAME = "general-test-digester-rules.xml";
 	private static final String EXPECTED = Arrays.asList(
 		"              Master: Master",
 		"              Object: ",
@@ -25,7 +25,7 @@ public class FrankDocElementSummaryTest {
 	@Test
 	public void testElementSummary() throws IOException {
 		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, FRANK_DOC_GROUP_VALUES_PACKAGE);
-		FrankDocModel model = FrankDocModel.populate(getDigesterRulesURL(DIGESTER_RULES_FILE_NAME), null, PACKAGE + "Master", classRepository);
+		FrankDocModel model = FrankDocModel.populate(getDigesterRulesURL(BaseIntegrationTest.GENERAL_DIGEST_RULES_FILE), null, PACKAGE + "Master", classRepository);
 		FrankDocElementSummaryFactory instance = new FrankDocElementSummaryFactory(model);
 		String actual = instance.getText();
 		System.out.println(actual);
