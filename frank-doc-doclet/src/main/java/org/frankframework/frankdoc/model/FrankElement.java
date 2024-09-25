@@ -63,7 +63,6 @@ public class FrankElement implements Comparable<FrankElement> {
 	public static final String JAVADOC_FORWARD_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forward";
 	public static final String JAVADOC_FORWARDS_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forwards";
 	public static final String JAVADOC_SEE = "@see";
-	public static final String JAVADOC_TAG = "@ff.tag";
 	public static final String LABEL = "org.frankframework.doc.Label";
 	public static final String LABEL_NAME = "name";
 
@@ -127,7 +126,6 @@ public class FrankElement implements Comparable<FrankElement> {
 		specificParameters = parseParameterJavadocTags(clazz);
 		forwards = parseForwardJavadocTags(clazz);
 		quickLinks = parseSeeJavadocTags(clazz);
-		tags = parseTagJavadocTags(clazz);
 		notes = Notes.getInstance().valueOf(clazz);
 		labels = parseLabelAnnotations(clazz, labelValues);
 
@@ -269,19 +267,6 @@ public class FrankElement implements Comparable<FrankElement> {
 			})
 			.filter(Objects::nonNull)
 			.toList();
-	}
-
-	private List<ParsedJavaDocTag> parseTagJavadocTags(FrankClass clazz) {
-		List<ParsedJavaDocTag> tags = parseJavadocTags(clazz, JAVADOC_TAG);
-		tags.stream()
-			.collect(Collectors.groupingBy(ParsedJavaDocTag::getName, Collectors.counting()))
-			.entrySet().stream()
-			.filter(e -> e.getValue() >= 2L)
-			.map(Entry::getKey)
-			.sorted()
-			.forEach(duplicate -> log.error("FrankElement [{}] has multiple values for tag [{}]", fullName, duplicate));
-
-		return tags;
 	}
 
 	private List<ParsedJavaDocTag> parseJavadocTags(FrankClass clazz, String tagName) {

@@ -43,7 +43,7 @@ class FrankDocGroupFactory {
 	private final Map<String, FrankDocGroup> groups = new HashMap<>();
 
 	// This constructor ensures that group Other is always created, also if there
-	// is no ElementType without a FrankDocGroup annotation. We always need group\
+	// is no ElementType without a FrankDocGroup annotation. We always need group
 	// Other because it will contain Configuration and Module.
 	FrankDocGroupFactory(@NonNull FrankClassRepository classes) {
 		try {

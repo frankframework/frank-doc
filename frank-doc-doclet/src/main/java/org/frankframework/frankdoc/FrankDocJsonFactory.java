@@ -254,13 +254,6 @@ public class FrankDocJsonFactory {
 			frankElement.getForwards().forEach(f -> builder.add(getJsonForForward(f)));
 			result.add("forwards", builder.build());
 		}
-		if (!frankElement.getTags().isEmpty()) {
-			final var builder = bf.createObjectBuilder();
-			for (ParsedJavaDocTag tag: frankElement.getTags()) {
-				builder.add(tag.getName(), tag.getDescription());
-			}
-			result.add("tags", builder.build());
-		}
 		if (!frankElement.getLabels().isEmpty()) {
 			final var builder = bf.createArrayBuilder();
 			for (FrankLabel lab: frankElement.getLabels()) {

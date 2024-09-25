@@ -61,11 +61,7 @@
 				{
 					"name":"break"
 				}
-            ],
-            "tags":{
-            	"myTag":"myValue",
-            	"myOtherTag":"myOtherValue"
-            }
+            ]
         },
         {
             "name":"Module",

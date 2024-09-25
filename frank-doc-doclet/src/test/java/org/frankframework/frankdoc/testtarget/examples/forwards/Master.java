@@ -7,9 +7,6 @@ import org.frankframework.doc.Forward;
  *
  * @ff.forward failure When something goes wrong.
  *
- * @ff.tag myTag myValue
- * @ff.tag myOtherTag myOtherValue
- *
  * @author martijn
  *
  */
