@@ -227,21 +227,21 @@ public class FrankElement implements Comparable<FrankElement> {
 			FrankAnnotation[] forwardAnnotations = (FrankAnnotation[]) forwardsAnnotation.getValue();
 
 			forwards.addAll(Arrays.stream(forwardAnnotations)
-				.map(this::annotationToForward)
+				.map(annotation -> annotationToForward(annotation, clazz))
 				.toList());
 		}
 
 		FrankAnnotation forwardAnnotation = clazz.getAnnotation(JAVADOC_FORWARD_ANNOTATION_CLASSNAME);
 		if (forwardAnnotation != null) {
-			forwards.add(annotationToForward(forwardAnnotation));
+			forwards.add(annotationToForward(forwardAnnotation, clazz));
 		}
 
 		return forwards;
 	}
 
-	private Forward annotationToForward(FrankAnnotation annotation) {
-		String name = (String) annotation.getValueOf("name");
-		String description = (String) annotation.getValueOf("description");
+	private Forward annotationToForward(FrankAnnotation annotation, FrankClass clazz) {
+		String name = Utils.substituteJavadocTags((String) annotation.getValueOf("name"), clazz);
+		String description = Utils.substituteJavadocTags((String) annotation.getValueOf("description"), clazz);
 
 		if (description.isEmpty()) {
 			description = null;

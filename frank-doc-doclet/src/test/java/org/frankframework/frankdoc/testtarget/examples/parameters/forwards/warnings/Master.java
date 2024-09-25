@@ -2,7 +2,6 @@ package org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warn
 
 /**
  * @ff.parameter myParamWithoutDescription
- * @ff.forward myForwardWithoutDescription
  *
  * @author martijn
  *

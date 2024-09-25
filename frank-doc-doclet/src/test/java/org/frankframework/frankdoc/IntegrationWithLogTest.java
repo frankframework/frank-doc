@@ -82,7 +82,6 @@ public class IntegrationWithLogTest {
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel.populate(digesterRulesUrl, null, startClassName, classRepository);
 			appender.assertLogged("FrankElement [org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.Master] has a [@ff.parameter] tag without a value: [myParamWithoutDescription]");
-			appender.assertLogged("FrankElement [org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.Master] has a [@ff.forward] tag without a value: [myForwardWithoutDescription]");
 		}
 	}
 
