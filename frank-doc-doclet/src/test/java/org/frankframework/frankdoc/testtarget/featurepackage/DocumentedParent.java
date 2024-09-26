@@ -1,5 +1,8 @@
 package org.frankframework.frankdoc.testtarget.featurepackage;
 
+import org.frankframework.doc.Category;
+import org.frankframework.doc.CategoryType;
+
 /**
  * Sends a message using a {@link ISender sender} and optionally receives a reply from the same sender, or
  * from a {@link ICorrelatedPullingListener listener}.
@@ -18,6 +21,8 @@ package org.frankframework.frankdoc.testtarget.featurepackage;
  *
  * @author  Gerrit van Brakel
  */
+@Category(CategoryType.BASIC)
+@Category(CategoryType.ADVANCED)
 public class DocumentedParent implements HasSender {
 
 	private String destinationName;

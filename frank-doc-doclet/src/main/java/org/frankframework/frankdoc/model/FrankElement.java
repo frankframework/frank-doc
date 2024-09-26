@@ -44,12 +44,13 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Models a Java class that can be referred to in a Frank configuration.
@@ -62,8 +63,9 @@ public class FrankElement implements Comparable<FrankElement> {
 	public static final String JAVADOC_FORWARD = "@ff.forward";
 	public static final String JAVADOC_FORWARD_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forward";
 	public static final String JAVADOC_FORWARDS_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forwards";
+	public static final String JAVADOC_LABEL_ANNOTATION_CLASSNAME = "org.frankframework.doc.Label";
+	public static final String JAVADOC_LABELS_ANNOTATION_CLASSNAME = "org.frankframework.doc.Categories";
 	public static final String JAVADOC_SEE = "@see";
-	public static final String LABEL = "org.frankframework.doc.Label";
 	public static final String LABEL_NAME = "name";
 
 	private static final Pattern JAVADOC_SEE_PATTERN = Pattern.compile("<a href=[\"'](.*?)[\"']>(.*?)<\\/a>");
@@ -114,7 +116,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	private @Getter List<ParsedJavaDocTag> tags = new ArrayList<>();
 	private @Getter List<Note> notes = new ArrayList<>();
 
-	private @Getter List<FrankLabel> labels = new ArrayList<>();
+	private @Getter Map<String, List<String>> labels = new HashMap<>();
 
 	FrankElement(FrankClass clazz, LabelValues labelValues) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
@@ -289,16 +291,49 @@ public class FrankElement implements Comparable<FrankElement> {
 			.toList();
 	}
 
-	private List<FrankLabel> parseLabelAnnotations(FrankClass clazz, LabelValues labelValues) {
+	private boolean isLabelAnnotation(FrankAnnotation annotation) {
+		// Check if annotation is a singular label.
+		if (annotation.getAnnotation(JAVADOC_LABEL_ANNOTATION_CLASSNAME) != null)
+			return true;
+
+		// Check if annotation contains a list of label annotations.
+		Object value = annotation.getValue();
+
+		if (value instanceof FrankAnnotation[] valueAnnotations) {
+			if (valueAnnotations.length > 0) {
+				return valueAnnotations[0].getAnnotation(JAVADOC_LABEL_ANNOTATION_CLASSNAME) != null;
+			}
+		}
+
+		return false;
+	}
+
+	private Map<String, List<String>> parseLabelAnnotations(FrankClass clazz, LabelValues labelValues) {
 		return Arrays.stream(clazz.getAnnotations())
-			.filter(a -> a.getAnnotation(LABEL) != null)
-			.map(a -> parseLabelAnnotation(a, labelValues))
-			.toList();
+			.filter(this::isLabelAnnotation)
+			.flatMap(annotation -> parseLabelAnnotation(annotation, labelValues))
+			.collect(Collectors.groupingBy(FrankLabel::getName, Collectors.mapping(FrankLabel::getValue, Collectors.toList())));
+	}
+
+	private Stream<FrankLabel> parseLabelAnnotation(FrankAnnotation annotation, LabelValues labelValues) {
+		Object value = annotation.getValue();
+
+		if (value instanceof FrankAnnotation[] annotations) {
+			return Arrays.stream(annotations)
+				.map(a -> annotationToFrankLabel(a, labelValues));
+		}
+
+		FrankAnnotation labelAnnotation = annotation.getAnnotation(JAVADOC_LABEL_ANNOTATION_CLASSNAME);
+		if (labelAnnotation != null) {
+			return Stream.of(annotationToFrankLabel(annotation, labelValues));
+		}
+
+		return Stream.empty();
 	}
 
 	// This function adds the label, and it's corresponding value to the global LabelValues as a side effect.
-	private FrankLabel parseLabelAnnotation(FrankAnnotation labelAddingAnnotation, LabelValues labelValues) {
-		String label = labelAddingAnnotation.getAnnotation(LABEL).getValueOf(LABEL_NAME).toString();
+	private FrankLabel annotationToFrankLabel(FrankAnnotation labelAddingAnnotation, LabelValues labelValues) {
+		String label = labelAddingAnnotation.getAnnotation(JAVADOC_LABEL_ANNOTATION_CLASSNAME).getValueOf(LABEL_NAME).toString();
 		Object rawValue = labelAddingAnnotation.getValue();
 
 		if (rawValue instanceof FrankEnumConstant enumConstant) {

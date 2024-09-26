@@ -46,20 +46,17 @@
                     "type":"Module"
                 }
             ],
-            "labels":[
-                {
-                    "label":"myLabel",
-                    "value":"basic"
-                },
-                {
-                    "label":"myIntLabel",
-                    "value":"3"
-                },
-                {
-                    "label":"myEnumLabel",
-                    "value":"second"
-                }
-            ]
+            "labels":{
+                "myLabel":[
+                    "basic"
+                ],
+                "myEnumLabel":[
+                    "second"
+                ],
+                "myIntLabel":[
+                    "3"
+                ]
+            }
         },
         {
             "name":"Module",
@@ -73,6 +70,7 @@
             "name":"Object",
             "fullName":"java.lang.Object",
             "elementNames":[
+                
             ],
             "attributes":[
                 {
@@ -83,6 +81,7 @@
         }
     ],
     "enums":[
+        
     ],
     "labels":[
         {

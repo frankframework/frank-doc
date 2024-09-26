@@ -16,12 +16,14 @@
 package org.frankframework.doc;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.TYPE;
 
 @Target(TYPE)
 @Label(name="Category")
+@Repeatable(Categories.class)
 @Documented
 public @interface Category {
 	@LabelValue CategoryType value();

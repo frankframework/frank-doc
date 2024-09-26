@@ -42,7 +42,7 @@
             ]
         }
     ],
-    "elements":[
+    "elements": [
         {
             "name":"Documented",
             "fullName":"org.frankframework.frankdoc.testtarget.featurepackage.Documented",
@@ -82,12 +82,11 @@
                 }
             ],
             "parametersDescription":"Any parameters defined on the pipe will be handed to the sender, if this is a ISenderWithParameters.",
-            "labels":[
-                {
-                    "label":"Category",
-                    "value":"Basic"
-                }
-            ]
+            "labels": {
+				"Category": [
+					"Basic"
+				]
+			}
         },
         {
             "name":"DocumentedParent",
@@ -141,7 +140,13 @@
                     "name":"&lt;defined-by-sender&gt;",
                     "description":"any forward, as returned by name by {@link ISender sender}"
                 }
-            ]
+            ],
+			"labels": {
+				"Category":[
+					"Basic",
+					"Advanced"
+				]
+			}
         },
         {
             "name":"Module",
@@ -170,6 +175,7 @@
         {
             "label":"Category",
             "values":[
+				"Advanced",
                 "Basic"
             ]
         }
