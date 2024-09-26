@@ -172,11 +172,12 @@ public class FrankDocJsonFactory {
 
 		for(String sortKey: sortKeys) {
 			if(sortKey.equals(Constants.MODULE_ELEMENT_NAME)) {
-				builder.add(sortKey, getElementReferencedEntityRoot());
+				JsonObject element = getElementReferencedEntityRoot();
+				builder.add(element.getString("fullName"), element);
 			} else {
 				elementsByName.get(sortKey).stream()
 						.map(this::getElement)
-						.forEach(element -> builder.add(sortKey, element));
+						.forEach(element -> builder.add(element.getString("fullName"), element));
 			}
 		}
 		return builder.build();
