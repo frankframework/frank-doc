@@ -20,7 +20,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.DocWriterNew;
+import org.frankframework.frankdoc.FrankDocXsdFactory;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.LogUtil;
 
@@ -35,7 +35,7 @@ import java.util.function.Predicate;
  * <li> The structure is very similar in the XML schema for config children and
  * attributes. In both cases, we have cumulative groups that include inherited
  * items and declared groups that hold only items at the present level of the
- * inheritance hierarchy. Please see this in action at {@link DocWriterNew}.
+ * inheritance hierarchy. Please see this in action at {@link FrankDocXsdFactory}.
  * </ul>
  *
  * @author martijn

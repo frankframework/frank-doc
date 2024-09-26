@@ -20,17 +20,16 @@ import lombok.Getter;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-class DocWriterNewXmlUtils {
-	private static Logger log = LogUtil.getLogger(DocWriterNewXmlUtils.class);
+class FrankDocXsdFactoryXmlUtils {
+	private static Logger log = LogUtil.getLogger(FrankDocXsdFactoryXmlUtils.class);
 
 	static final String XML_SCHEMA_URI = "http://www.w3.org/2001/XMLSchema";
 
-	private DocWriterNewXmlUtils() {
+	private FrankDocXsdFactoryXmlUtils() {
 	}
 
 	static XmlBuilder getXmlSchema(String version) {

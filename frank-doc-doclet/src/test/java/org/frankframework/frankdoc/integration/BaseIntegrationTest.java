@@ -1,7 +1,7 @@
 package org.frankframework.frankdoc.integration;
 
 import org.frankframework.frankdoc.AttributeTypeStrategy;
-import org.frankframework.frankdoc.DocWriterNew;
+import org.frankframework.frankdoc.FrankDocXsdFactory;
 import org.frankframework.frankdoc.FrankDocJsonFactory;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.XsdVersion;
@@ -48,9 +48,8 @@ public abstract class BaseIntegrationTest {
 	}
 
 	protected String convertModelToXsd(FrankDocModel model, XsdVersion version, AttributeTypeStrategy attributeTypeStrategy) {
-		var docWriter = new DocWriterNew(model, attributeTypeStrategy, "1.2.3-SNAPSHOT");
-		docWriter.init(model.getRootClassName(), version);
-		return docWriter.getSchema();
+		var factory = new FrankDocXsdFactory(model, attributeTypeStrategy, "1.2.3-SNAPSHOT", model.getRootClassName(), version);
+		return factory.getSchema();
 	}
 
 	protected void assertXsdEqual(String actual, String fileName) throws IOException {
