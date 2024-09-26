@@ -41,7 +41,7 @@ public class DocletBuilder implements jdk.javadoc.doclet.Doclet {
 
 		boolean result = true;
 		try {
-			new Doclet(docTrees, elements, options).run();
+			new Doclet(docTrees, elements, options).generate();
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			result = false;

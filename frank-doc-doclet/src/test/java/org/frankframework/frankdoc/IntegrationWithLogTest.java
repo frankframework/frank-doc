@@ -17,31 +17,24 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class IntegrationWithLogTest {
 	@Test
 	public void whenPluralConfigChildHasMultipleCandidatesForDefaultElementThenLogged() throws Exception {
-		TestAppender appender = TestAppender.newBuilder().build();
-		TestAppender.addToRootLogger(appender);
-		try {
+		try (TestAppender appender = TestAppender.newBuilder().build()) {
 			String thePackage = "org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.";
 			String startClassName = thePackage + "Master";
 			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel model = FrankDocModel.populate(digesterRulesUrl, null, startClassName, classRepository);
-			DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "1.2.3-SNAPSHOT");
-			docWriter.init(startClassName, XsdVersion.STRICT);
-			String actualXsd = docWriter.getSchema();
+			FrankDocXsdFactory factory = new FrankDocXsdFactory(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "1.2.3-SNAPSHOT", startClassName, XsdVersion.STRICT);
+			String actualXsd = factory.getSchema();
 			String expectedXsd = TestUtil.getTestFile("/doc/examplesExpected/testPluralConflictDefaultOption.xsd");
 			TestUtil.assertEqualsIgnoreCRLF(expectedXsd, actualXsd);
 			appender.assertLogged("ConfigChildSet [ConfigChildSet(ObjectConfigChild(MyElement.registerB(IChild1)), ObjectConfigChild(MyElement.registerB(IChild2)))] has multiple candidates for the default element: [org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Child1, org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Child2]");
 			appender.assertLogged("ConfigChildSet [ConfigChildSet(ObjectConfigChild(Master.registerA(IInterface1)), ObjectConfigChild(Master.registerA(IInterface2)))] has multiple candidates for the default element: [org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Interface1, org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Interface2]");
-		} finally {
-			TestAppender.removeAppender(appender);
 		}
 	}
 
 	@Test
 	public void whenAttributeOverloadedWithTypeConflictThenLogged() throws Exception {
-		TestAppender appender = TestAppender.newBuilder().build();
-		TestAppender.addToRootLogger(appender);
-		try {
+		try (TestAppender appender = TestAppender.newBuilder().build()) {
 			String thePackage = "org.frankframework.frankdoc.testtarget.attribute.overload.";
 			String startClassName = thePackage + "Master";
 			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
@@ -59,46 +52,34 @@ public class IntegrationWithLogTest {
 			appender.assertLogged("Class [org.frankframework.frankdoc.testtarget.attribute.overload.Master] has overloaded declared or inherited attribute setters. Type of attribute [overloadedEnum] can be any of [java.lang.String, org.frankframework.frankdoc.testtarget.attribute.overload.MyEnum]");
 			appender.assertLogged("In Frank element [Master]: setter [setMyAttribute] has type [org.frankframework.frankdoc.testtarget.attribute.overload.MyEnum] while the getter has type [java.lang.String]");
 			appender.assertLogged("In Frank element [Master]: setter [setMyAttribute2] has type [java.lang.String] while the getter has type [org.frankframework.frankdoc.testtarget.attribute.overload.MyEnum]");
-		} finally {
-			TestAppender.removeAppender(appender);
 		}
 	}
 
 	@Test
 	public void testContradictionsWithDefaultAndMandatoryAreLogged() throws Exception {
-		TestAppender appender = TestAppender.newBuilder().build();
-		TestAppender.addToRootLogger(appender);
-		try {
+		try (TestAppender appender = TestAppender.newBuilder().build()) {
 			String thePackage = "org.frankframework.frankdoc.testtarget.attributeDefault.";
 			String startClassName = thePackage + "Master";
 			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel model = FrankDocModel.populate(digesterRulesUrl, null, startClassName, classRepository);
-			DocWriterNew docWriter = new DocWriterNew(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "1.2.3-SNAPSHOT");
-			docWriter.init(startClassName, XsdVersion.STRICT);
-			String actualXsd = docWriter.getSchema();
+			FrankDocXsdFactory factory = new FrankDocXsdFactory(model, AttributeTypeStrategy.ALLOW_PROPERTY_REF, "1.2.3-SNAPSHOT", startClassName, XsdVersion.STRICT);
+			String actualXsd = factory.getSchema();
 			String expectedXsd = TestUtil.getTestFile("/doc/examplesExpected/attributeDefault.xsd");
 			TestUtil.assertEqualsIgnoreCRLF(expectedXsd, actualXsd);
 			appender.assertLogged("Attribute [Master.mandatoryWithDefault] is [MANDATORY], but it also has a default value: [something]");
-		} finally {
-			TestAppender.removeAppender(appender);
 		}
 	}
 
 	@Test
 	public void whenParameterOrForwardLacksDescriptionThenLogged() throws Exception {
-		TestAppender appender = TestAppender.newBuilder().build();
-		TestAppender.addToRootLogger(appender);
-		try {
+		try (TestAppender appender = TestAppender.newBuilder().build()) {
 			String thePackage = "org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.";
 			String startClassName = thePackage + "Master";
 			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
 			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
 			FrankDocModel.populate(digesterRulesUrl, null, startClassName, classRepository);
 			appender.assertLogged("FrankElement [org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.Master] has a [@ff.parameter] tag without a value: [myParamWithoutDescription]");
-			appender.assertLogged("FrankElement [org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.Master] has a [@ff.forward] tag without a value: [myForwardWithoutDescription]");
-		} finally {
-			TestAppender.removeAppender(appender);
 		}
 	}
 }

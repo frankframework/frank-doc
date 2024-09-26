@@ -2,6 +2,7 @@ package org.frankframework.frankdoc.testtarget.featurepackage;
 
 import org.frankframework.doc.Category;
 import org.frankframework.doc.CategoryType;
+import org.frankframework.doc.Forward;
 
 /**
  * Sends a message using a {@link ISender sender} and optionally receives a reply from the same sender, or
@@ -12,15 +13,14 @@ import org.frankframework.doc.CategoryType;
  * and it is used at runtime instead of the stubFilename specified by the attribute. A lookup of the
  * file for this stubFilename will be done at runtime, while the file for the stubFilename specified
  * as an attribute will be done at configuration time.
-
- * @ff.forward timeout
- * @ff.forward illegalResult
- * @ff.forward presumedTimeout
- * @ff.forward interrupt
- * @ff.forward "&lt;defined-by-sender&gt;" any forward, as returned by name by {@link ISender sender}
  *
  * @author  Gerrit van Brakel
  */
+@Forward(name = "timeout")
+@Forward(name = "illegalResult")
+@Forward(name = "presumedTimeout")
+@Forward(name = "interrupt")
+@Forward(name = "&lt;defined-by-sender&gt;", description = "any forward, as returned by name by {@link ISender sender}")
 @Category(CategoryType.BASIC)
 @Category(CategoryType.ADVANCED)
 public class DocumentedParent implements HasSender {

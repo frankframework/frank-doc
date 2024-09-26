@@ -25,9 +25,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addComplexType;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.addElementWithType;
-import static org.frankframework.frankdoc.DocWriterNewXmlUtils.getXmlSchema;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addComplexType;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addElementWithType;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.getXmlSchema;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 

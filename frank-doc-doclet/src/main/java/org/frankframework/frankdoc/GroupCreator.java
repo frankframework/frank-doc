@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 
 /**
  * Helper class for building attribute groups and config child groups from the model.
- * See {@link DocWriterNew} to understand what we try to achieve.
+ * See {@link FrankDocXsdFactory} to understand what we try to achieve.
  *
  * @author martijn
  *
