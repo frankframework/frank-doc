@@ -47,11 +47,11 @@
                 }
             ],
             "labels": {
-                "myLabel": [
-                    "basic"
-                ],
                 "myEnumLabel": [
                     "second"
+                ],
+                "myLabel": [
+                    "basic"
                 ],
                 "myIntLabel": [
                     "3"
@@ -83,6 +83,7 @@
         {
             "label": "myEnumLabel",
             "values": [
+                "first",
                 "second"
             ]
         },

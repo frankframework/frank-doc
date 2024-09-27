@@ -170,7 +170,7 @@ public class FrankDocJsonFactory {
 
 		final var builder = bf.createObjectBuilder();
 
-		for(String sortKey: sortKeys) {
+		for (String sortKey: sortKeys) {
 			if(sortKey.equals(Constants.MODULE_ELEMENT_NAME)) {
 				JsonObject element = getElementReferencedEntityRoot();
 				builder.add(element.getString("fullName"), element);

@@ -36,6 +36,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * A method on a class, which indicates which child elements can be used.
+ * For example for a Configuration: registerInclude, registerAdapter, setSapSystems and setMonitoring.
+ *
+ * <p>
+ * All methods with <code>set</code> are singular and can only be used once within the current element.
+ * All methods with <code>register</code> are plural and can be used multiple times within the current element.
+ * </p>
+ */
 public abstract class ConfigChild extends ElementChild {
 	private static Logger log = LogUtil.getLogger(ConfigChild.class);
 
