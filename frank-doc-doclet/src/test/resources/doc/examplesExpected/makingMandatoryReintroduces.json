@@ -2,18 +2,6 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "groups": [
-        {
-            "name": "Other",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild",
-                "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild2",
-                "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.IInterface",
-                "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master",
-                "Module"
-            ]
-        }
-    ],
     "types": [
         {
             "name": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild",

@@ -2,16 +2,6 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "groups": [
-        {
-            "name": "Other",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.entity.reference.Adapter",
-                "org.frankframework.frankdoc.testtarget.entity.reference.Configuration",
-                "Module"
-            ]
-        }
-    ],
     "types": [
         {
             "name": "org.frankframework.frankdoc.testtarget.entity.reference.Adapter",

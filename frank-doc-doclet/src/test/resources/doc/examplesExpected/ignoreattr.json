@@ -2,27 +2,6 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "groups": [
-        {
-            "name": "Group 1",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.examples.ignore.attributes.IChild1"
-            ]
-        },
-        {
-            "name": "Group 2",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.examples.ignore.attributes.IChild2"
-            ]
-        },
-        {
-            "name": "Other",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.examples.ignore.attributes.Master",
-                "Module"
-            ]
-        }
-    ],
     "types": [
         {
             "name": "org.frankframework.frankdoc.testtarget.examples.ignore.attributes.IChild1",

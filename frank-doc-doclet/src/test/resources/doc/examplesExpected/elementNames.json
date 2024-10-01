@@ -2,17 +2,6 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "groups": [
-        {
-            "name": "Other",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.element.name.IFirst",
-                "org.frankframework.frankdoc.testtarget.element.name.IThird",
-                "org.frankframework.frankdoc.testtarget.element.name.Master",
-                "Module"
-            ]
-        }
-    ],
     "types": [
         {
             "name": "org.frankframework.frankdoc.testtarget.element.name.IFirst",

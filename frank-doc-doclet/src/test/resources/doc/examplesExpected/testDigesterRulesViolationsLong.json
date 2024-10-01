@@ -2,18 +2,6 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "groups": [
-        {
-            "name": "Other",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.examples.pattern.violation.longPattern.B",
-                "org.frankframework.frankdoc.testtarget.examples.pattern.violation.longPattern.C",
-                "org.frankframework.frankdoc.testtarget.examples.pattern.violation.longPattern.D",
-                "org.frankframework.frankdoc.testtarget.examples.pattern.violation.longPattern.A",
-                "Module"
-            ]
-        }
-    ],
     "types": [
         {
             "name": "org.frankframework.frankdoc.testtarget.examples.pattern.violation.longPattern.B",

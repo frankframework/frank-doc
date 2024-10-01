@@ -2,17 +2,6 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "groups": [
-        {
-            "name": "Other",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.examples.reintroduce.IInterface",
-                "org.frankframework.frankdoc.testtarget.examples.reintroduce.MyConfigChild",
-                "org.frankframework.frankdoc.testtarget.examples.reintroduce.Master",
-                "Module"
-            ]
-        }
-    ],
     "types": [
         {
             "name": "org.frankframework.frankdoc.testtarget.examples.reintroduce.IInterface",

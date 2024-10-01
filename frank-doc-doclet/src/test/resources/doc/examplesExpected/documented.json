@@ -2,22 +2,6 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "groups": [
-        {
-            "name": "Sender",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.featurepackage.ISender"
-            ]
-        },
-        {
-            "name": "Other",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.featurepackage.ICorrelatedPullingListener",
-                "org.frankframework.frankdoc.testtarget.featurepackage.Documented",
-                "Module"
-            ]
-        }
-    ],
     "types": [
         {
             "name": "org.frankframework.frankdoc.testtarget.featurepackage.ICorrelatedPullingListener",

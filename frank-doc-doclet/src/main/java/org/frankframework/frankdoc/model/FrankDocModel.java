@@ -68,8 +68,6 @@ public class FrankDocModel {
 
 	private final @Getter Map<String, List<ConfigChildSetterDescriptor>> configChildDescriptors = new HashMap<>();
 
-	private final FrankDocGroupFactory groupFactory;
-	private @Getter List<FrankDocGroup> groups;
 	private @Getter List<Group> propertyGroups = new ArrayList<>();
 
 	// We want to iterate FrankElement in the order they are created, to be able
@@ -91,7 +89,6 @@ public class FrankDocModel {
 
 	FrankDocModel(FrankClassRepository classRepository, String rootClassName) {
 		this.classRepository = classRepository;
-		this.groupFactory = new FrankDocGroupFactory(classRepository);
 		this.rootClassName = rootClassName;
 	}
 
@@ -119,7 +116,7 @@ public class FrankDocModel {
 			result.setElementNamesOfFrankElements(rootClassName);
 
 			// Build the groups based on the element types, which are available.
-			result.buildGroups();
+			result.addLeftOverConfigChildren();
 			result.parsePropertyGroups(appConstantsPropertiesUrl);
 		} catch(Exception e) {
 			log.fatal("Could not populate FrankDocModel", e);
@@ -615,10 +612,8 @@ public class FrankDocModel {
 			return allTypes.get(clazz.getName());
 		}
 
-		FrankDocGroup group = groupFactory.findOrCreateGroup(clazz);
-
-		log.trace("Creating ElementType [{}] with group [{}]", clazz::getName, group::getName);
-		final ElementType result = new ElementType(clazz, group, classRepository);
+		log.trace("Creating ElementType [{}]", clazz::getName);
+		final ElementType result = new ElementType(clazz, classRepository);
 		// If a containing FrankElement contains the type being created, we do not
 		// want recursion.
 		allTypes.put(result.getFullName(), result);
@@ -917,21 +912,7 @@ public class FrankDocModel {
 			.forEach(f -> f.setInterfaceBased(true));
 	}
 
-	public void buildGroups() {
-		Map<String, List<ElementType>> groupsElementTypes = allTypes.values().stream()
-				.collect(Collectors.groupingBy(f -> f.getGroup().getName()));
-		groups = groupFactory.getAllGroups();
-		for(FrankDocGroup group: groups) {
-			// The default applies to group Other in case it has no ElementType objects.
-			// In this case we still need group Other for all items in elementsOutsideConfigChildren.
-			// This is typically one element that plays the role of Configuration in some tests.
-			List<ElementType> elementTypes = new ArrayList<>();
-			if(groupsElementTypes.containsKey(group.getName())) {
-				elementTypes = new ArrayList<>(groupsElementTypes.get(group.getName()));
-			}
-			Collections.sort(elementTypes);
-			group.setElementTypes(elementTypes);
-		}
+	public void addLeftOverConfigChildren() {
 		final Map<String, FrankElement> leftOvers = new HashMap<>(allElements);
 		allTypes.values().stream().flatMap(et -> et.getSyntax2Members().stream()).forEach(f -> leftOvers.remove(f.getFullName()));
 		elementsOutsideConfigChildren = leftOvers.values().stream()

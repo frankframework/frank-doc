@@ -80,10 +80,7 @@ limitations under the License.
  * The model is not only used to generate the XML Schema file (<code>ibisdoc.xsd</code>). It is also
  * used to generate a website with reference documentation. That website documents all tags
  * ({@link org.frankframework.frankdoc.model.FrankElement} objects) that can be used. The {@link org.frankframework.frankdoc.model.FrankElement} objects are grouped
- * by the implemented Java interface (interface-implementing {@link org.frankframework.frankdoc.model.ElementType} objects). There
- * is an additional group "Other" for all {@link org.frankframework.frankdoc.model.FrankElement} that belong to a non-interface-based
- * {@link org.frankframework.frankdoc.model.ElementType} (e.g. <code>org.frankframework.core.PipeForward</code>). These table-of-contents (TOC)
- * groups are modeled by model class {@link org.frankframework.frankdoc.model.FrankDocGroup}.
+ * by the implemented Java interface (interface-implementing {@link org.frankframework.frankdoc.model.ElementType} objects).
  * <p>
  * Class {@link org.frankframework.frankdoc.model.FrankDocModel} holds the entire model (not shown in the diagram). Two model classes
  * have not been explained yet: {@link org.frankframework.frankdoc.model.ConfigChildSet} and
@@ -99,14 +96,6 @@ limitations under the License.
  * calculates the name of this XML element. Remember that XML elements in Frank configs not only
  * express the referenced Java class but also the role in which this Java class is used. This is
  * why the method has an {@link org.frankframework.frankdoc.model.ElementRole} argument.
- * <p>
- * {@link org.frankframework.frankdoc.model.FrankElement}-s in
- * {@link org.frankframework.frankdoc.model.FrankDocGroup} "Other",
- * like <code>&lt;Forward&gt;</code> and <code>&lt;Param&gt;</code>, are
- * named in a special way. They usually belong to a single
- * {@link org.frankframework.frankdoc.model.ElementRole}. Their name is
- * based on the syntax 1 name of that {@link org.frankframework.frankdoc.model.ElementRole}.
- * <p>
  * This way of naming introduces potential conflicts when deprecated
  * {@link org.frankframework.frankdoc.model.FrankElement}-s are included. These potential conflicts
  * are explained in the following subsections, with the solutions applied to prevent them. There are

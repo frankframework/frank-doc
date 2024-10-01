@@ -2,16 +2,6 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "groups": [
-        {
-            "name": "Other",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.IChild",
-                "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master",
-                "Module"
-            ]
-        }
-    ],
     "types": [
         {
             "name": "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.IChild",

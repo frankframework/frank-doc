@@ -2,17 +2,6 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "groups": [
-        {
-            "name": "Other",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.examples.parameters.Child1",
-                "org.frankframework.frankdoc.testtarget.examples.parameters.Child2",
-                "org.frankframework.frankdoc.testtarget.examples.parameters.Master",
-                "Module"
-            ]
-        }
-    ],
     "types": [
         {
             "name": "org.frankframework.frankdoc.testtarget.examples.parameters.Child1",

@@ -27,10 +27,8 @@ import org.frankframework.frankdoc.model.ElementChild;
 import org.frankframework.frankdoc.model.ElementType;
 import org.frankframework.frankdoc.model.EnumValue;
 import org.frankframework.frankdoc.model.FrankAttribute;
-import org.frankframework.frankdoc.model.FrankDocGroup;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.model.FrankElement;
-import org.frankframework.frankdoc.model.FrankLabel;
 import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.ParsedJavaDocTag;
@@ -77,7 +75,6 @@ public class FrankDocJsonFactory {
 			if(frankFrameworkVersion != null) {
 				result.add("metadata", getMetadata());
 			}
-			result.add("groups", getGroups());
 			result.add("types", getTypes());
 			result.add("elements", getElements());
 			result.add("enums", getEnums());
@@ -94,32 +91,6 @@ public class FrankDocJsonFactory {
 		JsonObjectBuilder metadata = bf.createObjectBuilder();
 		metadata.add("version", frankFrameworkVersion);
 		return metadata.build();
-	}
-
-	private JsonArray getGroups() throws JsonException {
-		JsonArrayBuilder result = bf.createArrayBuilder();
-		for(FrankDocGroup group: model.getGroups()) {
-			result.add(getGroup(group));
-		}
-		return result.build();
-	}
-
-	private JsonObject getGroup(FrankDocGroup group) throws JsonException {
-		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", group.getName());
-		final JsonArrayBuilder types = bf.createArrayBuilder();
-		group.getElementTypes().stream()
-				.map(ElementType::getFullName)
-				.forEach(types::add);
-
-
-
-		if(group.getName().equals(FrankDocGroup.GROUP_NAME_OTHER)) {
-			elementsOutsideChildren.forEach(f -> types.add(f.getFullName()));
-			types.add(Constants.MODULE_ELEMENT_NAME);
-		}
-		result.add("types", types);
-		return result.build();
 	}
 
 	private JsonArray getTypes() {

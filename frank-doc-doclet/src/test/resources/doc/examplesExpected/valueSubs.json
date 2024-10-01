@@ -2,16 +2,6 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "groups": [
-        {
-            "name": "Other",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.examples.valueSubs.Other",
-                "org.frankframework.frankdoc.testtarget.examples.valueSubs.WithValueSubstitutions",
-                "Module"
-            ]
-        }
-    ],
     "types": [
         {
             "name": "org.frankframework.frankdoc.testtarget.examples.valueSubs.Other",

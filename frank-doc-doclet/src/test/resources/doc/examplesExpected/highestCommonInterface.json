@@ -2,17 +2,6 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "groups": [
-        {
-            "name": "Other",
-            "types": [
-                "org.frankframework.frankdoc.testtarget.highest.commonInterface.IExtension",
-                "org.frankframework.frankdoc.testtarget.highest.commonInterface.IListener",
-                "org.frankframework.frankdoc.testtarget.highest.commonInterface.Master",
-                "Module"
-            ]
-        }
-    ],
     "types": [
         {
             "name": "org.frankframework.frankdoc.testtarget.highest.commonInterface.IExtension",
