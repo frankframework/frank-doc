@@ -114,8 +114,6 @@ public class FrankDocModel {
 			result.setOverriddenFrom();
 			result.createConfigChildSets();
 			result.setElementNamesOfFrankElements(rootClassName);
-
-			// Build the groups based on the element types, which are available.
 			result.addLeftOverConfigChildren();
 			result.parsePropertyGroups(appConstantsPropertiesUrl);
 		} catch(Exception e) {

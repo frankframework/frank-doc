@@ -64,9 +64,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	public static final String JAVADOC_FORWARD_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forward";
 	public static final String JAVADOC_FORWARDS_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forwards";
 	public static final String JAVADOC_LABEL_ANNOTATION_CLASSNAME = "org.frankframework.doc.Label";
-	public static final String JAVADOC_LABELS_ANNOTATION_CLASSNAME = "org.frankframework.doc.Categories";
 	public static final String JAVADOC_SEE = "@see";
-	public static final String JAVADOC_TAG = "@ff.tag";
 	public static final String LABEL = "org.frankframework.doc.Label";
 	public static final String LABEL_NAME = "name";
 
