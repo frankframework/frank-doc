@@ -335,7 +335,7 @@ public final class Utils {
 	}
 
 	private static String getLiteralValueReplacement(String value) {
-		return "`" + StringEscapeUtils.escapeHtml4(value) + "`";
+		return String.format("`%s`", StringEscapeUtils.escapeHtml4(value));
 	}
 
 	private static String getClassFieldValueReplacement(String ref, FrankClass context) {
