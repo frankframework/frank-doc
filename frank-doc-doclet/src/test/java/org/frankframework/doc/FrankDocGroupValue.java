@@ -36,6 +36,7 @@ public enum FrankDocGroupValue {
 	MONITORING,
 	@EnumLabel("Job")
 	JOB,
+	// This label is automatically added to the Module element.
 	@EnumLabel("Other")
 	OTHER,
 }

@@ -171,6 +171,11 @@ public class FrankDocJsonFactory {
 		JsonArrayBuilder xmlElementNames = bf.createArrayBuilder();
 		xmlElementNames.add(Constants.MODULE_ELEMENT_NAME);
 		result.add("elementNames", xmlElementNames.build());
+
+		final var labelBuilder = bf.createObjectBuilder();
+		labelBuilder.add("FrankDocGroup", bf.createArrayBuilder(List.of(Constants.MODULE_ELEMENT_FRANK_DOC_GROUP)));
+		result.add("labels", labelBuilder);
+
 		return result.build();
 	}
 

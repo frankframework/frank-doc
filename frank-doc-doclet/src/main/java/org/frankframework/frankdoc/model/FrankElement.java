@@ -319,18 +319,20 @@ public class FrankElement implements Comparable<FrankElement> {
 			.flatMap(annotation -> parseLabelAnnotation(annotation, labelValues))
 			.collect(groupingBy(FrankLabel::getName, Collectors.mapping(FrankLabel::getValue, Collectors.toList())));
 
-		// Recursively search the superclass and interfaces for label annotations.
-		FrankClass superClass = clazz.getSuperclass();
-		if (superClass != null) {
-			labels = mergeLabels(labels, parseLabelAnnotations(superClass, labelValues));
-		}
 
+
+		// Recursively search the superclass and interfaces for label annotations.
 		var interfaceLabels = Arrays.stream(clazz.getInterfaces())
 			.map(i -> parseLabelAnnotations(i, labelValues))
 			.toList();
 
 		for (var map2 : interfaceLabels) {
 			labels = mergeLabels(labels, map2);
+		}
+
+		FrankClass superClass = clazz.getSuperclass();
+		if (superClass != null) {
+			labels = mergeLabels(labels, parseLabelAnnotations(superClass, labelValues));
 		}
 
 		return labels;

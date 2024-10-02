@@ -1,4 +1,4 @@
 package org.frankframework.frankdoc.testtarget.category;
 
-public interface IChild extends ParentOfIChild {
+public class ChildConfigChildC implements IChild {
 }
