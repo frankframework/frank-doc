@@ -146,7 +146,7 @@
         "org.frankframework.frankdoc.testtarget.examples.simple.Start": {
             "name": "Start",
             "fullName": "org.frankframework.frankdoc.testtarget.examples.simple.Start",
-            "description": "Description of Start. Value of VARIABLE is <code>variable value</code>. Value of TheEnum.ENUM_CONSTANT is <code>enum constant</code>.",
+            "description": "Description of Start. Value of VARIABLE is <code>variable value</code>. Value of TheEnum.ENUM_CONSTANT is <code>enum constant</code>.\n Value of literal is `This is a literal`.",
             "parent": "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart",
             "elementNames": [
                 "Start"

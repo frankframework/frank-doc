@@ -6,6 +6,7 @@ import org.frankframework.doc.FrankDocGroupValue;
 
 /**
  * Description of Start. Value of VARIABLE is {@value #VARIABLE}. Value of TheEnum.ENUM_CONSTANT is {@value org.frankframework.frankdoc.testtarget.examples.simple.Start.TheEnum#ENUM_CONSTANT}.
+ * Value of literal is {@literal This is a literal}.
  * @author M66C303
  *
  */
