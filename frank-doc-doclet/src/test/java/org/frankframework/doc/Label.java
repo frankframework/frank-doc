@@ -16,7 +16,9 @@
 
 package org.frankframework.doc;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -24,8 +26,10 @@ import java.lang.annotation.Target;
 /**
  * Marker Annotation for Label annotations.
  */
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
+@Inherited
 public @interface Label {
 	String name();
 }

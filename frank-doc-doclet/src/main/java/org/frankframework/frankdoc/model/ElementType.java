@@ -84,14 +84,12 @@ public class ElementType implements Comparable<ElementType> {
 
 	private final InterfaceHierarchyItem interfaceHierarchy;
 	private @Getter List<ElementType> commonInterfaceHierarchy;
-	private final @Getter FrankDocGroup group;
 	private final @Getter String defaultElement;
 
-	ElementType(FrankClass clazz, FrankDocGroup group, FrankClassRepository repository) {
+	ElementType(FrankClass clazz, FrankClassRepository repository) {
 		interfaceHierarchy = new InterfaceHierarchyItem(clazz);
 		members = new ArrayList<>();
 		this.fromJavaInterface = clazz.isInterface();
-		this.group = group;
 		this.defaultElement = parseDefaultElementTag(clazz, repository);
 	}
 

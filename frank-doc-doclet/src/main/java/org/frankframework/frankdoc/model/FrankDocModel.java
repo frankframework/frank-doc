@@ -68,8 +68,6 @@ public class FrankDocModel {
 
 	private final @Getter Map<String, List<ConfigChildSetterDescriptor>> configChildDescriptors = new HashMap<>();
 
-	private final FrankDocGroupFactory groupFactory;
-	private @Getter List<FrankDocGroup> groups;
 	private @Getter List<Group> propertyGroups = new ArrayList<>();
 
 	// We want to iterate FrankElement in the order they are created, to be able
@@ -91,7 +89,6 @@ public class FrankDocModel {
 
 	FrankDocModel(FrankClassRepository classRepository, String rootClassName) {
 		this.classRepository = classRepository;
-		this.groupFactory = new FrankDocGroupFactory(classRepository);
 		this.rootClassName = rootClassName;
 	}
 
@@ -100,10 +97,15 @@ public class FrankDocModel {
 		try {
 			log.trace("Populating FrankDocModel");
 			result.createConfigChildDescriptorsFrom(digestRulesUrl);
+
+			// Creates the first root element, from which will be branched.
+			// This is "Configuration".
 			result.findOrCreateRootFrankElement(rootClassName);
+			// Recursively finds all potential elements.
 			result.buildDescendants();
+			// Removes duplicate config children and sorts them.
 			result.allElements.values().forEach(result::finishConfigChildrenFor);
-			result.labelValues.finishInitialization();
+
 			result.checkSuspiciousHtml();
 			result.calculateTypeNameSeq();
 			result.calculateInterfaceBased();
@@ -112,7 +114,7 @@ public class FrankDocModel {
 			result.setOverriddenFrom();
 			result.createConfigChildSets();
 			result.setElementNamesOfFrankElements(rootClassName);
-			result.buildGroups();
+			result.addLeftOverConfigChildren();
 			result.parsePropertyGroups(appConstantsPropertiesUrl);
 		} catch(Exception e) {
 			log.fatal("Could not populate FrankDocModel", e);
@@ -202,8 +204,8 @@ public class FrankDocModel {
 				log.trace("Pass [{}]", pass++);
 			}
 			// We update allElements during the iteration, so we have to copy
-			for(FrankElement existing: new ArrayList<>(allElements.values())) {
-				if(createConfigChildren(existing)) {
+			for (FrankElement existing: new ArrayList<>(allElements.values())) {
+				if (createConfigChildren(existing)) {
 					addedDescendants = true;
 				}
 			}
@@ -251,17 +253,23 @@ public class FrankDocModel {
 	FrankElement findOrCreateFrankElement(String fullClassName, FrankElementCreationStrategy creator) throws FrankDocException {
 		log.trace("FrankElement requested for class name [{}]", () -> fullClassName);
 		FrankClass clazz = classRepository.findClass(fullClassName);
+		// Check if Element is already created.
 		if(allElements.containsKey(clazz.getName())) {
 			log.trace("Already present");
 			return allElements.get(clazz.getName());
 		}
+
 		log.trace("Creating FrankElement for class name [{}]", clazz::getName);
 		FrankElement current = creator.createFromClass(clazz);
 		log.trace("Created [{}] [{}]", current.getClass().getSimpleName(), current.getFullName());
 		allElements.put(clazz.getName(), current);
+
+		// Check if the parent exists. If not, create it.
 		FrankClass superClass = clazz.getSuperclass();
 		FrankElement parent = superClass == null ? null : creator.recursiveFindOrCreate(superClass.getName());
 		current.setParent(parent);
+
+		// Add the attributes of the element.
 		current.setAttributes(createAttributes(clazz, current, classRepository));
 		log.trace("Done creating FrankElement for class name [{}]", clazz::getName);
 		return current;
@@ -483,16 +491,23 @@ public class FrankDocModel {
 		boolean createdNewConfigChildren = false;
 		List<FrankMethod> frankMethods = parent.getUnusedConfigChildSetterCandidates().keySet().stream()
 				.filter(m -> configChildDescriptors.containsKey(m.getName()))
-				.collect(Collectors.toList());
-		for(FrankMethod frankMethod: frankMethods) {
+				.toList();
+
+		for (FrankMethod frankMethod: frankMethods) {
+			// Ensure that the method is an actual config child.
 			log.trace("Have config child setter candidate [{}]", frankMethod::getName);
 			List<ConfigChildSetterDescriptor> descriptorCandidates = configChildDescriptors.get(frankMethod.getName());
+
+			// This can be either ForObject or ForText. This changes the creation method of the ConfigChild it selves.
 			ConfigChildSetterDescriptor configChildDescriptor = ConfigChildSetterDescriptor.find(parent, descriptorCandidates);
 			if(configChildDescriptor == null) {
 				log.trace("Not a config child, next");
 				continue;
 			}
+
+			// Create the config child.
 			log.trace("Have ConfigChildSetterDescriptor [{}]", configChildDescriptor::toString);
+			// Either a ObjectConfigChild or TextConfigChild.
 			ConfigChild configChild = configChildDescriptor.createConfigChild(parent, frankMethod);
 			configChild.setAllowMultiple(configChildDescriptor.isAllowMultiple());
 			log.trace("Allow multiple = [{}]", () -> Boolean.toString(configChild.isAllowMultiple()));
@@ -501,15 +516,23 @@ public class FrankDocModel {
 					ancestorMethod -> handleConfigChildSetterAncestor(configChild, ancestorMethod, context));
 			configChild.setMandatoryStatus(MandatoryStatus.of(context.mandatoryValue, context.optionalValue));
 			log.trace("Mandatory status [{}]", configChild.getMandatoryStatus());
+
 			if(configChildDescriptor.isForObject() && frankMethod.getParameterTypes()[0] instanceof FrankClass) {
 				log.trace("For FrankElement [{}] method [{}], going to search element role", parent::getFullName, frankMethod::getName);
 				FrankClass elementTypeClass = (FrankClass) frankMethod.getParameterTypes()[0];
+
+				// Creates a ElementType and ElementRole.
 				((ObjectConfigChild) configChild).setElementRole(findOrCreateElementRole(elementTypeClass, configChildDescriptor.getRoleName()));
+
+				// Adds the ConfigChild (this) as the parent to the just created child elements.
 				((ObjectConfigChild) configChild).getElementRole().getElementType().getMembers().forEach(f -> f.addConfigParent(configChild));
 				log.trace("For FrankElement [{}] method [{}], have the element role", parent::getFullName, frankMethod::getName);
 			}
+
 			configChild.setOrder(parent.getUnusedConfigChildSetterCandidates().get(frankMethod));
 			createdNewConfigChildren = true;
+
+			// Add the ConfigChild to the parent element as under construction.
 			if (configChild.getRoleName() != null)
 				parent.getConfigChildrenUnderConstruction().add(configChild);
 			parent.getUnusedConfigChildSetterCandidates().remove(frankMethod);
@@ -586,26 +609,27 @@ public class FrankDocModel {
 			log.trace("Already present");
 			return allTypes.get(clazz.getName());
 		}
-		FrankDocGroup group = groupFactory.getGroup(clazz);
-		log.trace("Creating ElementType [{}] with group [{}]", clazz::getName, group::getName);
-		final ElementType result = new ElementType(clazz, group, classRepository);
+
+		log.trace("Creating ElementType [{}]", clazz::getName);
+		final ElementType result = new ElementType(clazz, classRepository);
 		// If a containing FrankElement contains the type being created, we do not
 		// want recursion.
 		allTypes.put(result.getFullName(), result);
-		if(result.isFromJavaInterface()) {
+		if (result.isFromJavaInterface()) {
 			log.trace("Class [{}] is a Java interface, going to create all member FrankElement", clazz::getName);
 			List<FrankClass> memberClasses = clazz.getInterfaceImplementations().stream()
 					.filter(m -> ! excludedByExcludeFromTypeFeature(m, clazz)).collect(Collectors.toList());
 			// We sort here to make the order deterministic.
 			Collections.sort(memberClasses, Comparator.comparing(FrankClass::getName));
 			for(FrankClass memberClass: memberClasses) {
+				// Creates the frank element, but also checks if it is not protected.
 				addElementIfNotProtected(memberClass, result);
 			}
 		} else {
 			// We do not create a config child if the argument clazz is not an interface and if it has feature PROTECTED.
 			// Therefore, we can safely proceed here.
 			log.trace("Class [{}] is not a Java interface, creating its FrankElement", clazz::getName);
-			if(excludedByExcludeFromTypeFeature(clazz, clazz)) {
+			if (excludedByExcludeFromTypeFeature(clazz, clazz)) {
 				log.error("Feature ExcludeFromTypeFeature excludes the only possible member of class [{}]", clazz.getName());
 			}
 			FrankElement member = findOrCreateFrankElement(clazz.getName());
@@ -886,21 +910,7 @@ public class FrankDocModel {
 			.forEach(f -> f.setInterfaceBased(true));
 	}
 
-	public void buildGroups() {
-		Map<String, List<ElementType>> groupsElementTypes = allTypes.values().stream()
-				.collect(Collectors.groupingBy(f -> f.getGroup().getName()));
-		groups = groupFactory.getAllGroups();
-		for(FrankDocGroup group: groups) {
-			// The default applies to group Other in case it has no ElementType objects.
-			// In this case we still need group Other for all items in elementsOutsideConfigChildren.
-			// This is typically one element that plays the role of Configuration in some tests.
-			List<ElementType> elementTypes = new ArrayList<>();
-			if(groupsElementTypes.containsKey(group.getName())) {
-				elementTypes = new ArrayList<>(groupsElementTypes.get(group.getName()));
-			}
-			Collections.sort(elementTypes);
-			group.setElementTypes(elementTypes);
-		}
+	public void addLeftOverConfigChildren() {
 		final Map<String, FrankElement> leftOvers = new HashMap<>(allElements);
 		allTypes.values().stream().flatMap(et -> et.getSyntax2Members().stream()).forEach(f -> leftOvers.remove(f.getFullName()));
 		elementsOutsideConfigChildren = leftOvers.values().stream()

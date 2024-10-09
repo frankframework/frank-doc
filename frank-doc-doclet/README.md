@@ -258,8 +258,6 @@ The default value is `org.frankframework.pipes.SenderPipe` in this example. The 
 
 **@Optional:** Java annotation that does the same as JavaDoc tag `@ff.optional`.
 
-**@ff.tag:** Add tag to Java class that is shown in the Frank!Doc webapplication. Add the `@ff.tag` JavaDoc tag in the JavaDoc comment above a class. There are two arguments. The first argument is the tag name and the second argument is the tag value.
-
 **@Reintroduce:** Java annotation meant to change the order of config children or attributes in the XSD. The default order is that inherited element children go after declared element children. To have a different order, override an inherited config child setter or attribute setter and add this annotation. The inherited element child is then sorted with the declared element children. Please note that an inherited element child is also sorted with the declared element children if the setter is overridden with a new JavaDoc comment. This annotation is needed if and only if the only modification of the element child is the sort order.
 
 **@ff.reintroduce:** JavaDoc tag that does the same as Java annotation `@Reintroduce`.

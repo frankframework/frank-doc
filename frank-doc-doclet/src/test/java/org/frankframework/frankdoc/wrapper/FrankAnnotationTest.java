@@ -78,7 +78,7 @@ public class FrankAnnotationTest extends TestBase {
 		Arrays.stream(annotations).forEach(frankAnnotation -> assertEquals(1, frankAnnotation.getAnnotationCount()));
 
 		List<FrankAnnotation> annotationsForLabels = Arrays.stream(annotations)
-			.filter(a -> a.getAnnotation(FrankElement.LABEL) != null)
+			.filter(a -> a.getAnnotation(FrankElement.JAVADOC_LABEL_ANNOTATION_CLASSNAME) != null)
 			.collect(Collectors.toList());
 
 		assertEquals(3, annotationsForLabels.size());

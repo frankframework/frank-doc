@@ -27,10 +27,8 @@ import org.frankframework.frankdoc.model.ElementChild;
 import org.frankframework.frankdoc.model.ElementType;
 import org.frankframework.frankdoc.model.EnumValue;
 import org.frankframework.frankdoc.model.FrankAttribute;
-import org.frankframework.frankdoc.model.FrankDocGroup;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.model.FrankElement;
-import org.frankframework.frankdoc.model.FrankLabel;
 import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.ParsedJavaDocTag;
@@ -77,7 +75,6 @@ public class FrankDocJsonFactory {
 			if(frankFrameworkVersion != null) {
 				result.add("metadata", getMetadata());
 			}
-			result.add("groups", getGroups());
 			result.add("types", getTypes());
 			result.add("elements", getElements());
 			result.add("enums", getEnums());
@@ -94,29 +91,6 @@ public class FrankDocJsonFactory {
 		JsonObjectBuilder metadata = bf.createObjectBuilder();
 		metadata.add("version", frankFrameworkVersion);
 		return metadata.build();
-	}
-
-	private JsonArray getGroups() throws JsonException {
-		JsonArrayBuilder result = bf.createArrayBuilder();
-		for(FrankDocGroup group: model.getGroups()) {
-			result.add(getGroup(group));
-		}
-		return result.build();
-	}
-
-	private JsonObject getGroup(FrankDocGroup group) throws JsonException {
-		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", group.getName());
-		final JsonArrayBuilder types = bf.createArrayBuilder();
-		group.getElementTypes().stream()
-				.map(ElementType::getFullName)
-				.forEach(types::add);
-		if(group.getName().equals(FrankDocGroup.GROUP_NAME_OTHER)) {
-			elementsOutsideChildren.forEach(f -> types.add(f.getFullName()));
-			types.add(Constants.MODULE_ELEMENT_NAME);
-		}
-		result.add("types", types);
-		return result.build();
 	}
 
 	private JsonArray getTypes() {
@@ -158,23 +132,26 @@ public class FrankDocJsonFactory {
 		return result.build();
 	}
 
-	private JsonArray getElements() throws JsonException {
+	private JsonObject getElements() throws JsonException {
 		Map<String, List<FrankElement>> elementsByName = model.getAllElements().values().stream()
 				.collect(Collectors.groupingBy(this::getElementNameForJson));
 		List<String> sortKeys = new ArrayList<>(elementsByName.keySet());
 		sortKeys.add(Constants.MODULE_ELEMENT_NAME);
 		Collections.sort(sortKeys);
-		JsonArrayBuilder result = bf.createArrayBuilder();
-		for(String sortKey: sortKeys) {
+
+		final var builder = bf.createObjectBuilder();
+
+		for (String sortKey: sortKeys) {
 			if(sortKey.equals(Constants.MODULE_ELEMENT_NAME)) {
-				result.add(getElementReferencedEntityRoot());
+				JsonObject element = getElementReferencedEntityRoot();
+				builder.add(element.getString("fullName"), element);
 			} else {
 				elementsByName.get(sortKey).stream()
 						.map(this::getElement)
-						.forEach(result::add);
+						.forEach(element -> builder.add(element.getString("fullName"), element));
 			}
 		}
-		return result.build();
+		return builder.build();
 	}
 
 	private String getElementNameForJson(FrankElement f) {
@@ -194,6 +171,11 @@ public class FrankDocJsonFactory {
 		JsonArrayBuilder xmlElementNames = bf.createArrayBuilder();
 		xmlElementNames.add(Constants.MODULE_ELEMENT_NAME);
 		result.add("elementNames", xmlElementNames.build());
+
+		final var labelBuilder = bf.createObjectBuilder();
+		labelBuilder.add("FrankDocGroup", bf.createArrayBuilder(List.of(Constants.MODULE_ELEMENT_FRANK_DOC_GROUP)));
+		result.add("labels", labelBuilder);
+
 		return result.build();
 	}
 
@@ -254,21 +236,10 @@ public class FrankDocJsonFactory {
 			frankElement.getForwards().forEach(f -> builder.add(getJsonForForward(f)));
 			result.add("forwards", builder.build());
 		}
-		if (!frankElement.getTags().isEmpty()) {
-			final var builder = bf.createObjectBuilder();
-			for (ParsedJavaDocTag tag: frankElement.getTags()) {
-				builder.add(tag.getName(), tag.getDescription());
-			}
-			result.add("tags", builder.build());
-		}
 		if (!frankElement.getLabels().isEmpty()) {
-			final var builder = bf.createArrayBuilder();
-			for (FrankLabel lab: frankElement.getLabels()) {
-				JsonObjectBuilder ob = bf.createObjectBuilder();
-				ob.add("label", lab.getName());
-				ob.add("value", lab.getValue());
-				builder.add(ob.build());
-			}
+			final var builder = bf.createObjectBuilder();
+
+			frankElement.getLabels().forEach((label, value) -> builder.add(label, bf.createArrayBuilder(value)));
 			result.add("labels", builder.build());
 		}
 		if (!frankElement.getQuickLinks().isEmpty()) {

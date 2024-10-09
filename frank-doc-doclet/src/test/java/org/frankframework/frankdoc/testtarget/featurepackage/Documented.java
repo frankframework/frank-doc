@@ -1,6 +1,7 @@
 package org.frankframework.frankdoc.testtarget.featurepackage;
 
 import org.frankframework.doc.Category;
+import org.frankframework.doc.CategoryType;
 import org.frankframework.doc.Default;
 import org.frankframework.doc.Reintroduce;
 import org.frankframework.frankdoc.testtarget.wrapper.variables.IMailFileSystem;
@@ -11,7 +12,7 @@ import org.frankframework.frankdoc.testtarget.wrapper.variables.IMailFileSystem;
  *
  * @ff.parameters Any parameters defined on the pipe will be handed to the sender, if this is a ISenderWithParameters.
  */
-@Category("Basic")
+@Category(CategoryType.BASIC)
 public class Documented extends DocumentedParent implements IMailFileSystem<String> {
 	public static final String VARIABLE = "my value";
 	private boolean transacted = false;

@@ -20,6 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Documented
+@Label(name = "FrankDocGroup")
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FrankDocGroup {
 	FrankDocGroupValue value();
