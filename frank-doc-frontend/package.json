@@ -35,8 +35,8 @@
     "@angular/cli": "~18.0.6",
     "@angular/compiler-cli": "^18.0.5",
     "@types/jasmine": "~4.3.0",
-    "@typescript-eslint/eslint-plugin": "^5.57.0",
-    "@typescript-eslint/parser": "^5.57.0",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.0",
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-unicorn": "^46.0.0",
@@ -49,10 +49,11 @@
     "karma-jasmine-html-reporter": "~2.0.0",
     "lint-staged": "^13.2.1",
     "prettier": "2.8.8",
-    "typescript": "^5.4.5"
+    "typescript": "~5.5.4"
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write",
     "*.{ts, html}": "eslint"
-  }
+  },
+  "packageManager": "pnpm@9.11.0+sha512.0a203ffaed5a3f63242cd064c8fb5892366c103e328079318f78062f24ea8c9d50bc6a47aa3567cabefd824d170e78fa2745ed1f16b132e16436146b7688f19b"
 }
