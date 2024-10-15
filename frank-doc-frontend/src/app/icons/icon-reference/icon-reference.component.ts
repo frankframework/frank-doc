@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { IconBaseComponent } from '@frankframework/angular-components';
 
 @Component({
   selector: 'app-icon-reference',
@@ -6,4 +7,4 @@ import { Component } from '@angular/core';
   imports: [],
   templateUrl: './icon-reference.component.html',
 })
-export class IconReferenceComponent {}
+export class IconReferenceComponent extends IconBaseComponent {}

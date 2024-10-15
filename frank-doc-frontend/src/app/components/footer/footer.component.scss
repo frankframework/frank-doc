@@ -1,0 +1,23 @@
+footer {
+  width: 100%;
+  padding: 60px 100px;
+  border-radius: 15px 15px 0 0;
+  background: #fdc300;
+}
+
+.divider-top {
+  display: flex;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  justify-content: flex-end;
+  align-items: center;
+
+  .logo {
+    flex: 1;
+    align-self: flex-start;
+  }
+}
+
+.divider-bottom {
+  margin-top: 10px;
+}
