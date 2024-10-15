@@ -1,0 +1,29 @@
+header {
+  display: flex;
+  width: 100%;
+  padding: 30px 50px;
+  align-items: center;
+
+  .title {
+    display: inline-flex;
+    width: 200px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  nav {
+    margin: 0 8vw;
+    flex: 1;
+
+    & > ul {
+      display: flex;
+      padding: 0;
+      align-items: center;
+      list-style: none;
+
+      li {
+        margin: 0 20px;
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+.page {
+  width: 100%;
+  padding: 0 5vw;
+}
+
+.search-container {
+  margin-top: 30px;
+
+  .subtitle {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+  }
+
+  .title {
+    margin: 20px 0;
+    font-size: 48px;
+    font-weight: 700;
+  }
+
+  ff-search {
+    width: 100%;
+  }
+}
