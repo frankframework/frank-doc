@@ -118,7 +118,7 @@ importers:
         specifier: ^3.2.5
         version: 3.3.3
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.4.0
         version: 5.5.4
 
 packages:
@@ -1254,7 +1254,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
   '@frankframework/angular-components@file:../../angular-components/dist/angular-components/frankframework-angular-components-0.1.0.tgz':
-    resolution: {integrity: sha512-VHVGLejl0cSiTZMF9J7ll2eS26CPbDg6frDVX2OaowVc71HyNJs5unF7v/OSC33y7pfy3+kHT+Spox/Is9r/ag==, tarball: file:../../angular-components/dist/angular-components/frankframework-angular-components-0.1.0.tgz}
+    resolution: {integrity: sha512-Bmd03x7W92byGJM/lc1YYCSYLCbaoQWerVQYzcsK+C4XiSViQMJpM/ceYQFkBJjX2skl20LnA2q1HXmhF4qEPQ==, tarball: file:../../angular-components/dist/angular-components/frankframework-angular-components-0.1.0.tgz}
     version: 0.1.0
     peerDependencies:
       '@angular/cdk': ^18.2.0

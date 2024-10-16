@@ -3,9 +3,11 @@
     <p class="subtitle">Technical documentation of our Frank!Elements</p>
     <h2 class="title">What are you looking for?</h2>
     <ff-search [(ngModel)]="searchQuery"></ff-search>
-    <!-- TODO filters -->
+    <div class="filters">
+      <ff-button>Add Filter</ff-button>
+    </div>
   </div>
   <div class="elements">
-    <p>{{ searchQuery }}</p>
+    <app-home-component-list [components]="elements" [searchQuery]="searchQuery"></app-home-component-list>
   </div>
 </div>
