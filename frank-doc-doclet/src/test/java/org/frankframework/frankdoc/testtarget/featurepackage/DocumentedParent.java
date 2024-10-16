@@ -10,7 +10,7 @@ import org.frankframework.doc.Forward;
  *
  * @ff.parameters any parameters defined on the pipe will be handed to the sender, if this is a {@link ISenderWithParameters ISenderWithParameters}
  * @ff.parameter  stubFilename will <u>not</u> be handed to the sender
- * and it is used at runtime instead of the stubFilename specified by the attribute. A lookup of the
+ * and it is used at runtime instead of the {@literal stubFilename} specified by the attribute. A lookup of the
  * file for this stubFilename will be done at runtime, while the file for the stubFilename specified
  * as an attribute will be done at configuration time.
  *
@@ -19,8 +19,8 @@ import org.frankframework.doc.Forward;
 @Forward(name = "timeout")
 @Forward(name = "illegalResult")
 @Forward(name = "presumedTimeout")
-@Forward(name = "interrupt")
-@Forward(name = "&lt;defined-by-sender&gt;", description = "any forward, as returned by name by {@link ISender sender}")
+@Forward(name = "{@literal interrupt}")
+@Forward(name = "&lt;defined-by-sender&gt;", description = "any {@literal forward}, as returned by name by {@link ISender sender}")
 @Category(CategoryType.BASIC)
 @Category(CategoryType.ADVANCED)
 public class DocumentedParent implements HasSender {
