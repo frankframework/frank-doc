@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IconReferenceComponent } from '../../icons/icon-reference/icon-reference.component';
 
 @Component({
@@ -8,4 +8,6 @@ import { IconReferenceComponent } from '../../icons/icon-reference/icon-referenc
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+  @Input() version: string = '';
+}

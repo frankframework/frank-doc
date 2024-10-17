@@ -1,4 +1,7 @@
-<app-header></app-header>
+<app-header [version]="version()"></app-header>
+@if (error) {
+  <ff-alert type="error">{{ error }}</ff-alert>
+}
 <main>
   <router-outlet></router-outlet>
 </main>

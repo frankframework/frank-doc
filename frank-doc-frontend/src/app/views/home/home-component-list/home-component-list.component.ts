@@ -1,14 +1,23 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Element } from '../../../frankdoc.types';
+import { KeyValuePipe } from '@angular/common';
 
 @Component({
   selector: 'app-home-component-list',
   standalone: true,
-  imports: [],
+  imports: [KeyValuePipe],
   templateUrl: './home-component-list.component.html',
   styleUrl: './home-component-list.component.scss',
 })
-export class HomeComponentListComponent {
-  @Input() components: Element[] = [];
+export class HomeComponentListComponent implements OnChanges {
+  @Input() components: Record<string, Element> = {};
   @Input() searchQuery: string = '';
+
+  ngOnChanges(): void {
+    console.log(this.components);
+  }
+
+  test(value: unknown): void {
+    console.log(value);
+  }
 }
