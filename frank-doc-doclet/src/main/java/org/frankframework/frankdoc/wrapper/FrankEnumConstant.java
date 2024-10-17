@@ -16,8 +16,11 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
+import java.util.List;
+
 public interface FrankEnumConstant extends FrankProgramElement {
 	String getJavaDoc();
 	FrankAnnotation getAnnotation(String name);
 	String getJavaDocTag(String tagName);
+	List<String> getAllEnumValues();
 }

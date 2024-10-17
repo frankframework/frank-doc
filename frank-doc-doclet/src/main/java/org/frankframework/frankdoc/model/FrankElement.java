@@ -44,13 +44,14 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * Models a Java class that can be referred to in a Frank configuration.
@@ -62,8 +63,8 @@ public class FrankElement implements Comparable<FrankElement> {
 	public static final String JAVADOC_PARAMETER = "@ff.parameter";
 	public static final String JAVADOC_FORWARD_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forward";
 	public static final String JAVADOC_FORWARDS_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forwards";
+	public static final String JAVADOC_LABEL_ANNOTATION_CLASSNAME = "org.frankframework.doc.Label";
 	public static final String JAVADOC_SEE = "@see";
-	public static final String JAVADOC_TAG = "@ff.tag";
 	public static final String LABEL = "org.frankframework.doc.Label";
 	public static final String LABEL_NAME = "name";
 
@@ -76,6 +77,8 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private static final Pattern DESCRIPTION_HEADER_SPLIT = Pattern.compile("(\\. )|(\\.\\n)|(\\.\\r\\n)");
 
+	// A list of methods on the class, which meet certain criteria. The method must be public and have 1 argument for example.
+	// FrankMethod: Index
 	private final @Getter LinkedHashMap<FrankMethod, Integer> unusedConfigChildSetterCandidates = new LinkedHashMap<>();
 	private final @Getter List<ConfigChild> configChildrenUnderConstruction = new ArrayList<>();
 
@@ -112,10 +115,9 @@ public class FrankElement implements Comparable<FrankElement> {
 	private @Getter List<ParsedJavaDocTag> specificParameters = new ArrayList<>();
 	private @Getter List<Forward> forwards = new ArrayList<>();
 	private @Getter List<QuickLink> quickLinks = new ArrayList<>();
-	private @Getter List<ParsedJavaDocTag> tags = new ArrayList<>();
 	private @Getter List<Note> notes = new ArrayList<>();
 
-	private @Getter List<FrankLabel> labels = new ArrayList<>();
+	private @Getter Map<String, List<String>> labels = new HashMap<>();
 
 	FrankElement(FrankClass clazz, LabelValues labelValues) {
 		this(clazz.getName(), clazz.getSimpleName(), clazz.isAbstract());
@@ -127,9 +129,8 @@ public class FrankElement implements Comparable<FrankElement> {
 		specificParameters = parseParameterJavadocTags(clazz);
 		forwards = parseForwardJavadocTags(clazz);
 		quickLinks = parseSeeJavadocTags(clazz);
-		tags = parseTagJavadocTags(clazz);
 		notes = Notes.getInstance().valueOf(clazz);
-		handleLabels(clazz, labelValues);
+		labels = parseLabelAnnotations(clazz, labelValues);
 
 		description = Description.getInstance().valueOf(clazz);
 		descriptionHeader = renderDescriptionHeader();
@@ -268,19 +269,6 @@ public class FrankElement implements Comparable<FrankElement> {
 			.toList();
 	}
 
-	private List<ParsedJavaDocTag> parseTagJavadocTags(FrankClass clazz) {
-		List<ParsedJavaDocTag> tags = parseJavadocTags(clazz, JAVADOC_TAG);
-		tags.stream()
-			.collect(Collectors.groupingBy(ParsedJavaDocTag::getName, Collectors.counting()))
-			.entrySet().stream()
-			.filter(e -> e.getValue() >= 2L)
-			.map(Entry::getKey)
-			.sorted()
-			.forEach(duplicate -> log.error("FrankElement [{}] has multiple values for tag [{}]", fullName, duplicate));
-
-		return tags;
-	}
-
 	private List<ParsedJavaDocTag> parseJavadocTags(FrankClass clazz, String tagName) {
 		return clazz.getAllJavaDocTagsOf(tagName).stream()
 			.map(arguments -> {
@@ -301,24 +289,96 @@ public class FrankElement implements Comparable<FrankElement> {
 			.toList();
 	}
 
-	private void handleLabels(FrankClass clazz, LabelValues labelValues) {
-		Arrays.stream(clazz.getAnnotations())
-			.filter(a -> a.getAnnotation(LABEL) != null)
-			.forEach(a -> handleSpecificLabel(a, labelValues));
+	private boolean isLabelAnnotation(FrankAnnotation annotation) {
+		// Check if annotation is a singular label.
+		if (annotation.getAnnotation(JAVADOC_LABEL_ANNOTATION_CLASSNAME) != null)
+			return true;
+
+		// Check if annotation contains a list of label annotations.
+		Object value = annotation.getValue();
+
+		if (value instanceof FrankAnnotation[] valueAnnotations) {
+			if (valueAnnotations.length > 0) {
+				return valueAnnotations[0].getAnnotation(JAVADOC_LABEL_ANNOTATION_CLASSNAME) != null;
+			}
+		}
+
+		return false;
 	}
 
-	void handleSpecificLabel(FrankAnnotation labelAddingAnnotation, LabelValues labelValues) {
-		String label = labelAddingAnnotation.getAnnotation(LABEL).getValueOf(LABEL_NAME).toString();
+	private Map<String, List<String>> parseLabelAnnotations(FrankClass clazz, LabelValues labelValues) {
+		if (clazz == null) {
+			return new HashMap<>();
+		}
+
+		// Search labels for this class.
+		Map<String, List<String>> labels = Arrays.stream(clazz.getAnnotations())
+			.filter(this::isLabelAnnotation)
+			.flatMap(annotation -> parseLabelAnnotation(annotation, labelValues))
+			.collect(groupingBy(FrankLabel::getName, Collectors.mapping(FrankLabel::getValue, Collectors.toList())));
+
+
+
+		// Recursively search the superclass and interfaces for label annotations.
+		var interfaceLabels = Arrays.stream(clazz.getInterfaces())
+			.map(i -> parseLabelAnnotations(i, labelValues))
+			.toList();
+
+		for (var map2 : interfaceLabels) {
+			labels = mergeLabels(labels, map2);
+		}
+
+		FrankClass superClass = clazz.getSuperclass();
+		if (superClass != null) {
+			labels = mergeLabels(labels, parseLabelAnnotations(superClass, labelValues));
+		}
+
+		return labels;
+	}
+
+	private Map<String, List<String>> mergeLabels(Map<String, List<String>> map1, Map<String, List<String>> map2) {
+		HashMap<String, List<String>> result = new HashMap<>(map1);
+
+		for (String key : map2.keySet()) {
+			if (!result.containsKey(key)) {
+				result.put(key, map2.get(key));
+			}
+		}
+
+		return result;
+	}
+
+	private Stream<FrankLabel> parseLabelAnnotation(FrankAnnotation annotation, LabelValues labelValues) {
+		Object value = annotation.getValue();
+
+		if (value instanceof FrankAnnotation[] annotations) {
+			return Arrays.stream(annotations)
+				.map(a -> annotationToFrankLabel(a, labelValues));
+		}
+
+		FrankAnnotation labelAnnotation = annotation.getAnnotation(JAVADOC_LABEL_ANNOTATION_CLASSNAME);
+		if (labelAnnotation != null) {
+			return Stream.of(annotationToFrankLabel(annotation, labelValues));
+		}
+
+		return Stream.empty();
+	}
+
+	// This function adds the label, and it's corresponding value to the global LabelValues as a side effect.
+	private FrankLabel annotationToFrankLabel(FrankAnnotation labelAddingAnnotation, LabelValues labelValues) {
+		String label = labelAddingAnnotation.getAnnotation(JAVADOC_LABEL_ANNOTATION_CLASSNAME).getValueOf(LABEL_NAME).toString();
 		Object rawValue = labelAddingAnnotation.getValue();
+
 		if (rawValue instanceof FrankEnumConstant enumConstant) {
+			labelValues.setValues(label, enumConstant.getAllEnumValues());
+
 			// This considers annotation @EnumLabel
 			EnumValue value = new EnumValue(enumConstant);
-			labels.add(new FrankLabel(label, value.getLabel()));
-			labelValues.addValue(label, value.getLabel());
-		} else {
-			labels.add(new FrankLabel(label, rawValue.toString()));
-			labelValues.addValue(label, rawValue.toString());
+			return new FrankLabel(label, value.getLabel());
 		}
+
+		labelValues.addValue(label, rawValue.toString());
+		return new FrankLabel(label, rawValue.toString());
 	}
 
 	/**

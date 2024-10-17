@@ -82,27 +82,4 @@ public class IntegrationWithLogTest {
 			appender.assertLogged("FrankElement [org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.Master] has a [@ff.parameter] tag without a value: [myParamWithoutDescription]");
 		}
 	}
-
-	public void whenFfTagOccursMultipleTimesWithSameNameThenError() throws Exception {
-		try (TestAppender appender = TestAppender.newBuilder().build()) {
-			String thePackage = "org.frankframework.frankdoc.testtarget.tag.not.unique.";
-			String startClassName = thePackage + "Master";
-			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
-			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
-			FrankDocModel.populate(digesterRulesUrl, null, startClassName, classRepository);
-			appender.assertLogged("FrankElement [org.frankframework.frankdoc.testtarget.tag.not.unique.Master] has multiple values for tag [myTag]");
-		}
-	}
-
-	@Test
-	public void whenSpecificParameterHasNoNameAndNoDescriptionThenLogged() throws Exception {
-		try (TestAppender appender = TestAppender.newBuilder().build()) {
-			String thePackage = "org.frankframework.frankdoc.testtarget.tag.no.name.";
-			String startClassName = thePackage + "Master";
-			FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(thePackage, FRANK_DOC_GROUP_VALUES_PACKAGE);
-			URL digesterRulesUrl = TestUtil.resourceAsURL("doc/general-test-digester-rules.xml");
-			FrankDocModel.populate(digesterRulesUrl, null, startClassName, classRepository);
-			appender.assertLogged("Error parsing a [@ff.parameter] tag of class [org.frankframework.frankdoc.testtarget.tag.no.name.Master]");
-		}
-	}
 }

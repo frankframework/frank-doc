@@ -12,6 +12,9 @@ end_of_line = lf
 [*.js]
 indent_style = space
 
+[*.json]
+indent_style = space
+
 [*.yml]
 indent_style = space
 indent_size = 2

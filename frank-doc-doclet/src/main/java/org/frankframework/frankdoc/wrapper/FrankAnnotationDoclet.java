@@ -103,8 +103,8 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 		if (raw instanceof Attribute.Class) {
 			return ((Attribute.Class) raw).classType.toString();
 		}
-		if (raw instanceof Attribute.Enum) {
-			return new FrankEnumConstantDoclet(((Attribute.Enum) raw).getValue(), null);
+		if (raw instanceof Attribute.Enum enumInstance) {
+			return new FrankEnumConstantDoclet(enumInstance.getValue(), null);
 		}
 
 		return raw.getValue();

@@ -1,5 +1,7 @@
 package org.frankframework.frankdoc.testtarget.featurepackage;
 
+import org.frankframework.doc.Category;
+import org.frankframework.doc.CategoryType;
 import org.frankframework.doc.Forward;
 
 /**
@@ -19,6 +21,8 @@ import org.frankframework.doc.Forward;
 @Forward(name = "presumedTimeout")
 @Forward(name = "{@literal interrupt}")
 @Forward(name = "&lt;defined-by-sender&gt;", description = "any {@literal forward}, as returned by name by {@link ISender sender}")
+@Category(CategoryType.BASIC)
+@Category(CategoryType.ADVANCED)
 public class DocumentedParent implements HasSender {
 
 	private String destinationName;

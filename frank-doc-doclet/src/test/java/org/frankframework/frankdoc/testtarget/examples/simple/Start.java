@@ -1,6 +1,8 @@
 package org.frankframework.frankdoc.testtarget.examples.simple;
 
 import org.frankframework.doc.EnumLabel;
+import org.frankframework.doc.FrankDocGroup;
+import org.frankframework.doc.FrankDocGroupValue;
 
 /**
  * Description of Start. Value of VARIABLE is {@value #VARIABLE}. Value of TheEnum.ENUM_CONSTANT is {@value org.frankframework.frankdoc.testtarget.examples.simple.Start.TheEnum#ENUM_CONSTANT}.
@@ -8,6 +10,7 @@ import org.frankframework.doc.EnumLabel;
  * @author M66C303
  *
  */
+@FrankDocGroup(FrankDocGroupValue.BATCH)
 public class Start extends AbstractParentOfStart {
 	public static final String VARIABLE = "variable value";
 

@@ -3,11 +3,7 @@ package org.frankframework.frankdoc.testtarget.examples.forwards;
 import org.frankframework.doc.Forward;
 
 /**
- * @ff.tag myTag myValue
- * @ff.tag myOtherTag myOtherValue
- *
  * @author martijn
- *
  */
 @Forward(name = "success")
 @Forward(name = "failure", description = "When something goes wrong.")
