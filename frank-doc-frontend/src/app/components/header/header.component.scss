@@ -8,7 +8,18 @@ header {
     display: inline-flex;
     width: 200px;
     align-items: center;
-    justify-content: space-between;
+    gap: 6px;
+    font-size: 18px;
+    font-weight: 700;
+
+    h1 {
+      font-size: inherit;
+      font-weight: inherit;
+    }
+
+    .version {
+      color: rgba(30, 30, 30, 0.50);
+    }
   }
 
   nav {

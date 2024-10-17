@@ -1,4 +1,5 @@
-export interface FrankDocument {
+// eslint-disable-next-line unicorn/prevent-abbreviations
+export interface FrankDoc {
   metadata: Metadata;
   types: TypeElement[];
   elements: Element[];
@@ -20,6 +21,7 @@ export type Element = {
   deprecated?: DeprecationInfo;
   parameters?: ParsedTag[];
   parametersDescription?: string;
+  labels?: Record<string, string[]>; // maybe make this smarter and have key be based on Label (type) name
 };
 
 export type Attribute = {
