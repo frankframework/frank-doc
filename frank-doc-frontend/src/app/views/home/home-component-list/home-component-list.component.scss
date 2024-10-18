@@ -1,14 +1,84 @@
+.tabs {
+  display: flex;
+  margin: 35px 0;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  .tab {
+    margin-right: 30px;
+    padding:0 0 16px;
+    font-size: 20px;
+    font-weight: 600;
+
+    &.active {
+      margin-bottom: -1px;
+      border-bottom: 1px solid #000;
+    }
+
+    .count {
+      margin-left: 4px;
+      padding: 0 6px;
+      background-color: #ededed;
+      border: 1px solid #D8D8D8;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+  }
+}
+
 .components {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 20px;
   justify-content: center;
   align-content: center;
 
   .card {
-    width: 300px;
-    height: 200px;
-    border: 1px solid #000;
+    position: relative;
+    width: 400px;
+    height: 250px;
+    padding: 20px 40px 20px 20px;
+    border: 1px solid #D8D8D8;
+    border-radius: 8px;
+
+    .label {
+      letter-spacing: 2.1px;
+      text-transform: uppercase;
+    }
+
+    .name {
+      margin: 6px 0;
+      color: #1E1E1E;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .element-names {
+      margin-bottom: 10px;
+    }
+
+    .label,
+    .element-names {
+      color: rgba(0, 0, 0, 0.50);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .description {
+      height: 65px;
+      color: #1E1E1E;
+      font-size: 16px;
+      font-weight: 400;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    ff-button {
+      position: absolute;
+      bottom: 20px;
+      right: 40px;
+    }
   }
 }
 
