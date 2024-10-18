@@ -52,7 +52,7 @@ abstract class ConfigChildSetterDescriptor {
 		this.pattern = pattern;
 		if(methodName.startsWith("set")) {
 			allowMultiple = false;
-		} else if((methodName.startsWith("add")) || methodName.startsWith("register")) {
+		} else if((methodName.startsWith("add"))) {
 			allowMultiple = true;
 		} else {
 			throw new SAXException(
