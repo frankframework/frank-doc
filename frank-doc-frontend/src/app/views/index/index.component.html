@@ -1,0 +1,22 @@
+<div class="page-container">
+  <div class="sidenav">
+    @for (filter of filters; track filter.name) {
+      <span class="filter">{{ filter.name }}</span>
+      <ul>
+        @for (label of filter.labels; track label.name) {
+          <li>{{ label.name }} ({{ label.elements.length }})</li>
+        }
+      </ul>
+    }
+  </div>
+  <div class="page">
+    <h2>Index</h2>
+    <p class="description">
+      There's a lorum ipsum generated text here but I'm not even sure what could be written here. Maybe some explanation
+      on how the page works or how the items are organized. To fill some more space I'll repeat this once again just so
+      I don't have to lorum ipsum. There's a lorum ipsum generated text here but I'm not even sure what could be written
+      here. Maybe some explanation on how the page works or how the items are organized. To fill some more space I'll
+      repeat this once again just so I don't have to lorum ipsum.
+    </p>
+  </div>
+</div>

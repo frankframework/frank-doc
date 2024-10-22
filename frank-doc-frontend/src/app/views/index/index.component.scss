@@ -1,0 +1,12 @@
+.page-container {
+  display: flex;
+  margin: 0 50px;
+
+  .sidenav {
+    width: 286px;
+  }
+
+  .page {
+    flex: 1;
+  }
+}

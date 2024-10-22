@@ -6,12 +6,16 @@
   </div>
   <nav>
     <ul>
-      <li><a class="active">Home</a></li>
-      <li><a>Index</a></li>
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a></li>
+      <li><a routerLink="/index" routerLinkActive="active">Index</a></li>
     </ul>
   </nav>
   <div class="actions">
-    <button class="switch-theme-button" title="Dark/light Mode"><app-icon-download></app-icon-download></button>
-    <button class="download-xsd-button" title="Download XSD">XSD<!-- icon here --></button>
+    <button class="switch-theme-button" title="Dark/light Mode">
+      <app-icon-darkmode width="20" height="20"></app-icon-darkmode>
+    </button>
+    <button class="download-xsd-button" title="Download XSD">
+      <app-icon-download width="20" height="20"></app-icon-download>
+    </button>
   </div>
 </header>
