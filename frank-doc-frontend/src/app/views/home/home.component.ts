@@ -1,9 +1,11 @@
-import { Component, computed, Signal } from '@angular/core';
+import { Component, computed, isDevMode, Signal } from '@angular/core';
 import { ButtonComponent, SearchComponent } from '@frankframework/angular-components';
 import { FormsModule } from '@angular/forms';
 import { HomeComponentListComponent } from './home-component-list/home-component-list.component';
 import { AppService } from '../../app.service';
-import { Element } from '../../frankdoc.types';
+// eslint-disable-next-line unicorn/prevent-abbreviations
+import { FrankDoc, Element } from '../../frankdoc.types';
+import Fuse, { FuseResult } from 'fuse.js';
 
 @Component({
   selector: 'app-home',
@@ -14,10 +16,57 @@ import { Element } from '../../frankdoc.types';
 })
 export class HomeComponent {
   protected searchQuery = '';
-  protected readonly elements: Signal<Record<string, Element>> = computed(
+  protected readonly elements: Signal<FrankDoc['elements']> = computed(
     // eslint-disable-next-line unicorn/consistent-function-scoping
     () => this.appService.frankDoc()?.elements ?? {},
   );
+  protected filteredElements: FuseResult<Element>[] = [];
+
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  private readonly elementsList: Signal<Element[]> = computed(() => Object.values(this.elements()));
+  private readonly fuse: Signal<Fuse<Element>> = computed(
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    () =>
+      new Fuse(this.elementsList(), {
+        keys: [
+          {
+            name: 'name',
+            weight: 2,
+          },
+          {
+            name: 'fullName',
+            weight: 2,
+          },
+          {
+            name: 'elementNames', // default weight is 1.0
+          },
+          {
+            name: 'labels.FrankDocGroup',
+          },
+          {
+            name: 'attributes',
+            weight: 0.7,
+          },
+          {
+            name: 'description',
+            weight: 0.5,
+          },
+        ],
+        includeScore: true,
+        includeMatches: true,
+        threshold: 0.2,
+        minMatchCharLength: 3,
+        ignoreLocation: true,
+      }),
+  );
 
   constructor(private appService: AppService) {}
+
+  protected onSearchQueryChange(query: string): void {
+    const searchPattern = query.trim();
+    if (searchPattern !== '') {
+      this.filteredElements = this.fuse().search(searchPattern);
+      if (isDevMode()) console.log(this.filteredElements);
+    }
+  }
 }

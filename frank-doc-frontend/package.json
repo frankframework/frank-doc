@@ -25,6 +25,7 @@
     "@angular/router": "^18.0.5",
     "@frankframework/angular-components": "file:..\\..\\angular-components\\dist\\angular-components\\frankframework-angular-components-0.1.0.tgz",
     "bootstrap": "3.4.1",
+    "fuse.js": "^7.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.7"
