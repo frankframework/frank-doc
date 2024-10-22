@@ -49,4 +49,19 @@ header {
       }
     }
   }
+
+  .actions > button {
+    padding: 0;
+    border: none;
+    background: transparent;
+    outline: none;
+
+    &:last-child {
+      margin-left: 25px;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
