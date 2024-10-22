@@ -29,9 +29,9 @@
 
 .components {
   display: flex;
+  margin: 35px 0;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: center;
   align-content: center;
 
   .card {

@@ -2,7 +2,7 @@
 export interface FrankDoc {
   metadata: Metadata;
   types: TypeElement[];
-  elements: Element[];
+  elements: Record<string, Element>;
   enums: Enum[];
   labels: Label[];
   properties: Property[];

@@ -1,33 +1,31 @@
 <div class="tabs">
   <div class="tab active">
     <span>Components</span>
-    <span class="count">{{ Object.keys(components).length }}</span>
+    <span class="count">{{ components.length }}</span>
   </div>
   <div class="tab">
     <span>Related</span>
-    <span class="count">0</span>
+    <span class="count">{{ relatedComponents.length }}</span>
   </div>
   <div class="list-modes"></div>
 </div>
 <div class="components">
-  @if (searchQuery !== '') {
-    @for (component of components | keyvalue; track component.key) {
-      <div class="card">
-        <p class="label">{{ component.value.labels ? component.value.labels['FrankDocGroup'][0] : '' }}</p>
-        <p class="name">{{ component.value.name }}</p>
-        <p class="element-names">
-          @for (elementName of component.value.elementNames; track elementName; let first = $first) {
-            @if (!first) {
-              &bull;
-            }
-            <span>{{ elementName }}</span>
+  @for (component of components; track component.item.name) {
+    <div class="card">
+      <p class="label">{{ component.item.labels ? component.item.labels['FrankDocGroup'][0] : '' }}</p>
+      <p class="name">{{ component.item.name }}</p>
+      <p class="element-names">
+        @for (elementName of component.item.elementNames; track elementName; let first = $first) {
+          @if (!first) {
+            &bull;
           }
-        </p>
-        <p class="description">{{ component.value.description }}</p>
-        <ff-button>-></ff-button>
-      </div>
-    } @empty {
-      <p>No Frank!Elements found.</p>
-    }
+          <span>{{ elementName }}</span>
+        }
+      </p>
+      <p class="description">{{ component.item.description }}</p>
+      <ff-button>-></ff-button>
+    </div>
+  } @empty {
+    <p>No Frank!Elements found.</p>
   }
 </div>

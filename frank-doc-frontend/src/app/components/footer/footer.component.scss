@@ -16,8 +16,24 @@ footer {
     flex: 1;
     align-self: flex-start;
   }
+
+  .links > a {
+    color: #343434;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration-line: underline;
+    text-transform: capitalize;
+
+    & + a {
+      margin-left: 15px;
+    }
+  }
 }
 
 .divider-bottom {
   margin-top: 10px;
+  color: #000;
+  font-size: 16px;
+  font-weight: 300;
+  text-transform: capitalize;
 }

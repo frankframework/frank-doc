@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { IconReferenceComponent } from '../../icons/icon-reference/icon-reference.component';
+import { IconFfLogoSmallComponent } from '../../icons/icon-reference/icon-ff-logo-small.component';
+import { IconDownloadComponent } from '../../icons/icon-download/icon-download.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [IconReferenceComponent],
+  imports: [IconFfLogoSmallComponent, IconDownloadComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })

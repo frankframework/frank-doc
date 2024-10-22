@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { IconBaseComponent } from '@frankframework/angular-components';
 
 @Component({
-  selector: 'app-icon-reference',
+  selector: 'app-icon-download',
   standalone: true,
   imports: [],
-  templateUrl: './icon-reference.component.html',
+  templateUrl: './icon-download.component.html',
 })
-export class IconReferenceComponent extends IconBaseComponent {}
+export class IconDownloadComponent extends IconBaseComponent {}

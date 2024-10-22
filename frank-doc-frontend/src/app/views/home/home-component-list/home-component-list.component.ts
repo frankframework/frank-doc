@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { Element } from '../../../frankdoc.types';
 import { KeyValuePipe } from '@angular/common';
 import { ButtonComponent } from '@frankframework/angular-components';
+import { FuseResult } from 'fuse.js';
+import { Element } from '../../../frankdoc.types';
 
 @Component({
   selector: 'app-home-component-list',
@@ -11,7 +12,7 @@ import { ButtonComponent } from '@frankframework/angular-components';
   styleUrl: './home-component-list.component.scss',
 })
 export class HomeComponentListComponent {
-  @Input() components: Record<string, Element> = {};
-  @Input() searchQuery: string = '';
-  protected readonly Object = Object;
+  @Input() components: FuseResult<Element>[] = [];
+
+  protected relatedComponents: FuseResult<Element>[] = [];
 }
