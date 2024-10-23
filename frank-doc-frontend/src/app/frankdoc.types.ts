@@ -1,4 +1,3 @@
-// eslint-disable-next-line unicorn/prevent-abbreviations
 export interface FrankDoc {
   metadata: Metadata;
   types: TypeElement[];

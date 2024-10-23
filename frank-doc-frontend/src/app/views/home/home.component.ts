@@ -3,7 +3,6 @@ import { ButtonComponent, SearchComponent } from '@frankframework/angular-compon
 import { FormsModule } from '@angular/forms';
 import { HomeComponentListComponent } from './home-component-list/home-component-list.component';
 import { AppService } from '../../app.service';
-// eslint-disable-next-line unicorn/prevent-abbreviations
 import { FrankDoc, Element } from '../../frankdoc.types';
 import Fuse, { FuseResult } from 'fuse.js';
 
@@ -17,15 +16,12 @@ import Fuse, { FuseResult } from 'fuse.js';
 export class HomeComponent {
   protected searchQuery = '';
   protected readonly elements: Signal<FrankDoc['elements']> = computed(
-    // eslint-disable-next-line unicorn/consistent-function-scoping
     () => this.appService.frankDoc()?.elements ?? {},
   );
   protected filteredElements: FuseResult<Element>[] = [];
 
-  // eslint-disable-next-line unicorn/consistent-function-scoping
   private readonly elementsList: Signal<Element[]> = computed(() => Object.values(this.elements()));
   private readonly fuse: Signal<Fuse<Element>> = computed(
-    // eslint-disable-next-line unicorn/consistent-function-scoping
     () =>
       new Fuse(this.elementsList(), {
         keys: [
