@@ -20,11 +20,13 @@ module.exports = {
       rules: {
         'prefer-template': 'error',
         '@typescript-eslint/explicit-function-return-type': 'error',
-        'unicorn/prevent-abbreviations': 'warn',
+        // 'unicorn/prevent-abbreviations': 'warn',
+        'unicorn/prevent-abbreviations': 'off', // doesn't work well with FrankDoc type name
         'unicorn/no-array-reduce': 'off',
         'unicorn/prefer-ternary': 'warn',
         'unicorn/no-null': 'off',
         'unicorn/prefer-dom-node-text-content': 'warn',
+        'unicorn/consistent-function-scoping': 'off', // doesn't work well with Signals
       },
     },
     {
