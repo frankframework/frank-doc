@@ -1,15 +1,16 @@
 import { Component, computed, isDevMode, Signal } from '@angular/core';
-import { ButtonComponent, SearchComponent } from '@frankframework/angular-components';
+import { SearchComponent } from '@frankframework/angular-components';
 import { FormsModule } from '@angular/forms';
 import { HomeComponentListComponent } from './home-component-list/home-component-list.component';
 import { AppService } from '../../app.service';
 import { FrankDoc, Element } from '../../frankdoc.types';
 import Fuse, { FuseResult } from 'fuse.js';
+import { HomeFiltersComponent } from './home-filters/home-filters.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [SearchComponent, FormsModule, ButtonComponent, HomeComponentListComponent],
+  imports: [SearchComponent, FormsModule, HomeComponentListComponent, HomeFiltersComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
