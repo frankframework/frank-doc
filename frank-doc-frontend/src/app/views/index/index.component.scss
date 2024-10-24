@@ -4,13 +4,18 @@
   margin: 0 50px;
 
   .sidenav {
-    width: 286px;
+    width: 300px;
   }
 
   .page {
     width: 100%;
     flex: 1 1 auto;
   }
+}
+
+ff-chip {
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .sidenav {
@@ -44,7 +49,7 @@
 
 
 .page {
-  padding: 20px 50px;
+  padding: 20px;
 
   h2 {
     margin-bottom: 10px;
@@ -83,11 +88,11 @@
       .elements {
         display: flex;
         flex-wrap: wrap;
-        column-gap: 50px;
+        gap:  5px 50px;
 
         a {
           display: inline-block;
-          width: 225px;
+          width: 250px;
           color: #1E1E1E;
           font-size: 16px;
           text-transform: capitalize;

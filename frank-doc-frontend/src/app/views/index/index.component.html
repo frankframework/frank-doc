@@ -4,7 +4,11 @@
       <span class="filter-name">{{ filter.name }} ({{ filter.labels.length }})</span>
       <ul>
         @for (label of filter.labels; track label.name) {
-          <li>{{ label.name }} ({{ label.elements.length }})</li>
+          <li>
+            <ff-chip colour="#CD55EB" slim>{{ label.name.charAt(0) }}</ff-chip> {{ label.name }} ({{
+              label.elements.length
+            }})
+          </li>
         }
       </ul>
     }
@@ -27,7 +31,11 @@
             <h4>{{ label.name }}</h4>
             <div class="elements">
               @for (element of label.elements; track element) {
-                <a [routerLink]="['/', label.name, element]"><ff-chip colour="#CD55EB">C</ff-chip> {{ element }}</a>
+                <a [routerLink]="['/', label.name, element]"
+                  ><ff-chip colour="#CD55EB" slim>{{ label.name.charAt(0) }}</ff-chip> {{ element }}</a
+                >
+              } @empty {
+                <p>No elements found.</p>
               }
             </div>
           </div>
