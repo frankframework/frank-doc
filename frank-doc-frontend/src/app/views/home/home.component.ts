@@ -7,6 +7,8 @@ import { FrankDoc, Element } from '../../frankdoc.types';
 import Fuse, { FuseResult } from 'fuse.js';
 import { HomeFiltersComponent } from './home-filters/home-filters.component';
 
+export type SelectedFilters = Record<string, string[]>;
+
 @Component({
   selector: 'app-home',
   standalone: true,

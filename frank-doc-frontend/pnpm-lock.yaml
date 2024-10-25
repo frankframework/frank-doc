@@ -38,9 +38,6 @@ importers:
       '@frankframework/angular-components':
         specifier: file:..\..\angular-components\dist\angular-components\frankframework-angular-components-0.1.1.tgz
         version: file:../../angular-components/dist/angular-components/frankframework-angular-components-0.1.1.tgz(@angular/cdk@18.2.9(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.14.10))
-      bootstrap:
-        specifier: 3.4.1
-        version: 3.4.1
       fuse.js:
         specifier: ^7.0.0
         version: 7.0.0
@@ -2079,10 +2076,6 @@ packages:
 
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
-
-  bootstrap@3.4.1:
-    resolution: {integrity: sha512-yN5oZVmRCwe5aKwzRj6736nSmKDX7pLYwsXiCj/EYmo16hODaBiT4En5btW/jhBF/seV+XMx3aYwukYC3A49DA==}
-    engines: {node: '>=6'}
 
   brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -7031,8 +7024,6 @@ snapshots:
       multicast-dns: 7.2.5
 
   boolbase@1.0.0: {}
-
-  bootstrap@3.4.1: {}
 
   brace-expansion@1.1.11:
     dependencies:
