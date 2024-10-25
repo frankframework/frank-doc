@@ -1,1 +1,26 @@
-<ff-button>Add Filter</ff-button>
+<ff-button toggleable [(active)]="open" (activeChange)="toggleDropdown()">Add Filter</ff-button>
+<div #menu class="menu">
+  <div class="menu-card filters">
+    <ul>
+      @for (filter of filters(); track filter.name) {
+        <li (click)="toggleFilterMenu(filter)">{{ filter.name }}</li>
+      }
+    </ul>
+    <button (click)="clearFilters()">Clear all filters</button>
+  </div>
+  @if (selectedFilter) {
+    <div class="menu-card labels">
+      <ul>
+        @for (label of selectedFilter.labels; track label.name) {
+          <li>
+            <label
+              >{{ label.name }}
+              <input type="checkbox" [name]="label.name" (change)="onToggleLabel(selectedFilter.name, label.name)"
+            /></label>
+          </li>
+        }
+      </ul>
+      <button (click)="clearSelectedLabels()">Clear selected filters</button>
+    </div>
+  }
+</div>
