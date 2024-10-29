@@ -31,7 +31,7 @@ public class ListenerChild extends ListenerParent {
 	public void setDeprecatedInParentAttribute(String value) {
 	}
 
-	public void registerTextConfigChild(String value) {
+	public void addTextConfigChild(String value) {
 	}
 
 	// This one becomes an attribute of ListenerChild

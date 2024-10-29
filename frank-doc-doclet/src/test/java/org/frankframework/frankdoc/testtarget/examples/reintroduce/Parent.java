@@ -4,6 +4,6 @@ public class Parent implements IInterface {
 	public void setAttribute(String value) {
 	}
 
-	public void registerB(MyConfigChild child) {
+	public void addB(MyConfigChild child) {
 	}
 }

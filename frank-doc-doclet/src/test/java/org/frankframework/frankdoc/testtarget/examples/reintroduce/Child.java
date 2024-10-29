@@ -18,6 +18,6 @@ public class Child extends Parent {
 	}
 
 	@Reintroduce
-	public void registerB(MyConfigChild child) {
+	public void addB(MyConfigChild child) {
 	}
 }

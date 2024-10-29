@@ -2,13 +2,13 @@
 <digester-rules>
   <rule pattern="*/roleNameChild" registerMethod="setChild"/>
   <rule pattern="*/roleNameDeprecatedChild" registerMethod="setDeprecatedChild"/>
-  <rule pattern="*/roleNameInheritedChilds" registerMethod="registerInheritedChilds"/>
+  <rule pattern="*/roleNameInheritedChilds" registerMethod="addInheritedChilds"/>
   <rule pattern="*/roleNameInheritedChildDocOnDerived" registerMethod="setInheritedChildDocOnDerived"/>
   <rule pattern="*/roleNameChildNoDoc" registerMethod="setChildNoDoc"/>
   <rule pattern="*/roleNameInheritedChildDocWithDescriptionOverride" registerMethod="setInheritedChildDocWithDescriptionOverride"/>
   <rule pattern="*/roleNameInheritedWithoutOverride" registerMethod="setInheritedWithoutOverride"/>
   <rule pattern="*/roleNameInheritedChildNonSelected" registerMethod="setInheritedChildNonSelected"/>
   <rule pattern="*/roleNameChildOverriddenOnlyParentAnnotated" registerMethod="setChildOverriddenOnlyParentAnnotated"/>
-  <rule pattern="*/roleNameText" registerTextMethod="registerText" />
+  <rule pattern="*/roleNameText" registerTextMethod="addText" />
   <rule pattern="*/roleNameIgnored" registerTextMethod="setNotConfigChildButAttribute" />
 </digester-rules>

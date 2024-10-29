@@ -1,10 +1,10 @@
 package org.frankframework.frankdoc.testtarget.examples.pattern.violation;
 
 public class A {
-	public void registerB(B child) {
+	public void addB(B child) {
 	}
 
 	// Violating config child. Thet pattern is */b/j
-	public void registerJ(String text) {
+	public void addJ(String text) {
 	}
 }
