@@ -3,6 +3,7 @@
     <p class="subtitle">Technical documentation of our Frank!Elements</p>
     <h2 class="title">What are you looking for?</h2>
     <ff-search [(ngModel)]="searchQuery" (ngModelChange)="onSearchQueryChange($event)"></ff-search>
+    <!--<app-home-filters (selectedFilters)=""></app-home-filters>-->
     <app-home-filters></app-home-filters>
   </div>
   @if (searchQuery.trim() !== '') {
