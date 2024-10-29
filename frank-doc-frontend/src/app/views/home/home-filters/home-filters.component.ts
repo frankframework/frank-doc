@@ -41,21 +41,30 @@ export class HomeFiltersComponent {
   }
 
   onToggleLabel(filterName: string, labelName: string): void {
-    const filterLabelIndex = this.selectedFilterLabels[filterName]?.indexOf(labelName);
-    if (filterLabelIndex !== -1) {
-      this.selectedFilterLabels[filterName].splice(filterLabelIndex, 1);
-      return;
+    if (!this.selectedFilterLabels[filterName]) {
+      this.selectedFilterLabels[filterName] = [];
     }
-    this.selectedFilterLabels[filterName].push(labelName);
-    this.selectedFilters.emit({ ...this.selectedFilterLabels });
+
+    const filterLabelIndex = this.selectedFilterLabels[filterName]?.indexOf(labelName);
+    if (filterLabelIndex === -1) {
+      this.selectedFilterLabels[filterName].push(labelName);
+    } else {
+      this.selectedFilterLabels[filterName].splice(filterLabelIndex, 1);
+    }
+    this.updateSelectedFilters();
   }
 
   clearFilters(): void {
-    // TODO clear all selected labels
-    console.log('clearing');
+    this.selectedFilterLabels = {};
+    this.updateSelectedFilters();
   }
 
   clearSelectedLabels(): void {
-    // TODO for selected filter remove all labels
+    if (!this.selectedFilter) return;
+    delete this.selectedFilterLabels[this.selectedFilter.name];
+  }
+
+  private updateSelectedFilters(): void {
+    this.selectedFilters.emit({ ...this.selectedFilterLabels });
   }
 }
