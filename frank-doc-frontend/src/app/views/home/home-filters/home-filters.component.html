@@ -3,20 +3,18 @@
   <div class="menu-card filters">
     <ul>
       @for (filter of filters(); track filter.name) {
-        <li (click)="toggleFilterMenu(filter)">{{ filter.name }}</li>
+        <li (click)="toggleFilterMenu(filter)" [ngClass]="{ active: selectedFilter === filter }">{{ filter.name }}</li>
       }
     </ul>
     <button (click)="clearFilters()">Clear all filters</button>
   </div>
   @if (selectedFilter) {
     <div class="menu-card labels">
+      <p class="menu-title">{{ selectedFilter.name }}</p>
       <ul>
         @for (label of selectedFilter.labels; track label.name) {
           <li>
-            <label
-              >{{ label.name }}
-              <input type="checkbox" [name]="label.name" (change)="onToggleLabel(selectedFilter.name, label.name)"
-            /></label>
+            <ff-checkbox>{{ label.name }}</ff-checkbox>
           </li>
         }
       </ul>
