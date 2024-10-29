@@ -4,14 +4,15 @@
 name: Build with Frank!Framework
 
 on:
-  workflow_run:
-    workflows: [Java CI with Maven]
-    types: [completed]
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
   workflow_dispatch:
 
 jobs:
   build:
-
+    needs: [maven-build]
     runs-on: ubuntu-latest
 
     steps:
