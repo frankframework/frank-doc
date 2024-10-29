@@ -1,12 +1,13 @@
 import { Component, computed, ElementRef, EventEmitter, Output, Signal, ViewChild } from '@angular/core';
-import { ButtonComponent } from '@frankframework/angular-components';
+import { ButtonComponent, CheckboxComponent } from '@frankframework/angular-components';
 import { AppService, Filter } from '../../../app.service';
 import { SelectedFilters } from '../home.component';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-home-filters',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, NgClass, CheckboxComponent],
   templateUrl: './home-filters.component.html',
   styleUrl: './home-filters.component.scss',
 })
@@ -28,6 +29,7 @@ export class HomeFiltersComponent {
       return;
     }
     menuElement.classList.remove('open');
+    this.selectedFilter = null;
   }
 
   toggleFilterMenu(filter: Filter): void {
@@ -50,6 +52,7 @@ export class HomeFiltersComponent {
 
   clearFilters(): void {
     // TODO clear all selected labels
+    console.log('clearing');
   }
 
   clearSelectedLabels(): void {
