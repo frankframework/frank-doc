@@ -16,4 +16,18 @@ export class HomeComponentListComponent {
   @Input() components: FuseResult<Element>[] = [];
 
   protected relatedComponents: FuseResult<Element>[] = [];
+
+  getFirstFilter(labels?: Record<string, string[]>): string {
+    if (!labels) return '-';
+    const labelGroups = Object.keys(labels);
+    if (labelGroups.length === 0) return '-';
+    return labelGroups[0];
+  }
+
+  getFirstLabel(labels?: Record<string, string[]>): string {
+    if (!labels) return '-';
+    const labelGroups = Object.keys(labels);
+    if (labelGroups.length === 0) return '-';
+    return labels[labelGroups[0]][0];
+  }
 }

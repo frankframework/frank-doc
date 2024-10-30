@@ -5,6 +5,7 @@
 
   .sidenav {
     width: 300px;
+    flex: 0 0 auto;
   }
 
   .page {
@@ -19,8 +20,8 @@ ff-chip {
 }
 
 .sidenav {
-  padding: 20px 0;
-  border-image: linear-gradient(180deg, #fff 0%, #EDEDED 5%) 1;
+  padding: 20px 20px 20px 0;
+  border-image: linear-gradient(180deg, #fff 0%, #EDEDED 50px) 1;
   border-width:  0 1px 0 0;
   border-style: solid;
 
@@ -33,7 +34,7 @@ ff-chip {
   }
 
   ul {
-    padding: 0 13px;
+    padding-left: 13px;
     list-style: none;
     margin-bottom: 25px;
 
@@ -49,7 +50,7 @@ ff-chip {
 
 
 .page {
-  padding: 20px;
+  padding: 20px 0 0 50px;
 
   h2 {
     margin-bottom: 10px;

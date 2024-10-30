@@ -2,6 +2,13 @@
 
 @import '@frankframework/angular-components';
 
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('assets/DMMono-Regular.ttf') format('truetype');
+}
+
 * {
   margin: 0;
   box-sizing: border-box;

@@ -23,7 +23,7 @@
     "@angular/platform-browser": "^18.0.5",
     "@angular/platform-browser-dynamic": "^18.0.5",
     "@angular/router": "^18.0.5",
-    "@frankframework/angular-components": "file:..\\..\\angular-components\\dist\\angular-components\\frankframework-angular-components-0.2.0.tgz",
+    "@frankframework/angular-components": "file:..\\..\\angular-components\\dist\\angular-components\\frankframework-angular-components-0.2.1.tgz",
     "fuse.js": "^7.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
