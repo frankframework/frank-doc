@@ -5,6 +5,7 @@
 
   .side-search {
     width: 300px;
+    flex: 0 0 auto;
   }
 
   .details {
@@ -14,12 +15,20 @@
 
   .side-navigation {
     width: 300px;
+    flex: 0 0 auto;
   }
 }
 
 .side-search {
+  padding-right: 20px;
+
   ff-search {
     width: 100%;
+  }
+
+  .search-results,
+  .search-related {
+    margin-top: 50px;
   }
 }
 
@@ -53,9 +62,35 @@
   }
 
   .syntax > pre {
-    padding: 15px 20px;
-    background: #F5F5F5;
-    border-radius: 10px;
+    position: relative;
+    padding: 26px;
+    border-radius: 8px;
+    border: 1px solid #D8D8D8;
+    font-size: 16px;
+    color: #1E1E1E;
+    background: rgba(237, 237, 237, 0.50);
+
+    button {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 5px;
+      border: none;
+      border-radius: 5px;
+      background: rgba(216, 216, 216, 0.75);
+
+      &:hover {
+        background: rgba(216, 216, 216, 1);
+      }
+
+      &:active {
+        background: rgba(216, 216, 216, .5);
+      }
+    }
+
+    code {
+      font-family: 'DM Mono', monospace;
+    }
   }
 }
 

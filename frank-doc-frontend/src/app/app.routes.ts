@@ -15,7 +15,7 @@ export const routes: Routes = [
     title: 'Index',
   },
   {
-    path: 'test',
+    path: ':filter/:label/:element',
     component: DetailsComponent,
   },
   {

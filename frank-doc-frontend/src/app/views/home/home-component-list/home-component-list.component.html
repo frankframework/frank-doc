@@ -12,7 +12,7 @@
 <div class="components">
   @for (component of components; track component.item.name) {
     <div class="card">
-      <p class="label">{{ component.item.labels ? component.item.labels['FrankDocGroup'][0] : '' }}</p>
+      <p class="label">{{ component.item.labels ? getFirstLabel(component.item.labels) : '' }}</p>
       <p class="name">{{ component.item.name }}</p>
       <p class="element-names">
         @for (elementName of component.item.elementNames; track elementName; let first = $first) {
@@ -23,7 +23,15 @@
         }
       </p>
       <p class="description">{{ component.item.description }}</p>
-      <ff-button routerLink="test">-></ff-button>
+      <ff-button
+        [routerLink]="[
+          '/',
+          getFirstFilter(component.item.labels),
+          getFirstLabel(component.item.labels),
+          component.item.name,
+        ]"
+        >-></ff-button
+      >
     </div>
   } @empty {
     <p>No Frank!Elements found.</p>

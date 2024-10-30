@@ -31,7 +31,7 @@
             <h4>{{ label.name }}</h4>
             <div class="elements">
               @for (element of label.elements; track element) {
-                <a [routerLink]="['/', label.name, element]"
+                <a [routerLink]="['/', filter.name, label.name, element]"
                   ><ff-chip colour="#CD55EB" slim>{{ label.name.charAt(0) }}</ff-chip> {{ element }}</a
                 >
               } @empty {
