@@ -1,5 +1,3 @@
 <Master>
-  <Part className="org.frankframework.frankdoc.testtarget.exotic.Member1">
-    <Child className="org.frankframework.frankdoc.testtarget.exotic.Child1" />
-  </Part>
+  <Part />
 </Master>
