@@ -15,6 +15,10 @@ export const routes: Routes = [
     title: 'Index',
   },
   {
+    path: ':fullname',
+    component: DetailsComponent,
+  },
+  {
     path: ':filter/:label/:element',
     component: DetailsComponent,
   },

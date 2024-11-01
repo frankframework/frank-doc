@@ -1,0 +1,44 @@
+@if (element) {
+  <h2>{{ element.name }}</h2>
+  @if (element.labels) {
+    @for (filter of element.labels | keyvalue; track filter; let index = $index) {
+      @for (label of filter.value; track label) {
+        <ff-chip [colour]="getLabelColor(index)" rounded>{{ label }}</ff-chip>
+      }
+    }
+  }
+  <div class="section explanation">
+    <h3>Explanation</h3>
+    <p [innerHtml]="element.description ?? '' | javadoc: frankDocElements"></p>
+  </div>
+  <div class="section quick-links">
+    <h3>Quick Links</h3>
+    <ul>
+      <li>
+        <a href="">Github - TestPipe Implementation Examples</a>
+      </li>
+      <li>
+        <a [href]="javaDocUrlOf(element.fullName)">Javadoc - TestPipe</a>
+      </li>
+    </ul>
+  </div>
+  <div class="section syntax">
+    <h3>Syntax</h3>
+    <pre><button>Copy</button><code
+    >&lt;!--Copy the required code below--&gt;
+
+&lt;TestPipe name=”my-test-pipe” version=”1” /&gt;</code
+    ></pre>
+  </div>
+  <div class="section options">
+    <h3>Component Options</h3>
+  </div>
+} @else {
+  <h2>Element not found</h2>
+  <div class="section explanation">
+    <p>
+      Use the search bar on the left or navigate to the <a routerLink="/">home page</a> to find the Frank!Element you're
+      looking for, or go to the <a routerLink="/index">index page</a> for a full list of possible Frank!Elements.
+    </p>
+  </div>
+}

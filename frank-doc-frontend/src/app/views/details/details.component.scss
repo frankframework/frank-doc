@@ -34,64 +34,6 @@
 
 .details {
   padding: 0 20px;
-
-  h2 {
-    color: #1E1E1E;
-    font-size: 50px;
-    font-weight: 700;
-  }
-
-  ff-chip + ff-chip {
-    margin-left: 5px;
-  }
-
-  .section {
-    margin-top: 50px;
-  }
-
-  h3 {
-    margin-bottom: 15px;
-    color: #1E1E1E;
-    font-size: 32px;
-    font-weight: 600;
-  }
-
-  .explanation > p {
-    color: #626262;
-    font-size: 16px;
-  }
-
-  .syntax > pre {
-    position: relative;
-    padding: 26px;
-    border-radius: 8px;
-    border: 1px solid #D8D8D8;
-    font-size: 16px;
-    color: #1E1E1E;
-    background: rgba(237, 237, 237, 0.50);
-
-    button {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      padding: 5px;
-      border: none;
-      border-radius: 5px;
-      background: rgba(216, 216, 216, 0.75);
-
-      &:hover {
-        background: rgba(216, 216, 216, 1);
-      }
-
-      &:active {
-        background: rgba(216, 216, 216, .5);
-      }
-    }
-
-    code {
-      font-family: 'DM Mono', monospace;
-    }
-  }
 }
 
 .side-navigation {

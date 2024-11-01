@@ -27,4 +27,8 @@ export class AppService {
   getFrankDoc(): Observable<FrankDoc> {
     return this.http.get<FrankDoc>(`${environment.frankDocUrl}?cache=${Date.now()}`);
   }
+
+  fullNameToSimpleName(fullName: string): string {
+    return fullName.slice(fullName.lastIndexOf('.') + 1);
+  }
 }
