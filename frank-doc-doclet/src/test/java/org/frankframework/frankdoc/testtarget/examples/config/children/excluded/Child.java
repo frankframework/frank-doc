@@ -6,12 +6,12 @@ public class Child extends Parent {
 	/**
 	 * Documented, but still not a config child. @Protected is inherited.
 	 */
-	public void registerB(Item child) {
+	public void addB(Item child) {
 	}
 
 	// Not documented, but the Frank!Doc should see this config child.
 	// The Frank!Doc must also prevent inheritance.
 	@Protected
-	public void registerC(Item child) {
+	public void addC(Item child) {
 	}
 }

@@ -1,9 +1,9 @@
 package org.frankframework.frankdoc.testtarget.highest.commonInterface;
 
 public class Master {
-	public void registerA(IListener child) {
+	public void addA(IListener child) {
 	}
 
-	public void registerB(IExtension child) {
+	public void addB(IExtension child) {
 	}
 }

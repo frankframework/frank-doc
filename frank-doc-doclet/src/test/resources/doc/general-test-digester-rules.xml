@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <digester-rules>
-  <rule pattern="*/a" registerMethod="registerA"/>
-  <rule pattern="*/b" registerMethod="registerB"/>
-  <rule pattern="*/c" registerMethod="registerC"/>
-  <rule pattern="*/d" registerMethod="registerD"/>
+  <rule pattern="*/a" registerMethod="addA"/>
+  <rule pattern="*/b" registerMethod="addB"/>
+  <rule pattern="*/c" registerMethod="addC"/>
+  <rule pattern="*/d" registerMethod="addD"/>
   <!-- Should be ignored by Frank!Doc. A method starting with "set" cannot
        be a text config child because a method setX(String) is an attribute
        setter -->
   <rule pattern="*/i" registerTextMethod="setI"/>
 
   <rule pattern="*/p" registerTextMethod="addP"/>
-  <rule pattern="*/q" registerTextMethod="registerQ"/>
-  <rule pattern="*/r" registerTextMethod="registerR"/>
-  <rule pattern="*/s" registerTextMethod="registerS"/>
+  <rule pattern="*/q" registerTextMethod="addQ"/>
+  <rule pattern="*/r" registerTextMethod="addR"/>
+  <rule pattern="*/s" registerTextMethod="addS"/>
 
   <rule pattern="*/sender" registerMethod="setSender" beanClass="org.frankframework.frankdoc.testtarget.featurepackage.ISender" />
   <rule pattern="*/listener" registerMethod="setListener"/>

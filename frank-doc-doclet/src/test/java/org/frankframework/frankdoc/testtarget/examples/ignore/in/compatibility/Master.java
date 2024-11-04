@@ -11,6 +11,6 @@ public class Master {
 	 * @ff.mandatory ignoreInCompatibilityMode
 	 * @param child
 	 */
-	public void registerA(Nested child) {
+	public void addA(Nested child) {
 	}
 }

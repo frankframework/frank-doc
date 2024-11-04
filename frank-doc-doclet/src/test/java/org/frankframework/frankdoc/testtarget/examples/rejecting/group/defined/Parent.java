@@ -7,9 +7,9 @@ public class Parent implements IInterface {
 	public void setRejectedAttribute(String value) {
 	}
 
-	public void registerB(Nested1 child) {
+	public void addB(Nested1 child) {
 	}
 
-	public void registerC(Nested2 child) {
+	public void addC(Nested2 child) {
 	}
 }

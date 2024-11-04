@@ -10,9 +10,9 @@ public class Start {
 	public void addP(String value) {
 	}
 
-	public void registerA(IChild child) {
+	public void addA(IChild child) {
 	}
 
-	public void registerB(IChild child) {
+	public void addB(IChild child) {
 	}
 }

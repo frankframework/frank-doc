@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <digester-rules>
   <!-- Root pattern, ignored -->
-  <rule pattern="a" registerMethod="registerA"/>
-  <rule pattern="a/b" registerMethod="registerB"/>
+  <rule pattern="a" registerMethod="addA"/>
+  <rule pattern="a/b" registerMethod="addB"/>
   <!--  B does not have C because B is not a root -->
-  <rule pattern="b/c" registerMethod="registerC"/>
+  <rule pattern="b/c" registerMethod="addC"/>
   <!-- We test that the Frank!Doc can handle multiple rules with the same registerMethod -->
   <!-- This one does not produce a child, A has the method -->
-  <rule pattern="b/d" registerMethod="registerD"/>  
+  <rule pattern="b/d" registerMethod="addD"/>
   <!-- But this one matches -->
-  <rule pattern="*/d" registerMethod="registerD"/>      
+  <rule pattern="*/d" registerMethod="addD"/>
 </digester-rules>

@@ -6,12 +6,12 @@ public class SelectingAncestor extends NoRelevantAncestorBecauseOnlyTechnicalOve
 	}
 
 	// Technical override, so not a child
-	public void registerB(Nested1 child) {
+	public void addB(Nested1 child) {
 	}
 
 	public void setSelectedAttribute(String value) {
 	}
 
-	public void registerC(Nested2 child) {
+	public void addC(Nested2 child) {
 	}
 }

@@ -62,26 +62,27 @@ public class ConfigChildSetterDescriptorTest {
 	}
 
 	@Test
-	public void whenPluralRegisterThenPluralInDictionary() {
-		ConfigChildSetterDescriptor configChildDescriptor = instance.getConfigChildDescriptors().get("registerItemPlural").get(0);
+	public void whenPluralAddThenPluralInDictionary() {
+		ConfigChildSetterDescriptor configChildDescriptor = instance.getConfigChildDescriptors().get("addItemPlural").get(0);
 		assertNotNull(configChildDescriptor);
 		assertTrue(configChildDescriptor.isForObject());
-		assertEquals("registerItemPlural", configChildDescriptor.getMethodName());
-		assertEquals("roleNameItemPluralRegister", configChildDescriptor.getRoleName());
+		assertEquals("addItemPlural", configChildDescriptor.getMethodName());
+		assertEquals("roleNameItemPluralAdd", configChildDescriptor.getRoleName());
 		assertTrue(configChildDescriptor.isAllowMultiple());
 	}
 
 	@Test
-	public void onlyRulesWithRegisterMethodsGoInDictionary() {
-		assertEquals(4, instance.getConfigChildDescriptors().size());
+	public void onlyRulesWithAddMethodsGoInDictionary() {
+		assertEquals(3, instance.getConfigChildDescriptors().size());
+		assertEquals(2, instance.getConfigChildDescriptors().get("addItemPlural").size());
 	}
 
 	@Test
-	public void whenHasRegisterTextMethodThenTextConfigChild() {
-		ConfigChildSetterDescriptor configChildDescriptor = instance.getConfigChildDescriptors().get("registerText").get(0);
+	public void whenHasAddTextMethodThenTextConfigChild() {
+		ConfigChildSetterDescriptor configChildDescriptor = instance.getConfigChildDescriptors().get("addText").get(0);
 		assertNotNull(configChildDescriptor);
 		assertFalse(configChildDescriptor.isForObject());
-		assertEquals("registerText", configChildDescriptor.getMethodName());
+		assertEquals("addText", configChildDescriptor.getMethodName());
 		assertEquals("roleNameText", configChildDescriptor.getRoleName());
 		assertTrue(configChildDescriptor.isAllowMultiple());
 	}

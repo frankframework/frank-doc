@@ -6,7 +6,7 @@ public class RejectingAncestor extends SelectingAncestor {
 	}
 
 	// Technical override, so not a child
-	public void registerB(Nested1 child) {
+	public void addB(Nested1 child) {
 	}
 
 	@Deprecated
@@ -14,6 +14,6 @@ public class RejectingAncestor extends SelectingAncestor {
 	}
 
 	@Deprecated
-	public void registerC(Nested2 child) {
+	public void addC(Nested2 child) {
 	}
 }

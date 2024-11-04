@@ -4,7 +4,7 @@ public class Master {
 	/**
 	 * @ff.mandatory
 	 */
-	public void registerA(IInterface child) {
+	public void addA(IInterface child) {
 	}
 
 	/**
@@ -16,6 +16,6 @@ public class Master {
 	/**
 	 * @ff.mandatory
 	 */
-	public void registerC(Child child) {
+	public void addC(Child child) {
 	}
 }

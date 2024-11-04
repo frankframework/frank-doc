@@ -17,6 +17,6 @@ public class Configuration {
 	/**
 	 * Register an adapter with the configuration.
 	 */
-	public void registerAdapter(Adapter adapter) {
+	public void addAdapter(Adapter adapter) {
 	}
 }

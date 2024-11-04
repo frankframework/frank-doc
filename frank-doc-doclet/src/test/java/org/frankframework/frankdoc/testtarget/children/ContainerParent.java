@@ -1,7 +1,7 @@
 package org.frankframework.frankdoc.testtarget.children;
 
 public class ContainerParent {
-	protected void registerInheritedChilds(InheritedChild inheritedChild) {
+	protected void addInheritedChilds(InheritedChild inheritedChild) {
 	}
 
 	protected void setInheritedChildDocOnDerived(InheritedChildDocOnDerived child) {

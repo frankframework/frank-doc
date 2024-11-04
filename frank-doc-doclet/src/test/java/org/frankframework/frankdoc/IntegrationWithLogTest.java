@@ -27,8 +27,8 @@ public class IntegrationWithLogTest {
 			String actualXsd = factory.getSchema();
 			String expectedXsd = TestUtil.getTestFile("/doc/examplesExpected/testPluralConflictDefaultOption.xsd");
 			TestUtil.assertEqualsIgnoreCRLF(expectedXsd, actualXsd);
-			appender.assertLogged("ConfigChildSet [ConfigChildSet(ObjectConfigChild(MyElement.registerB(IChild1)), ObjectConfigChild(MyElement.registerB(IChild2)))] has multiple candidates for the default element: [org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Child1, org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Child2]");
-			appender.assertLogged("ConfigChildSet [ConfigChildSet(ObjectConfigChild(Master.registerA(IInterface1)), ObjectConfigChild(Master.registerA(IInterface2)))] has multiple candidates for the default element: [org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Interface1, org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Interface2]");
+			appender.assertLogged("ConfigChildSet [ConfigChildSet(ObjectConfigChild(MyElement.addB(IChild1)), ObjectConfigChild(MyElement.addB(IChild2)))] has multiple candidates for the default element: [org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Child1, org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Child2]");
+			appender.assertLogged("ConfigChildSet [ConfigChildSet(ObjectConfigChild(Master.addA(IInterface1)), ObjectConfigChild(Master.addA(IInterface2)))] has multiple candidates for the default element: [org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Interface1, org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Interface2]");
 		}
 	}
 
