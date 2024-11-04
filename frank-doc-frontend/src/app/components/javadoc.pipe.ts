@@ -11,8 +11,8 @@ export class JavadocPipe implements PipeTransform {
   private appService: AppService = inject(AppService);
   private domSanatizer: DomSanitizer = inject(DomSanitizer);
 
-  transform(value: string, elements: FrankDoc['elements']): SafeHtml | string {
-    if (value === '') return value;
+  transform(value: string, elements: FrankDoc['elements'] | null): SafeHtml | string {
+    if (value === '' || !elements) return value;
     const markdownLinkRegex = /\[(.*?)]\((.+?)\)/g;
     const linkRegex = /(?:{@link\s(.*?)})/g;
     value = value.replace(markdownLinkRegex, '<a target="_blank" href="$2" alt="$1">$1</a>'); // old regex: /\[(.*?)\]\((.+?)\)/g
@@ -39,7 +39,7 @@ export class JavadocPipe implements PipeTransform {
 
     const element = this.findElement(elements, elementParts[0]);
     if (!element) return name;
-    return `<a href="#/All/${element.name}">${name}</a>`;
+    return `<a href="#/${element.fullName}">${name}</a>`;
   }
 
   getInternalMethodReference(captureGroup: string, hashPosition: number): string {
