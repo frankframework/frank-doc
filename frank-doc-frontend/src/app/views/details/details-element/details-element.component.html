@@ -15,10 +15,10 @@
     <h3>Quick Links</h3>
     <ul>
       <li>
-        <a href="">Github - TestPipe Implementation Examples</a>
+        <a [href]="githubUrlOf(element.name)">Github - {{ element.name }} Implementation Examples</a>
       </li>
       <li>
-        <a [href]="javaDocUrlOf(element.fullName)">Javadoc - TestPipe</a>
+        <a [href]="javaDocUrlOf(element.fullName)">Javadoc - {{ element.name }}</a>
       </li>
     </ul>
   </div>
@@ -32,6 +32,116 @@
   </div>
   <div class="section options">
     <h3>Component Options</h3>
+    @if (element.attributes) {
+      <div class="attributes">
+        <span class="options-title">Attributes</span>
+        <ff-alert type="warning">The attributes below are required</ff-alert>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (attribute of attributesRequired; track attribute.name) {
+              <tr>
+                <td>{{ attribute.name }}</td>
+                <td>{{ attribute.description }}</td>
+                <td>{{ attribute.type }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        <ff-alert type="info">The attributes below are optional</ff-alert>
+        <span class="options-sub-title">Optional</span>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (attribute of attributesOptional; track attribute.name) {
+              <tr>
+                <td>{{ attribute.name }}</td>
+                <td>{{ attribute.description }}</td>
+                <td>{{ attribute.type }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+    @if (element.parameters) {
+      <div class="parameters">
+        <span class="options-title">Parameters</span>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (parameter of element.parameters; track parameter.name) {
+              <tr>
+                <td>{{ parameter.name }}</td>
+                <td>{{ parameter.description }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+    @if (element.children) {
+      <div class="nested-elements">
+        <span class="options-title">Nested Elements</span>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Cardinality</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (nestedElement of element.children; track nestedElement.roleName) {
+              <tr>
+                <td>{{ nestedElement.roleName }}</td>
+                <td>{{ nestedElement.description }}</td>
+                <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+    @if (element.forwards) {
+      <div class="forwards">
+        <span class="options-title">Forwards</span>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (forward of element.forwards; track forward.name) {
+              <tr>
+                <td>{{ forward.name }}</td>
+                <td>{{ forward.description }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   </div>
 } @else {
   <h2>Element not found</h2>

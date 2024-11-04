@@ -19,6 +19,11 @@ export const routes: Routes = [
     component: DetailsComponent,
   },
   {
+    // old url structure, only checks element short name
+    path: ':label/:element',
+    component: DetailsComponent,
+  },
+  {
     path: ':filter/:label/:element',
     component: DetailsComponent,
   },
