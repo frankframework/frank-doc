@@ -6,6 +6,6 @@ public class NoRelevantAncestorBecauseOnlyTechnicalOverrides extends DefaultAnce
 	}
 
 	// Technical override, so not a child
-	public void registerB(Nested1 child) {
+	public void addB(Nested1 child) {
 	}
 }

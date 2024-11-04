@@ -26,13 +26,13 @@ public class Parent implements IInterface {
 	 * @ff.mandatory
 	 * @param child
 	 */
-	public void registerB(ConfigChild child) {
+	public void addB(ConfigChild child) {
 	}
 
 	/**
 	 * @ff.mandatory
 	 * @param child
 	 */
-	public void registerC(ConfigChild2 child) {
+	public void addC(ConfigChild2 child) {
 	}
 }

@@ -9,8 +9,8 @@ public class Container extends ContainerParent {
 	}
 
 	@Override
-	public void registerInheritedChilds(InheritedChild inheritedChild) {
-		super.registerInheritedChilds(inheritedChild);
+	public void addInheritedChilds(InheritedChild inheritedChild) {
+		super.addInheritedChilds(inheritedChild);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class Container extends ContainerParent {
 	}
 
 	// To test TextConfigChild
-	public void registerText(String value) {
+	public void addText(String value) {
 	}
 
 	// Not a config child because the name starts with "set" and the argument is String.

@@ -13,6 +13,6 @@ public abstract class RejectingChild extends Parent {
 	}
 
 	@Deprecated
-	public void registerC(Nested2 child) {
+	public void addC(Nested2 child) {
 	}
 }

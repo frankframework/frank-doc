@@ -168,7 +168,7 @@ public class FrankDocModelConfigChildrenTest {
 	public void testSequenceOfConfigChildrenMatchesSequenceOfConfigChildSetters() {
 		List<String> actualConfigChildNames = configChildren.stream().map(ConfigChild::toString).collect(Collectors.toList());
 		String[] expectedConfigChildNames = new String[] {"ObjectConfigChild(Container.setChild(Child))", "ObjectConfigChild(Container.setDeprecatedChild(Child))",
-				"ObjectConfigChild(Container.registerInheritedChilds(InheritedChild))", "ObjectConfigChild(Container.setInheritedChildDocOnDerived(InheritedChildDocOnDerived))",
+				"ObjectConfigChild(Container.addInheritedChilds(InheritedChild))", "ObjectConfigChild(Container.setInheritedChildDocOnDerived(InheritedChildDocOnDerived))",
 				"ObjectConfigChild(Container.setInheritedChildDocWithDescriptionOverride(InheritedChildDocWithDescriptionOverride))", "ObjectConfigChild(Container.setInheritedChildNonSelected(InheritedChildNonSelected))",
 				"ObjectConfigChild(Container.setChildOverriddenOnlyParentAnnotated(ChildOverriddenOnlyParentAnnotated))",
 				"TextConfigChild(roleName = roleNameText)"};

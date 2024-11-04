@@ -2,9 +2,9 @@
 <digester-rules>
   <rule pattern="*/roleNameItemSingular" registerMethod="setItemSingular"/>
   <rule pattern="*/roleNameItemPluralAdd" registerMethod="addItemPlural"/>
-  <rule pattern="*/roleNameItemPluralRegister" registerMethod="registerItemPlural"/>
+  <rule pattern="*/roleNameItemPluralRegister" registerMethod="addItemPlural"/>
   <rule pattern="*/jmsRealms" factory="org.frankframework.configuration.JmsRealmsFactory"/>
-  <rule pattern="*/roleNameText" registerTextMethod="registerText" />
+  <rule pattern="*/roleNameText" registerTextMethod="addText" />
   <!-- Ignored as config child setter descriptor because it has registerTextMethod and because the method name starts with "set" -->
   <rule pattern="*/roleNameIgnored" registerTextMethod="setIgnored" />
 </digester-rules>

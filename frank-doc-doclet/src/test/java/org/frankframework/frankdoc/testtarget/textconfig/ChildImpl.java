@@ -1,9 +1,9 @@
 package org.frankframework.frankdoc.testtarget.textconfig;
 
 public class ChildImpl implements IChild {
-	public void registerQ(String value) {
+	public void addQ(String value) {
 	}
 
-	public void registerC(GrandChild child) {
+	public void addC(GrandChild child) {
 	}
 }

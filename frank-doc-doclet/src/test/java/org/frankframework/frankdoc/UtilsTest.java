@@ -94,8 +94,8 @@ public class UtilsTest {
 	}
 
 	@Test
-	public void whenMethodStartsWithRegisterAndTakesStringThenTextConfigChildSetter() throws FrankDocException {
-		assertTrue(isConfigChildSetter(getTestMethod("registerTextConfigChild")));
+	public void whenMethodStartsWithAddAndTakesStringThenTextConfigChildSetter() throws FrankDocException {
+		assertTrue(isConfigChildSetter(getTestMethod("addTextConfigChild")));
 	}
 
 	@Test

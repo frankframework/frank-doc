@@ -11,5 +11,5 @@ public interface IChanger {
 	 * @ff.optional
 	 * @param child
 	 */
-	void registerB(ConfigChild child);
+	void addB(ConfigChild child);
 }

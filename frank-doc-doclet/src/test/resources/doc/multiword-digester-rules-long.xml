@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <digester-rules>
   <!-- Root pattern, ignored -->
-  <rule pattern="a" registerMethod="registerA"/>
-  <rule pattern="a/b" registerMethod="registerB"/>
-  <rule pattern="a/b/c" registerMethod="registerC"/>
+  <rule pattern="a" registerMethod="addA"/>
+  <rule pattern="a/b" registerMethod="addB"/>
+  <rule pattern="a/b/c" registerMethod="addC"/>
   <!-- This also produces a config child, a * can also match zero pattern components -->
-  <rule pattern="*/a/b/d" registerMethod="registerD"/>  
+  <rule pattern="*/a/b/d" registerMethod="addD"/>
 </digester-rules>

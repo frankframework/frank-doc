@@ -2,14 +2,14 @@ package org.frankframework.frankdoc.testtarget.examples.pattern.violation;
 
 public class B {
 	// Config child that satisfies patter */b/c.
-	public void registerC(C child) {
+	public void addC(C child) {
 	}
 
 	// Violating config child, violates pattern */c/d.
-	public void registerD(D child) {
+	public void addD(D child) {
 	}
 
 	// Text config child.
-	public void registerI(String text) {
+	public void addI(String text) {
 	}
 }
