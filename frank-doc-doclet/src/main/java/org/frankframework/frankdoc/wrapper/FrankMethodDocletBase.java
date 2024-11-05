@@ -88,15 +88,15 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 		ExecutableElement overriddenExecutableElement = getOverriddenExecutableElement();
 		// The overriddenExecutableElement can be in a Java interface instead of an ancestor class.
 		// This is because in Java 8 a Java interface can have default method implementations.
-		if((overriddenExecutableElement != null) && (! overriddenExecutableElement.getClass().isInterface())) {
+		if(overriddenExecutableElement != null && !overriddenExecutableElement.getClass().isInterface()) {
 			FrankMethodDocletBase overriddenMethod = (FrankMethodDocletBase) declaringClass.recursivelyFindFrankMethod(overriddenExecutableElement);
 			if(overriddenMethod != null) {
 				return overriddenMethod.searchExcludingImplementedInterfaces(getter);
 			} else {
-				if(! warnedMethodsNotInJavaDoc.contains(overriddenExecutableElement)) {
+				if (!warnedMethodsNotInJavaDoc.contains(overriddenExecutableElement)) {
 					warnedMethodsNotInJavaDoc.add(overriddenExecutableElement);
 					// To see this warning, run test FrankMethodOverrideTest.whenPackagePrivateOverriddenByPublicThenOnlyChildMethodConsidered().
-					log.warn("Class {} inherits method {}, but no annotations or JavaDocs are known because the overridden method is not public.",
+					log.info("Class {} inherits method {}, but no annotations or JavaDocs are known because the overridden method is not public.",
 						declaringClass::getName, overriddenExecutableElement::getSimpleName);
 				}
 			}
@@ -106,7 +106,7 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 
 	abstract ExecutableElement getOverriddenExecutableElement();
 
-	private <T> T searchImplementedInterfaces(FrankClass clazz, String methodSignature, Function<FrankMethodDocletBase, T> getter) throws FrankDocException {
+	private <T> T searchImplementedInterfaces(FrankClass clazz, String methodSignature, Function<FrankMethodDocletBase, T> getter) {
 		TransitiveImplementedInterfaceBrowser<T> interfaceBrowser = new TransitiveImplementedInterfaceBrowser<>(clazz);
 		Function<FrankClass, T> classGetter = interfaze -> interfaze.getMethodItemFromSignature(methodSignature, getter);
 		T result = interfaceBrowser.search(classGetter);

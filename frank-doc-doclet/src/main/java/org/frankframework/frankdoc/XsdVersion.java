@@ -97,7 +97,7 @@ public enum XsdVersion {
 			if(attribute.getDescription() != null) {
 				return;
 			}
-			log.warn("Attribute [{}] lacks description", attribute);
+			log.info("Attribute [{}] lacks description", attribute);
 		}
 
 		@Override
@@ -105,7 +105,7 @@ public enum XsdVersion {
 			if(configChild.getDescription() != null) {
 				return;
 			}
-			log.warn("Config child [{}] lacks description", configChild);
+			log.info("Config child [{}] lacks description", configChild);
 		}
 
 		AttributeUse getRoleNameAttributeUse() {
