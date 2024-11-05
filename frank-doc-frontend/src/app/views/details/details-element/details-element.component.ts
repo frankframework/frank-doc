@@ -7,6 +7,7 @@ import { Attribute, Element, FrankDoc } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
 import { DocToTextPipe } from '../../../components/doc-to-text.pipe';
 import { TransformToRoutelinkDirective } from '../../../components/transform-to-routelink.directive';
+import { JavadocTextDirective } from '../../../components/javadoc-text.directive';
 
 @Component({
   selector: 'app-details-element',
@@ -19,6 +20,7 @@ import { TransformToRoutelinkDirective } from '../../../components/transform-to-
     AlertComponent,
     DocToTextPipe,
     TransformToRoutelinkDirective,
+    JavadocTextDirective,
   ],
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',
