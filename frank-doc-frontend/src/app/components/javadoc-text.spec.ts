@@ -1,8 +1,8 @@
-import { JavadocTransformerDirective } from './javadoc-transformer.directive';
+import { JavadocTextDirective } from './javadoc-text.directive';
 
 describe('JavadocTransformerDirective', () => {
   it('should create an instance', () => {
-    const directive = new JavadocTransformerDirective();
+    const directive = new JavadocTextDirective();
     expect(directive).toBeTruthy();
   });
 });
