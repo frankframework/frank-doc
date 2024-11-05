@@ -9,7 +9,8 @@
   }
   <div class="section explanation">
     <h3>Explanation</h3>
-    <p [innerHtml]="element.description ?? '' | javadoc: frankDocElements"></p>
+    <!--<p appTransformToRoutelink>{{ element.description ?? '' | docToText: frankDocElements }}</p>-->
+    <p appTransformToRoutelink>{{ element.description ?? '' | docToText: frankDocElements }}</p>
   </div>
   <div class="section quick-links">
     <h3>Quick Links</h3>
