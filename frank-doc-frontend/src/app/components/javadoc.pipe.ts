@@ -4,6 +4,7 @@ import { AppService } from '../app.service';
 import { FrankDoc } from '../frankdoc.types';
 import { transformLink } from './javadoc';
 
+/** @deprecated */
 @Pipe({
   name: 'javadoc',
   standalone: true,
