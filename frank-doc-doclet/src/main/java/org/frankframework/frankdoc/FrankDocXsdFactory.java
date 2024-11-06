@@ -59,6 +59,7 @@ import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addElementR
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addElementWithType;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addExtension;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSequence;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAnyAttribute;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAnyOtherNamespaceAttribute;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAttributeGroup;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createComplexType;
@@ -723,8 +724,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		XmlBuilder choice = addChoice(group);
 		List<FrankElement> frankElementOptions = role.getMembers().stream()
 				.filter(version.getElementFilter())
-				.filter(f -> (f != role.getDefaultElementOptionConflict()))
-				.collect(Collectors.toList());
+				.toList();
 		for(FrankElement frankElement: frankElementOptions) {
 			log.trace("Append ElementGroup with FrankElement [{}]", frankElement::getFullName);
 			addElementToElementGroup(choice, frankElement, role);
@@ -749,9 +749,14 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		XmlBuilder complexType = addComplexType(element);
 		XmlBuilder complexContent = addComplexContent(complexType);
 		XmlBuilder extension = addExtension(complexContent, xsdElementType(frankElement));
+
 		log.trace("Adding attribute [{}] for FrankElement [{}]", () -> ELEMENT_ROLE, frankElement::getFullName);
 		XmlBuilder attributeElementRole = FrankDocXsdFactoryXmlUtils.createAttribute(ELEMENT_ROLE, FIXED, role.getRoleName(), version.getRoleNameAttributeUse());
 		attributeReuseManager.addAttribute(attributeElementRole, extension);
+
+		if (role.getDefaultElementOptionConflict() == frankElement) {
+			attributeReuseManager.addAttribute(createAnyAttribute(), extension);
+		}
 	}
 
 	private void addDocumentationFrom(XmlBuilder element, FrankElement frankElement) {
@@ -777,6 +782,10 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void addElementGroupGenericOption(XmlBuilder context, List<ElementRole> roles) {
+		if (roles.stream().noneMatch(role -> role.getDefaultElementOptionConflict() == null)) {
+			return;
+		}
+
 		log.trace("Doing the generic element option, role group [{}]", () -> ElementRole.describeCollection(roles));
 		String roleName = ElementGroupManager.getRoleName(roles);
 		XmlBuilder genericElementOption = addElementWithType(context, Utils.toUpperCamelCase(roleName));
