@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/** @deprecated */
 @Pipe({
   name: 'asText',
   standalone: true,

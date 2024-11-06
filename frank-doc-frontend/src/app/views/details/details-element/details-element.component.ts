@@ -5,23 +5,12 @@ import { KeyValuePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Attribute, Element, FrankDoc } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
-import { DocToTextPipe } from '../../../components/doc-to-text.pipe';
-import { TransformToRoutelinkDirective } from '../../../components/transform-to-routelink.directive';
-import { JavadocTextDirective } from '../../../components/javadoc-text.directive';
+import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
 
 @Component({
   selector: 'app-details-element',
   standalone: true,
-  imports: [
-    ChipComponent,
-    JavadocPipe,
-    KeyValuePipe,
-    RouterLink,
-    AlertComponent,
-    DocToTextPipe,
-    TransformToRoutelinkDirective,
-    JavadocTextDirective,
-  ],
+  imports: [ChipComponent, JavadocPipe, KeyValuePipe, RouterLink, AlertComponent, JavadocTransformDirective],
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',
 })

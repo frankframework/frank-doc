@@ -10,7 +10,12 @@
   <div class="section explanation">
     <h3>Explanation</h3>
     <!--<p appTransformToRoutelink>{{ element.description ?? '' | docToText: frankDocElements }}</p>-->
-    <p *javadocText="let text of element.description; elements: frankDocElements">{{ text }}</p>
+    <p *javadocTransform="let text of element.description; link: linkTemplate; elements: frankDocElements">
+      {{ text }}
+    </p>
+    <ng-template #linkTemplate let-link
+      ><a [routerLink]="[link.href]">{{ link.text }}</a></ng-template
+    >
   </div>
   <div class="section quick-links">
     <h3>Quick Links</h3>
