@@ -9,22 +9,24 @@
   }
   <div class="section explanation">
     <h3>Explanation</h3>
-    <!--<p appTransformToRoutelink>{{ element.description ?? '' | docToText: frankDocElements }}</p>-->
-    <p *javadocTransform="let text of element.description; link: linkTemplate; elements: frankDocElements">
-      {{ text }}
+    <p>
+      <span
+        *javadocTransform="let text of element.description; link: linkTemplate; elements: frankDocElements"
+        [innerHTML]="text"
+      ></span>
+      <ng-template #linkTemplate let-link
+        ><a [routerLink]="[link.href]">{{ link.text }}</a></ng-template
+      >
     </p>
-    <ng-template #linkTemplate let-link
-      ><a [routerLink]="[link.href]">{{ link.text }}</a></ng-template
-    >
   </div>
   <div class="section quick-links">
     <h3>Quick Links</h3>
     <ul>
       <li>
-        <a [href]="githubUrlOf(element.name)">Github - {{ element.name }} Implementation Examples</a>
+        <a [href]="githubUrlOf(element.name)" target="_blank">Github - {{ element.name }} Implementation Examples</a>
       </li>
       <li>
-        <a [href]="javaDocUrlOf(element.fullName)">Javadoc - {{ element.name }}</a>
+        <a [href]="javaDocUrlOf(element.fullName)" target="_blank">Javadoc - {{ element.name }}</a>
       </li>
     </ul>
   </div>
@@ -41,45 +43,49 @@
     @if (element.attributes) {
       <div class="attributes">
         <span class="options-title">Attributes</span>
-        <ff-alert type="warning">The attributes below are required</ff-alert>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (attribute of attributesRequired; track attribute.name) {
+        @if (attributesRequired.length > 0) {
+          <ff-alert type="warning">The attributes below are required</ff-alert>
+          <table>
+            <thead>
               <tr>
-                <td>{{ attribute.name }}</td>
-                <td>{{ attribute.description }}</td>
-                <td>{{ attribute.type }}</td>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Type</th>
               </tr>
-            }
-          </tbody>
-        </table>
-        <ff-alert type="info">The attributes below are optional</ff-alert>
-        <span class="options-sub-title">Optional</span>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (attribute of attributesOptional; track attribute.name) {
+            </thead>
+            <tbody>
+              @for (attribute of attributesRequired; track attribute.name) {
+                <tr>
+                  <td>{{ attribute.name }}</td>
+                  <td [innerHTML]="attribute.description"></td>
+                  <td>{{ attribute.type }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+        @if (attributesOptional.length > 0) {
+          <ff-alert type="info">The attributes below are optional</ff-alert>
+          <span class="options-sub-title">Optional</span>
+          <table>
+            <thead>
               <tr>
-                <td>{{ attribute.name }}</td>
-                <td>{{ attribute.description }}</td>
-                <td>{{ attribute.type }}</td>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Type</th>
               </tr>
-            }
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @for (attribute of attributesOptional; track attribute.name) {
+                <tr>
+                  <td>{{ attribute.name }}</td>
+                  <td [innerHTML]="attribute.description">=</td>
+                  <td>{{ attribute.type }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
       </div>
     }
     @if (element.parameters) {
@@ -97,7 +103,7 @@
             @for (parameter of element.parameters; track parameter.name) {
               <tr>
                 <td>{{ parameter.name }}</td>
-                <td>{{ parameter.description }}</td>
+                <td [innerHTML]="parameter.description"></td>
               </tr>
             }
           </tbody>
@@ -119,7 +125,7 @@
             @for (nestedElement of element.children; track nestedElement.roleName) {
               <tr>
                 <td>{{ nestedElement.roleName }}</td>
-                <td>{{ nestedElement.description }}</td>
+                <td [innerHTML]="nestedElement.description"></td>
                 <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
               </tr>
             }
@@ -141,7 +147,7 @@
             @for (forward of element.forwards; track forward.name) {
               <tr>
                 <td>{{ forward.name }}</td>
-                <td>{{ forward.description }}</td>
+                <td [innerHTML]="forward.description"></td>
               </tr>
             }
           </tbody>

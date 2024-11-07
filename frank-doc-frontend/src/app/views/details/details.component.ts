@@ -4,7 +4,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Element, FrankDoc } from '../../frankdoc.types';
 import { AppService } from '../../app.service';
 import { KeyValuePipe } from '@angular/common';
-import { JavadocPipe } from '../../components/javadoc.pipe';
 import { DetailsElementComponent } from './details-element/details-element.component';
 
 type ElementFilterProperties = {
@@ -16,7 +15,7 @@ type ElementFilterProperties = {
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [SearchComponent, ChipComponent, RouterLink, KeyValuePipe, JavadocPipe, DetailsElementComponent],
+  imports: [SearchComponent, ChipComponent, RouterLink, KeyValuePipe, DetailsElementComponent],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -24,7 +23,8 @@ export class DetailsComponent implements OnInit {
   protected readonly frankDocElements: Signal<FrankDoc['elements'] | null> = computed(
     () => this.appService.frankDoc()?.elements ?? null,
   );
-  protected readonly element: Signal<Element | null> = computed(() => {
+  protected elementByRoute: Element | null = null;
+  protected readonly elementBySignal: Signal<Element | null> = computed(() => {
     const elements = this.frankDocElements();
     if (elements) return this.findElement(elements);
     return null;
@@ -37,25 +37,18 @@ export class DetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      const frankDocElements = this.frankDocElements();
       const fullName: string | undefined = params['fullname'];
-      if (fullName) {
-        this.fullElementName = fullName;
-        if (frankDocElements) this.getElementByFullName(frankDocElements, fullName);
-        return;
-      }
-
       const filterName: string | undefined = params['filter'];
       const labelName: string | undefined = params['label'];
       const elementName: string | undefined = params['element'];
 
-      if (!labelName || !elementName) {
-        return;
+      if (fullName) {
+        this.fullElementName = fullName;
+      } else if (labelName && elementName) {
+        this.elementFilterProperties = { filterName, labelName, elementName };
       }
 
-      this.elementFilterProperties = { filterName, labelName, elementName };
-      const elements = this.frankDocElements();
-      if (elements) this.getElementByFilterLabelNames(elements, this.elementFilterProperties);
+      this.elementByRoute = this.findElement(this.frankDocElements());
     });
   }
 
@@ -80,21 +73,14 @@ export class DetailsComponent implements OnInit {
     const filteredElement = elements.find((element) => {
       return element.name === elementName && element.labels?.[filterName]?.includes(labelName);
     });
-    console.log(filteredElement);
     return filteredElement ?? null;
   }
 
   private getElementByShortName(frankDocElements: Element[], shortName: string): Element | null {
-    // return frankDocElements.find((element) => element.name === shortName) ?? null;
-    const filteredElement = frankDocElements.find((element) => element.name === shortName);
-    console.log(filteredElement);
-    return filteredElement ?? null;
+    return frankDocElements.find((element) => element.name === shortName) ?? null;
   }
 
   private getElementByFullName(frankDocElements: FrankDoc['elements'], fullName: string): Element | null {
-    // return frankDocElements[fullName] ?? null;
-    const filteredElement = frankDocElements[fullName];
-    console.log(filteredElement);
-    return filteredElement ?? null;
+    return frankDocElements[fullName] ?? null;
   }
 }

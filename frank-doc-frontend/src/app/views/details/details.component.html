@@ -9,7 +9,10 @@
     </div>
   </div>
   <div class="details">
-    <app-details-element [element]="element()" [frankDocElements]="frankDocElements()"></app-details-element>
+    <app-details-element
+      [element]="elementByRoute ?? elementBySignal()"
+      [frankDocElements]="frankDocElements()"
+    ></app-details-element>
   </div>
   <div class="side-navigation">
     <ul>

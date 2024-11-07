@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AlertComponent, ChipComponent } from '@frankframework/angular-components';
-import { JavadocPipe } from '../../../components/javadoc.pipe';
 import { KeyValuePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Attribute, Element, FrankDoc } from '../../../frankdoc.types';
@@ -10,7 +9,7 @@ import { JavadocTransformDirective } from '../../../components/javadoc-transform
 @Component({
   selector: 'app-details-element',
   standalone: true,
-  imports: [ChipComponent, JavadocPipe, KeyValuePipe, RouterLink, AlertComponent, JavadocTransformDirective],
+  imports: [ChipComponent, KeyValuePipe, RouterLink, AlertComponent, JavadocTransformDirective],
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',
 })
