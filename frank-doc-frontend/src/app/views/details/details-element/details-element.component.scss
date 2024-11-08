@@ -77,6 +77,14 @@ h3 {
       text-align: left;
       letter-spacing: 1.8px;
       text-transform: uppercase;
+
+      &:first-child {
+        padding-left: 18px;
+      }
+
+      &:last-child {
+        padding-right: 18px;
+      }
     }
 
     td {
@@ -110,6 +118,13 @@ h3 {
       border-bottom: 1px solid #1E1E1E;
       color: #1E1E1E;
       font-size: 24px;
+      font-weight: 600;
+    }
+
+    .options-sub-title {
+      padding-left: 18px;
+      color: #1E1E1E;
+      font-size: 18px;
       font-weight: 600;
     }
   }
