@@ -1,10 +1,10 @@
 import { Directive, inject, Input, OnChanges, TemplateRef, ViewContainerRef } from '@angular/core';
 import { FrankDoc } from '../frankdoc.types';
 import { AppService } from '../app.service';
-import { transformRouterLink } from './javadoc';
+import { getLinkData, LinkData } from './javadoc';
 
 export type TemplateContext = { $implicit: string };
-export type LinkTemplateContext = { $implicit: { href: string; text: string } };
+export type LinkTemplateContext = { $implicit: LinkData };
 
 /**
  * Transforms javadoc text to html text, handles links as a different template.
@@ -15,33 +15,29 @@ export type LinkTemplateContext = { $implicit: { href: string; text: string } };
 })
 export class JavadocTransformDirective implements OnChanges {
   @Input({ required: true }) javadocTransformOf?: string;
-  @Input({ required: true }) javadocTransformLink!: TemplateRef<LinkTemplateContext>;
   @Input({ required: true }) javadocTransformElements!: FrankDoc['elements'] | null;
+  @Input() javadocTransformLink?: TemplateRef<LinkTemplateContext>;
+  @Input() javadocTransformAsText: boolean = false;
 
   private templateRef: TemplateRef<TemplateContext> = inject(TemplateRef);
   private viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
   private appService: AppService = inject(AppService);
 
+  private markdownLinkRegex = /\[(.*?)]\((.+?)\)/g; // old regex: /\[(.*?)\]\((.+?)\)/g
+  private tagsRegex = /<[^>]*>?/gm;
+  private linkRegex = /(?:{@link\s(.*?)})/g;
+
   ngOnChanges(): void {
     if (!this.javadocTransformOf || !this.javadocTransformElements) return;
-    const markdownLinkRegex = /\[(.*?)]\((.+?)\)/g;
-    const linkRegex = /(?:{@link\s(.*?)})/g;
+    const javadocParts = this.javadocTransformAsText ? this.transformAsText() : this.transformAsHtml();
     this.viewContainerRef.clear();
-    let value = `${this.javadocTransformOf}`;
-    value = value.replace(markdownLinkRegex, '<a target="_blank" href="$2" alt="$1">$1</a>'); // old regex: /\[(.*?)\]\((.+?)\)/g
-    value = value.replaceAll('\\"', '"');
-    value = value.replace(linkRegex, (_, captureGroup) =>
-      transformRouterLink(captureGroup, this.javadocTransformElements!, this.appService),
-    );
-
-    const javadocParts = value.split('\\"');
 
     for (const partIndexString in javadocParts) {
       const partIndex = +partIndexString;
       const part = javadocParts[partIndex];
-      if (partIndex % 2 !== 0 && part.startsWith('{')) {
+      if (this.javadocTransformLink && partIndex % 2 !== 0 && part.startsWith('{')) {
         try {
-          const linkData = JSON.parse(part);
+          const linkData: LinkData = JSON.parse(part);
           this.viewContainerRef.createEmbeddedView<LinkTemplateContext>(this.javadocTransformLink, {
             $implicit: linkData,
           });
@@ -54,5 +50,43 @@ export class JavadocTransformDirective implements OnChanges {
         $implicit: part,
       });
     }
+  }
+
+  transformAsHtml(): string[] {
+    let value = `${this.javadocTransformOf}`;
+    value = value.replace(this.markdownLinkRegex, '<a target="_blank" href="$2" alt="$1">$1</a>');
+    value = value.replaceAll('\\"', '"');
+
+    if (this.javadocTransformLink) {
+      value = value.replace(this.linkRegex, (_, captureGroup) => {
+        const linkData = getLinkData(captureGroup, this.javadocTransformElements!, this.appService);
+        if (typeof linkData === 'string') return linkData;
+        return `\\"${JSON.stringify(linkData)}\\"`;
+      });
+      return value.split('\\"');
+    }
+    value = value.replace(this.linkRegex, (_, captureGroup) => {
+      const linkData = getLinkData(captureGroup, this.javadocTransformElements!, this.appService);
+      if (typeof linkData === 'string') return linkData;
+      return this.defaultLinkTransformation(linkData);
+    });
+    return [value];
+  }
+
+  transformAsText(): string[] {
+    let value = `${this.javadocTransformOf}`;
+    value = value.replace(this.markdownLinkRegex, '$1($2)');
+    value = value.replaceAll('\\"', '"');
+    value = value.replace(this.tagsRegex, '');
+    value = value.replace(this.linkRegex, (_: string, captureGroup: string) => {
+      const linkData = getLinkData(captureGroup, this.javadocTransformElements!, this.appService);
+      if (typeof linkData === 'string') return linkData;
+      return `${linkData.text}(${linkData.href})`;
+    });
+    return [value];
+  }
+
+  private defaultLinkTransformation(linkData: LinkData): string {
+    return `<a href="#/${linkData.href}">${linkData.text}</a>`;
   }
 }
