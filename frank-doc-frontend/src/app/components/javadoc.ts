@@ -1,20 +1,23 @@
 import { Element, FrankDoc } from '../frankdoc.types';
 import { AppService } from '../app.service';
 
-export const transformLink = function (
+export type LinkData = { href: string; text: string };
+
+export const getLinkData = function (
   captureGroup: string,
   elements: FrankDoc['elements'],
   appService: AppService,
-): string {
-  // {@link PipeLineSession pipeLineSession} -> 'PipeLineSession pipeLineSession'
-  // {@link IPipe#configure()} -> 'IPipe#configure()'
-  // {@link #doPipe(Message, PipeLineSession) doPipe} -> '#doPipe(Message, PipeLineSession) doPipe'
+): LinkData | string {
+  /* {@link PipeLineSession pipeLineSession} -> 'PipeLineSession pipeLineSession'
+   * {@link IPipe#configure()} -> 'IPipe#configure()'
+   * {@link #doPipe(Message, PipeLineSession) doPipe} -> '#doPipe(Message, PipeLineSession) doPipe'
+   */
+
   const hashPosition = captureGroup.indexOf('#'),
     isMethod = hashPosition > -1,
     elementString = isMethod ? captureGroup.split('#')[0] : captureGroup;
 
   if (elementString === '') {
-    //if there is no element ref then it's an internal method
     return getInternalMethodReference(captureGroup, hashPosition);
   }
 
@@ -23,33 +26,7 @@ export const transformLink = function (
 
   const element = findElement(elements, appService, elementParts[0]);
   if (!element) return name;
-  return `<a href="#/${element.fullName}">${name}</a>`;
-};
-
-export const transformRouterLink = function (
-  captureGroup: string,
-  elements: FrankDoc['elements'],
-  appService: AppService,
-): string {
-  // {@link PipeLineSession pipeLineSession} -> 'PipeLineSession pipeLineSession'
-  // {@link IPipe#configure()} -> 'IPipe#configure()'
-  // {@link #doPipe(Message, PipeLineSession) doPipe} -> '#doPipe(Message, PipeLineSession) doPipe'
-  const hashPosition = captureGroup.indexOf('#'),
-    isMethod = hashPosition > -1,
-    elementString = isMethod ? captureGroup.split('#')[0] : captureGroup;
-
-  if (elementString === '') {
-    //if there is no element ref then it's an internal method
-    return getInternalMethodReference(captureGroup, hashPosition);
-  }
-
-  const elementParts = elementString.split(' '); //first part is the class name, 2nd part the written name
-  const name = parseLinkName(elementParts, isMethod, captureGroup);
-
-  const element = findElement(elements, appService, elementParts[0]);
-  if (!element) return name;
-  // return `<a [routerLink]="/${element.fullName}">${name}</a>`;
-  return `\\"{ \"href\": \"/${element.fullName}\", \"text\": \"${name}\" }\\"`;
+  return { href: `${element.fullName}`, text: name };
 };
 
 export const getInternalMethodReference = function (captureGroup: string, hashPosition: number): string {

@@ -10,13 +10,7 @@
   <div class="section explanation">
     <h3>Explanation</h3>
     <p>
-      <span
-        *javadocTransform="let text of element.description; link: linkTemplate; elements: frankDocElements"
-        [innerHTML]="text"
-      ></span>
-      <ng-template #linkTemplate let-link
-        ><a [routerLink]="[link.href]">{{ link.text }}</a></ng-template
-      >
+      <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>
     </p>
   </div>
   <div class="section quick-links">
@@ -41,7 +35,7 @@
   <div class="section options">
     <h3>Component Options</h3>
     @if (element.attributes) {
-      <div class="attributes">
+      <div class="sub-options attributes">
         <span class="options-title">Attributes</span>
         @if (attributesRequired.length > 0) {
           <ff-alert type="warning">The attributes below are required</ff-alert>
@@ -89,7 +83,7 @@
       </div>
     }
     @if (element.parameters) {
-      <div class="parameters">
+      <div class="sub-options parameters">
         <span class="options-title">Parameters</span>
         <table>
           <thead>
@@ -111,7 +105,7 @@
       </div>
     }
     @if (element.children) {
-      <div class="nested-elements">
+      <div class="sub-options nested-elements">
         <span class="options-title">Nested Elements</span>
         <table>
           <thead>
@@ -134,7 +128,7 @@
       </div>
     }
     @if (element.forwards) {
-      <div class="forwards">
+      <div class="sub-options forwards">
         <span class="options-title">Forwards</span>
         <table>
           <thead>

@@ -4,6 +4,15 @@ h2 {
   font-weight: 700;
 }
 
+pre {
+  padding: 26px;
+  border-radius: 8px;
+  border: 1px solid #D8D8D8;
+  font-size: 16px;
+  color: #1E1E1E;
+  background: rgba(237, 237, 237, 0.50);
+}
+
 code {
   font-family: 'DM Mono', monospace;
 }
@@ -62,7 +71,6 @@ h3 {
 
     th {
       padding: 10px 0;
-      border-bottom: 1px solid #EDEDED;
       color: #8A8A8A;
       font-size: 12px;
       font-weight: 600;
@@ -72,10 +80,44 @@ h3 {
     }
 
     td {
+      padding: 13px 0;
+      border-top: 1px solid #EDEDED;
       color: #626262;
       font-size: 16px;
       font-weight: 400;
       vertical-align: text-top;
+
+      &:first-child {
+        padding-left: 18px;
+        color: #1E1E1E;
+        font-family: 'DM Mono', monospace;
+        font-weight: 500;
+      }
+
+      &:last-child {
+        padding-right: 18px;
+      }
+    }
+  }
+
+  .sub-options {
+    padding: 0 0 20px 30px;
+
+    .options-title {
+      display: block;
+      margin-bottom: 20px;
+      padding: 15px 0;
+      border-bottom: 1px solid #1E1E1E;
+      color: #1E1E1E;
+      font-size: 24px;
+      font-weight: 600;
+    }
+  }
+
+  .attributes {
+    ff-alert {
+      display: block;
+      margin: 20px 0;
     }
   }
 }
