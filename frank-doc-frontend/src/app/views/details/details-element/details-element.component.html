@@ -36,131 +36,139 @@
     <h3>Component Options</h3>
     @if (element.attributes) {
       <div class="sub-options attributes">
-        <span class="options-title">Attributes</span>
-        @if (attributesRequired.length > 0) {
-          <ff-alert type="warning">The attributes below are required</ff-alert>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (attribute of attributesRequired; track attribute.name) {
+        <span class="options-title" [collapse]="attributes">Attributes</span>
+        <div class="options-list" #attributes>
+          @if (attributesRequired.length > 0) {
+            <ff-alert type="warning">The attributes below are required</ff-alert>
+            <table>
+              <thead>
                 <tr>
-                  <td>{{ attribute.name }}</td>
-                  <td
-                    *javadocTransform="let text of attribute.description; elements: frankDocElements"
-                    [innerHTML]="text"
-                  ></td>
-                  <td>{{ attribute.type }}</td>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Type</th>
                 </tr>
-              }
-            </tbody>
-          </table>
-        }
-        @if (attributesOptional.length > 0) {
-          <ff-alert type="info">The attributes below are optional</ff-alert>
-          <span class="options-sub-title">Optional</span>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (attribute of attributesOptional; track attribute.name) {
+              </thead>
+              <tbody>
+                @for (attribute of attributesRequired; track attribute.name) {
+                  <tr>
+                    <td>{{ attribute.name }}</td>
+                    <td
+                      *javadocTransform="let text of attribute.description; elements: frankDocElements"
+                      [innerHTML]="text"
+                    ></td>
+                    <td>{{ attribute.type }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+          @if (attributesOptional.length > 0) {
+            <ff-alert type="info">The attributes below are optional</ff-alert>
+            <span class="options-sub-title">Optional</span>
+            <table>
+              <thead>
                 <tr>
-                  <td>{{ attribute.name }}</td>
-                  <td
-                    *javadocTransform="let text of attribute.description; elements: frankDocElements"
-                    [innerHTML]="text"
-                  ></td>
-                  <td>{{ attribute.type }}</td>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Type</th>
                 </tr>
-              }
-            </tbody>
-          </table>
-        }
+              </thead>
+              <tbody>
+                @for (attribute of attributesOptional; track attribute.name) {
+                  <tr>
+                    <td>{{ attribute.name }}</td>
+                    <td
+                      *javadocTransform="let text of attribute.description; elements: frankDocElements"
+                      [innerHTML]="text"
+                    ></td>
+                    <td>{{ attribute.type }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
       </div>
     }
     @if (element.parameters) {
       <div class="sub-options parameters">
-        <span class="options-title">Parameters</span>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (parameter of element.parameters; track parameter.name) {
+        <span class="options-title" [collapse]="parameters">Parameters</span>
+        <div class="options-list" #parameters>
+          <table>
+            <thead>
               <tr>
-                <td>{{ parameter.name }}</td>
-                <td
-                  *javadocTransform="let text of parameter.description; elements: frankDocElements"
-                  [innerHTML]="text"
-                ></td>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Type</th>
               </tr>
-            }
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @for (parameter of element.parameters; track parameter.name) {
+                <tr>
+                  <td>{{ parameter.name }}</td>
+                  <td
+                    *javadocTransform="let text of parameter.description; elements: frankDocElements"
+                    [innerHTML]="text"
+                  ></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     }
     @if (element.children) {
       <div class="sub-options nested-elements">
-        <span class="options-title">Nested Elements</span>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Cardinality</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (nestedElement of element.children; track nestedElement.roleName) {
+        <span class="options-title" [collapse]="nestedElements">Nested Elements</span>
+        <div class="options-list" #nestedElements>
+          <table>
+            <thead>
               <tr>
-                <td>{{ nestedElement.roleName }}</td>
-                <td
-                  *javadocTransform="let text of nestedElement.description; elements: frankDocElements"
-                  [innerHTML]="text"
-                ></td>
-                <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Cardinality</th>
               </tr>
-            }
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @for (nestedElement of element.children; track nestedElement.roleName) {
+                <tr>
+                  <td>{{ nestedElement.roleName }}</td>
+                  <td
+                    *javadocTransform="let text of nestedElement.description; elements: frankDocElements"
+                    [innerHTML]="text"
+                  ></td>
+                  <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     }
     @if (element.forwards) {
       <div class="sub-options forwards">
-        <span class="options-title">Forwards</span>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (forward of element.forwards; track forward.name) {
+        <span class="options-title" [collapse]="forwards">Forwards</span>
+        <div class="options-list" #forwards>
+          <table>
+            <thead>
               <tr>
-                <td>{{ forward.name }}</td>
-                <td
-                  *javadocTransform="let text of forward.description; elements: frankDocElements"
-                  [innerHTML]="text"
-                ></td>
+                <th>Name</th>
+                <th>Description</th>
               </tr>
-            }
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @for (forward of element.forwards; track forward.name) {
+                <tr>
+                  <td>{{ forward.name }}</td>
+                  <td
+                    *javadocTransform="let text of forward.description; elements: frankDocElements"
+                    [innerHTML]="text"
+                  ></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     }
   </div>

@@ -5,11 +5,12 @@ import { RouterLink } from '@angular/router';
 import { Attribute, Element, FrankDoc } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
 import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
+import { CollapseDirective } from '../../../components/collapse.directive';
 
 @Component({
   selector: 'app-details-element',
   standalone: true,
-  imports: [ChipComponent, KeyValuePipe, RouterLink, AlertComponent, JavadocTransformDirective],
+  imports: [ChipComponent, KeyValuePipe, RouterLink, AlertComponent, JavadocTransformDirective, CollapseDirective],
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',
 })
