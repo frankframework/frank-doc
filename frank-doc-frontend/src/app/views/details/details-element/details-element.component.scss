@@ -2,6 +2,7 @@ h2 {
   color: #1E1E1E;
   font-size: 50px;
   font-weight: 700;
+  word-break: break-word;
 }
 
 pre {
@@ -23,6 +24,7 @@ ff-chip + ff-chip {
 
 .section {
   margin-top: 50px;
+  overflow: auto;
 }
 
 h3 {
@@ -88,7 +90,7 @@ h3 {
     }
 
     td {
-      padding: 13px 0;
+      padding: 13px 3px;
       border-top: 1px solid #EDEDED;
       color: #626262;
       font-size: 16px;

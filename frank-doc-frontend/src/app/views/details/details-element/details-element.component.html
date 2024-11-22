@@ -51,7 +51,10 @@
               @for (attribute of attributesRequired; track attribute.name) {
                 <tr>
                   <td>{{ attribute.name }}</td>
-                  <td [innerHTML]="attribute.description"></td>
+                  <td
+                    *javadocTransform="let text of attribute.description; elements: frankDocElements"
+                    [innerHTML]="text"
+                  ></td>
                   <td>{{ attribute.type }}</td>
                 </tr>
               }
@@ -73,7 +76,10 @@
               @for (attribute of attributesOptional; track attribute.name) {
                 <tr>
                   <td>{{ attribute.name }}</td>
-                  <td [innerHTML]="attribute.description">=</td>
+                  <td
+                    *javadocTransform="let text of attribute.description; elements: frankDocElements"
+                    [innerHTML]="text"
+                  ></td>
                   <td>{{ attribute.type }}</td>
                 </tr>
               }
@@ -97,7 +103,10 @@
             @for (parameter of element.parameters; track parameter.name) {
               <tr>
                 <td>{{ parameter.name }}</td>
-                <td [innerHTML]="parameter.description"></td>
+                <td
+                  *javadocTransform="let text of parameter.description; elements: frankDocElements"
+                  [innerHTML]="text"
+                ></td>
               </tr>
             }
           </tbody>
@@ -119,7 +128,10 @@
             @for (nestedElement of element.children; track nestedElement.roleName) {
               <tr>
                 <td>{{ nestedElement.roleName }}</td>
-                <td [innerHTML]="nestedElement.description"></td>
+                <td
+                  *javadocTransform="let text of nestedElement.description; elements: frankDocElements"
+                  [innerHTML]="text"
+                ></td>
                 <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
               </tr>
             }
@@ -141,7 +153,10 @@
             @for (forward of element.forwards; track forward.name) {
               <tr>
                 <td>{{ forward.name }}</td>
-                <td [innerHTML]="forward.description"></td>
+                <td
+                  *javadocTransform="let text of forward.description; elements: frankDocElements"
+                  [innerHTML]="text"
+                ></td>
               </tr>
             }
           </tbody>

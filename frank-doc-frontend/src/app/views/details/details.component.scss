@@ -1,7 +1,8 @@
 .page {
   display: flex;
-  max-width: 100%;
-  margin: 0 50px;
+  width: 100%;
+  margin-bottom: 30px;
+  padding: 0 50px;
 
   .side-search {
     width: 300px;
@@ -34,6 +35,7 @@
 
 .details {
   padding: 0 20px;
+  overflow: hidden;
 }
 
 .side-navigation {
