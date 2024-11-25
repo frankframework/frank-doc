@@ -1,4 +1,4 @@
-import { Component, computed, isDevMode, Signal } from '@angular/core';
+import { Component, computed, isDevMode, signal, Signal, WritableSignal } from '@angular/core';
 import { SearchComponent } from '@frankframework/angular-components';
 import { FormsModule } from '@angular/forms';
 import { HomeComponentListComponent } from './home-component-list/home-component-list.component';
@@ -21,43 +21,44 @@ export class HomeComponent {
   protected readonly elements: Signal<FrankDoc['elements']> = computed(
     () => this.appService.frankDoc()?.elements ?? {},
   );
+  protected readonly selectedFilters: WritableSignal<SelectedFilters> = signal({});
   protected filteredElements: FuseResult<Element>[] = [];
 
   private readonly elementsList: Signal<Element[]> = computed(() => Object.values(this.elements()));
-  private readonly fuse: Signal<Fuse<Element>> = computed(
-    () =>
-      new Fuse(this.elementsList(), {
-        keys: [
-          {
-            name: 'name',
-            weight: 2,
-          },
-          {
-            name: 'fullName',
-            weight: 2,
-          },
-          {
-            name: 'elementNames', // default weight is 1.0
-          },
-          {
-            name: 'labels.FrankDocGroup',
-          },
-          {
-            name: 'attributes',
-            weight: 0.7,
-          },
-          {
-            name: 'description',
-            weight: 0.5,
-          },
-        ],
-        includeScore: true,
-        includeMatches: true,
-        threshold: 0.2,
-        minMatchCharLength: 3,
-        ignoreLocation: true,
-      }),
-  );
+  private readonly fuse: Signal<Fuse<Element>> = computed(() => {
+    console.log(this.selectedFilters());
+    return new Fuse(this.elementsList(), {
+      keys: [
+        {
+          name: 'name',
+          weight: 2,
+        },
+        {
+          name: 'fullName',
+          weight: 2,
+        },
+        {
+          name: 'elementNames', // default weight is 1.0
+        },
+        {
+          name: 'labels.FrankDocGroup',
+        },
+        {
+          name: 'attributes',
+          weight: 0.7,
+        },
+        {
+          name: 'description',
+          weight: 0.5,
+        },
+      ],
+      includeScore: true,
+      includeMatches: true,
+      threshold: 0.2,
+      minMatchCharLength: 3,
+      ignoreLocation: true,
+    });
+  });
 
   constructor(private appService: AppService) {}
 
@@ -67,5 +68,10 @@ export class HomeComponent {
       this.filteredElements = this.fuse().search(searchPattern);
       if (isDevMode()) console.log(this.filteredElements);
     }
+  }
+
+  protected updateSelectedFilters(selectedFilters: SelectedFilters): void {
+    this.selectedFilters.set(selectedFilters);
+    if (isDevMode()) console.log(selectedFilters);
   }
 }
