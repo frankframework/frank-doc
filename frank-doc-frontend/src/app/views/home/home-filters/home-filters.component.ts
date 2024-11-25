@@ -41,6 +41,7 @@ export class HomeFiltersComponent {
   }
 
   onToggleLabel(filterName: string, labelName: string): void {
+    debugger;
     if (!this.selectedFilterLabels[filterName]) {
       this.selectedFilterLabels[filterName] = [];
     }
