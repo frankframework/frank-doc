@@ -41,7 +41,6 @@ export class HomeFiltersComponent {
   }
 
   onToggleLabel(filterName: string, labelName: string): void {
-    debugger;
     if (!this.selectedFilterLabels[filterName]) {
       this.selectedFilterLabels[filterName] = [];
     }
@@ -53,6 +52,10 @@ export class HomeFiltersComponent {
       this.selectedFilterLabels[filterName].splice(filterLabelIndex, 1);
     }
     this.updateSelectedFilters();
+  }
+
+  getToggledLabel(filterName: string, labelName: string): boolean {
+    return this.selectedFilterLabels[filterName]?.includes(labelName) ?? false;
   }
 
   clearFilters(): void {
