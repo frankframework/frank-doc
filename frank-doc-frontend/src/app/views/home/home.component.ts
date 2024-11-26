@@ -27,6 +27,10 @@ export class HomeComponent {
   private readonly elementsList: Signal<Element[]> = computed(() => Object.values(this.elements()));
   private readonly fuse: Signal<Fuse<Element>> = computed(() => {
     console.log(this.selectedFilters());
+    this.elementsList().filter((element) => {
+      element;
+      // TODO
+    });
     return new Fuse(this.elementsList(), {
       keys: [
         {

@@ -14,7 +14,11 @@
       <ul>
         @for (label of selectedFilter.labels; track label.name) {
           <li>
-            <ff-checkbox (click)="onToggleLabel(selectedFilter.name, label.name)">{{ label.name }}</ff-checkbox>
+            <ff-checkbox
+              [checked]="getToggledLabel(selectedFilter.name, label.name)"
+              (click)="onToggleLabel(selectedFilter.name, label.name)"
+              >{{ label.name }}</ff-checkbox
+            >
           </li>
         }
       </ul>
