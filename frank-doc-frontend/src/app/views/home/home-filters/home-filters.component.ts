@@ -1,13 +1,24 @@
-import { Component, computed, ElementRef, EventEmitter, Output, Signal, ViewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  EventEmitter,
+  Output,
+  signal,
+  Signal,
+  ViewChild,
+  WritableSignal,
+} from '@angular/core';
 import { ButtonComponent, CheckboxComponent } from '@frankframework/angular-components';
 import { AppService, Filter } from '../../../app.service';
 import { SelectedFilters } from '../home.component';
 import { NgClass } from '@angular/common';
+import { InitFilterToggleDirective } from './init-filter-toggle.directive';
 
 @Component({
   selector: 'app-home-filters',
   standalone: true,
-  imports: [ButtonComponent, NgClass, CheckboxComponent],
+  imports: [ButtonComponent, NgClass, CheckboxComponent, InitFilterToggleDirective],
   templateUrl: './home-filters.component.html',
   styleUrl: './home-filters.component.scss',
 })
@@ -18,7 +29,7 @@ export class HomeFiltersComponent {
   protected filters: Signal<Filter[]> = computed(() => this.appService.filters());
   protected open: boolean = false;
   protected selectedFilter: Filter | null = null;
-  protected selectedFilterLabels: SelectedFilters = {};
+  protected selectedFilterLabels: WritableSignal<SelectedFilters> = signal({});
 
   constructor(private appService: AppService) {}
 
@@ -41,34 +52,31 @@ export class HomeFiltersComponent {
   }
 
   onToggleLabel(filterName: string, labelName: string): void {
-    if (!this.selectedFilterLabels[filterName]) {
-      this.selectedFilterLabels[filterName] = [];
-    }
-
-    const filterLabelIndex = this.selectedFilterLabels[filterName]?.indexOf(labelName);
+    const selectedFilterLabels = this.selectedFilterLabels();
+    selectedFilterLabels[filterName] ??= [];
+    const filterLabelIndex = selectedFilterLabels[filterName].indexOf(labelName);
     if (filterLabelIndex === -1) {
-      this.selectedFilterLabels[filterName].push(labelName);
+      selectedFilterLabels[filterName].push(labelName);
     } else {
-      this.selectedFilterLabels[filterName].splice(filterLabelIndex, 1);
+      selectedFilterLabels[filterName].splice(filterLabelIndex, 1);
     }
-    this.updateSelectedFilters();
-  }
-
-  getToggledLabel(filterName: string, labelName: string): boolean {
-    return this.selectedFilterLabels[filterName]?.includes(labelName) ?? false;
+    this.updateSelectedFilters(selectedFilterLabels);
   }
 
   clearFilters(): void {
-    this.selectedFilterLabels = {};
-    this.updateSelectedFilters();
+    this.updateSelectedFilters({});
   }
 
   clearSelectedLabels(): void {
     if (!this.selectedFilter) return;
-    delete this.selectedFilterLabels[this.selectedFilter.name];
+    const selectedFilterLabels = this.selectedFilterLabels();
+    delete selectedFilterLabels[this.selectedFilter.name];
+    this.updateSelectedFilters(selectedFilterLabels);
   }
 
-  private updateSelectedFilters(): void {
-    this.selectedFilters.emit({ ...this.selectedFilterLabels });
+  private updateSelectedFilters(selectedFilters: SelectedFilters): void {
+    // using spread to have directive input's update, maybe input signals will improve this so no spreading is needed
+    this.selectedFilterLabels.set({ ...selectedFilters });
+    this.selectedFilters.emit(this.selectedFilterLabels());
   }
 }
