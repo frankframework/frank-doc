@@ -15,7 +15,9 @@
         @for (label of selectedFilter.labels; track label.name) {
           <li>
             <ff-checkbox
-              [checked]="getToggledLabel(selectedFilter.name, label.name)"
+              [initFilterToggle]="selectedFilterLabels()"
+              [initFilterName]="selectedFilter.name"
+              [initLabelName]="label.name"
               (click)="onToggleLabel(selectedFilter.name, label.name)"
               >{{ label.name }}</ff-checkbox
             >
