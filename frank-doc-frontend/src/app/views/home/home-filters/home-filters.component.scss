@@ -1,7 +1,7 @@
 .selected-filter {
   display: inline-flex;
   margin-right: 10px;
-  padding: 0 16px;
+  padding-left: 16px;
   border-radius: 50px;
   border: 1px solid #FDC300;
   justify-content: center;
@@ -10,14 +10,22 @@
   font-weight: 600;
   cursor: default;
 
+  &:hover {
+    overflow: hidden;
+  }
+
   span {
-    padding: 10px 0;
+    padding: 9px 0;
   }
 
   .close-button {
     margin-left: 12px;
-    padding-left: 12px;
+    padding: 9px 16px 9px 12px;
     border-left: 1px solid #FDC300;
+
+    &:hover {
+      background: #FDC300;
+    }
   }
 }
 
