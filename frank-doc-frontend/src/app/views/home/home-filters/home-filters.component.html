@@ -1,3 +1,11 @@
+@for (selectedFilterGroup of selectedFilterLabels() | keyvalue; track selectedFilterGroup.key) {
+  @for (selectedFilter of selectedFilterGroup.value; track selectedFilter; let index = $index) {
+    <span class="selected-filter"
+      ><span>{{ selectedFilter }}</span
+      ><span class="close-button" (click)="removeSelectedFilterLabel(selectedFilterGroup.key, index)">x</span></span
+    >
+  }
+}
 <ff-button toggleable [(active)]="open" (activeChange)="toggleDropdown()">Add Filter</ff-button>
 <div #menu class="menu">
   <div class="menu-card filters">
@@ -18,7 +26,7 @@
               [initFilterToggle]="selectedFilterLabels()"
               [initFilterName]="selectedFilter.name"
               [initLabelName]="label.name"
-              (click)="onToggleLabel(selectedFilter.name, label.name)"
+              (click)="toggleMenuLabel(selectedFilter.name, label.name)"
               >{{ label.name }}</ff-checkbox
             >
           </li>
