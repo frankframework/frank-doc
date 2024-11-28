@@ -24,11 +24,7 @@ export class HomeComponent {
   protected filteredElements: FuseResult<Element>[] = [];
 
   private readonly elementsList: Signal<Element[]> = computed(() => Object.values(this.elements()));
-  private readonly fuse: Signal<Fuse<Element>> = computed(() => {
-    // const selectedFilters = this.selectedFilters();
-    // const filteredElements = this.filterElementsBySelectedFilters(elements, selectedFilters);
-    return new Fuse(this.elementsList(), this.fuseOptions);
-  });
+  private readonly fuse: Signal<Fuse<Element>> = computed(() => new Fuse(this.elementsList(), this.fuseOptions));
 
   private fuseOptions: IFuseOptions<Element> = {
     keys: [

@@ -1,3 +1,26 @@
+.selected-filter {
+  display: inline-flex;
+  margin-right: 10px;
+  padding: 0 16px;
+  border-radius: 50px;
+  border: 1px solid #FDC300;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: default;
+
+  span {
+    padding: 10px 0;
+  }
+
+  .close-button {
+    margin-left: 12px;
+    padding-left: 12px;
+    border-left: 1px solid #FDC300;
+  }
+}
+
 .menu {
   position: absolute;
   display: flex;

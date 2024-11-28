@@ -12,13 +12,13 @@ import {
 import { ButtonComponent, CheckboxComponent } from '@frankframework/angular-components';
 import { AppService, Filter } from '../../../app.service';
 import { SelectedFilters } from '../home.component';
-import { NgClass } from '@angular/common';
+import { KeyValuePipe, NgClass } from '@angular/common';
 import { InitFilterToggleDirective } from './init-filter-toggle.directive';
 
 @Component({
   selector: 'app-home-filters',
   standalone: true,
-  imports: [ButtonComponent, NgClass, CheckboxComponent, InitFilterToggleDirective],
+  imports: [ButtonComponent, NgClass, CheckboxComponent, InitFilterToggleDirective, KeyValuePipe],
   templateUrl: './home-filters.component.html',
   styleUrl: './home-filters.component.scss',
 })
@@ -33,7 +33,7 @@ export class HomeFiltersComponent {
 
   constructor(private appService: AppService) {}
 
-  toggleDropdown(): void {
+  protected toggleDropdown(): void {
     const menuElement = this.menuElementRef.nativeElement;
     if (this.open) {
       menuElement.classList.add('open');
@@ -43,7 +43,7 @@ export class HomeFiltersComponent {
     this.selectedFilter = null;
   }
 
-  toggleFilterMenu(filter: Filter): void {
+  protected toggleFilterMenu(filter: Filter): void {
     if (this.selectedFilter === filter) {
       this.selectedFilter = null;
       return;
@@ -51,7 +51,7 @@ export class HomeFiltersComponent {
     this.selectedFilter = filter;
   }
 
-  onToggleLabel(filterName: string, labelName: string): void {
+  protected toggleMenuLabel(filterName: string, labelName: string): void {
     const selectedFilterLabels = this.selectedFilterLabels();
     selectedFilterLabels[filterName] ??= [];
     const filterLabelIndex = selectedFilterLabels[filterName].indexOf(labelName);
@@ -63,14 +63,20 @@ export class HomeFiltersComponent {
     this.updateSelectedFilters(selectedFilterLabels);
   }
 
-  clearFilters(): void {
+  protected clearFilters(): void {
     this.updateSelectedFilters({});
   }
 
-  clearSelectedLabels(): void {
+  protected clearSelectedLabels(): void {
     if (!this.selectedFilter) return;
     const selectedFilterLabels = this.selectedFilterLabels();
     delete selectedFilterLabels[this.selectedFilter.name];
+    this.updateSelectedFilters(selectedFilterLabels);
+  }
+
+  protected removeSelectedFilterLabel(filterGroup: string, index: number): void {
+    const selectedFilterLabels = this.selectedFilterLabels();
+    selectedFilterLabels[filterGroup].splice(index, 1);
     this.updateSelectedFilters(selectedFilterLabels);
   }
 
