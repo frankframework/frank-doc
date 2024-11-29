@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AlertComponent, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Attribute, Element, FrankDoc, ParsedTag } from '../../../frankdoc.types';
+import { Attribute, Child, Element, FrankDoc, ParsedTag } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
 import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
 import { CollapseDirective } from '../../../components/collapse.directive';
@@ -13,8 +13,10 @@ type InheritedParentElementProperties<T> = {
 };
 
 type InheritedProperties = {
-  attributes: InheritedParentElementProperties<Attribute>[];
+  attributesRequired: InheritedParentElementProperties<Attribute>[];
+  attributesOptional: InheritedParentElementProperties<Attribute>[];
   parameters: InheritedParentElementProperties<ParsedTag>[];
+  children: InheritedParentElementProperties<Child>[];
   forwards: InheritedParentElementProperties<ParsedTag>[];
 };
 
@@ -32,8 +34,10 @@ export class DetailsElementComponent implements OnChanges {
   protected attributesRequired: Attribute[] = [];
   protected attributesOptional: Attribute[] = [];
   protected inheritedProperties: InheritedProperties = {
-    attributes: [],
+    attributesRequired: [],
+    attributesOptional: [],
     parameters: [],
+    children: [],
     forwards: [],
   };
 
@@ -46,6 +50,13 @@ export class DetailsElementComponent implements OnChanges {
         this.attributesOptional = this.element?.attributes.filter((attribute) => !attribute.mandatory) ?? [];
       }
       if (this.element?.parent) {
+        this.inheritedProperties = {
+          attributesRequired: [],
+          attributesOptional: [],
+          parameters: [],
+          children: [],
+          forwards: [],
+        };
         this.getInheritedProperties(this.element.parent);
       }
     }
@@ -68,7 +79,41 @@ export class DetailsElementComponent implements OnChanges {
   }
 
   private getInheritedProperties(elementIndex: string): void {
-    elementIndex;
-    // TODO get inherited properties from parent element recursively
+    const element = this.frankDocElements?.[elementIndex];
+    if (!element) return;
+
+    if (element.attributes) {
+      this.inheritedProperties.attributesRequired.push({
+        parentElementName: element.name,
+        properties: element.attributes.filter((attribute) => attribute.mandatory === true),
+      });
+      this.inheritedProperties.attributesOptional.push({
+        parentElementName: element.name,
+        properties: element.attributes.filter((attribute) => !attribute.mandatory),
+      });
+    }
+
+    if (element.parameters) {
+      this.inheritedProperties.parameters.push({
+        parentElementName: element.name,
+        properties: element.parameters,
+      });
+    }
+
+    if (element.children) {
+      this.inheritedProperties.children.push({
+        parentElementName: element.name,
+        properties: element.children,
+      });
+    }
+
+    if (element.forwards) {
+      this.inheritedProperties.forwards.push({
+        parentElementName: element.name,
+        properties: element.forwards,
+      });
+    }
+
+    if (element.parent) this.getInheritedProperties(element.parent);
   }
 }

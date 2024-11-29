@@ -145,7 +145,7 @@
         </div>
       </div>
     }
-    @if (element.forwards) {
+    @if (element.forwards || inheritedProperties.forwards.length > 0) {
       <div class="sub-options forwards">
         <span class="options-title" [collapse]="forwards">Forwards</span>
         <div class="options-list" #forwards>
@@ -165,6 +165,20 @@
                     [innerHTML]="text"
                   ></td>
                 </tr>
+              }
+              @for (inheritedForward of inheritedProperties.forwards; track inheritedForward.parentElementName) {
+                <span>{{ inheritedForward.parentElementName }}</span>
+                <!-- TODO maybe ng-content for this? as to not have two loops define the same content -->
+                <!-- For testing see Base64Pipe -->
+                @for (forward of inheritedForward.properties; track forward.name) {
+                  <tr>
+                    <td>{{ forward.name }}</td>
+                    <td
+                      *javadocTransform="let text of forward.description; elements: frankDocElements"
+                      [innerHTML]="text"
+                    ></td>
+                  </tr>
+                }
               }
             </tbody>
           </table>
