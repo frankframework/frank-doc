@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AlertComponent, ChipComponent } from '@frankframework/angular-components';
-import { KeyValuePipe } from '@angular/common';
+import { KeyValuePipe, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Attribute, Child, Element, FrankDoc, ParsedTag } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
@@ -23,7 +23,15 @@ type InheritedProperties = {
 @Component({
   selector: 'app-details-element',
   standalone: true,
-  imports: [ChipComponent, KeyValuePipe, RouterLink, AlertComponent, JavadocTransformDirective, CollapseDirective],
+  imports: [
+    ChipComponent,
+    KeyValuePipe,
+    RouterLink,
+    AlertComponent,
+    JavadocTransformDirective,
+    CollapseDirective,
+    NgTemplateOutlet,
+  ],
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',
 })
@@ -57,7 +65,8 @@ export class DetailsElementComponent implements OnChanges {
           children: [],
           forwards: [],
         };
-        this.getInheritedProperties(this.element.parent);
+        this.setInheritedProperties(this.element.parent);
+        console.log(this.inheritedProperties);
       }
     }
   }
@@ -78,19 +87,25 @@ export class DetailsElementComponent implements OnChanges {
         null;
   }
 
-  private getInheritedProperties(elementIndex: string): void {
+  private setInheritedProperties(elementIndex: string): void {
     const element = this.frankDocElements?.[elementIndex];
     if (!element) return;
 
     if (element.attributes) {
-      this.inheritedProperties.attributesRequired.push({
-        parentElementName: element.name,
-        properties: element.attributes.filter((attribute) => attribute.mandatory === true),
-      });
-      this.inheritedProperties.attributesOptional.push({
-        parentElementName: element.name,
-        properties: element.attributes.filter((attribute) => !attribute.mandatory),
-      });
+      const attributesRequired = element.attributes.filter((attribute) => attribute.mandatory === true);
+      const attributesOptional = element.attributes.filter((attribute) => !attribute.mandatory);
+      if (attributesRequired.length > 0) {
+        this.inheritedProperties.attributesRequired.push({
+          parentElementName: element.name,
+          properties: attributesRequired,
+        });
+      }
+      if (attributesOptional.length > 0) {
+        this.inheritedProperties.attributesOptional.push({
+          parentElementName: element.name,
+          properties: attributesOptional,
+        });
+      }
     }
 
     if (element.parameters) {
@@ -114,6 +129,6 @@ export class DetailsElementComponent implements OnChanges {
       });
     }
 
-    if (element.parent) this.getInheritedProperties(element.parent);
+    if (element.parent) this.setInheritedProperties(element.parent);
   }
 }
