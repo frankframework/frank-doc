@@ -66,7 +66,6 @@ export class DetailsElementComponent implements OnChanges {
           forwards: [],
         };
         this.setInheritedProperties(this.element.parent);
-        console.log(this.inheritedProperties);
       }
     }
   }
