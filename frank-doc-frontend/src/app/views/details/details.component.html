@@ -9,22 +9,36 @@
     </div>
   </div>
   <div class="details">
-    <app-details-element
-      [element]="elementByRoute ?? elementBySignal()"
-      [frankDocElements]="frankDocElements()"
-    ></app-details-element>
+    <app-details-element [element]="getFoundElement()" [frankDocElements]="frankDocElements()"></app-details-element>
   </div>
   <div class="side-navigation">
-    <ul>
-      <li class="active">Explanation</li>
-      <li>Quick Links</li>
-      <li>Syntax</li>
-      <li>Component Options</li>
-    </ul>
-    <div class="feedback">
-      <p>Was this helpful?</p>
-      <button>like</button>
-      <button>dislike</button>
+    <div class="sticky">
+      <ul>
+        <li class="active">Explanation</li>
+        <li>Quick Links</li>
+        <li>Syntax</li>
+        <li>
+          <span>Component Options</span>
+          <ul>
+            <li>
+              <span>Attributes</span>
+              <ul>
+                <li>Required</li>
+                <li>Optional</li>
+              </ul>
+            </li>
+            <li>Parameters</li>
+            <li>Nested Elements</li>
+            <li>Forwards</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="feedback">
+        <p>Was this helpful?</p>
+        <button>like</button>
+        <button>dislike</button>
+      </div>
     </div>
   </div>
 </div>
+50
