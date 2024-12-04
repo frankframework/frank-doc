@@ -40,207 +40,197 @@
         <div class="options-list" #attributes>
           @if (attributesRequired.length > 0 || inheritedProperties.attributesRequired.length > 0) {
             <ng-template #attributesRequiredTemplate let-attributesRequired>
-              @for (attribute of attributesRequired; track attribute.name) {
-                <tr>
-                  <td>{{ attribute.name }}</td>
-                  <td
-                    *javadocTransform="let text of attribute.description ?? '-'; elements: frankDocElements"
-                    [innerHTML]="text"
-                  ></td>
-                  <td>{{ attribute.type ?? '-' }}</td>
-                </tr>
-              }
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (attribute of attributesRequired; track attribute.name) {
+                    <tr>
+                      <td>{{ attribute.name }}</td>
+                      <td
+                        *javadocTransform="let text of attribute.description ?? '-'; elements: frankDocElements"
+                        [innerHTML]="text"
+                      ></td>
+                      <td>{{ attribute.type ?? '-' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
             </ng-template>
             <ff-alert type="warning">The attributes below are required</ff-alert>
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                <ng-container
-                  *ngTemplateOutlet="attributesRequiredTemplate; context: { $implicit: attributesRequired }"
-                ></ng-container>
-                @for (
-                  inheritedAttributesRequired of inheritedProperties.attributesRequired;
-                  track inheritedAttributesRequired.parentElementName
-                ) {
-                  <span>{{ inheritedAttributesRequired.parentElementName }}</span>
-                  <ng-container
-                    *ngTemplateOutlet="
-                      attributesRequiredTemplate;
-                      context: { $implicit: inheritedAttributesRequired.properties }
-                    "
-                  ></ng-container>
-                }
-              </tbody>
-            </table>
+            <ng-container
+              *ngTemplateOutlet="attributesRequiredTemplate; context: { $implicit: attributesRequired }"
+            ></ng-container>
+            @for (
+              inheritedAttributesRequired of inheritedProperties.attributesRequired;
+              track inheritedAttributesRequired.parentElementName
+            ) {
+              <div class="parent-element-title">{{ inheritedAttributesRequired.parentElementName }}</div>
+              <ng-container
+                *ngTemplateOutlet="
+                  attributesRequiredTemplate;
+                  context: { $implicit: inheritedAttributesRequired.properties }
+                "
+              ></ng-container>
+            }
           }
           @if (attributesOptional.length > 0 || inheritedProperties.attributesOptional.length > 0) {
             <ng-template #attributesOptionalTemplate let-attributesOptional>
-              @for (attribute of attributesOptional; track attribute.name) {
-                <tr>
-                  <td>{{ attribute.name }}</td>
-                  <td
-                    *javadocTransform="let text of attribute.description ?? '-'; elements: frankDocElements"
-                    [innerHTML]="text"
-                  ></td>
-                  <td>{{ attribute.type ?? '-' }}</td>
-                </tr>
-              }
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (attribute of attributesOptional; track attribute.name) {
+                    <tr>
+                      <td>{{ attribute.name }}</td>
+                      <td
+                        *javadocTransform="let text of attribute.description ?? '-'; elements: frankDocElements"
+                        [innerHTML]="text"
+                      ></td>
+                      <td>{{ attribute.type ?? '-' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
             </ng-template>
             <ff-alert type="info">The attributes below are optional</ff-alert>
             <span class="options-sub-title">Optional</span>
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                <ng-container
-                  *ngTemplateOutlet="attributesOptionalTemplate; context: { $implicit: attributesOptional }"
-                ></ng-container>
-                @for (
-                  inheritedAttributesOptional of inheritedProperties.attributesOptional;
-                  track inheritedAttributesOptional.parentElementName
-                ) {
-                  <span>{{ inheritedAttributesOptional.parentElementName }}</span>
-                  <ng-container
-                    *ngTemplateOutlet="
-                      attributesOptionalTemplate;
-                      context: { $implicit: inheritedAttributesOptional.properties }
-                    "
-                  ></ng-container>
-                }
-              </tbody>
-            </table>
+            <ng-container
+              *ngTemplateOutlet="attributesOptionalTemplate; context: { $implicit: attributesOptional }"
+            ></ng-container>
+            @for (
+              inheritedAttributesOptional of inheritedProperties.attributesOptional;
+              track inheritedAttributesOptional.parentElementName
+            ) {
+              <div class="parent-element-title">{{ inheritedAttributesOptional.parentElementName }}</div>
+              <ng-container
+                *ngTemplateOutlet="
+                  attributesOptionalTemplate;
+                  context: { $implicit: inheritedAttributesOptional.properties }
+                "
+              ></ng-container>
+            }
           }
         </div>
       </div>
     }
     @if (element.parameters || inheritedProperties.parameters.length > 0) {
       <ng-template #parametersTemplate let-parameters>
-        @for (parameter of parameters; track parameter.name) {
-          <tr>
-            <td>{{ parameter.name }}</td>
-            <td
-              *javadocTransform="let text of parameter.description ?? '-'; elements: frankDocElements"
-              [innerHTML]="text"
-            ></td>
-          </tr>
-        }
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (parameter of parameters; track parameter.name) {
+              <tr>
+                <td>{{ parameter.name }}</td>
+                <td
+                  *javadocTransform="let text of parameter.description ?? '-'; elements: frankDocElements"
+                  [innerHTML]="text"
+                ></td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </ng-template>
       <div class="sub-options parameters">
         <span class="options-title" [collapse]="parameters">Parameters</span>
         <div class="options-list" #parameters>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              <ng-container
-                *ngTemplateOutlet="parametersTemplate; context: { $implicit: element.parameters }"
-              ></ng-container>
-              @for (
-                inheritedParameters of inheritedProperties.parameters;
-                track inheritedParameters.parentElementName
-              ) {
-                <span>{{ inheritedParameters.parentElementName }}</span>
-                <ng-container
-                  *ngTemplateOutlet="parametersTemplate; context: { $implicit: inheritedParameters.properties }"
-                ></ng-container>
-              }
-            </tbody>
-          </table>
+          <ng-container
+            *ngTemplateOutlet="parametersTemplate; context: { $implicit: element.parameters }"
+          ></ng-container>
+          @for (inheritedParameters of inheritedProperties.parameters; track inheritedParameters.parentElementName) {
+            <div class="parent-element-title">{{ inheritedParameters.parentElementName }}</div>
+            <ng-container
+              *ngTemplateOutlet="parametersTemplate; context: { $implicit: inheritedParameters.properties }"
+            ></ng-container>
+          }
         </div>
       </div>
     }
     @if (element.children || inheritedProperties.children.length > 0) {
       <ng-template #childrenTemplate let-children>
-        @for (nestedElement of children; track nestedElement.roleName) {
-          <tr>
-            <td>{{ nestedElement.roleName }}</td>
-            <td
-              *javadocTransform="let text of nestedElement.description ?? '-'; elements: frankDocElements"
-              [innerHTML]="text"
-            ></td>
-            <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
-          </tr>
-        }
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Cardinality</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (nestedElement of children; track nestedElement.roleName) {
+              <tr>
+                <td>{{ nestedElement.roleName }}</td>
+                <td
+                  *javadocTransform="let text of nestedElement.description ?? '-'; elements: frankDocElements"
+                  [innerHTML]="text"
+                ></td>
+                <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </ng-template>
       <div class="sub-options nested-elements">
         <span class="options-title" [collapse]="nestedElements">Nested Elements</span>
         <div class="options-list" #nestedElements>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Cardinality</th>
-              </tr>
-            </thead>
-            <tbody>
-              <ng-container
-                *ngTemplateOutlet="childrenTemplate; context: { $implicit: element.children }"
-              ></ng-container>
-              @for (
-                inheritedChildren of inheritedProperties.children ?? '-';
-                track inheritedChildren.parentElementName
-              ) {
-                <span>{{ inheritedChildren.parentElementName }}</span>
-                <ng-container
-                  *ngTemplateOutlet="childrenTemplate; context: { $implicit: inheritedChildren.properties }"
-                ></ng-container>
-              }
-            </tbody>
-          </table>
+          <ng-container *ngTemplateOutlet="childrenTemplate; context: { $implicit: element.children }"></ng-container>
+          @for (inheritedChildren of inheritedProperties.children ?? '-'; track inheritedChildren.parentElementName) {
+            <div class="parent-element-title">{{ inheritedChildren.parentElementName }}</div>
+            <ng-container
+              *ngTemplateOutlet="childrenTemplate; context: { $implicit: inheritedChildren.properties }"
+            ></ng-container>
+          }
         </div>
       </div>
     }
     @if (element.forwards || inheritedProperties.forwards.length > 0) {
       <ng-template #forwardTemplate let-forwards>
-        @for (forward of forwards; track forward.name) {
-          <tr>
-            <td>{{ forward.name }}</td>
-            <td
-              *javadocTransform="let text of forward.description ?? '-'; elements: frankDocElements"
-              [innerHTML]="text"
-            ></td>
-          </tr>
-        }
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (forward of forwards; track forward.name) {
+              <tr>
+                <td>{{ forward.name }}</td>
+                <td
+                  *javadocTransform="let text of forward.description ?? '-'; elements: frankDocElements"
+                  [innerHTML]="text"
+                ></td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </ng-template>
       <div class="sub-options forwards">
         <span class="options-title" [collapse]="forwards">Forwards</span>
         <div class="options-list" #forwards>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <ng-container
-                *ngTemplateOutlet="forwardTemplate; context: { $implicit: element.forwards }"
-              ></ng-container>
-              @for (inheritedForward of inheritedProperties.forwards; track inheritedForward.parentElementName) {
-                <span>{{ inheritedForward.parentElementName }}</span>
-                <ng-container
-                  *ngTemplateOutlet="forwardTemplate; context: { $implicit: inheritedForward.properties }"
-                ></ng-container>
-              }
-            </tbody>
-          </table>
+          <ng-container *ngTemplateOutlet="forwardTemplate; context: { $implicit: element.forwards }"></ng-container>
+          @for (inheritedForward of inheritedProperties.forwards; track inheritedForward.parentElementName) {
+            <div class="parent-element-title">{{ inheritedForward.parentElementName }}</div>
+            <ng-container
+              *ngTemplateOutlet="forwardTemplate; context: { $implicit: inheritedForward.properties }"
+            ></ng-container>
+          }
         </div>
       </div>
     }
