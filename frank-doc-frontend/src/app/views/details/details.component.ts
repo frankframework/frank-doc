@@ -1,9 +1,8 @@
 import { Component, computed, inject, OnInit, Signal } from '@angular/core';
-import { ChipComponent, SearchComponent } from '@frankframework/angular-components';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { SearchComponent } from '@frankframework/angular-components';
+import { ActivatedRoute } from '@angular/router';
 import { Element, FrankDoc } from '../../frankdoc.types';
 import { AppService } from '../../app.service';
-import { KeyValuePipe } from '@angular/common';
 import { DetailsElementComponent } from './details-element/details-element.component';
 
 type ElementFilterProperties = {
@@ -15,7 +14,7 @@ type ElementFilterProperties = {
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [SearchComponent, ChipComponent, RouterLink, KeyValuePipe, DetailsElementComponent],
+  imports: [SearchComponent, DetailsElementComponent],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -50,6 +49,10 @@ export class DetailsComponent implements OnInit {
 
       this.elementByRoute = this.findElement(this.frankDocElements());
     });
+  }
+
+  protected getFoundElement(): Element | null {
+    return this.elementByRoute ?? this.elementBySignal();
   }
 
   private findElement(frankDocElements: FrankDoc['elements'] | null): FrankDoc['elements'][string] | null {
