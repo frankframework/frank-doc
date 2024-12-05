@@ -114,13 +114,22 @@ h3 {
     padding: 0 0 20px 30px;
 
     .options-title {
-      display: block;
+      display: flex;
       margin-bottom: 20px;
       padding: 15px 0;
       border-bottom: 1px solid #1E1E1E;
       color: #1E1E1E;
       font-size: 24px;
       font-weight: 600;
+
+      span {
+        flex: 1 1 auto;
+      }
+
+      app-icon-caret {
+        margin-right: 12px;
+        flex: 0 0 auto;
+      }
     }
 
     .options-sub-title {
