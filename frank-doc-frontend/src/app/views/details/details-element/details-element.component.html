@@ -36,7 +36,15 @@
     <h3>Component Options</h3>
     @if (element.attributes) {
       <div class="sub-options attributes">
-        <span class="options-title" [collapse]="attributes">Attributes</span>
+        <div
+          class="options-title"
+          [collapse]="attributes"
+          [animationSpeed]="300"
+          (collapsedChange)="collapsedOptions.attributes = $event"
+        >
+          <span>Attributes</span>
+          <app-icon-caret [rotation]="collapsedOptions.attributes ? 'down' : 'up'"></app-icon-caret>
+        </div>
         <div class="options-list" #attributes>
           @if (attributesRequired.length > 0 || inheritedProperties.attributesRequired.length > 0) {
             <ng-template #attributesRequiredTemplate let-attributesRequired>
@@ -148,7 +156,14 @@
         </table>
       </ng-template>
       <div class="sub-options parameters">
-        <span class="options-title" [collapse]="parameters">Parameters</span>
+        <div
+          class="options-title"
+          [collapse]="parameters"
+          (collapsedChange)="collapsedOptions.parameters = $event"
+        >
+          <span>Parameters</span>
+          <app-icon-caret [rotation]="collapsedOptions.attributes ? 'down' : 'up'"></app-icon-caret>
+        </div>
         <div class="options-list" #parameters>
           <ng-container
             *ngTemplateOutlet="parametersTemplate; context: { $implicit: element.parameters }"
@@ -187,10 +202,17 @@
         </table>
       </ng-template>
       <div class="sub-options nested-elements">
-        <span class="options-title" [collapse]="nestedElements">Nested Elements</span>
+        <div
+          class="options-title"
+          [collapse]="nestedElements"
+          (collapsedChange)="collapsedOptions.children = $event"
+        >
+          <span>Nested Elements</span>
+          <app-icon-caret [rotation]="collapsedOptions.children ? 'down' : 'up'"></app-icon-caret>
+        </div>
         <div class="options-list" #nestedElements>
           <ng-container *ngTemplateOutlet="childrenTemplate; context: { $implicit: element.children }"></ng-container>
-          @for (inheritedChildren of inheritedProperties.children ?? '-'; track inheritedChildren.parentElementName) {
+          @for (inheritedChildren of inheritedProperties.children; track inheritedChildren.parentElementName) {
             <div class="parent-element-title">{{ inheritedChildren.parentElementName }}</div>
             <ng-container
               *ngTemplateOutlet="childrenTemplate; context: { $implicit: inheritedChildren.properties }"
@@ -222,7 +244,14 @@
         </table>
       </ng-template>
       <div class="sub-options forwards">
-        <span class="options-title" [collapse]="forwards">Forwards</span>
+        <div
+          class="options-title"
+          [collapse]="forwards"
+          (collapsedChange)="collapsedOptions.forwards = $event"
+        >
+          <span>Forwards</span>
+          <app-icon-caret [rotation]="collapsedOptions.forwards ? 'down' : 'up'"></app-icon-caret>
+        </div>
         <div class="options-list" #forwards>
           <ng-container *ngTemplateOutlet="forwardTemplate; context: { $implicit: element.forwards }"></ng-container>
           @for (inheritedForward of inheritedProperties.forwards; track inheritedForward.parentElementName) {

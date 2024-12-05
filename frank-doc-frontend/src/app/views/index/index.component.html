@@ -1,8 +1,15 @@
 <div class="page-container">
   <div class="sidenav">
     @for (filter of filters(); track filter.name) {
-      <span class="filter-name">{{ filter.name }} ({{ filter.labels.length }})</span>
-      <ul>
+      <div class="filter-name" [collapse]="filterList" (collapsedChange)="collapsedFilters[filter.name] = $event">
+        <span>{{ filter.name }} ({{ filter.labels.length }})</span>
+        <app-icon-caret
+          [width]="18"
+          [height]="18"
+          [rotation]="collapsedFilters[filter.name] ? 'down' : 'up'"
+        ></app-icon-caret>
+      </div>
+      <ul #filterList>
         @for (label of filter.labels; track label.name) {
           <li>
             <ff-chip colour="#CD55EB" slim>{{ label.name.charAt(0) }}</ff-chip> {{ label.name }} ({{
