@@ -55,6 +55,13 @@ export class DetailsComponent implements OnInit {
     return this.elementByRoute ?? this.elementBySignal();
   }
 
+  protected scrollToElement(selectors: string): void {
+    const element = document.querySelector(selectors);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   private findElement(frankDocElements: FrankDoc['elements'] | null): FrankDoc['elements'][string] | null {
     if (!frankDocElements) return null;
     if (this.fullElementName) return this.getElementByFullName(frankDocElements, this.fullElementName);
