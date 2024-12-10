@@ -45,7 +45,7 @@
           <span>Attributes</span>
           <app-icon-caret [rotation]="collapsedOptions.attributes ? 'down' : 'up'"></app-icon-caret>
         </div>
-        <div class="options-list" #attributes>
+        <div class="options-list" id="attributes" #attributes>
           @if (attributesRequired.length > 0 || inheritedProperties.attributesRequired.length > 0) {
             <ng-template #attributesRequiredTemplate let-attributesRequired>
               <table>
@@ -70,7 +70,7 @@
                 </tbody>
               </table>
             </ng-template>
-            <ff-alert type="warning">The attributes below are required</ff-alert>
+            <ff-alert type="warning" id="attributes-required">The attributes below are required</ff-alert>
             <ng-container
               *ngTemplateOutlet="attributesRequiredTemplate; context: { $implicit: attributesRequired }"
             ></ng-container>
@@ -112,7 +112,7 @@
               </table>
             </ng-template>
             <ff-alert type="info">The attributes below are optional</ff-alert>
-            <span class="options-sub-title">Optional</span>
+            <span class="options-sub-title" id="attributes-optional">Optional</span>
             <ng-container
               *ngTemplateOutlet="attributesOptionalTemplate; context: { $implicit: attributesOptional }"
             ></ng-container>
@@ -155,12 +155,8 @@
           </tbody>
         </table>
       </ng-template>
-      <div class="sub-options parameters">
-        <div
-          class="options-title"
-          [collapse]="parameters"
-          (collapsedChange)="collapsedOptions.parameters = $event"
-        >
+      <div class="sub-options parameters" id="parameters">
+        <div class="options-title" [collapse]="parameters" (collapsedChange)="collapsedOptions.parameters = $event">
           <span>Parameters</span>
           <app-icon-caret [rotation]="collapsedOptions.attributes ? 'down' : 'up'"></app-icon-caret>
         </div>
@@ -201,12 +197,8 @@
           </tbody>
         </table>
       </ng-template>
-      <div class="sub-options nested-elements">
-        <div
-          class="options-title"
-          [collapse]="nestedElements"
-          (collapsedChange)="collapsedOptions.children = $event"
-        >
+      <div class="sub-options nested-elements" id="nested-elements">
+        <div class="options-title" [collapse]="nestedElements" (collapsedChange)="collapsedOptions.children = $event">
           <span>Nested Elements</span>
           <app-icon-caret [rotation]="collapsedOptions.children ? 'down' : 'up'"></app-icon-caret>
         </div>
@@ -243,12 +235,8 @@
           </tbody>
         </table>
       </ng-template>
-      <div class="sub-options forwards">
-        <div
-          class="options-title"
-          [collapse]="forwards"
-          (collapsedChange)="collapsedOptions.forwards = $event"
-        >
+      <div class="sub-options forwards" id="forwards">
+        <div class="options-title" [collapse]="forwards" (collapsedChange)="collapsedOptions.forwards = $event">
           <span>Forwards</span>
           <app-icon-caret [rotation]="collapsedOptions.forwards ? 'down' : 'up'"></app-icon-caret>
         </div>

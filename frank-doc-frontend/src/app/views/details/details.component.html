@@ -14,22 +14,22 @@
   <div class="side-navigation">
     <div class="sticky">
       <ul>
-        <li class="active">Explanation</li>
-        <li>Quick Links</li>
-        <li>Syntax</li>
+        <li (click)="scrollToElement('.explanation')">Explanation</li>
+        <li (click)="scrollToElement('.quick-links')">Quick Links</li>
+        <li (click)="scrollToElement('.syntax')">Syntax</li>
         <li>
-          <span>Component Options</span>
+          <span (click)="scrollToElement('.options')">Component Options</span>
           <ul>
             <li>
-              <span>Attributes</span>
+              <span (click)="scrollToElement('#attributes')">Attributes</span>
               <ul>
-                <li>Required</li>
-                <li>Optional</li>
+                <li (click)="scrollToElement('#attributes-required')">Required</li>
+                <li (click)="scrollToElement('#attributes-optional')">Optional</li>
               </ul>
             </li>
-            <li>Parameters</li>
-            <li>Nested Elements</li>
-            <li>Forwards</li>
+            <li (click)="scrollToElement('#parameters')">Parameters</li>
+            <li (click)="scrollToElement('#nested-elements')">Nested Elements</li>
+            <li (click)="scrollToElement('#forwards')">Forwards</li>
           </ul>
         </li>
       </ul>
