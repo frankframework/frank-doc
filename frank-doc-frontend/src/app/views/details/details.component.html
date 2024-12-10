@@ -1,12 +1,6 @@
 <div class="page">
   <div class="side-search">
-    <ff-search [focusKeyEnabled]="false" slim></ff-search>
-    <div class="search-results">
-      <span class="title">Results (5)</span>
-    </div>
-    <div class="search-related">
-      <span class="title">Related (5)</span>
-    </div>
+    <app-details-search [element]="getFoundElement()" [frankDocElements]="frankDocElements()"></app-details-search>
   </div>
   <div class="details">
     <app-details-element [element]="getFoundElement()" [frankDocElements]="frankDocElements()"></app-details-element>

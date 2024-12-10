@@ -1,0 +1,28 @@
+<ff-search
+  slim
+  [focusKeyEnabled]="false"
+  [(ngModel)]="searchQuery"
+  (ngModelChange)="resetAndSearch($event)"
+></ff-search>
+<div class="search-results">
+  <span class="title">Results ({{ filteredElements.length }})</span>
+  <ul>
+    @for (searchElement of filteredElements; track searchElement.item.name) {
+      <li>
+        <a
+          [routerLink]="[
+            '/',
+            getFirstFilter(searchElement.item.labels),
+            getFirstLabel(searchElement.item.labels),
+            searchElement.item.name,
+          ]"
+          [ngClass]="{ active: searchElement.item.name === element?.name }"
+          >{{ searchElement.item.name }}</a
+        >
+      </li>
+    }
+  </ul>
+</div>
+<div class="search-related">
+  <span class="title">Related (0)</span>
+</div>
