@@ -11,9 +11,9 @@ import {
 } from '@angular/core';
 import { ButtonComponent, CheckboxComponent } from '@frankframework/angular-components';
 import { AppService, Filter } from '../../../app.service';
-import { SelectedFilters } from '../home.component';
 import { KeyValuePipe, NgClass } from '@angular/common';
 import { InitFilterToggleDirective } from './init-filter-toggle.directive';
+import { ElementLabels } from '../../../frankdoc.types';
 
 @Component({
   selector: 'app-home-filters',
@@ -24,12 +24,12 @@ import { InitFilterToggleDirective } from './init-filter-toggle.directive';
 })
 export class HomeFiltersComponent {
   @ViewChild('menu') menuElementRef!: ElementRef<HTMLDivElement>;
-  @Output() selectedFilters: EventEmitter<SelectedFilters> = new EventEmitter<SelectedFilters>();
+  @Output() selectedFilters: EventEmitter<ElementLabels> = new EventEmitter<ElementLabels>();
 
   protected filters: Signal<Filter[]> = computed(() => this.appService.filters());
   protected open: boolean = false;
   protected selectedFilter: Filter | null = null;
-  protected selectedFilterLabels: WritableSignal<SelectedFilters> = signal({});
+  protected selectedFilterLabels: WritableSignal<ElementLabels> = signal({});
 
   constructor(private appService: AppService) {}
 
@@ -80,7 +80,7 @@ export class HomeFiltersComponent {
     this.updateSelectedFilters(selectedFilterLabels);
   }
 
-  private updateSelectedFilters(selectedFilters: SelectedFilters): void {
+  private updateSelectedFilters(selectedFilters: ElementLabels): void {
     // using spread to have directive input's update, maybe input signals will improve this so no spreading is needed
     this.selectedFilterLabels.set({ ...selectedFilters });
     this.selectedFilters.emit(this.selectedFilterLabels());

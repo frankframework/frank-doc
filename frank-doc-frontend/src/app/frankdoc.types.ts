@@ -20,7 +20,7 @@ export type Element = {
   deprecated?: DeprecationInfo;
   parameters?: ParsedTag[];
   parametersDescription?: string;
-  labels?: Record<string, string[]>; // maybe make this smarter and have key be based on Label (type) name
+  labels?: ElementLabels; // maybe make this smarter and have key be based on Label (type) name
 };
 
 export type Attribute = {
@@ -47,6 +47,8 @@ export type ParsedTag = {
   name: string;
   description?: string;
 };
+
+export type ElementLabels = Record<string, string[]>;
 
 export type Enum = {
   name: string;

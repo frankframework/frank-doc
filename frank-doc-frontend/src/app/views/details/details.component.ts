@@ -1,9 +1,9 @@
 import { Component, computed, inject, OnInit, Signal } from '@angular/core';
-import { SearchComponent } from '@frankframework/angular-components';
 import { ActivatedRoute } from '@angular/router';
 import { Element, FrankDoc } from '../../frankdoc.types';
 import { AppService } from '../../app.service';
 import { DetailsElementComponent } from './details-element/details-element.component';
+import { DetailsSearchComponent } from './details-search/details-search.component';
 
 type ElementFilterProperties = {
   filterName?: string;
@@ -14,7 +14,7 @@ type ElementFilterProperties = {
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [SearchComponent, DetailsElementComponent],
+  imports: [DetailsElementComponent, DetailsSearchComponent],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })

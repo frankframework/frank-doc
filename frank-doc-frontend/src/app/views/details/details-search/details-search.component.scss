@@ -1,0 +1,36 @@
+ff-search {
+  width: 100%;
+}
+
+.search-results,
+.search-related {
+  margin-top: 50px;
+
+  .title {
+    color: #1E1E1E;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  ul {
+    padding: 0;
+    list-style: none;
+
+    li {
+      padding: 3px 0 3px 25px;
+    }
+
+    a {
+      color: #626262;
+      font-size: 16px;
+      font-weight: 400;
+      text-decoration: none;
+      text-transform: capitalize;
+
+      &.active {
+        color: #1E1E1E;
+        font-weight: 600;
+      }
+    }
+  }
+}
