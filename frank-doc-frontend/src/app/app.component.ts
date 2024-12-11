@@ -1,4 +1,4 @@
-import { Component, computed, OnInit, Signal } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { RouterOutlet } from '@angular/router';
@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   protected version: Signal<string> = computed(() => this.appService.frankDoc()?.metadata.version ?? 'unknown');
   protected error: string | null = null;
 
-  constructor(private appService: AppService) {}
+  private appService: AppService = inject(AppService);
 
   ngOnInit(): void {
     this.appService.getFrankDoc().subscribe({

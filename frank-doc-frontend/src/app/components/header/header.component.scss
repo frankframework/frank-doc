@@ -64,4 +64,8 @@ header {
       cursor: pointer;
     }
   }
+
+  .actions .switch-theme-button app-icon-darkmode {
+    cursor: not-allowed;
+  }
 }

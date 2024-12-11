@@ -13,8 +13,8 @@
   @for (component of components; track component.item.name) {
     <div class="card">
       <p class="label">{{ component.item.labels ? getFirstLabel(component.item.labels) : '' }}</p>
-      <p class="name">{{ component.item.name }}</p>
-      <p class="element-names">
+      <p class="name" [title]="component.item.name">{{ component.item.name }}</p>
+      <p class="element-names" [title]="component.item.elementNames.join('\n')">
         @for (elementName of component.item.elementNames; track elementName; let first = $first) {
           @if (!first) {
             &bull;
@@ -22,7 +22,7 @@
           <span>{{ elementName }}</span>
         }
       </p>
-      <p class="description">{{ component.item.description }}</p>
+      <p class="description">{{ component.item.description | truncate: 150 }}</p>
       <ff-button
         [routerLink]="[
           '/',

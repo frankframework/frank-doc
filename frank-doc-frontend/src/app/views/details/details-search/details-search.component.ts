@@ -34,8 +34,10 @@ export class DetailsSearchComponent implements OnChanges {
       this.fuse.setCollection(this.elementsList);
     }
     if (changes['element']) {
-      const firstElementNamePart = this.element?.name.split(/(?=[A-Z])/)[0];
-      this.searchQuery = firstElementNamePart ?? '';
+      if (this.searchQuery === '') {
+        const firstElementNamePart = this.element?.name.split(/(?=[A-Z])/)[0];
+        this.searchQuery = firstElementNamePart ?? '';
+      }
       this.updateSelectedFilters(this.element?.labels ?? {});
     }
   }
@@ -49,13 +51,13 @@ export class DetailsSearchComponent implements OnChanges {
     const searchPattern = query.trim();
     if (searchPattern !== '') {
       this.filteredElements = this.fuse.search(searchPattern);
-      if (isDevMode()) console.log(this.filteredElements);
+      if (isDevMode()) console.log('Search', this.filteredElements);
     }
   }
 
   protected updateSelectedFilters(selectedFilters: ElementLabels): void {
     this.fuse.setCollection(this.appService.filterElementsBySelectedFilters(this.elementsList, selectedFilters));
     this.search(this.searchQuery);
-    if (isDevMode()) console.log(selectedFilters);
+    if (isDevMode()) console.log('Selected Filters', selectedFilters);
   }
 }

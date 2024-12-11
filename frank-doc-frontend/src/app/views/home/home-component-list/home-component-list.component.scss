@@ -20,9 +20,10 @@
       padding: 0 6px;
       background-color: #ededed;
       border: 1px solid #D8D8D8;
-      border-radius: 8px;
+      border-radius: 5px;
       font-size: 12px;
       font-weight: 600;
+      vertical-align: middle;
     }
   }
 }
@@ -42,6 +43,13 @@
     border: 1px solid #D8D8D8;
     border-radius: 8px;
 
+    .name,
+    .element-names,
+    .description {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .label {
       letter-spacing: 2.1px;
       text-transform: uppercase;
@@ -56,6 +64,7 @@
 
     .element-names {
       margin-bottom: 10px;
+      white-space: nowrap;
     }
 
     .label,
@@ -66,12 +75,10 @@
     }
 
     .description {
-      height: 65px;
+      //height: 65px;
       color: #1E1E1E;
       font-size: 16px;
       font-weight: 400;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     ff-button {
