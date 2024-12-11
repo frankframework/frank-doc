@@ -5,7 +5,8 @@
   (ngModelChange)="resetAndSearch($event)"
 ></ff-search>
 <div class="search-results">
-  <span class="title">Results ({{ filteredElements.length }})</span>
+  <span class="title">Results</span>
+  <span class="count">{{ filteredElements.length }}</span>
   <ul>
     @for (searchElement of filteredElements; track searchElement.item.name) {
       <li [ngClass]="{ active: searchElement.item.name === element?.name }">
@@ -23,5 +24,6 @@
   </ul>
 </div>
 <div class="search-related">
-  <span class="title">Related (0)</span>
+  <span class="title">Related</span>
+  <span class="count">0</span>
 </div>

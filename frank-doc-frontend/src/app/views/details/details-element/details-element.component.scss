@@ -39,6 +39,24 @@ h3 {
   font-size: 16px;
 }
 
+.quick-links {
+  a {
+    color: #0066AF;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+
+    &:active {
+      color: #fdc300;
+    }
+  }
+}
+
 .syntax > pre {
   position: relative;
   padding: 26px;
@@ -70,6 +88,7 @@ h3 {
 .options {
   table {
     width: 100%;
+    overflow: auto;
 
     th {
       padding: 10px 0;

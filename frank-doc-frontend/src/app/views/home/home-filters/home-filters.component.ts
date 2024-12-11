@@ -3,6 +3,8 @@ import {
   computed,
   ElementRef,
   EventEmitter,
+  inject,
+  OnDestroy,
   Output,
   signal,
   Signal,
@@ -22,24 +24,31 @@ import { ElementLabels } from '../../../frankdoc.types';
   templateUrl: './home-filters.component.html',
   styleUrl: './home-filters.component.scss',
 })
-export class HomeFiltersComponent {
+export class HomeFiltersComponent implements OnDestroy {
   @ViewChild('menu') menuElementRef!: ElementRef<HTMLDivElement>;
   @Output() selectedFilters: EventEmitter<ElementLabels> = new EventEmitter<ElementLabels>();
 
+  private appService: AppService = inject(AppService);
   protected filters: Signal<Filter[]> = computed(() => this.appService.filters());
   protected open: boolean = false;
   protected selectedFilter: Filter | null = null;
   protected selectedFilterLabels: WritableSignal<ElementLabels> = signal({});
 
-  constructor(private appService: AppService) {}
+  private onOutsideClick: (event: MouseEvent) => void = (event: MouseEvent): void => this.outsideClickHandler(event);
+
+  ngOnDestroy(): void {
+    document.removeEventListener('click', this.onOutsideClick);
+  }
 
   protected toggleDropdown(): void {
     const menuElement = this.menuElementRef.nativeElement;
     if (this.open) {
       menuElement.classList.add('open');
+      setTimeout(() => document.addEventListener('click', this.onOutsideClick));
       return;
     }
     menuElement.classList.remove('open');
+    document.removeEventListener('click', this.onOutsideClick);
     this.selectedFilter = null;
   }
 
@@ -84,5 +93,13 @@ export class HomeFiltersComponent {
     // using spread to have directive input's update, maybe input signals will improve this so no spreading is needed
     this.selectedFilterLabels.set({ ...selectedFilters });
     this.selectedFilters.emit(this.selectedFilterLabels());
+  }
+
+  private outsideClickHandler(event: MouseEvent): void {
+    const clickedElement = event.target as HTMLElement;
+    if (!clickedElement.closest('.menu.open')) {
+      this.open = false;
+      this.toggleDropdown();
+    }
   }
 }

@@ -4,11 +4,12 @@ import { FuseResult } from 'fuse.js';
 import { Element } from '../../../frankdoc.types';
 import { RouterLink } from '@angular/router';
 import { AppService } from '../../../app.service';
+import { TruncatePipe } from '../../../components/truncate.pipe';
 
 @Component({
   selector: 'app-home-component-list',
   standalone: true,
-  imports: [ButtonComponent, RouterLink],
+  imports: [ButtonComponent, RouterLink, TruncatePipe],
   templateUrl: './home-component-list.component.html',
   styleUrl: './home-component-list.component.scss',
 })

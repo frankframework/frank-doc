@@ -31,13 +31,13 @@ export class HomeComponent {
     const searchPattern = query.trim();
     if (searchPattern !== '') {
       this.filteredElements = this.fuse().search(searchPattern);
-      if (isDevMode()) console.log(this.filteredElements);
+      if (isDevMode()) console.log('Search', this.filteredElements);
     }
   }
 
   protected updateSelectedFilters(selectedFilters: ElementLabels): void {
     this.fuse().setCollection(this.appService.filterElementsBySelectedFilters(this.elementsList(), selectedFilters));
     this.search(this.searchQuery);
-    if (isDevMode()) console.log(selectedFilters);
+    if (isDevMode()) console.log('Selected Filters', selectedFilters);
   }
 }

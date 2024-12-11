@@ -4,6 +4,8 @@ import { Element, FrankDoc } from '../../frankdoc.types';
 import { AppService } from '../../app.service';
 import { DetailsElementComponent } from './details-element/details-element.component';
 import { DetailsSearchComponent } from './details-search/details-search.component';
+import { IconLikeComponent } from '../../icons/icon-like/icon-like.component';
+import { IconDislikeComponent } from '../../icons/icon-dislike/icon-dislike.component';
 
 type ElementFilterProperties = {
   filterName?: string;
@@ -14,7 +16,7 @@ type ElementFilterProperties = {
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [DetailsElementComponent, DetailsSearchComponent],
+  imports: [DetailsElementComponent, DetailsSearchComponent, IconLikeComponent, IconDislikeComponent],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
