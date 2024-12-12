@@ -7,6 +7,7 @@ import { DetailsSearchComponent } from './details-search/details-search.componen
 import { IconLikeComponent } from '../../icons/icon-like/icon-like.component';
 import { IconDislikeComponent } from '../../icons/icon-dislike/icon-dislike.component';
 import { environment } from '../../../environments/environment';
+import { IconSmileComponent } from '../../icons/icon-smile/icon-smile.component';
 
 type ElementFilterProperties = {
   filterName?: string;
@@ -17,7 +18,13 @@ type ElementFilterProperties = {
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [DetailsElementComponent, DetailsSearchComponent, IconLikeComponent, IconDislikeComponent],
+  imports: [
+    DetailsElementComponent,
+    DetailsSearchComponent,
+    IconLikeComponent,
+    IconDislikeComponent,
+    IconSmileComponent,
+  ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })

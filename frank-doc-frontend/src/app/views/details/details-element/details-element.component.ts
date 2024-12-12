@@ -59,6 +59,7 @@ export class DetailsElementComponent implements OnChanges {
     forwards: false,
   };
   protected undefinedType = 'string';
+  protected elementSyntax: string = '';
 
   private filterColours: string[] = ['#CD55EB', '#037CD4', '#00B31D'];
 
@@ -78,6 +79,7 @@ export class DetailsElementComponent implements OnChanges {
         };
         this.setInheritedProperties(this.element.parent);
       }
+      this.generateElementSyntax();
     }
   }
 
@@ -95,6 +97,18 @@ export class DetailsElementComponent implements OnChanges {
       : // We only have a JavaDoc URL if we have an element with a Java class. The
         // exception we handle here is <Module>.
         null;
+  }
+
+  protected copyToClipboard(text: string): void {
+    const element = document.createElement('textarea');
+    element.value = text;
+    element.setAttribute('readonly', '');
+    element.style.position = 'absolute';
+    element.style.left = '-9999px';
+    document.body.append(element);
+    element.select();
+    document.execCommand('copy'); // TODO: soon deprecated but no real solution yet
+    element.remove();
   }
 
   private setInheritedProperties(elementIndex: string): void {
@@ -140,5 +154,13 @@ export class DetailsElementComponent implements OnChanges {
     }
 
     if (element.parent) this.setInheritedProperties(element.parent);
+  }
+
+  private generateElementSyntax(): void {
+    if (this.element) {
+      this.elementSyntax = `
+<${this.element.name} name=”my-${this.element.name.toLowerCase()}” />
+`.trim();
+    }
   }
 }

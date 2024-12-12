@@ -28,10 +28,8 @@
   </div>
   <div class="section syntax">
     <h3>Syntax</h3>
-    <pre><button>Copy</button><code
-    >&lt;!--Copy the required code below--&gt;
-
-&lt;{{element.name}} name=”my-test-pipe” version=”1” /&gt;</code
+    <pre><button (click)="copyToClipboard(elementSyntax)">Copy</button><code [innerText]="elementSyntax"
+    >&lt;{{element.name}} name=”my-test-pipe” version=”1” /&gt;</code
     ></pre>
   </div>
   <div class="section options">

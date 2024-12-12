@@ -15,6 +15,16 @@
   font-family: Inter, sans-serif;
 }
 
+.feedback-btn {
+  position: fixed;
+  bottom: 25px;
+  right: 50px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
 .details .section {
   pre {
     padding: 8px;
@@ -22,7 +32,6 @@
     border: 1px solid #D8D8D8;
     color: #1E1E1E;
     background: rgba(237, 237, 237, 0.50);
-    //font-size: 16px;
     word-break: break-all;
     word-wrap: break-word;
     white-space: normal;
@@ -41,6 +50,15 @@
 
     &:active {
       color: #fdc300;
+    }
+
+    &:hover {
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-skip-ink: none;
+      text-decoration-thickness: auto;
+      text-underline-offset: auto;
+      text-underline-position: from-font;
     }
   }
 

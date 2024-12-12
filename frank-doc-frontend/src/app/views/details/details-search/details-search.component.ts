@@ -52,7 +52,7 @@ export class DetailsSearchComponent implements OnChanges {
   protected search(query: string): void {
     const searchPattern = query.trim();
     if (searchPattern !== '') {
-      this.filteredElements = this.fuse.search(searchPattern).slice(0, 20);
+      this.filteredElements = this.fuse.search(searchPattern, { limit: 20 });
       if (isDevMode()) console.log('Search', this.filteredElements);
     }
   }
