@@ -40,6 +40,15 @@ h3 {
 }
 
 .quick-links {
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+
+  app-icon-arrow-right-up {
+    margin-right: 10px;
+  }
+
   a {
     color: #0066AF;
     font-size: 16px;
@@ -115,6 +124,7 @@ h3 {
       font-size: 16px;
       font-weight: 400;
       vertical-align: text-top;
+      word-break: normal;
 
       &:first-child {
         padding-left: 18px;
