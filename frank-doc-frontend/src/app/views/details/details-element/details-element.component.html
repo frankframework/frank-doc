@@ -17,10 +17,12 @@
     <h3>Quick Links</h3>
     <ul>
       <li>
-        <a [href]="githubUrlOf(element.name)" target="_blank">Github - {{ element.name }} Implementation Examples</a>
+        <app-icon-arrow-right-up width="14" height="14"></app-icon-arrow-right-up
+        ><a [href]="githubUrlOf(element.name)" target="_blank">Github - {{ element.name }} Implementation Examples</a>
       </li>
       <li>
-        <a [href]="javaDocUrlOf(element.fullName)" target="_blank">Javadoc - {{ element.name }}</a>
+        <app-icon-arrow-right-up width="14" height="14"></app-icon-arrow-right-up
+        ><a [href]="javaDocUrlOf(element.fullName)" target="_blank">Javadoc - {{ element.name }}</a>
       </li>
     </ul>
   </div>
@@ -29,7 +31,7 @@
     <pre><button>Copy</button><code
     >&lt;!--Copy the required code below--&gt;
 
-&lt;TestPipe name=”my-test-pipe” version=”1” /&gt;</code
+&lt;{{element.name}} name=”my-test-pipe” version=”1” /&gt;</code
     ></pre>
   </div>
   <div class="section options">
@@ -64,7 +66,7 @@
                         *javadocTransform="let text of attribute.description ?? '-'; elements: frankDocElements"
                         [innerHTML]="text"
                       ></td>
-                      <td>{{ attribute.type ?? '-' }}</td>
+                      <td>{{ attribute.type ?? undefinedType }}</td>
                     </tr>
                   }
                 </tbody>
@@ -105,7 +107,7 @@
                         *javadocTransform="let text of attribute.description ?? '-'; elements: frankDocElements"
                         [innerHTML]="text"
                       ></td>
-                      <td>{{ attribute.type ?? '-' }}</td>
+                      <td>{{ attribute.type ?? undefinedType }}</td>
                     </tr>
                   }
                 </tbody>
@@ -164,12 +166,12 @@
           <ng-container
             *ngTemplateOutlet="parametersTemplate; context: { $implicit: element.parameters }"
           ></ng-container>
-          @for (inheritedParameters of inheritedProperties.parameters; track inheritedParameters.parentElementName) {
+          <!--@for (inheritedParameters of inheritedProperties.parameters; track inheritedParameters.parentElementName) {
             <div class="parent-element-title">{{ inheritedParameters.parentElementName }}</div>
             <ng-container
               *ngTemplateOutlet="parametersTemplate; context: { $implicit: inheritedParameters.properties }"
             ></ng-container>
-          }
+          }-->
         </div>
       </div>
     }
@@ -204,12 +206,12 @@
         </div>
         <div class="options-list" #nestedElements>
           <ng-container *ngTemplateOutlet="childrenTemplate; context: { $implicit: element.children }"></ng-container>
-          @for (inheritedChildren of inheritedProperties.children; track inheritedChildren.parentElementName) {
+          <!--@for (inheritedChildren of inheritedProperties.children; track inheritedChildren.parentElementName) {
             <div class="parent-element-title">{{ inheritedChildren.parentElementName }}</div>
             <ng-container
               *ngTemplateOutlet="childrenTemplate; context: { $implicit: inheritedChildren.properties }"
             ></ng-container>
-          }
+          }-->
         </div>
       </div>
     }
@@ -242,12 +244,12 @@
         </div>
         <div class="options-list" #forwards>
           <ng-container *ngTemplateOutlet="forwardTemplate; context: { $implicit: element.forwards }"></ng-container>
-          @for (inheritedForward of inheritedProperties.forwards; track inheritedForward.parentElementName) {
+          <!--@for (inheritedForward of inheritedProperties.forwards; track inheritedForward.parentElementName) {
             <div class="parent-element-title">{{ inheritedForward.parentElementName }}</div>
             <ng-container
               *ngTemplateOutlet="forwardTemplate; context: { $implicit: inheritedForward.properties }"
             ></ng-container>
-          }
+          }-->
         </div>
       </div>
     }

@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
 import { CollapseDirective } from '../../../components/collapse.directive';
 import { IconCaretComponent } from '../../../icons/icon-caret-down/icon-caret.component';
+import { IconArrowRightUpComponent } from '../../../icons/icon-arrow-right-up/icon-arrow-right-up.component';
 
 type InheritedParentElementProperties<T> = {
   parentElementName: string;
@@ -33,6 +34,7 @@ type InheritedProperties = {
     CollapseDirective,
     NgTemplateOutlet,
     IconCaretComponent,
+    IconArrowRightUpComponent,
   ],
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',
@@ -56,6 +58,7 @@ export class DetailsElementComponent implements OnChanges {
     children: false,
     forwards: false,
   };
+  protected undefinedType = 'string';
 
   private filterColours: string[] = ['#CD55EB', '#037CD4', '#00B31D'];
 
