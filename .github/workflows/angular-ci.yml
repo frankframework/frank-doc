@@ -16,8 +16,8 @@ jobs:
         with:
           node-version: 21
       - name: Install dependencies
-        run: npm ci
+        run: pnpm ci
       - name: Build
-        run: npm run build
+        run: pnpm run build
       - name: Run tests
-        run: npm test -- --no-watch --no-progress --browsers=ChromeHeadless
+        run: pnpm test -- --no-watch --no-progress --browsers=ChromeHeadless

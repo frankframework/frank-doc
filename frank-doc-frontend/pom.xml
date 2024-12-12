@@ -75,7 +75,7 @@
             </goals>
             <phase>generate-resources</phase>
             <configuration>
-              <executable>npm</executable>
+              <executable>pnpm</executable>
               <arguments>
                 <argument>ci</argument>
               </arguments>
@@ -88,9 +88,8 @@
             </goals>
             <phase>generate-resources</phase>
             <configuration>
-              <executable>npx</executable>
+              <executable>pnpm</executable>
               <arguments>
-                <argument>ng</argument>
                 <argument>build</argument>
               </arguments>
             </configuration>

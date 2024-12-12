@@ -104,12 +104,12 @@ jobs:
         run: echo "FRANKDOC_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
         working-directory: frank-doc
 
-      - name: Checkout Frank!Framework
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-          repository: ibissource/iaf
-          path: iaf
+    - name: Checkout Frank!Framework
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+        repository: frankframework/frankframework
+        path: iaf
 
       - name: Build Frank!Framework
         env:
