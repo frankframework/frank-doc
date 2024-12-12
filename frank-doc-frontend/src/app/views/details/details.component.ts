@@ -6,6 +6,7 @@ import { DetailsElementComponent } from './details-element/details-element.compo
 import { DetailsSearchComponent } from './details-search/details-search.component';
 import { IconLikeComponent } from '../../icons/icon-like/icon-like.component';
 import { IconDislikeComponent } from '../../icons/icon-dislike/icon-dislike.component';
+import { environment } from '../../../environments/environment';
 
 type ElementFilterProperties = {
   filterName?: string;
@@ -30,6 +31,7 @@ export class DetailsComponent implements OnInit {
     if (elements) return this.findElement(elements);
     return null;
   });
+  protected readonly showFeedback: boolean = environment.feedbackButtons;
 
   private route: ActivatedRoute = inject(ActivatedRoute);
   private appService: AppService = inject(AppService);

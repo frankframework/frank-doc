@@ -5,6 +5,7 @@ import { Element } from '../../../frankdoc.types';
 import { RouterLink } from '@angular/router';
 import { AppService } from '../../../app.service';
 import { TruncatePipe } from '../../../components/truncate.pipe';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-home-component-list',
@@ -17,6 +18,7 @@ export class HomeComponentListComponent {
   @Input() components: FuseResult<Element>[] = [];
 
   protected relatedComponents: FuseResult<Element>[] = [];
+  protected showRelated: boolean = environment.relatedSearchResults;
 
   private appService: AppService = inject(AppService);
   protected getFirstFilter = this.appService.getFirstFilter;
