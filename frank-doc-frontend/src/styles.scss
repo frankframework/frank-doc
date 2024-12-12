@@ -33,6 +33,17 @@
     }
   }
 
+  a {
+    color: #0066AF;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:active {
+      color: #fdc300;
+    }
+  }
+
   code {
     font-family: 'DM Mono', monospace;
   }

@@ -50,19 +50,12 @@ h3 {
   }
 
   a {
-    color: #0066AF;
-    font-size: 16px;
-    font-weight: 500;
     text-decoration-line: underline;
     text-decoration-style: solid;
     text-decoration-skip-ink: none;
     text-decoration-thickness: auto;
     text-underline-offset: auto;
     text-underline-position: from-font;
-
-    &:active {
-      color: #fdc300;
-    }
   }
 }
 
