@@ -6,6 +6,7 @@ import { Element, ElementLabels, FrankDoc } from '../../../frankdoc.types';
 import { AppService } from '../../../app.service';
 import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-details-search',
@@ -20,6 +21,7 @@ export class DetailsSearchComponent implements OnChanges {
 
   protected searchQuery = '';
   protected filteredElements: FuseResult<Element>[] = [];
+  protected showRelated: boolean = environment.relatedSearchResults;
 
   private appService: AppService = inject(AppService);
   protected getFirstFilter = this.appService.getFirstFilter;
