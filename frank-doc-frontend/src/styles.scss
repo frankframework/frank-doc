@@ -66,3 +66,12 @@
     font-family: 'DM Mono', monospace;
   }
 }
+
+.collapsed {
+  height: 0;
+  overflow: hidden;
+}
+
+.transforming {
+  overflow-y: hidden;
+}

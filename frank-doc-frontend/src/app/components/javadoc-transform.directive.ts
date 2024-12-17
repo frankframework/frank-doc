@@ -19,13 +19,13 @@ export class JavadocTransformDirective implements OnChanges {
   @Input() javadocTransformLink?: TemplateRef<LinkTemplateContext>;
   @Input() javadocTransformAsText: boolean = false;
 
-  private templateRef: TemplateRef<TemplateContext> = inject(TemplateRef);
-  private viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
-  private appService: AppService = inject(AppService);
+  private readonly templateRef: TemplateRef<TemplateContext> = inject(TemplateRef);
+  private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+  private readonly appService: AppService = inject(AppService);
 
-  private markdownLinkRegex = /\[(.*?)]\((.+?)\)/g; // old regex: /\[(.*?)\]\((.+?)\)/g
-  private tagsRegex = /<[^>]*>?/gm;
-  private linkRegex = /(?:{@link\s(.*?)})/g;
+  private readonly markdownLinkRegex = /\[(.*?)]\((.+?)\)/g; // old regex: /\[(.*?)\]\((.+?)\)/g
+  private readonly tagsRegex = /<[^>]*>?/gm;
+  private readonly linkRegex = /(?:{@link\s(.*?)})/g;
 
   ngOnChanges(): void {
     if (!this.javadocTransformOf || !this.javadocTransformElements) return;

@@ -11,9 +11,9 @@ export class InitFilterToggleDirective implements OnChanges {
   @Input({ required: true }) initFilterName!: string;
   @Input({ required: true }) initLabelName!: string;
 
-  private checkbox: CheckboxComponent = inject(CheckboxComponent);
+  private readonly checkbox: CheckboxComponent = inject(CheckboxComponent);
 
   ngOnChanges(): void {
-    this.checkbox.checked = this.selectedFilterLabels[this.initFilterName]?.includes(this.initLabelName) ?? false;
+    this.checkbox.checked = !!this.selectedFilterLabels[this.initFilterName]?.includes(this.initLabelName);
   }
 }
