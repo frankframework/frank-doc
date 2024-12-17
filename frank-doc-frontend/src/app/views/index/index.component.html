@@ -1,6 +1,6 @@
 <div class="page-container">
   <div class="sidenav">
-    @for (filter of filters(); track filter.name) {
+    @for (filter of filters(); track filter.name; let index = $index) {
       <div class="filter-name" [collapse]="filterList" (collapsedChange)="collapsedFilters[filter.name] = $event">
         <span>{{ filter.name }} ({{ filter.labels.length }})</span>
         <app-icon-caret
@@ -12,9 +12,8 @@
       <ul #filterList>
         @for (label of filter.labels; track label.name) {
           <li>
-            <ff-chip colour="#CD55EB" slim>{{ label.name.charAt(0) }}</ff-chip> {{ label.name }} ({{
-              label.elements.length
-            }})
+            <ff-chip [colour]="getLabelColor(filterColours, index)" slim>{{ label.name.charAt(0) }}</ff-chip>
+            {{ label.name }} ({{ label.elements.length }})
           </li>
         }
       </ul>
@@ -30,7 +29,7 @@
       repeat this once again just so I don't have to lorum ipsum.
     </p>
 
-    @for (filter of filters(); track filter.name) {
+    @for (filter of filters(); track filter.name; let index = $index) {
       <div class="filter-container">
         <h3>{{ filter.name }}</h3>
         @for (label of filter.labels; track label.name) {
@@ -39,7 +38,8 @@
             <div class="elements">
               @for (element of label.elements; track element) {
                 <a [routerLink]="['/', filter.name, label.name, element]"
-                  ><ff-chip colour="#CD55EB" slim>{{ label.name.charAt(0) }}</ff-chip> {{ element }}</a
+                  ><ff-chip [colour]="getLabelColor(filterColours, index)" slim>{{ label.name.charAt(0) }}</ff-chip>
+                  {{ element }}</a
                 >
               } @empty {
                 <p>No elements found.</p>

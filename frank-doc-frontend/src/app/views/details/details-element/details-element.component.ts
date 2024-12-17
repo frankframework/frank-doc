@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AlertComponent, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -8,6 +8,7 @@ import { JavadocTransformDirective } from '../../../components/javadoc-transform
 import { CollapseDirective } from '../../../components/collapse.directive';
 import { IconCaretComponent } from '../../../icons/icon-caret-down/icon-caret.component';
 import { IconArrowRightUpComponent } from '../../../icons/icon-arrow-right-up/icon-arrow-right-up.component';
+import { AppService } from '../../../app.service';
 
 type InheritedParentElementProperties<T> = {
   parentElementName: string;
@@ -61,7 +62,9 @@ export class DetailsElementComponent implements OnChanges {
   protected undefinedType = 'string';
   protected elementSyntax: string = '';
 
-  private filterColours: string[] = ['#CD55EB', '#037CD4', '#00B31D'];
+  private readonly appService: AppService = inject(AppService);
+  protected readonly filterColours = this.appService.filterColours;
+  protected readonly getLabelColor = this.appService.getLabelColor;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['element']) {
@@ -81,10 +84,6 @@ export class DetailsElementComponent implements OnChanges {
       }
       this.generateElementSyntax();
     }
-  }
-
-  protected getLabelColor(index: number): string {
-    return this.filterColours[index % this.filterColours.length];
   }
 
   protected githubUrlOf(name: string): string {
@@ -159,7 +158,7 @@ export class DetailsElementComponent implements OnChanges {
   private generateElementSyntax(): void {
     if (this.element) {
       this.elementSyntax = `
-<${this.element.name} name=”my-${this.element.name.toLowerCase()}” />
+<${this.element.name} name="my-${this.element.name.toLowerCase()}" />
 `.trim();
     }
   }

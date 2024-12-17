@@ -17,7 +17,9 @@ import { environment } from '../../../environments/environment';
 export class IndexComponent {
   protected collapsedFilters: Record<string, boolean> = {};
   protected readonly showFeedback: boolean = environment.feedbackButtons;
+  protected readonly filters: Signal<Filter[]> = computed(() => this.appService.filters());
 
-  private appService: AppService = inject(AppService);
-  protected filters: Signal<Filter[]> = computed(() => this.appService.filters());
+  private readonly appService: AppService = inject(AppService);
+  protected readonly filterColours = this.appService.filterColours;
+  protected readonly getLabelColor = this.appService.getLabelColor;
 }

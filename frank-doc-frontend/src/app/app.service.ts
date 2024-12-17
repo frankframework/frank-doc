@@ -1,4 +1,4 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -53,8 +53,9 @@ export class AppService {
     minMatchCharLength: 3,
     ignoreLocation: true,
   };
+  readonly filterColours: string[] = ['#CD55EB', '#037CD4', '#00B31D'];
 
-  constructor(private http: HttpClient) {}
+  private readonly http: HttpClient = inject(HttpClient);
 
   getFrankDoc(): Observable<FrankDoc> {
     return this.http.get<FrankDoc>(`${environment.frankDocUrl}?cache=${Date.now()}`);
@@ -92,6 +93,10 @@ export class AppService {
     const labelGroups = Object.keys(labels);
     if (labelGroups.length === 0) return '-';
     return labels[labelGroups[0]][0];
+  }
+
+  getLabelColor(colours: string[], index: number): string {
+    return colours[index % colours.length];
   }
 
   private getSelectedFiltersLength(selectedFilters: ElementLabels): number {

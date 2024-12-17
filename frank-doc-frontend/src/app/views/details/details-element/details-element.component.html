@@ -3,7 +3,7 @@
   @if (element.labels) {
     @for (filter of element.labels | keyvalue; track filter; let index = $index) {
       @for (label of filter.value; track label) {
-        <ff-chip [colour]="getLabelColor(index)" rounded>{{ label }}</ff-chip>
+        <ff-chip [colour]="getLabelColor(filterColours, index)" rounded>{{ label }}</ff-chip>
       }
     }
   }
@@ -28,9 +28,7 @@
   </div>
   <div class="section syntax">
     <h3>Syntax</h3>
-    <pre><button (click)="copyToClipboard(elementSyntax)">Copy</button><code [innerText]="elementSyntax"
-    >&lt;{{element.name}} name=”my-test-pipe” version=”1” /&gt;</code
-    ></pre>
+    <pre><button (click)="copyToClipboard(elementSyntax)">Copy</button><code [innerText]="elementSyntax"></code></pre>
   </div>
   <div class="section options">
     <h3>Component Options</h3>
@@ -132,7 +130,7 @@
         </div>
       </div>
     }
-    @if (element.parameters || inheritedProperties.parameters.length > 0) {
+    @if (element.parameters) {
       <ng-template #parametersTemplate let-parameters>
         <table>
           <thead>
@@ -173,7 +171,7 @@
         </div>
       </div>
     }
-    @if (element.children || inheritedProperties.children.length > 0) {
+    @if (element.children) {
       <ng-template #childrenTemplate let-children>
         <table>
           <thead>
@@ -213,7 +211,7 @@
         </div>
       </div>
     }
-    @if (element.forwards || inheritedProperties.forwards.length > 0) {
+    @if (element.forwards) {
       <ng-template #forwardTemplate let-forwards>
         <table>
           <thead>
