@@ -97,6 +97,7 @@ jobs:
         with:
           node-version: 21
           cache: 'pnpm'
+          cache-dependency-path: frank-doc-frontend/pnpm-lock.yaml
 
       - name: Build with Maven
         env:
