@@ -1,3 +1,5 @@
+@use '../../../variables';
+
 .page-container {
   display: flex;
   max-width: 100%;
@@ -21,13 +23,13 @@ ff-chip {
 
 .sidenav {
   padding: 20px 20px 20px 0;
-  border-image: linear-gradient(180deg, #fff 0%, #EDEDED 50px) 1;
+  border-image: linear-gradient(180deg, #fff 0%, variables.$ff-color-light-gray 50px) 1;
   border-width:  0 1px 0 0;
   border-style: solid;
 
   .filter-name {
     margin-bottom: 5px;
-    color: #1E1E1E;
+    color: variables.$ff-color-dark;
     font-size: 18px;
     font-weight: 600;
     text-transform: capitalize;
@@ -40,7 +42,7 @@ ff-chip {
 
     li {
       margin: 5px 0;
-      color: #1E1E1E;
+      color: variables.$ff-color-dark;
       font-size: 16px;
       font-weight: 500;
       text-transform: capitalize;
@@ -54,7 +56,7 @@ ff-chip {
 
   h2 {
     margin-bottom: 10px;
-    color: #1E1E1E;
+    color: variables.$ff-color-dark;
     font-size: 50px;
     font-weight: 700;
     line-height: 0.9;
@@ -62,7 +64,7 @@ ff-chip {
 
   .description {
     max-width: 900px;
-    color: #626262;
+    color: variables.$ff-color-dark-gray;
     font-size: 16px;
     font-weight: 400;
   }
@@ -71,7 +73,7 @@ ff-chip {
     margin-top: 50px;
 
     h3 {
-      color: #1E1E1E;
+      color: variables.$ff-color-dark;
       font-size: 32px;
       font-weight: 600;
     }
@@ -81,7 +83,7 @@ ff-chip {
 
       h4 {
         margin-bottom: 15px;
-        color: #1E1E1E;
+        color: variables.$ff-color-dark;
         font-size: 24px;
         font-weight: 600;
       }
@@ -94,7 +96,7 @@ ff-chip {
         a {
           display: inline-block;
           width: 250px;
-          color: #1E1E1E;
+          color: variables.$ff-color-dark;
           font-size: 16px;
           text-transform: capitalize;
           text-decoration: none;

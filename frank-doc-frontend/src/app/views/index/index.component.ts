@@ -6,6 +6,7 @@ import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.compo
 import { CollapseDirective } from '../../components/collapse.directive';
 import { IconSmileComponent } from '../../icons/icon-smile/icon-smile.component';
 import { environment } from '../../../environments/environment';
+import { filterColours } from '../../app.constants';
 
 @Component({
   selector: 'app-index',
@@ -20,6 +21,6 @@ export class IndexComponent {
   protected readonly filters: Signal<Filter[]> = computed(() => this.appService.filters());
 
   private readonly appService: AppService = inject(AppService);
-  protected readonly filterColours = this.appService.filterColours;
+  protected readonly filterColours = filterColours;
   protected readonly getLabelColor = this.appService.getLabelColor;
 }

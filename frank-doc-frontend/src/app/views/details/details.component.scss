@@ -1,3 +1,5 @@
+@use '../../../variables';
+
 .page {
   display: flex;
   width: 100%;
@@ -37,7 +39,7 @@
 
   ul {
     padding: 10px 0;
-    border-left: 1px solid #EDEDED;
+    border-left: 1px solid variables.$ff-color-light-gray;
     color: #000;
     font-size: 16px;
     list-style: none;
@@ -54,8 +56,8 @@
       &.active {
         margin-left: -1px;
         padding-left: 29px;
-        border-left: 1px solid #1E1E1E;
-        color: #1E1E1E;
+        border-left: 1px solid variables.$ff-color-dark;
+        color: variables.$ff-color-dark;
         font-weight: 700;
       }
 

@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Element, ElementLabels, FrankDoc } from './frankdoc.types';
-import { IFuseOptions } from 'fuse.js';
 
 export type Filter = {
   name: string;
@@ -22,38 +21,6 @@ export class AppService {
   readonly frankDoc: WritableSignal<FrankDoc | null> = signal(null);
   readonly filters: WritableSignal<Filter[]> = signal([]);
   readonly darkmode: WritableSignal<boolean> = signal(false);
-  readonly fuseOptions: IFuseOptions<Element> = {
-    keys: [
-      {
-        name: 'name',
-        weight: 2,
-      },
-      {
-        name: 'fullName',
-        weight: 2,
-      },
-      {
-        name: 'elementNames', // default weight is 1.0
-      },
-      {
-        name: 'labels.FrankDocGroup',
-      },
-      {
-        name: 'attributes',
-        weight: 0.7,
-      },
-      {
-        name: 'description',
-        weight: 0.5,
-      },
-    ],
-    includeScore: true,
-    includeMatches: true,
-    threshold: 0.2,
-    minMatchCharLength: 3,
-    ignoreLocation: true,
-  };
-  readonly filterColours: string[] = ['#CD55EB', '#037CD4', '#00B31D'];
 
   private readonly http: HttpClient = inject(HttpClient);
 

@@ -1,8 +1,10 @@
+@use '../../../variables';
+
 footer {
   width: 100%;
   padding: 60px 100px;
   border-radius: 15px 15px 0 0;
-  background: #fdc300;
+  background: variables.$ff-bgcolor-yellow;
 }
 
 .divider-top {
@@ -18,7 +20,7 @@ footer {
   }
 
   .links > a {
-    color: #343434;
+    color: variables.$ff-bgcolor-dark-gray;
     font-size: 16px;
     font-weight: 500;
     text-decoration-line: underline;

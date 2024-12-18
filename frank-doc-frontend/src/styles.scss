@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import '@frankframework/angular-components';
+@use '@frankframework/angular-components';
+@use 'variables';
 
 @font-face {
   font-family: 'DM Mono';
@@ -29,8 +30,8 @@
   pre {
     padding: 8px;
     border-radius: 8px;
-    border: 1px solid #D8D8D8;
-    color: #1E1E1E;
+    border: 1px solid variables.$ff-bgcolor-gray;
+    color: variables.$ff-color-dark;
     background: rgba(237, 237, 237, 0.50);
     word-break: break-all;
     word-wrap: break-word;
@@ -43,13 +44,13 @@
   }
 
   a {
-    color: #0066AF;
+    color: variables.$ff-anchor-default;
     font-size: 16px;
     font-weight: 500;
     text-decoration: none;
 
     &:active {
-      color: #fdc300;
+      color: variables.$ff-anchor-active;
     }
 
     &:hover {

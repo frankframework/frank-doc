@@ -6,6 +6,7 @@ import { AppService } from '../../app.service';
 import { FrankDoc, Element, ElementLabels } from '../../frankdoc.types';
 import Fuse, { FuseResult } from 'fuse.js';
 import { HomeFiltersComponent } from './home-filters/home-filters.component';
+import { fuseOptions } from '../../app.constants';
 
 @Component({
   selector: 'app-home',
@@ -21,11 +22,9 @@ export class HomeComponent {
   );
   protected filteredElements: FuseResult<Element>[] = [];
 
-  private appService: AppService = inject(AppService);
+  private readonly appService: AppService = inject(AppService);
   private readonly elementsList: Signal<Element[]> = computed(() => Object.values(this.elements()));
-  private readonly fuse: Signal<Fuse<Element>> = computed(
-    () => new Fuse(this.elementsList(), this.appService.fuseOptions),
-  );
+  private readonly fuse: Signal<Fuse<Element>> = computed(() => new Fuse(this.elementsList(), fuseOptions));
 
   protected search(query: string): void {
     const searchPattern = query.trim();

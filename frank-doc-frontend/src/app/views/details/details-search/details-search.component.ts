@@ -7,6 +7,7 @@ import { AppService } from '../../../app.service';
 import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/environment';
+import { fuseOptions } from '../../../app.constants';
 
 @Component({
   selector: 'app-details-search',
@@ -28,7 +29,7 @@ export class DetailsSearchComponent implements OnChanges {
   protected getFirstLabel = this.appService.getFirstLabel;
 
   private elementsList: Element[] = [];
-  private fuse: Fuse<Element> = new Fuse(this.elementsList, this.appService.fuseOptions);
+  private fuse: Fuse<Element> = new Fuse(this.elementsList, fuseOptions);
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['frankDocElements']) {

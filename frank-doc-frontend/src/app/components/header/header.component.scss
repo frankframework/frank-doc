@@ -1,3 +1,5 @@
+@use '../../../variables';
+
 header {
   display: flex;
   width: 100%;
@@ -43,7 +45,7 @@ header {
           text-decoration: none;
 
           &.active {
-            border-bottom: 3px solid #fdc300;
+            border-bottom: 3px solid variables.$ff-bgcolor-yellow;
           }
         }
       }

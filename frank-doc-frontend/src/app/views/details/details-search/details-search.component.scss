@@ -1,3 +1,5 @@
+@use '../../../../variables';
+
 ff-search {
   width: 100%;
 }
@@ -7,7 +9,7 @@ ff-search {
   margin-top: 50px;
 
   .title {
-    color: #1E1E1E;
+    color: variables.$ff-color-dark;
     font-size: 16px;
     font-weight: 600;
   }
@@ -15,8 +17,8 @@ ff-search {
   .count {
     margin-left: 4px;
     padding: 0 6px;
-    background-color: #ededed;
-    border: 1px solid #D8D8D8;
+    background-color: variables.$ff-color-light-gray;
+    border: 1px solid variables.$ff-bgcolor-gray;
     border-radius: 5px;
     font-size: 12px;
     font-weight: 600;
@@ -29,15 +31,15 @@ ff-search {
 
     li {
       padding: 3px 0 3px 25px;
-      border-left: 1px solid #EDEDED;
-      color: #626262;
+      border-left: 1px solid variables.$ff-color-light-gray;
+      color: variables.$ff-color-dark-gray;
       font-size: 16px;
       font-weight: 400;
       text-transform: capitalize;
 
       &.active {
-        border-left: 1px solid #1E1E1E;
-        color: #1E1E1E;
+        border-left: 1px solid variables.$ff-color-dark;
+        color: variables.$ff-color-dark;
         font-weight: 600;
       }
     }
