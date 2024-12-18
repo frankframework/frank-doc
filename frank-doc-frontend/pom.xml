@@ -77,7 +77,8 @@
             <configuration>
               <executable>pnpm</executable>
               <arguments>
-                <argument>install --frozen-lockfile</argument>
+                <argument>install</argument>
+                <argument>--frozen-lockfile</argument>
               </arguments>
             </configuration>
           </execution>
