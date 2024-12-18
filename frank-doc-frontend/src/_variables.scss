@@ -1,0 +1,8 @@
+@use '@frankframework/angular-components/styles/variables';
+
+@forward '@frankframework/angular-components/styles/variables';
+
+// Should be moved to the angular-components package
+$ff-anchor-default: #0066AF;
+$ff-anchor-active: variables.$ff-bgcolor-yellow;
+$ff-color-light-gray: #EDEDED;
