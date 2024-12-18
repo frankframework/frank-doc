@@ -59,7 +59,10 @@
                     <tr>
                       <td>{{ attribute.name }}</td>
                       <td
-                        *javadocTransform="let text of attribute.description ?? '-'; elements: frankDocElements"
+                        *javadocTransform="
+                          let text of attribute.description ?? DEFAULT_RETURN_CHARACTER;
+                          elements: frankDocElements
+                        "
                         [innerHTML]="text"
                       ></td>
                       <td>{{ attribute.type ?? undefinedType }}</td>
@@ -100,7 +103,10 @@
                     <tr>
                       <td>{{ attribute.name }}</td>
                       <td
-                        *javadocTransform="let text of attribute.description ?? '-'; elements: frankDocElements"
+                        *javadocTransform="
+                          let text of attribute.description ?? DEFAULT_RETURN_CHARACTER;
+                          elements: frankDocElements
+                        "
                         [innerHTML]="text"
                       ></td>
                       <td>{{ attribute.type ?? undefinedType }}</td>
@@ -145,7 +151,10 @@
               <tr>
                 <td>{{ parameter.name }}</td>
                 <td
-                  *javadocTransform="let text of parameter.description ?? '-'; elements: frankDocElements"
+                  *javadocTransform="
+                    let text of parameter.description ?? DEFAULT_RETURN_CHARACTER;
+                    elements: frankDocElements
+                  "
                   [innerHTML]="text"
                 ></td>
               </tr>
@@ -186,7 +195,10 @@
               <tr>
                 <td>{{ nestedElement.roleName }}</td>
                 <td
-                  *javadocTransform="let text of nestedElement.description ?? '-'; elements: frankDocElements"
+                  *javadocTransform="
+                    let text of nestedElement.description ?? DEFAULT_RETURN_CHARACTER;
+                    elements: frankDocElements
+                  "
                   [innerHTML]="text"
                 ></td>
                 <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
@@ -225,7 +237,10 @@
               <tr>
                 <td>{{ forward.name }}</td>
                 <td
-                  *javadocTransform="let text of forward.description ?? '-'; elements: frankDocElements"
+                  *javadocTransform="
+                    let text of forward.description ?? DEFAULT_RETURN_CHARACTER;
+                    elements: frankDocElements
+                  "
                   [innerHTML]="text"
                 ></td>
               </tr>

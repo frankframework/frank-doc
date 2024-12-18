@@ -9,7 +9,7 @@ import { CollapseDirective } from '../../../components/collapse.directive';
 import { IconCaretComponent } from '../../../icons/icon-caret-down/icon-caret.component';
 import { IconArrowRightUpComponent } from '../../../icons/icon-arrow-right-up/icon-arrow-right-up.component';
 import { AppService } from '../../../app.service';
-import { filterColours } from '../../../app.constants';
+import { DEFAULT_RETURN_CHARACTER, filterColours } from '../../../app.constants';
 
 type InheritedParentElementProperties<T> = {
   parentElementName: string;
@@ -64,6 +64,7 @@ export class DetailsElementComponent implements OnChanges {
   protected elementSyntax: string = '';
 
   private readonly appService: AppService = inject(AppService);
+  protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
   protected readonly filterColours = filterColours;
   protected readonly getLabelColor = this.appService.getLabelColor;
 

@@ -1,6 +1,8 @@
 import { IFuseOptions } from 'fuse.js';
 import { Element } from './frankdoc.types';
 
+export const DEFAULT_RETURN_CHARACTER = '-';
+
 export const fuseOptions: IFuseOptions<Element> = {
   keys: [
     {

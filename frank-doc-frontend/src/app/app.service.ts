@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Element, ElementLabels, FrankDoc } from './frankdoc.types';
+import { DEFAULT_RETURN_CHARACTER } from './app.constants';
 
 export type Filter = {
   name: string;
@@ -49,16 +50,16 @@ export class AppService {
   }
 
   getFirstFilter(labels?: Record<string, string[]>): string {
-    if (!labels) return '-';
+    if (!labels) return DEFAULT_RETURN_CHARACTER;
     const labelGroups = Object.keys(labels);
-    if (labelGroups.length === 0) return '-';
+    if (labelGroups.length === 0) return DEFAULT_RETURN_CHARACTER;
     return labelGroups[0];
   }
 
   getFirstLabel(labels?: Record<string, string[]>): string {
-    if (!labels) return '-';
+    if (!labels) return DEFAULT_RETURN_CHARACTER;
     const labelGroups = Object.keys(labels);
-    if (labelGroups.length === 0) return '-';
+    if (labelGroups.length === 0) return DEFAULT_RETURN_CHARACTER;
     return labels[labelGroups[0]][0];
   }
 

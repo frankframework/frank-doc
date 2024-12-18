@@ -2,7 +2,9 @@
   @for (selectedFilter of selectedFilterGroup.value; track selectedFilter; let index = $index) {
     <span class="selected-filter"
       ><span>{{ selectedFilter }}</span
-      ><span class="close-button" (click)="removeSelectedFilterLabel(selectedFilterGroup.key, index)">x</span></span
+      ><span class="close-button" (click)="removeSelectedFilterLabel(selectedFilterGroup.key, index)"
+        >&times;</span
+      ></span
     >
   }
 }
