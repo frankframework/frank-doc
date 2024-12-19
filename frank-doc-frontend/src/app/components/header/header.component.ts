@@ -4,7 +4,6 @@ import { IconDownloadComponent } from '../../icons/icon-download/icon-download.c
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IconDarkmodeComponent } from '../../icons/icon-darkmode/icon-darkmode.component';
 import { environment } from '../../../environments/environment';
-import { styleColours } from '../../app.constants';
 
 @Component({
   selector: 'app-header',
@@ -15,8 +14,6 @@ import { styleColours } from '../../app.constants';
 })
 export class HeaderComponent {
   @Input() version: string = '';
-
-  protected readonly styleColours = styleColours;
 
   downloadXSD(): void {
     const downloadUrl = environment.xsdUrl;
