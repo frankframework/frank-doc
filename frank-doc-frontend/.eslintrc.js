@@ -11,23 +11,30 @@ module.exports = {
         sourceType: 'module',
       },
       extends: [
+        'plugin:@typescript-eslint/recommended',
         'plugin:@angular-eslint/recommended',
         'plugin:@angular-eslint/template/process-inline-templates',
         'plugin:unicorn/recommended',
-        'prettier',
+        'plugin:prettier/recommended',
       ],
       rules: {
-        'unicorn/prevent-abbreviations': 'warn',
-        'unicorn/empty-brace-spaces': 'off',
+        'prefer-template': 'error',
+        '@typescript-eslint/explicit-function-return-type': 'error',
+        // 'unicorn/prevent-abbreviations': 'warn',
+        'unicorn/prevent-abbreviations': 'off', // doesn't work well with FrankDoc type name
         'unicorn/no-array-reduce': 'off',
         'unicorn/prefer-ternary': 'warn',
-        'unicorn/no-null': 'warn',
-        '@typescript-eslint/explicit-function-return-type': 'error',
+        'unicorn/no-null': 'off',
+        'unicorn/prefer-dom-node-text-content': 'warn',
+        'unicorn/consistent-function-scoping': 'off', // doesn't work well with Signals
       },
     },
     {
-      files: ['*.html'],
-      extends: ['plugin:@angular-eslint/template/recommended'],
+      files: ['*.component.html', '*.css', '*.scss'],
+      extends: [
+        'plugin:@angular-eslint/template/recommended',
+        'plugin:prettier/recommended'
+      ],
       rules: {},
     },
   ],

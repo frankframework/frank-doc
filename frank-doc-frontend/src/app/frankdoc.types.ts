@@ -1,12 +1,13 @@
 export interface FrankDoc {
   metadata: Metadata;
-  groups: Group[];
   types: TypeElement[];
-  elements: Element[];
+  elements: Record<string, Element>;
   enums: Enum[];
+  labels: Label[];
+  properties: Property[];
 }
 
-export interface Element {
+export type Element = {
   name: string;
   fullName: string;
   abstract?: boolean;
@@ -19,65 +20,73 @@ export interface Element {
   deprecated?: DeprecationInfo;
   parameters?: ParsedTag[];
   parametersDescription?: string;
-}
+  labels?: ElementLabels; // maybe make this smarter and have key be based on Label (type) name
+};
 
-export interface Attribute {
+export type Attribute = {
   name: string;
   mandatory?: boolean;
   describer?: string;
   description?: string;
-  type?: DataType;
+  type?: string;
   default?: string;
   deprecated?: DeprecationInfo;
   enum?: string;
-}
+};
 
-export enum DataType {
-  Bool = 'bool',
-  Int = 'int',
-}
-
-export interface Child {
+export type Child = {
   multiple: boolean;
   roleName: string;
   description?: string;
   type?: string;
   deprecated?: boolean;
   mandatory?: boolean;
-}
+};
 
-export interface ParsedTag {
+export type ParsedTag = {
   name: string;
   description?: string;
-}
+};
 
-export interface Enum {
+export type ElementLabels = Record<string, string[]>;
+
+export type Enum = {
   name: string;
   values: Value[];
-}
+};
 
-export interface Value {
+export type Value = {
   label: string;
   description?: string;
   deprecated?: boolean;
-}
+};
 
-export interface Group {
+export type Group = {
   name: string;
   types: string[];
-}
+};
 
-export interface Metadata {
+export type Metadata = {
   version: string;
-}
+};
 
-export interface TypeElement {
+export type TypeElement = {
   name: string;
   members: string[];
-}
+};
 
-export interface DeprecationInfo {
+export type DeprecationInfo = {
   forRemoval: boolean;
   since?: string;
   description?: string;
-}
+};
+
+export type Label = {
+  label: string;
+  values: string[];
+};
+
+export type Property = {
+  name: string;
+  properties: Record<string, string>;
+};

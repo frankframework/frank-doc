@@ -1,0 +1,102 @@
+name: Test Doclet
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'frank-doc-doclet/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'frank-doc-doclet/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build Frank!Framework with Doclet
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: frank-doc
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-maven-dependencies
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Set up Node.js 21
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          cache: 'pnpm'
+          cache-dependency-path: frank-doc-frontend/pnpm-lock.yaml
+
+      - name: Build with Maven
+        env:
+          CI_SERVICE: GITHUB
+          TZ: Europe/Amsterdam
+          JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
+        run: mvn -Pcodecoverage -Dmaven.javadoc.skip=true install -DskipTests
+        working-directory: frank-doc/frank-doc-doclet/
+
+      - name: Set Frank!Doc version environment variable
+        run: echo "FRANKDOC_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+        working-directory: frank-doc
+
+      - name: Checkout Frank!Framework
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          repository: frankframework/frankframework
+          path: frankframework
+
+      - name: Build Frank!Framework
+        env:
+          CI_SERVICE: GITHUB
+          TZ: Europe/Amsterdam
+        run: ./mvnw -PattachFrankDoc -DskipTests -Dfrankdoc.version=$FRANKDOC_VERSION process-sources
+        working-directory: frankframework
+
+      - name: Check FrankConfig.xsd
+        run: |
+          java -jar \
+            frank-doc/frank-doc-doclet/target/frank-doc-doclet-$FRANKDOC_VERSION.jar \
+            frank-doc/.github/workflows/validConfig.xml \
+            frankframework/target/frankdoc/xml/xsd/FrankConfig.xsd
+
+      - name: Check FrankConfig-compatibility.xsd
+        run: |
+          java -jar \
+            frank-doc/frank-doc-doclet/target/frank-doc-doclet-$FRANKDOC_VERSION.jar \
+            frank-doc/.github/workflows/validConfig.xml \
+            frankframework/target/frankdoc/xml/xsd/FrankConfig-compatibility.xsd
+
+      - name: Store FrankDoc.json
+        uses: actions/upload-artifact@v3
+        with:
+          name: FrankDoc.json
+          path: frankframework/target/frankdoc/js/*.json
+
+      - name: Store FrankDoc.xsd (Strict and compatibility)
+        uses: actions/upload-artifact@v3
+        with:
+          name: FrankDoc.xsd
+          path: frankframework/target/frankdoc/xml/xsd/*.xsd
