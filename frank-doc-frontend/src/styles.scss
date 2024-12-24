@@ -2,7 +2,8 @@
 @use "sass:meta";
 
 @use '@frankframework/angular-components';
-@use 'variables';
+@use '@frankframework/angular-components/styles/variables';
+
 
 @font-face {
   font-family: 'DM Mono';

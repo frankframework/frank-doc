@@ -1,11 +1,9 @@
-@use '../../../../variables';
-
 .selected-filter {
   display: inline-flex;
   margin-right: 10px;
   padding-left: 16px;
   border-radius: 50px;
-  border: 1px solid variables.$ff-bgcolor-yellow;
+  border: 1px solid var(--ff-bgcolor-yellow);
   justify-content: center;
   align-items: center;
   font-size: 16px;
@@ -23,10 +21,10 @@
   .close-button {
     margin-left: 12px;
     padding: 9px 16px 9px 12px;
-    border-left: 1px solid variables.$ff-bgcolor-yellow;
+    border-left: 1px solid var(--ff-bgcolor-yellow);
 
     &:hover {
-      background: variables.$ff-bgcolor-yellow;
+      background: var(--ff-bgcolor-yellow);
     }
   }
 }
@@ -56,7 +54,7 @@
 
     .menu-title {
       padding: 8px 25px 0 50px;
-      color: variables.$ff-color-dark;
+      color: var(--ff-color-dark);
       font-size: 16px;
       font-weight: 700;
     }
@@ -67,14 +65,14 @@
 
       & > li {
         padding: 8px 25px;
-        color: variables.$ff-color-dark;
+        color: var(--ff-color-dark);
         cursor: default;
         font-size: 16px;
         font-weight: 600;
 
         &.active {
           padding: 16px 25px;
-          background: variables.$ff-bgcolor-yellow;
+          background: var(--ff-bgcolor-yellow);
         }
 
         label {
@@ -108,7 +106,7 @@
       width: 100%;
       padding: 18px 25px;
       border: none;
-      border-top: 1px solid variables.$ff-color-light-gray;
+      border-top: 1px solid var(--ff-color-light-gray);
       border-radius: 0 0 15px 15px;
       color: #B2B2B2;
       font-size: 16px;

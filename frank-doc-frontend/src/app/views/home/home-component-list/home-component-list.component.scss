@@ -1,5 +1,3 @@
-@use '../../../../variables';
-
 .tabs {
   display: flex;
   margin: 35px 0;
@@ -20,8 +18,8 @@
     .count {
       margin-left: 4px;
       padding: 0 6px;
-      background-color: variables.$ff-color-light-gray;
-      border: 1px solid variables.$ff-bgcolor-gray;
+      background-color: var(--ff-color-light-gray);
+      border: 1px solid var(--ff-bgcolor-gray);
       border-radius: 5px;
       font-size: 12px;
       font-weight: 600;
@@ -42,7 +40,7 @@
     width: 400px;
     height: 250px;
     padding: 20px 40px 20px 20px;
-    border: 1px solid variables.$ff-bgcolor-gray;
+    border: 1px solid var(--ff-bgcolor-gray);
     border-radius: 8px;
 
     .name,
@@ -59,7 +57,7 @@
 
     .name {
       margin: 6px 0;
-      color: variables.$ff-color-dark;
+      color: var(--ff-color-dark);
       font-size: 24px;
       font-weight: 700;
     }
@@ -77,7 +75,7 @@
     }
 
     .description {
-      color: variables.$ff-color-dark;
+      color: var(--ff-color-dark);
       font-size: 16px;
       font-weight: 400;
     }
