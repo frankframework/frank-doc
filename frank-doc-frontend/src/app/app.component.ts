@@ -1,47 +1,64 @@
-import { Component, isDevMode, OnInit } from '@angular/core';
-import { AppService } from './app.service';
-import { Element, Group } from './frankdoc.types';
-import { Elements } from './app.types';
-import { NavigationStart, Router } from '@angular/router';
+import { Component, computed, inject, OnInit, Signal } from '@angular/core';
+import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { RouterOutlet } from '@angular/router';
+import { AlertComponent } from '@frankframework/angular-components';
+import { AppService, Filter } from './app.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Element, Label } from './frankdoc.types';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [HeaderComponent, FooterComponent, RouterOutlet, AlertComponent],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  groups: Group[] = [];
-  elements: Elements = {};
-  loadError?: string;
-  showDeprecatedElements = false;
-  showInheritance = false;
-  group?: Group;
-  element?: Element;
+  protected version: Signal<string> = computed(() => this.appService.frankDoc()?.metadata.version ?? 'unknown');
+  protected error: string | null = null;
 
-  constructor(private appService: AppService, private router: Router) {}
+  private appService: AppService = inject(AppService);
 
   ngOnInit(): void {
-    this.router.events.subscribe((event) => {
-      if (
-        event instanceof NavigationStart &&
-        event.url &&
-        /^\/!/.test(event.url)
-      ) {
-        this.router.navigate([event.url.replace('/!', '')]);
+    this.appService.getFrankDoc().subscribe({
+      next: (data) => {
+        this.appService.frankDoc.set(data);
+        const filters = this.getFiltersFromLabels(data.labels);
+        this.assignFrankDocElementsToFilters(filters, data.elements);
+        this.appService.filters.set(filters);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.error = `Couldn't retrieve FrankDoc file: ${error.statusText}`;
+      },
+    });
+  }
+
+  private getFiltersFromLabels(labels: Label[]): Filter[] {
+    return labels.map((filter) => ({
+      name: filter.label,
+      labels: filter.values.map((labelName) => ({
+        name: labelName,
+        elements: [],
+      })),
+    }));
+  }
+
+  private assignFrankDocElementsToFilters(filters: Filter[], elements: Record<string, Element>): void {
+    for (const element of Object.values(elements)) {
+      if (!element.labels) continue;
+
+      for (const elementFilterName in element.labels) {
+        const elementFilter = element.labels[elementFilterName];
+        const filter = filters.find((filter) => filter.name === elementFilterName);
+
+        if (!filter) continue;
+        for (const elementLabel of elementFilter) {
+          const label = filter.labels.find((label) => label.name === elementLabel);
+          if (!label) continue;
+          label.elements.push(element.name);
+        }
       }
-    });
-
-    this.appService.init();
-    this.appService.frankDoc$.subscribe((state) => {
-      if (isDevMode()) console.log(state);
-
-      this.groups = state.groups;
-      this.elements = state.elements;
-      this.loadError = state.loadError;
-      this.showDeprecatedElements = state.showDeprecatedElements;
-      this.showInheritance = state.showInheritance;
-      this.group = state.group;
-      this.element = state.element;
-    });
+    }
   }
 }

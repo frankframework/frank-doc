@@ -1,0 +1,90 @@
+.tabs {
+  display: flex;
+  margin: 35px 0;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  .tab {
+    margin-right: 30px;
+    padding:0 0 16px;
+    font-size: 20px;
+    font-weight: 600;
+
+    &.active {
+      margin-bottom: -1px;
+      border-bottom: 1px solid #000;
+    }
+
+    .count {
+      margin-left: 4px;
+      padding: 0 6px;
+      background-color: var(--ff-color-light-gray);
+      border: 1px solid var(--ff-bgcolor-gray);
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      vertical-align: middle;
+    }
+  }
+}
+
+.components {
+  display: flex;
+  margin: 35px 0;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-content: center;
+
+  .card {
+    position: relative;
+    width: 400px;
+    height: 250px;
+    padding: 20px 40px 20px 20px;
+    border: 1px solid var(--ff-bgcolor-gray);
+    border-radius: 8px;
+
+    .name,
+    .element-names,
+    .description {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .label {
+      letter-spacing: 2.1px;
+      text-transform: uppercase;
+    }
+
+    .name {
+      margin: 6px 0;
+      color: var(--ff-color-dark);
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .element-names {
+      margin-bottom: 10px;
+      white-space: nowrap;
+    }
+
+    .label,
+    .element-names {
+      color: rgba(0, 0, 0, 0.50);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .description {
+      color: var(--ff-color-dark);
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    ff-button {
+      position: absolute;
+      bottom: 20px;
+      right: 40px;
+    }
+  }
+}
+

@@ -1,0 +1,58 @@
+<div class="page-container">
+  <div class="sidenav">
+    @for (filter of filters(); track filter.name; let index = $index) {
+      <div class="filter-name" [collapse]="filterList" (collapsedChange)="collapsedFilters[filter.name] = $event">
+        <span>{{ filter.name }} ({{ filter.labels.length }})</span>
+        <app-icon-caret
+          [width]="18"
+          [height]="18"
+          [rotation]="collapsedFilters[filter.name] ? 'down' : 'up'"
+        ></app-icon-caret>
+      </div>
+      <ul #filterList>
+        @for (label of filter.labels; track label.name) {
+          <li>
+            <ff-chip [colour]="getLabelColor(filterColours, index)" slim>{{ label.name.charAt(0) }}</ff-chip>
+            {{ label.name }} ({{ label.elements.length }})
+          </li>
+        }
+      </ul>
+    }
+  </div>
+  <div class="page">
+    <h2>Index</h2>
+    <p class="description">
+      There's a lorum ipsum generated text here but I'm not even sure what could be written here. Maybe some explanation
+      on how the page works or how the items are organized. To fill some more space I'll repeat this once again just so
+      I don't have to lorum ipsum. There's a lorum ipsum generated text here but I'm not even sure what could be written
+      here. Maybe some explanation on how the page works or how the items are organized. To fill some more space I'll
+      repeat this once again just so I don't have to lorum ipsum.
+    </p>
+
+    @for (filter of filters(); track filter.name; let index = $index) {
+      <div class="filter-container">
+        <h3>{{ filter.name }}</h3>
+        @for (label of filter.labels; track label.name) {
+          <div class="label-container">
+            <h4>{{ label.name }}</h4>
+            <div class="elements">
+              @for (element of label.elements; track element) {
+                <a [routerLink]="['/', filter.name, label.name, element]"
+                  ><ff-chip [colour]="getLabelColor(filterColours, index)" slim>{{ label.name.charAt(0) }}</ff-chip>
+                  {{ element }}</a
+                >
+              } @empty {
+                <p>No elements found.</p>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+@if (showFeedback) {
+  <button class="feedback-btn" title="Feedback">
+    <app-icon-smile width="32" height="32"></app-icon-smile>
+  </button>
+}

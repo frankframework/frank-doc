@@ -1,3 +1,86 @@
 /* You can add global styles to this file, and also import other style files */
+@use "sass:meta";
 
-@import './legacy.scss';
+@use '@frankframework/angular-components';
+@use '@frankframework/angular-components/styles/variables';
+
+
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('assets/DMMono-Regular.ttf') format('truetype');
+}
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: Inter, sans-serif;
+}
+
+app-root {
+  @each $key, $value in meta.module-variables('variables') {
+    --#{$key}: #{$value};
+  }
+}
+
+.feedback-btn {
+  position: fixed;
+  bottom: 25px;
+  right: 50px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+.details .section {
+  pre {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid variables.$ff-bgcolor-gray;
+    color: variables.$ff-color-dark;
+    background: rgba(237, 237, 237, 0.50);
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow: auto;
+
+    code {
+      white-space: pre;
+    }
+  }
+
+  a {
+    color: variables.$ff-anchor-default;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:active {
+      color: variables.$ff-anchor-active;
+    }
+
+    &:hover {
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-skip-ink: none;
+      text-decoration-thickness: auto;
+      text-underline-offset: auto;
+      text-underline-position: from-font;
+    }
+  }
+
+  code {
+    font-family: 'DM Mono', monospace;
+  }
+}
+
+.collapsed {
+  height: 0;
+  overflow: hidden;
+}
+
+.transforming {
+  overflow-y: hidden;
+}

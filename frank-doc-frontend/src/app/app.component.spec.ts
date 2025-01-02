@@ -1,46 +1,27 @@
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, Input } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-
-@Component({ selector: 'sidebar', template: '' })
-class SidebarStubComponent {
-  @Input() groups: any;
-  @Input() elements: any;
-  @Input() showDeprecatedElements: any;
-  @Input() showInheritance: any;
-  @Input() selectedGroup?: any;
-  @Input() element?: any;
-}
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [AppComponent, SidebarStubComponent],
-    imports: [RouterTestingModule],
-    providers: [AppService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
-  });
+      imports: [AppComponent],
+      providers: [AppService, provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  /* it(`should have as title 'frank-doc-frontend'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    // expect(app.title).toEqual('frank-doc-frontend');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('frank-doc-frontend app is running!');
-  }); */
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

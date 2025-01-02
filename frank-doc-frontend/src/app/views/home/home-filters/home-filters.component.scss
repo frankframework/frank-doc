@@ -1,0 +1,119 @@
+.selected-filter {
+  display: inline-flex;
+  margin-right: 10px;
+  padding-left: 16px;
+  border-radius: 50px;
+  border: 1px solid var(--ff-bgcolor-yellow);
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: default;
+
+  &:hover {
+    overflow: hidden;
+  }
+
+  span {
+    padding: 9px 0;
+  }
+
+  .close-button {
+    margin-left: 12px;
+    padding: 9px 16px 9px 12px;
+    border-left: 1px solid var(--ff-bgcolor-yellow);
+
+    &:hover {
+      background: var(--ff-bgcolor-yellow);
+    }
+  }
+}
+
+.menu {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  visibility: hidden;
+  opacity: 0;
+  z-index: -1;
+
+  &.open {
+    visibility: visible;
+    opacity: 1;
+    z-index: 10;
+  }
+
+  .menu-card {
+    width: 300px;
+    margin: 10px 10px 0 0;
+    border-radius: 15px;
+    background: #FFF;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    user-select: none;
+    overflow: hidden;
+
+    .menu-title {
+      padding: 8px 25px 0 50px;
+      color: var(--ff-color-dark);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    & > ul {
+      padding: 0;
+      list-style: none;
+
+      & > li {
+        padding: 8px 25px;
+        color: var(--ff-color-dark);
+        cursor: default;
+        font-size: 16px;
+        font-weight: 600;
+
+        &.active {
+          padding: 16px 25px;
+          background: var(--ff-bgcolor-yellow);
+        }
+
+        label {
+          display: inline-flex;
+          width: 100%;
+
+          span {
+            flex: 1;
+          }
+
+          /* Not fully compatible with  some of the most widely-used browsers  */
+          /*input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
+            border: 1px solid #B2B2B2;
+
+            &:checked {
+              accent-color: #FDC300;
+            }
+          }*/
+          input[type="checkbox"] {
+            display: none;
+          }
+
+        }
+      }
+    }
+
+    & > button {
+      width: 100%;
+      padding: 18px 25px;
+      border: none;
+      border-top: 1px solid var(--ff-color-light-gray);
+      border-radius: 0 0 15px 15px;
+      color: #B2B2B2;
+      font-size: 16px;
+      font-weight: 500;
+      text-align: start;
+      background: #FFF;
+      box-shadow: 0px -2px 10px 0px rgba(237, 237, 237, 0.75);
+    }
+  }
+}

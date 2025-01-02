@@ -26,6 +26,7 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
+              "src/site.webmanifest",
               "src/assets",
               "src/js",
               "src/xml/xsd"
@@ -90,8 +91,14 @@
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src", "./node_modules"
+              ]
+            },
             "assets": [
               "src/favicon.ico",
+              "src/site.webmanifest",
               "src/assets",
               "src/js",
               "src/xml/xsd"

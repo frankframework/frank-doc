@@ -1,0 +1,13 @@
+<div class="page">
+  <div class="search-container">
+    <p class="subtitle">Technical documentation of our Frank!Elements</p>
+    <h2 class="title">What are you looking for?</h2>
+    <ff-search [(ngModel)]="searchQuery" (ngModelChange)="search($event)"></ff-search>
+    <app-home-filters (selectedFilters)="updateSelectedFilters($event)"></app-home-filters>
+  </div>
+  @if (searchQuery.trim() !== '') {
+    <div class="elements">
+      <app-home-component-list [components]="filteredElements"></app-home-component-list>
+    </div>
+  }
+</div>
