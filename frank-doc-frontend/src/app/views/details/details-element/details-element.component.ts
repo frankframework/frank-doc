@@ -112,6 +112,10 @@ export class DetailsElementComponent implements OnChanges {
     element.remove();
   }
 
+  protected hasInheritedProperties(): boolean {
+    return Object.values(this.inheritedProperties).some((properties) => properties.length > 0);
+  }
+
   private setInheritedProperties(elementIndex: string): void {
     const element = this.frankDocElements?.[elementIndex];
     if (!element) return;

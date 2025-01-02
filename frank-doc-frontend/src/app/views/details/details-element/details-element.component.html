@@ -32,7 +32,7 @@
   </div>
   <div class="section options">
     <h3>Component Options</h3>
-    @if (element.attributes) {
+    @if (element.attributes || hasInheritedProperties()) {
       <div class="sub-options attributes">
         <div
           class="options-title"
