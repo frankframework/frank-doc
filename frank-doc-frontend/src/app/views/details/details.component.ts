@@ -40,8 +40,10 @@ export class DetailsComponent implements OnInit {
   });
   protected readonly showFeedback: boolean = environment.feedbackButtons;
 
-  private route: ActivatedRoute = inject(ActivatedRoute);
   private appService: AppService = inject(AppService);
+  protected readonly scrollToElement = this.appService.scrollToElement;
+
+  private route: ActivatedRoute = inject(ActivatedRoute);
   private elementFilterProperties: ElementFilterProperties | null = null;
   private fullElementName: string | null = null;
 
@@ -64,13 +66,6 @@ export class DetailsComponent implements OnInit {
 
   protected getFoundElement(): Element | null {
     return this.elementByRoute ?? this.elementBySignal();
-  }
-
-  protected scrollToElement(selectors: string): void {
-    const element = document.querySelector(selectors);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
   }
 
   private findElement(frankDocElements: FrankDoc['elements'] | null): FrankDoc['elements'][string] | null {

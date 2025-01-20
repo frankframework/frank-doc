@@ -25,6 +25,10 @@ ff-chip {
   border-width:  0 1px 0 0;
   border-style: solid;
 
+  .filter-item {
+    cursor: pointer;
+  }
+
   .filter-name {
     margin-bottom: 5px;
     color: var(--ff-color-dark);

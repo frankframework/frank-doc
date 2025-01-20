@@ -11,7 +11,7 @@
       </div>
       <ul #filterList>
         @for (label of filter.labels; track label.name) {
-          <li>
+          <li class="filter-item" (click)="scrollToElement('#' + filter.name + '-' + label.name)">
             <ff-chip [colour]="getLabelColor(filterColours, index)" slim>{{ label.name.charAt(0) }}</ff-chip>
             {{ label.name }} ({{ label.elements.length }})
           </li>
@@ -34,9 +34,9 @@
         <h3>{{ filter.name }}</h3>
         @for (label of filter.labels; track label.name) {
           <div class="label-container">
-            <h4>{{ label.name }}</h4>
+            <h4 id="{{ filter.name }}-{{ label.name }}">{{ label.name }}</h4>
             <div class="elements">
-              @for (element of label.elements; track element) {
+              @for (element of label.elements; track $index) {
                 <a [routerLink]="['/', filter.name, label.name, element]"
                   ><ff-chip [colour]="getLabelColor(filterColours, index)" slim>{{ label.name.charAt(0) }}</ff-chip>
                   {{ element }}</a

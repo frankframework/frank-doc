@@ -23,4 +23,5 @@ export class IndexComponent {
   private readonly appService: AppService = inject(AppService);
   protected readonly filterColours = filterColours;
   protected readonly getLabelColor = this.appService.getLabelColor;
+  protected readonly scrollToElement = this.appService.scrollToElement;
 }

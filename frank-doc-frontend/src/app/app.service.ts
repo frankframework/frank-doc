@@ -67,6 +67,13 @@ export class AppService {
     return colours[index % colours.length];
   }
 
+  scrollToElement(selectors: string): void {
+    const element = document.querySelector(selectors);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   private getSelectedFiltersLength(selectedFilters: ElementLabels): number {
     if (Object.values(selectedFilters).length === 0) return 0;
     return Object.values(selectedFilters).reduce((acc, val) => acc + val.length, 0);
