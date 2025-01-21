@@ -1,10 +1,10 @@
-import { Directive, HostListener, Input, booleanAttribute, Output, EventEmitter } from '@angular/core';
+import { Directive, HostListener, Input, booleanAttribute, Output, EventEmitter, AfterViewInit } from '@angular/core';
 
 @Directive({
   selector: '[collapse]',
   standalone: true,
 })
-export class CollapseDirective {
+export class CollapseDirective implements AfterViewInit {
   @Input({ required: true }) collapse!: HTMLElement;
   @Input({ transform: booleanAttribute }) collapsed: boolean = false;
   @Input() animationSpeed: number = 300;
@@ -13,11 +13,18 @@ export class CollapseDirective {
   private collapseAnimation: Animation | null = null;
   private clientHeight: number = 0;
 
+  ngAfterViewInit(): void {
+    this.updateState();
+  }
+
   @HostListener('click')
   onClick(): void {
     this.collapsed = !this.collapsed;
     this.collapsedChange.emit(this.collapsed);
+    this.updateState();
+  }
 
+  updateState(): void {
     if (this.collapseAnimation) {
       this.collapseAnimation.cancel();
       return;
@@ -31,7 +38,7 @@ export class CollapseDirective {
     }
   }
 
-  collapseElement(): void {
+  private collapseElement(): void {
     this.collapse.classList.add('transforming');
     this.collapseAnimation = this.collapse.animate(
       { height: [`${this.clientHeight}px`, '0px'] },
@@ -47,7 +54,7 @@ export class CollapseDirective {
       });
   }
 
-  expandElement(): void {
+  private expandElement(): void {
     this.collapseAnimation = this.collapse.animate(
       { height: ['0px', `${this.clientHeight}px`] },
       { duration: this.animationSpeed, easing: 'ease-in-out' },
