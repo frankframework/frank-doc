@@ -59,9 +59,12 @@ export class DetailsElementComponent implements OnChanges {
     parameters: false,
     children: false,
     forwards: false,
+    inheritedRequired: new Map<string, boolean>(),
+    inheritedOptional: new Map<string, boolean>(),
   };
   protected undefinedType = 'string';
   protected elementSyntax: string = '';
+  protected collapsedInheritedThreshold = 1;
 
   private readonly appService: AppService = inject(AppService);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
@@ -86,6 +89,14 @@ export class DetailsElementComponent implements OnChanges {
       }
       this.generateElementSyntax();
     }
+  }
+
+  protected getInheritedRequiredCollapseOptions(parentElementName: string, defaultValue: boolean): boolean {
+    return this.getInheritedCollapseOptions(this.collapsedOptions.inheritedRequired, parentElementName, defaultValue);
+  }
+
+  protected getInheritedOptionalCollapseOptions(parentElementName: string, defaultValue: boolean): boolean {
+    return this.getInheritedCollapseOptions(this.collapsedOptions.inheritedOptional, parentElementName, defaultValue);
   }
 
   protected githubUrlOf(name: string): string {
@@ -159,6 +170,14 @@ export class DetailsElementComponent implements OnChanges {
     }
 
     if (element.parent) this.setInheritedProperties(element.parent);
+  }
+
+  private getInheritedCollapseOptions(
+    map: Map<string, boolean>,
+    parentElementName: string,
+    defaultValue: boolean,
+  ): boolean {
+    return map.get(parentElementName) ?? defaultValue;
   }
 
   private generateElementSyntax(): void {
