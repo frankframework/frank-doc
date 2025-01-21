@@ -18,8 +18,17 @@ code {
   font-family: 'DM Mono', monospace;
 }
 
-ff-chip + ff-chip {
-  margin-left: 5px;
+ff-chip {
+  &.abstract-label {
+    font-size: 20px;
+    font-weight: bold;
+    vertical-align: middle;
+  }
+
+  & + ff-chip {
+    margin-left: 5px;
+    vertical-align: middle;
+  }
 }
 
 .section {
