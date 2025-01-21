@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AlertComponent, ChipComponent } from '@frankframework/angular-components';
-import { KeyValuePipe, NgTemplateOutlet } from '@angular/common';
+import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Attribute, Child, Element, FrankDoc, ParsedTag } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
@@ -37,6 +37,7 @@ type InheritedProperties = {
     NgTemplateOutlet,
     IconCaretComponent,
     IconArrowRightUpComponent,
+    NgClass,
   ],
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',

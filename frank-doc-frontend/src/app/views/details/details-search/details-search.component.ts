@@ -33,7 +33,7 @@ export class DetailsSearchComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['frankDocElements']) {
-      this.elementsList = Object.values(this.frankDocElements ?? {});
+      this.elementsList = Object.values(this.frankDocElements ?? {}).filter((element) => !element.deprecated);
       this.fuse.setCollection(this.elementsList);
     }
     if (changes['element']) {

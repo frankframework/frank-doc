@@ -102,6 +102,10 @@ ff-chip {
           font-size: 16px;
           text-transform: capitalize;
           text-decoration: none;
+
+          &.deprecated {
+            text-decoration: line-through;
+          }
         }
       }
     }
