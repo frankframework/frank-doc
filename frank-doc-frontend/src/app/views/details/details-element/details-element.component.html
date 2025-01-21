@@ -1,5 +1,8 @@
 @if (element) {
   <h2>{{ element.name }}</h2>
+  @if (element.abstract) {
+    <ff-chip class="abstract-label" slim colour="#FDC300">Abstract</ff-chip>
+  }
   @if (element.labels) {
     @for (filter of element.labels | keyvalue; track filter; let index = $index) {
       @for (label of filter.value; track label) {
@@ -28,7 +31,11 @@
   </div>
   <div class="section syntax">
     <h3>Syntax</h3>
-    <pre><button (click)="copyToClipboard(elementSyntax)">Copy</button><code [innerText]="elementSyntax"></code></pre>
+    @if (element.abstract) {
+      <ff-alert type="warning">Abstract elements may not be used directly and has no syntax</ff-alert>
+    } @else {
+      <pre><button (click)="copyToClipboard(elementSyntax)">Copy</button><code [innerText]="elementSyntax"></code></pre>
+    }
   </div>
   <div class="section options">
     <h3>Component Options</h3>
