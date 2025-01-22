@@ -725,6 +725,13 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		List<FrankElement> frankElementOptions = role.getMembers().stream()
 				.filter(version.getElementFilter())
 				.toList();
+
+		if (version == XsdVersion.COMPATIBILITY) {
+			frankElementOptions = frankElementOptions.stream()
+				.filter(f -> f != role.getDefaultElementOptionConflict())
+				.toList();
+		}
+
 		for(FrankElement frankElement: frankElementOptions) {
 			log.trace("Append ElementGroup with FrankElement [{}]", frankElement::getFullName);
 			addElementToElementGroup(choice, frankElement, role);
@@ -754,7 +761,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		XmlBuilder attributeElementRole = FrankDocXsdFactoryXmlUtils.createAttribute(ELEMENT_ROLE, FIXED, role.getRoleName(), version.getRoleNameAttributeUse());
 		attributeReuseManager.addAttribute(attributeElementRole, extension);
 
-		if (role.getDefaultElementOptionConflict() == frankElement) {
+		if (version == XsdVersion.STRICT && role.getDefaultElementOptionConflict() == frankElement) {
 			attributeReuseManager.addAttribute(createAnyAttribute(), extension);
 		}
 	}
@@ -782,7 +789,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void addElementGroupGenericOption(XmlBuilder context, List<ElementRole> roles) {
-		if (roles.stream().noneMatch(role -> role.getDefaultElementOptionConflict() == null)) {
+		if (version == XsdVersion.STRICT && roles.stream().noneMatch(role -> role.getDefaultElementOptionConflict() == null)) {
 			return;
 		}
 
