@@ -728,7 +728,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 
 		if (version == XsdVersion.COMPATIBILITY) {
 			frankElementOptions = frankElementOptions.stream()
-				.filter(f -> (f != role.getDefaultElementOptionConflict()))
+				.filter(f -> f != role.getDefaultElementOptionConflict())
 				.toList();
 		}
 
