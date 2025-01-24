@@ -3,40 +3,56 @@
     <app-details-search [element]="getFoundElement()" [frankDocElements]="frankDocElements()"></app-details-search>
   </div>
   <div class="details">
-    <app-details-element [element]="getFoundElement()" [frankDocElements]="frankDocElements()"></app-details-element>
+    <app-details-element
+      [element]="getFoundElement()"
+      [frankDocElements]="frankDocElements()"
+      (hasInheritedProperties)="hasInheritedProperties = $event"
+    ></app-details-element>
   </div>
-  <div class="side-navigation">
-    <div class="sticky">
-      <ul>
-        <li (click)="scrollToElement('.explanation')">Explanation</li>
-        <li (click)="scrollToElement('.quick-links')">Quick Links</li>
-        <li (click)="scrollToElement('.syntax')">Syntax</li>
-        <li>
-          <span (click)="scrollToElement('.options')">Component Options</span>
-          <ul>
-            <li>
-              <span (click)="scrollToElement('#attributes')">Attributes</span>
-              <ul>
-                <li (click)="scrollToElement('#attributes-required')">Required</li>
-                <li (click)="scrollToElement('#attributes-optional')">Optional</li>
-              </ul>
-            </li>
-            <li (click)="scrollToElement('#parameters')">Parameters</li>
-            <li (click)="scrollToElement('#nested-elements')">Nested Elements</li>
-            <li (click)="scrollToElement('#forwards')">Forwards</li>
-          </ul>
-        </li>
-      </ul>
-      @if (showFeedback) {
-        <div class="feedback">
-          <p>Was this helpful?</p>
-          <button><app-icon-like width="20" height="20"></app-icon-like></button>
-          <button><app-icon-dislike width="20" height="20"></app-icon-dislike></button>
-        </div>
-        <button class="feedback-btn" title="Feedback">
-          <app-icon-smile width="32" height="32"></app-icon-smile>
-        </button>
-      }
+  @if (getFoundElement()) {
+    <div class="side-navigation">
+      <div class="sticky">
+        <ul>
+          <li (click)="scrollToElement('.explanation')">Explanation</li>
+          <li (click)="scrollToElement('.quick-links')">Quick Links</li>
+          <li (click)="scrollToElement('.syntax')">Syntax</li>
+          <li>
+            <span (click)="scrollToElement('.options')">Component Options</span>
+            <ul>
+              @if (getFoundElement()?.attributes || hasAnyInheritedProperties()) {
+                <li>
+                  <span (click)="scrollToElement('#attributes')">Attributes</span>
+                  <ul>
+                    @if (hasAnyRequiredProperities()) {
+                      <li (click)="scrollToElement('#attributes-required')">Required</li>
+                    }
+                    <li (click)="scrollToElement('#attributes-optional')">Optional</li>
+                  </ul>
+                </li>
+              }
+              @if (getFoundElement()?.parameters) {
+                <li (click)="scrollToElement('#parameters')">Parameters</li>
+              }
+              @if (getFoundElement()?.children) {
+                <li (click)="scrollToElement('#nested-elements')">Nested Elements</li>
+              }
+              @if (getFoundElement()?.forwards) {
+                <li (click)="scrollToElement('#forwards')">Forwards</li>
+              }
+            </ul>
+          </li>
+        </ul>
+        @if (showFeedback) {
+          <div class="feedback">
+            <p>Was this helpful?</p>
+            <button><app-icon-like width="20" height="20"></app-icon-like></button>
+            <button><app-icon-dislike width="20" height="20"></app-icon-dislike></button>
+          </div>
+          <button class="feedback-btn" title="Feedback">
+            <app-icon-smile width="32" height="32"></app-icon-smile>
+          </button>
+        }
+      </div>
     </div>
-  </div>
+  }
 </div>
