@@ -26,12 +26,11 @@
       </p>
       <p class="description">{{ component.item.description | truncate: 150 }}</p>
       <ff-button
-        [routerLink]="[
-          '/',
-          getFirstFilter(component.item.labels),
-          getFirstLabel(component.item.labels),
-          component.item.name,
-        ]"
+        [routerLink]="
+          component.item.labels
+            ? ['/', getFirstFilter(component.item.labels), getFirstLabel(component.item.labels), component.item.name]
+            : ['/', component.item.fullName]
+        "
         >&rarr;</ff-button
       >
     </div>
