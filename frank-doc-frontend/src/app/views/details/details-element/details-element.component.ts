@@ -2,7 +2,7 @@ import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { AlertComponent, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Attribute, Child, Element, FrankDoc, ParsedTag } from '../../../frankdoc.types';
+import { Attribute, Child, DeprecationInfo, Element, FrankDoc, ParsedTag } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
 import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
 import { CollapseDirective } from '../../../components/collapse.directive';
@@ -126,6 +126,10 @@ export class DetailsElementComponent implements OnChanges {
 
   protected hasInheritedProperties(): boolean {
     return Object.values(this.inheritedProperties).some((properties) => properties.length > 0);
+  }
+
+  protected getDeprecatedTitle(deprecatedInfo: DeprecationInfo): string {
+    return `${deprecatedInfo.description ?? 'This has been deprecated!'}${deprecatedInfo.since ? `\nSince ${deprecatedInfo.since}` : ''}`;
   }
 
   private setInheritedProperties(elementIndex: string): void {

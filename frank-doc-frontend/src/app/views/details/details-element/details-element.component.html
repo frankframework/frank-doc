@@ -83,8 +83,15 @@
                 </thead>
                 <tbody>
                   @for (attribute of attributesRequired; track attribute.name) {
-                    <tr>
-                      <td>{{ attribute.name }}</td>
+                    <tr
+                      [ngClass]="{
+                        deprecated: attribute.deprecated,
+                        forRemoval: attribute.deprecated && (attribute.deprecated.forRemoval ?? false),
+                      }"
+                    >
+                      <td [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''">
+                        {{ attribute.name }}
+                      </td>
                       <td
                         *javadocTransform="
                           let text of attribute.description ?? DEFAULT_RETURN_CHARACTER;
@@ -155,8 +162,15 @@
                 </thead>
                 <tbody>
                   @for (attribute of attributesOptional; track attribute.name) {
-                    <tr>
-                      <td>{{ attribute.name }}</td>
+                    <tr
+                      [ngClass]="{
+                        deprecated: attribute.deprecated,
+                        forRemoval: attribute.deprecated && (attribute.deprecated.forRemoval ?? false),
+                      }"
+                    >
+                      <td [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''">
+                        {{ attribute.name }}
+                      </td>
                       <td
                         *javadocTransform="
                           let text of attribute.description ?? DEFAULT_RETURN_CHARACTER;
@@ -270,7 +284,7 @@
             </thead>
             <tbody>
               @for (nestedElement of element.children; track nestedElement.roleName) {
-                <tr>
+                <tr [ngClass]="{ deprecated: nestedElement.deprecated }">
                   <td>{{ nestedElement.roleName }}</td>
                   <td
                     *javadocTransform="
