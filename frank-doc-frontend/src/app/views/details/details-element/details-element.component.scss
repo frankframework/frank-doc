@@ -3,6 +3,10 @@ h2 {
   font-size: 50px;
   font-weight: 700;
   word-break: break-word;
+
+  &.deprecated {
+    text-decoration: line-through;
+  }
 }
 
 pre {
@@ -100,6 +104,14 @@ h3 {
   table {
     width: 100%;
     overflow: auto;
+
+    tr.deprecated > td:first-child {
+      text-decoration: line-through;
+
+      &.forRemoval {
+        text-decoration-color: var(--ff-alert-error);
+      }
+    }
 
     th {
       padding: 10px 0;

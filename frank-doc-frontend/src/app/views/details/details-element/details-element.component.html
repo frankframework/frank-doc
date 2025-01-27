@@ -1,7 +1,10 @@
 @if (element) {
-  <h2>{{ element.name }}</h2>
+  <h2 [ngClass]="{ deprecated: element.deprecated }">{{ element.name }}</h2>
   @if (element.abstract) {
     <ff-chip class="abstract-label" slim colour="#FDC300">Abstract</ff-chip>
+  }
+  @if (element.deprecated) {
+    <ff-chip class="abstract-label" slim>Deprecated</ff-chip>
   }
   @if (element.labels) {
     @for (filter of element.labels | keyvalue; track filter; let index = $index) {
@@ -12,6 +15,20 @@
   }
 
   <div class="section explanation">
+    @if (element.deprecated) {
+      <ff-alert [type]="element.deprecated.forRemoval ? 'error' : 'warning'">
+        @if (element.deprecated.description) {
+          <p>{{ element.deprecated.description }}</p>
+        } @else {
+          <p>This element is deprecated!</p>
+        }
+        @if (element.deprecated.since) {
+          <p>
+            <small>Since: {{ element.deprecated.since }}</small>
+          </p>
+        }
+      </ff-alert>
+    }
     <h3>Explanation</h3>
     <p>
       <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>
@@ -66,8 +83,15 @@
                 </thead>
                 <tbody>
                   @for (attribute of attributesRequired; track attribute.name) {
-                    <tr>
-                      <td>{{ attribute.name }}</td>
+                    <tr
+                      [ngClass]="{
+                        deprecated: attribute.deprecated,
+                        forRemoval: attribute.deprecated && (attribute.deprecated.forRemoval ?? false),
+                      }"
+                    >
+                      <td [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''">
+                        {{ attribute.name }}
+                      </td>
                       <td
                         *javadocTransform="
                           let text of attribute.description ?? DEFAULT_RETURN_CHARACTER;
@@ -138,8 +162,15 @@
                 </thead>
                 <tbody>
                   @for (attribute of attributesOptional; track attribute.name) {
-                    <tr>
-                      <td>{{ attribute.name }}</td>
+                    <tr
+                      [ngClass]="{
+                        deprecated: attribute.deprecated,
+                        forRemoval: attribute.deprecated && (attribute.deprecated.forRemoval ?? false),
+                      }"
+                    >
+                      <td [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''">
+                        {{ attribute.name }}
+                      </td>
                       <td
                         *javadocTransform="
                           let text of attribute.description ?? DEFAULT_RETURN_CHARACTER;
@@ -253,7 +284,7 @@
             </thead>
             <tbody>
               @for (nestedElement of element.children; track nestedElement.roleName) {
-                <tr>
+                <tr [ngClass]="{ deprecated: nestedElement.deprecated }">
                   <td>{{ nestedElement.roleName }}</td>
                   <td
                     *javadocTransform="

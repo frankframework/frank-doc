@@ -1,8 +1,8 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { AlertComponent, ChipComponent } from '@frankframework/angular-components';
-import { KeyValuePipe, NgTemplateOutlet } from '@angular/common';
+import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Attribute, Child, Element, FrankDoc, ParsedTag } from '../../../frankdoc.types';
+import { Attribute, Child, DeprecationInfo, Element, FrankDoc, ParsedTag } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
 import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
 import { CollapseDirective } from '../../../components/collapse.directive';
@@ -38,6 +38,7 @@ type InheritedProperties = {
     NgTemplateOutlet,
     IconCaretComponent,
     IconArrowRightUpComponent,
+    NgClass,
   ],
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',
@@ -132,6 +133,10 @@ export class DetailsElementComponent implements OnChanges {
 
   protected hasAnyInheritedProperties(): boolean {
     return this._hasInheritedProperties.required || this._hasInheritedProperties.optional;
+  }
+
+  protected getDeprecatedTitle(deprecatedInfo: DeprecationInfo): string {
+    return `${deprecatedInfo.description ?? 'This has been deprecated!'}${deprecatedInfo.since ? `\nSince ${deprecatedInfo.since}` : ''}`;
   }
 
   private setInheritedProperties(elementIndex: string): void {
