@@ -11,12 +11,16 @@
     @for (searchElement of filteredElements; track searchElement.item.name) {
       <li [ngClass]="{ active: searchElement.item.name === element?.name }">
         <a
-          [routerLink]="[
-            '/',
-            getFirstFilter(searchElement.item.labels),
-            getFirstLabel(searchElement.item.labels),
-            searchElement.item.name,
-          ]"
+          [routerLink]="
+            searchElement.item.labels
+              ? [
+                  '/',
+                  getFirstFilter(searchElement.item.labels),
+                  getFirstLabel(searchElement.item.labels),
+                  searchElement.item.name,
+                ]
+              : ['/', searchElement.item.fullName]
+          "
           >{{ searchElement.item.name }}</a
         >
       </li>
