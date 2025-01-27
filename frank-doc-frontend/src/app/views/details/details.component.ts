@@ -15,6 +15,11 @@ type ElementFilterProperties = {
   elementName: string;
 };
 
+export type HasInheritedProperties = {
+  required: boolean;
+  optional: boolean;
+};
+
 @Component({
   selector: 'app-details',
   standalone: true,
@@ -39,6 +44,10 @@ export class DetailsComponent implements OnInit {
     return null;
   });
   protected readonly showFeedback: boolean = environment.feedbackButtons;
+  protected hasInheritedProperties: HasInheritedProperties = {
+    required: false,
+    optional: false,
+  };
 
   private appService: AppService = inject(AppService);
   protected readonly scrollToElement = this.appService.scrollToElement;
@@ -66,6 +75,17 @@ export class DetailsComponent implements OnInit {
 
   protected getFoundElement(): Element | null {
     return this.elementByRoute ?? this.elementBySignal();
+  }
+
+  protected hasAnyInheritedProperties(): boolean {
+    return this.hasInheritedProperties.required || this.hasInheritedProperties.optional;
+  }
+
+  protected hasAnyRequiredProperities(): boolean {
+    return (
+      this.hasInheritedProperties.required ||
+      (this.getFoundElement()?.attributes?.filter((attribute) => attribute.mandatory).length ?? 0) > 0
+    );
   }
 
   private findElement(frankDocElements: FrankDoc['elements'] | null): FrankDoc['elements'][string] | null {

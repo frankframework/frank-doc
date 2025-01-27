@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { AlertComponent, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -10,6 +10,7 @@ import { IconCaretComponent } from '../../../icons/icon-caret-down/icon-caret.co
 import { IconArrowRightUpComponent } from '../../../icons/icon-arrow-right-up/icon-arrow-right-up.component';
 import { AppService } from '../../../app.service';
 import { DEFAULT_RETURN_CHARACTER, filterColours } from '../../../app.constants';
+import { HasInheritedProperties } from '../details.component';
 
 type InheritedParentElementProperties<T> = {
   parentElementName: string;
@@ -44,6 +45,7 @@ type InheritedProperties = {
 export class DetailsElementComponent implements OnChanges {
   @Input({ required: true }) element!: Element | null;
   @Input({ required: true }) frankDocElements!: FrankDoc['elements'] | null;
+  @Output() hasInheritedProperties = new EventEmitter<HasInheritedProperties>();
 
   protected attributesRequired: Attribute[] = [];
   protected attributesOptional: Attribute[] = [];
@@ -65,6 +67,10 @@ export class DetailsElementComponent implements OnChanges {
   protected undefinedType = 'string';
   protected elementSyntax: string = '';
   protected collapsedInheritedThreshold = 1;
+  protected _hasInheritedProperties: HasInheritedProperties = {
+    required: false,
+    optional: false,
+  };
 
   private readonly appService: AppService = inject(AppService);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
@@ -86,6 +92,7 @@ export class DetailsElementComponent implements OnChanges {
           forwards: [],
         };
         this.setInheritedProperties(this.element.parent);
+        this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
       }
       this.generateElementSyntax();
     }
@@ -123,8 +130,8 @@ export class DetailsElementComponent implements OnChanges {
     element.remove();
   }
 
-  protected hasInheritedProperties(): boolean {
-    return Object.values(this.inheritedProperties).some((properties) => properties.length > 0);
+  protected hasAnyInheritedProperties(): boolean {
+    return this._hasInheritedProperties.required || this._hasInheritedProperties.optional;
   }
 
   private setInheritedProperties(elementIndex: string): void {
@@ -139,34 +146,15 @@ export class DetailsElementComponent implements OnChanges {
           parentElementName: element.name,
           properties: attributesRequired,
         });
+        this._hasInheritedProperties.required = true;
       }
       if (attributesOptional.length > 0) {
         this.inheritedProperties.attributesOptional.push({
           parentElementName: element.name,
           properties: attributesOptional,
         });
+        this._hasInheritedProperties.optional = true;
       }
-    }
-
-    if (element.parameters) {
-      this.inheritedProperties.parameters.push({
-        parentElementName: element.name,
-        properties: element.parameters,
-      });
-    }
-
-    if (element.children) {
-      this.inheritedProperties.children.push({
-        parentElementName: element.name,
-        properties: element.children,
-      });
-    }
-
-    if (element.forwards) {
-      this.inheritedProperties.forwards.push({
-        parentElementName: element.name,
-        properties: element.forwards,
-      });
     }
 
     if (element.parent) this.setInheritedProperties(element.parent);
