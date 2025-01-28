@@ -15,6 +15,10 @@ export const routes: Routes = [
     title: 'Index',
   },
   {
+    path: 'All',
+    redirectTo: '',
+  },
+  {
     path: ':fullname',
     component: DetailsComponent,
   },
