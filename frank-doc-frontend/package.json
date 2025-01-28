@@ -9,6 +9,7 @@
     "lint": "eslint ./src",
     "prettier": "prettier -w .",
     "test": "ng test",
+    "test:ci": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
     "watch": "ng build --watch --configuration development",
     "prepare": "cd .. && husky install frank-doc-frontend/.husky"
   },
