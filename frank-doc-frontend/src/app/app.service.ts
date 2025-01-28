@@ -22,6 +22,7 @@ export class AppService {
   readonly frankDoc: WritableSignal<FrankDoc | null> = signal(null);
   readonly filters: WritableSignal<Filter[]> = signal([]);
   readonly darkmode: WritableSignal<boolean> = signal(false);
+  hasLoaded: boolean = false;
 
   private readonly applicationLoadedSubject: Subject<void> = new Subject();
   readonly applicationLoaded$: Observable<void> = this.applicationLoadedSubject.asObservable();
@@ -29,7 +30,9 @@ export class AppService {
   private readonly http: HttpClient = inject(HttpClient);
 
   triggerApplicationLoaded(): void {
+    this.hasLoaded = true;
     this.applicationLoadedSubject.next();
+    this.applicationLoadedSubject.complete();
   }
 
   getFrankDoc(): Observable<FrankDoc> {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AlertComponent, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -11,6 +11,7 @@ import { IconArrowRightUpComponent } from '../../../icons/icon-arrow-right-up/ic
 import { AppService } from '../../../app.service';
 import { DEFAULT_RETURN_CHARACTER, filterColours } from '../../../app.constants';
 import { HasInheritedProperties } from '../details.component';
+import { first } from 'rxjs';
 
 type InheritedParentElementProperties<T> = {
   parentElementName: string;
@@ -43,7 +44,7 @@ type InheritedProperties = {
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',
 })
-export class DetailsElementComponent implements OnChanges {
+export class DetailsElementComponent implements OnInit, OnChanges {
   @Input({ required: true }) element!: Element | null;
   @Input({ required: true }) frankDocElements!: FrankDoc['elements'] | null;
   @Output() hasInheritedProperties = new EventEmitter<HasInheritedProperties>();
@@ -72,11 +73,17 @@ export class DetailsElementComponent implements OnChanges {
     required: false,
     optional: false,
   };
+  protected loading: boolean = true;
 
   private readonly appService: AppService = inject(AppService);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
   protected readonly filterColours = filterColours;
   protected readonly getLabelColor = this.appService.getLabelColor;
+
+  ngOnInit(): void {
+    this.appService.applicationLoaded$.pipe(first()).subscribe(() => (this.loading = false));
+    this.loading = !this.appService.hasLoaded;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['element']) {

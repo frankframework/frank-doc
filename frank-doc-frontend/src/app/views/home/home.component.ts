@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
   );
   protected filteredElements: FuseResult<Element>[] = [];
   protected initialFilters: ElementLabels = {};
+  protected loading: boolean = true;
 
   private readonly appService: AppService = inject(AppService);
   private readonly searchParamsService: SearchQueryParamsService = inject(SearchQueryParamsService);
@@ -35,11 +36,11 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.appService.applicationLoaded$.pipe(first()).subscribe(() => {
-      const params = this.searchParamsService.getFromRoute();
-      this.searchQuery = params.search;
-      this.initialFilters = params.query;
-      this.updateSelectedFilters(params.query);
+      this.initializeSearchFilters();
+      this.loading = false;
     });
+    this.initializeSearchFilters();
+    this.loading = !this.appService.hasLoaded;
   }
 
   protected search(query: string): void {
@@ -56,5 +57,12 @@ export class HomeComponent implements OnInit {
     this.fuse().setCollection(this.appService.filterElementsBySelectedFilters(this.elementsList(), selectedFilters));
     this.search(this.searchQuery);
     if (isDevMode()) console.log('Selected Filters', selectedFilters);
+  }
+
+  private initializeSearchFilters(): void {
+    const params = this.searchParamsService.getFromRoute();
+    this.searchQuery = params.search;
+    this.initialFilters = params.query;
+    this.updateSelectedFilters(params.query);
   }
 }

@@ -8,7 +8,11 @@
       (selectedFilters)="updateSelectedFilters($event)"
     ></app-home-filters>
   </div>
-  @if (searchQuery.trim() !== '') {
+  @if (loading) {
+    <div class="loading">
+      <p>Loading elements...</p>
+    </div>
+  } @else if (searchQuery.trim() !== '') {
     <div class="elements">
       <app-home-component-list [components]="filteredElements"></app-home-component-list>
     </div>
