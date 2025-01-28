@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
         const filters = this.getFiltersFromLabels(data.labels);
         this.assignFrankDocElementsToFilters(filters, data.elements);
         this.appService.filters.set(filters);
+        this.appService.triggerApplicationLoaded();
       },
       error: (error: HttpErrorResponse) => {
         this.error = `Couldn't retrieve FrankDoc file: ${error.statusText}`;

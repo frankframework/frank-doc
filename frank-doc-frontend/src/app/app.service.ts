@@ -1,6 +1,6 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Element, ElementLabels, FrankDoc } from './frankdoc.types';
 import { DEFAULT_RETURN_CHARACTER } from './app.constants';
@@ -23,7 +23,14 @@ export class AppService {
   readonly filters: WritableSignal<Filter[]> = signal([]);
   readonly darkmode: WritableSignal<boolean> = signal(false);
 
+  private readonly applicationLoadedSubject: Subject<void> = new Subject();
+  readonly applicationLoaded$: Observable<void> = this.applicationLoadedSubject.asObservable();
+
   private readonly http: HttpClient = inject(HttpClient);
+
+  triggerApplicationLoaded(): void {
+    this.applicationLoadedSubject.next();
+  }
 
   getFrankDoc(): Observable<FrankDoc> {
     return this.http.get<FrankDoc>(`${environment.frankDocUrl}?cache=${Date.now()}`);

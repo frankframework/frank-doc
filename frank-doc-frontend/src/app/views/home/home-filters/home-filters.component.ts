@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   inject,
+  Input,
   OnDestroy,
   Output,
   signal,
@@ -35,6 +36,11 @@ export class HomeFiltersComponent implements OnDestroy {
   protected selectedFilterLabels: WritableSignal<ElementLabels> = signal({});
 
   private onOutsideClick: (event: MouseEvent) => void = (event: MouseEvent): void => this.outsideClickHandler(event);
+
+  @Input()
+  set initialFilters(initialFilters: ElementLabels) {
+    this.selectedFilterLabels.set(initialFilters);
+  }
 
   ngOnDestroy(): void {
     document.removeEventListener('click', this.onOutsideClick);
