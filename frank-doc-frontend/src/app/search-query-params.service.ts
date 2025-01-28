@@ -38,6 +38,7 @@ export class SearchQueryParamsService {
       relativeTo: this.currentRoute,
       preserveFragment: true,
       queryParams: newParams,
+      replaceUrl: true,
     });
   }
 
