@@ -74,6 +74,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     optional: false,
   };
   protected loading: boolean = true;
+  protected attributesHasDefaults: boolean = false;
 
   private readonly appService: AppService = inject(AppService);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
@@ -90,6 +91,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       if (this.element?.attributes) {
         this.attributesRequired = this.element?.attributes.filter((attribute) => attribute.mandatory === true) ?? [];
         this.attributesOptional = this.element?.attributes.filter((attribute) => !attribute.mandatory) ?? [];
+        this.attributesHasDefaults = this.element.attributes.some((attribute) => !!attribute.default);
       }
       if (this.element?.parent) {
         this.inheritedProperties = {
