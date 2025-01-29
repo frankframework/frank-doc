@@ -104,7 +104,6 @@ h3 {
   table {
     width: 100%;
     overflow: auto;
-    table-layout: fixed;
 
     tr.deprecated > td:first-child {
       text-decoration: line-through;
@@ -155,16 +154,6 @@ h3 {
       & > .empty-table {
         display: block;
         text-align: center;
-      }
-    }
-
-    th, td {
-      &:nth-child(1) {
-        width: 20%;
-      }
-
-      &:nth-child(2) {
-        width: 70%;
       }
     }
   }
