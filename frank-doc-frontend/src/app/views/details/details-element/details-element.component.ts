@@ -12,6 +12,7 @@ import { AppService } from '../../../app.service';
 import { DEFAULT_RETURN_CHARACTER, filterColours } from '../../../app.constants';
 import { HasInheritedProperties } from '../details.component';
 import { first } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 
 type InheritedParentElementProperties<T> = {
   parentElementName: string;
@@ -80,6 +81,8 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   protected readonly filterColours = filterColours;
   protected readonly getLabelColor = this.appService.getLabelColor;
 
+  private readonly titleService: Title = inject(Title);
+
   ngOnInit(): void {
     this.appService.applicationLoaded$.pipe(first()).subscribe(() => (this.loading = false));
     this.loading = !this.appService.hasLoaded;
@@ -103,6 +106,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
         this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
       }
       this.generateElementSyntax();
+      if (this.element?.name) this.titleService.setTitle(`${this.element?.name} | Frank!Doc`);
     }
   }
 
