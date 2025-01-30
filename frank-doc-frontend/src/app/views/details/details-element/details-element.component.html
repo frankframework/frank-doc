@@ -78,6 +78,9 @@
                   <tr>
                     <th>Name</th>
                     <th>Description</th>
+                    @if (attributesHasDefaults) {
+                      <th>Default</th>
+                    }
                     <th>Type</th>
                   </tr>
                 </thead>
@@ -99,6 +102,15 @@
                         "
                         [innerHTML]="text"
                       ></td>
+                      @if (attributesHasDefaults) {
+                        <td
+                          *javadocTransform="
+                            let text of attribute.default ?? DEFAULT_RETURN_CHARACTER;
+                            elements: frankDocElements
+                          "
+                          [innerHTML]="text"
+                        ></td>
+                      }
                       <td>{{ attribute.type ?? undefinedType }}</td>
                     </tr>
                   } @empty {
@@ -157,6 +169,9 @@
                   <tr>
                     <th>Name</th>
                     <th>Description</th>
+                    @if (attributesHasDefaults) {
+                      <th>Default</th>
+                    }
                     <th>Type</th>
                   </tr>
                 </thead>
@@ -178,6 +193,15 @@
                         "
                         [innerHTML]="text"
                       ></td>
+                      @if (attributesHasDefaults) {
+                        <td
+                          *javadocTransform="
+                            let text of attribute.default ?? DEFAULT_RETURN_CHARACTER;
+                            elements: frankDocElements
+                          "
+                          [innerHTML]="text"
+                        ></td>
+                      }
                       <td>{{ attribute.type ?? undefinedType }}</td>
                     </tr>
                   } @empty {
