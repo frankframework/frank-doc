@@ -7,12 +7,12 @@ export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    title: 'Home',
+    title: 'Home | Frank!Doc',
   },
   {
     path: 'index',
     component: IndexComponent,
-    title: 'Index',
+    title: 'Index | Frank!Doc',
   },
   {
     path: 'All',
@@ -21,15 +21,18 @@ export const routes: Routes = [
   {
     path: ':fullname',
     component: DetailsComponent,
+    title: 'Element details | Frank!Doc',
   },
   {
     // old url structure, only checks element short name
     path: ':label/:element',
     component: DetailsComponent,
+    title: 'Element details | Frank!Doc',
   },
   {
     path: ':filter/:label/:element',
     component: DetailsComponent,
+    title: 'Element details | Frank!Doc',
   },
   {
     path: '**',
