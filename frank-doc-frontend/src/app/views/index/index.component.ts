@@ -8,11 +8,12 @@ import { IconSmileComponent } from '../../icons/icon-smile/icon-smile.component'
 import { environment } from '../../../environments/environment';
 import { filterColours } from '../../app.constants';
 import { NgClass } from '@angular/common';
+import { NameWbrPipe } from '../../components/name-wbr.pipe';
 
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [RouterLink, ChipComponent, IconCaretComponent, CollapseDirective, IconSmileComponent, NgClass],
+  imports: [RouterLink, ChipComponent, IconCaretComponent, CollapseDirective, IconSmileComponent, NgClass, NameWbrPipe],
   templateUrl: './index.component.html',
   styleUrl: './index.component.scss',
 })

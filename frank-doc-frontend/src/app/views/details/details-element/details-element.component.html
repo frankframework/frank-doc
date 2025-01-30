@@ -1,5 +1,5 @@
 @if (element) {
-  <h2 [ngClass]="{ deprecated: element.deprecated }">{{ element.name }}</h2>
+  <h2 [ngClass]="{ deprecated: element.deprecated }" [innerHTML]="element.name | nameWbr"></h2>
   @if (element.abstract) {
     <ff-chip class="abstract-label" slim colour="#FDC300">Abstract</ff-chip>
   }
@@ -92,9 +92,10 @@
                         forRemoval: attribute.deprecated && (attribute.deprecated.forRemoval ?? false),
                       }"
                     >
-                      <td [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''">
-                        {{ attribute.name }}
-                      </td>
+                      <td
+                        [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''"
+                        [innerHTML]="attribute.name | nameWbr"
+                      ></td>
                       <td
                         *javadocTransform="
                           let text of attribute.description ?? DEFAULT_RETURN_CHARACTER;
@@ -183,9 +184,10 @@
                         forRemoval: attribute.deprecated && (attribute.deprecated.forRemoval ?? false),
                       }"
                     >
-                      <td [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''">
-                        {{ attribute.name }}
-                      </td>
+                      <td
+                        [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''"
+                        [innerHTML]="attribute.name | nameWbr"
+                      ></td>
                       <td
                         *javadocTransform="
                           let text of attribute.description ?? DEFAULT_RETURN_CHARACTER;
@@ -276,7 +278,7 @@
             <tbody>
               @for (parameter of element.parameters; track parameter.name) {
                 <tr>
-                  <td>{{ parameter.name }}</td>
+                  <td [innerHTML]="parameter.name | nameWbr"></td>
                   <td
                     *javadocTransform="
                       let text of parameter.description ?? DEFAULT_RETURN_CHARACTER;
@@ -309,7 +311,7 @@
             <tbody>
               @for (nestedElement of element.children; track nestedElement.roleName) {
                 <tr [ngClass]="{ deprecated: nestedElement.deprecated }">
-                  <td>{{ nestedElement.roleName }}</td>
+                  <td [innerHTML]="nestedElement.roleName | nameWbr"></td>
                   <td
                     *javadocTransform="
                       let text of nestedElement.description ?? DEFAULT_RETURN_CHARACTER;
@@ -342,7 +344,7 @@
             <tbody>
               @for (forward of element.forwards; track forward.name) {
                 <tr>
-                  <td>{{ forward.name }}</td>
+                  <td [innerHTML]="forward.name | nameWbr"></td>
                   <td
                     *javadocTransform="
                       let text of forward.description ?? DEFAULT_RETURN_CHARACTER;

@@ -17,6 +17,7 @@
 ff-chip {
   font-size: 14px;
   font-weight: 600;
+  margin-right: 3px;
 }
 
 .sidenav {
@@ -103,7 +104,7 @@ ff-chip {
           text-transform: capitalize;
           text-decoration: none;
 
-          &.deprecated {
+          & > span.deprecated {
             text-decoration: line-through;
           }
         }

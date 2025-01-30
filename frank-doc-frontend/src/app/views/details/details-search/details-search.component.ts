@@ -8,11 +8,12 @@ import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { fuseOptions } from '../../../app.constants';
+import { NameWbrPipe } from '../../../components/name-wbr.pipe';
 
 @Component({
   selector: 'app-details-search',
   standalone: true,
-  imports: [SearchComponent, FormsModule, NgClass, RouterLink],
+  imports: [SearchComponent, FormsModule, NgClass, RouterLink, NameWbrPipe],
   templateUrl: './details-search.component.html',
   styleUrl: './details-search.component.scss',
 })
