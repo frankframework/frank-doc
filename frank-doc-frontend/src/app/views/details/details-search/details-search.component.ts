@@ -22,7 +22,9 @@ export class DetailsSearchComponent implements OnChanges {
   @Input({ required: true }) frankDocElements!: FrankDoc['elements'] | null;
 
   protected searchQuery = '';
+  protected relatedSearchQuery = '';
   protected filteredElements: FuseResult<Element>[] = [];
+  protected relatedElements: FuseResult<Element>[] = [];
   protected showRelated: boolean = environment.relatedSearchResults;
 
   private appService: AppService = inject(AppService);
@@ -30,7 +32,9 @@ export class DetailsSearchComponent implements OnChanges {
   protected getFirstLabel = this.appService.getFirstLabel;
 
   private elementsList: Element[] = [];
+  private exclusiveElementsList: Element[] = [];
   private fuse: Fuse<Element> = new Fuse(this.elementsList, fuseOptions);
+  private fuseRelated: Fuse<Element> = new Fuse(this.elementsList, { ...fuseOptions, shouldSort: false });
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['frankDocElements']) {
@@ -38,30 +42,54 @@ export class DetailsSearchComponent implements OnChanges {
       this.fuse.setCollection(this.elementsList);
     }
     if (changes['element']) {
-      if (this.searchQuery === '') {
-        const firstElementNamePart = this.element?.name.split(/(?=[A-Z])/)[0];
-        this.searchQuery = firstElementNamePart ?? '';
+      if (this.element) {
+        const firstElementNamePart = this.element.name.split(/(?=[A-Z])/)[0];
+        this.relatedSearchQuery = firstElementNamePart ?? this.element.name;
+      } else {
+        this.relatedSearchQuery = '';
       }
-      this.updateSelectedFilters(this.element?.labels ?? {});
+      this.fuse.setCollection(this.elementsList);
+      this.filterExclusiveElements();
+      this.searchQuery = this.appService.previousSearchQuery;
+      this.searchFilteredElements();
     }
   }
 
-  protected resetAndSearch(query: string): void {
-    this.fuse.setCollection(this.elementsList);
-    this.search(query);
+  protected search(): void {
+    this.searchFilteredElements();
   }
 
-  protected search(query: string): void {
-    const searchPattern = query.trim();
-    if (searchPattern !== '') {
-      this.filteredElements = this.fuse.search(searchPattern, { limit: 20 });
-      if (isDevMode()) console.log('Search', this.filteredElements);
-    }
-  }
-
-  protected updateSelectedFilters(selectedFilters: ElementLabels): void {
+  protected updateSelectedFiltersInSearch(selectedFilters: ElementLabels): void {
     this.fuse.setCollection(this.appService.filterElementsBySelectedFilters(this.elementsList, selectedFilters));
-    this.search(this.searchQuery);
-    if (isDevMode()) console.log('Selected Filters', selectedFilters);
+    if (isDevMode()) console.log('Selected Filters for search', selectedFilters);
+    this.searchFilteredElements();
+  }
+
+  protected updateSelectedFiltersInRelated(selectedFilters: ElementLabels): void {
+    this.fuseRelated.setCollection(
+      this.appService.filterElementsBySelectedFilters(this.exclusiveElementsList, selectedFilters),
+    );
+    if (isDevMode()) console.log('Selected Filters for related', selectedFilters);
+    this.searchRelatedElements();
+  }
+
+  private searchFilteredElements(): void {
+    const searchPattern = this.searchQuery.trim();
+    if (searchPattern === '') return;
+    this.filteredElements = this.fuse.search(searchPattern, { limit: 20 });
+    this.appService.previousSearchQuery = searchPattern;
+    if (isDevMode()) console.log('Search', this.filteredElements);
+  }
+
+  private searchRelatedElements(): void {
+    const searchPattern = this.relatedSearchQuery.trim();
+    if (searchPattern === '') return;
+    this.relatedElements = this.fuseRelated.search(searchPattern, { limit: 10 });
+    if (isDevMode()) console.log('Related search', this.relatedElements);
+  }
+
+  private filterExclusiveElements(): void {
+    this.exclusiveElementsList = this.elementsList.filter((element) => element.name !== this.element?.name);
+    this.updateSelectedFiltersInRelated(this.element?.labels ?? {});
   }
 }
