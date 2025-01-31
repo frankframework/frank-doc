@@ -37,7 +37,6 @@ ff-chip {
 
 .section {
   margin-top: 50px;
-  overflow: auto;
 }
 
 h3 {
@@ -189,6 +188,7 @@ h3 {
 
     .options-list {
       padding-left: 15px;
+      overflow: auto;
     }
 
     .parent-element-title {

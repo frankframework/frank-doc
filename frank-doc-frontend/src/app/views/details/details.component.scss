@@ -2,11 +2,19 @@
   display: flex;
   width: 100%;
   margin-bottom: 30px;
-  padding: 0 50px;
+  padding: 0 24px;
+
+  @media (min-width: 1280px) {
+    padding: 0 50px;
+  }
 
   .side-search {
-    width: 290px;
+    width: 190px;
     flex: 0 0 auto;
+
+    @media (min-width: 1600px) {
+      width: 290px;
+    }
   }
 
   .details {
@@ -15,18 +23,30 @@
   }
 
   .side-navigation {
-    width: 290px;
+    width: 190px;
     flex: 0 0 auto;
+
+    @media (min-width: 1600px) {
+      width: 290px;
+    }
   }
 }
 
 .side-search {
-  padding-right: 20px;
+  padding-right: 12px;
+
+  @media (min-width: 1600px) {
+    padding-right: 20px;
+  }
 }
 
 .details {
-  padding: 0 20px;
+  padding: 0 12px;
   overflow: hidden;
+
+  @media (min-width: 1600px) {
+    padding: 0 20px;
+  }
 }
 
 .side-navigation {
@@ -44,7 +64,7 @@
 
     li {
       margin: 0;
-      padding-left: 28px;
+      padding-left: 16px;
       cursor: pointer;
 
       & + li {
@@ -59,7 +79,7 @@
         font-weight: 700;
       }
 
-       & > ul {
+      & > ul {
         padding-bottom: 0;
         border: none;
 
@@ -71,7 +91,11 @@
   }
 
   .feedback {
-    margin: 16px 0 0 28px;
+    margin: 16px 0 0 16px;
+
+    @media (min-width: 1600px) {
+      margin: 16px 0 0 28px;
+    }
 
     p {
       color: #000;

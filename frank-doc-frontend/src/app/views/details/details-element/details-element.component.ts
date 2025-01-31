@@ -13,6 +13,7 @@ import { DEFAULT_RETURN_CHARACTER, filterColours } from '../../../app.constants'
 import { HasInheritedProperties } from '../details.component';
 import { first } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { NameWbrPipe } from '../../../components/name-wbr.pipe';
 
 type InheritedParentElementProperties<T> = {
   parentElementName: string;
@@ -41,6 +42,7 @@ type InheritedProperties = {
     IconCaretComponent,
     IconArrowRightUpComponent,
     NgClass,
+    NameWbrPipe,
   ],
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',

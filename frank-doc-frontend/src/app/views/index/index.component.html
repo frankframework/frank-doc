@@ -39,12 +39,13 @@
             <h4 id="{{ filter.name }}-{{ label.name }}">{{ label.name }}</h4>
             <div class="elements">
               @for (element of label.elements; track $index) {
-                <a
-                  [routerLink]="['/', filter.name, label.name, element]"
-                  [ngClass]="{ deprecated: deprecatedElements().includes(element) }"
+                <a [routerLink]="['/', filter.name, label.name, element]"
                   ><ff-chip [colour]="getLabelColor(filterColours, index)" slim>{{ label.name.charAt(0) }}</ff-chip>
-                  {{ element }}</a
-                >
+                  <span
+                    [ngClass]="{ deprecated: deprecatedElements().includes(element) }"
+                    [innerHTML]="element | nameWbr"
+                  ></span
+                ></a>
               } @empty {
                 <p>No elements found.</p>
               }

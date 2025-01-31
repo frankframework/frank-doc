@@ -21,8 +21,8 @@
                 ]
               : ['/', searchElement.item.fullName]
           "
-          >{{ searchElement.item.name }}</a
-        >
+          [innerHTML]="searchElement.item.name | nameWbr"
+        ></a>
       </li>
     }
   </ul>
