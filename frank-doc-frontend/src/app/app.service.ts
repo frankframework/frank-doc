@@ -23,6 +23,7 @@ export class AppService {
   readonly filters: WritableSignal<Filter[]> = signal([]);
   readonly darkmode: WritableSignal<boolean> = signal(false);
   hasLoaded: boolean = false;
+  previousSearchQuery: string = '';
 
   private readonly applicationLoadedSubject: Subject<void> = new Subject();
   readonly applicationLoaded$: Observable<void> = this.applicationLoadedSubject.asObservable();

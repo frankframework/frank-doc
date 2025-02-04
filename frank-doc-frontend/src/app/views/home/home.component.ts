@@ -8,7 +8,6 @@ import Fuse, { FuseResult } from 'fuse.js';
 import { HomeFiltersComponent } from './home-filters/home-filters.component';
 import { fuseOptions } from '../../app.constants';
 import { SearchQueryParamsService } from '../../search-query-params.service';
-import { first } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -35,12 +34,13 @@ export class HomeComponent implements OnInit {
   private selectedFilters: ElementLabels = {};
 
   ngOnInit(): void {
-    this.appService.applicationLoaded$.pipe(first()).subscribe(() => {
+    this.appService.applicationLoaded$.subscribe(() => {
       this.initializeSearchFilters();
       this.loading = false;
     });
     this.initializeSearchFilters();
     this.loading = !this.appService.hasLoaded;
+    this.searchQuery = this.appService.previousSearchQuery;
   }
 
   protected search(query: string): void {
@@ -48,6 +48,7 @@ export class HomeComponent implements OnInit {
     this.searchParamsService.setInRoute({ search: searchPattern, query: this.selectedFilters });
     if (searchPattern !== '') {
       this.filteredElements = this.fuse().search(searchPattern);
+      this.appService.previousSearchQuery = searchPattern;
       if (isDevMode()) console.log('Search', this.filteredElements);
     }
   }

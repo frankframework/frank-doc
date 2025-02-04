@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { splitOnPascalCaseRegex } from '../app.constants';
 
 @Pipe({
   name: 'nameWbr',
@@ -6,6 +7,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class NameWbrPipe implements PipeTransform {
   transform(value: string): string {
-    return value.split(/(?=[A-Z])/).join('<wbr>');
+    return value.split(splitOnPascalCaseRegex).join('<wbr>');
   }
 }

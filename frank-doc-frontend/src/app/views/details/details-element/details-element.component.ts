@@ -11,7 +11,6 @@ import { IconArrowRightUpComponent } from '../../../icons/icon-arrow-right-up/ic
 import { AppService } from '../../../app.service';
 import { DEFAULT_RETURN_CHARACTER, filterColours } from '../../../app.constants';
 import { HasInheritedProperties } from '../details.component';
-import { first } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { NameWbrPipe } from '../../../components/name-wbr.pipe';
 
@@ -87,7 +86,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   private readonly titleService: Title = inject(Title);
 
   ngOnInit(): void {
-    this.appService.applicationLoaded$.pipe(first()).subscribe(() => (this.loading = false));
+    this.appService.applicationLoaded$.subscribe(() => (this.loading = false));
     this.loading = !this.appService.hasLoaded;
   }
 
