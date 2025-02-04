@@ -7,7 +7,7 @@ import { AppService } from '../../../app.service';
 import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/environment';
-import { fuseOptions } from '../../../app.constants';
+import { fuseOptions, splitOnPascalCaseRegex } from '../../../app.constants';
 import { NameWbrPipe } from '../../../components/name-wbr.pipe';
 
 @Component({
@@ -43,7 +43,7 @@ export class DetailsSearchComponent implements OnChanges {
     }
     if (changes['element']) {
       if (this.element) {
-        const firstElementNamePart = this.element.name.split(/(?=[A-Z])/)[0];
+        const firstElementNamePart = this.element.name.split(splitOnPascalCaseRegex)[0];
         this.relatedSearchQuery = firstElementNamePart ?? this.element.name;
       } else {
         this.relatedSearchQuery = '';
