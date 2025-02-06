@@ -14,8 +14,12 @@
 <div class="components">
   @for (component of components; track component.item.name) {
     <div class="card">
-      <p class="label">{{ component.item.labels ? getFirstLabel(component.item.labels) : '' }}</p>
-      <p class="name" [title]="component.item.name">{{ component.item.name }}</p>
+      <p class="label">
+        {{ component.item.labels ? getFirstLabel(component.item.labels) : '' }}
+      </p>
+      <p class="name" [title]="component.item.name" (click)="navigateToElement(component.item)">
+        {{ component.item.name }}
+      </p>
       <p class="element-names" [title]="component.item.elementNames.join('\n')">
         @for (elementName of component.item.elementNames; track elementName; let first = $first) {
           @if (!first) {
@@ -24,15 +28,10 @@
           <span>{{ elementName }}</span>
         }
       </p>
-      <p class="description">{{ component.item.description | truncate: 150 }}</p>
-      <ff-button
-        [routerLink]="
-          component.item.labels
-            ? ['/', getFirstFilter(component.item.labels), getFirstLabel(component.item.labels), component.item.name]
-            : ['/', component.item.fullName]
-        "
-        >&rarr;</ff-button
-      >
+      <p class="description" (click)="navigateToElement(component.item)">
+        {{ component.item.description | truncate: 150 }}
+      </p>
+      <ff-button (click)="navigateToElement(component.item)">&rarr;</ff-button>
     </div>
   } @empty {
     <p>No Elements found.</p>

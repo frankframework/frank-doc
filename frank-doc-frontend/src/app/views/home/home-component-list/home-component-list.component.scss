@@ -50,6 +50,11 @@
       text-overflow: ellipsis;
     }
 
+    .name, .description {
+      user-select: none;
+      cursor: pointer;
+    }
+
     .label {
       letter-spacing: 2.1px;
       text-transform: uppercase;
