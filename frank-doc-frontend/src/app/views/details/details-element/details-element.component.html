@@ -112,7 +112,7 @@
                           [innerHTML]="text"
                         ></td>
                       }
-                      <td>{{ attribute.type ?? undefinedType }}</td>
+                      <td>{{ attribute.type ?? attribute.enum ?? undefinedType }}</td>
                     </tr>
                   } @empty {
                     <tr>
@@ -204,7 +204,7 @@
                           [innerHTML]="text"
                         ></td>
                       }
-                      <td>{{ attribute.type ?? undefinedType }}</td>
+                      <td>{{ attribute.type ?? attribute.enum ?? undefinedType }}</td>
                     </tr>
                   } @empty {
                     <tr>
