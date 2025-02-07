@@ -112,7 +112,13 @@
                           [innerHTML]="text"
                         ></td>
                       }
-                      <td>{{ attribute.type ?? attribute.enum ?? undefinedType }}</td>
+                      @if (!!attribute.enum) {
+                        <td>
+                          <a href="">{{ getEnumShortName(attribute) ?? 'Enum' }}</a>
+                        </td>
+                      } @else {
+                        <td>{{ attribute.type ?? undefinedType }}</td>
+                      }
                     </tr>
                   } @empty {
                     <tr>
@@ -204,7 +210,13 @@
                           [innerHTML]="text"
                         ></td>
                       }
-                      <td>{{ attribute.type ?? attribute.enum ?? undefinedType }}</td>
+                      @if (!!attribute.enum) {
+                        <td>
+                          <a href="">{{ getEnumShortName(attribute) ?? 'Enum' }}</a>
+                        </td>
+                      } @else {
+                        <td>{{ attribute.type ?? undefinedType }}</td>
+                      }
                     </tr>
                   } @empty {
                     <tr>
@@ -357,6 +369,27 @@
             </tbody>
           </table>
         </div>
+      </div>
+    }
+    @if (usedEnums.length > 0) {
+      <div class="enums">
+        <p>Enums</p>
+        @for (enumType of usedEnums; track enumType.name) {
+          <table [id]="enumType.name">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th [colSpan]="enumType.values.length">Options</th>
+              </tr>
+            </thead>
+            <tbody>
+              <td>{{ getEnumShortName(enumType.name) }}</td>
+              @for (value of enumType.values; track $index; let index = $index) {
+                <td>{{ value.label }}</td>
+              }
+            </tbody>
+          </table>
+        }
       </div>
     }
   </div>

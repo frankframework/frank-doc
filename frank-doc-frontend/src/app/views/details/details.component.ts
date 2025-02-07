@@ -37,6 +37,9 @@ export class DetailsComponent implements OnInit {
   protected readonly frankDocElements: Signal<FrankDoc['elements'] | null> = computed(
     () => this.appService.frankDoc()?.elements ?? null,
   );
+  protected readonly frankDocEnums: Signal<FrankDoc['enums'] | null> = computed(
+    () => this.appService.frankDoc()?.enums ?? null,
+  );
   protected elementByRoute: Element | null = null;
   protected readonly elementBySignal: Signal<Element | null> = computed(() => {
     const elements = this.frankDocElements();
