@@ -84,6 +84,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
   protected readonly filterColours = filterColours;
   protected readonly getLabelColor = this.appService.getLabelColor;
+  protected readonly scrollToElement = this.appService.scrollToElement;
 
   private readonly titleService: Title = inject(Title);
 

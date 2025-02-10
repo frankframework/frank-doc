@@ -114,7 +114,9 @@
                       }
                       @if (!!attribute.enum) {
                         <td>
-                          <a href="">{{ getEnumShortName(attribute) ?? 'Enum' }}</a>
+                          <span (click)="scrollToElement(getEnumShortName(attribute) ?? '')">{{
+                            getEnumShortName(attribute) ?? 'Enum'
+                          }}</span>
                         </td>
                       } @else {
                         <td>{{ attribute.type ?? undefinedType }}</td>
@@ -212,7 +214,9 @@
                       }
                       @if (!!attribute.enum) {
                         <td>
-                          <a href="">{{ getEnumShortName(attribute) ?? 'Enum' }}</a>
+                          <span class="nav-to-enum" (click)="scrollToElement('#' + getEnumShortName(attribute))">{{
+                            getEnumShortName(attribute) ?? 'Enum'
+                          }}</span>
                         </td>
                       } @else {
                         <td>{{ attribute.type ?? undefinedType }}</td>
