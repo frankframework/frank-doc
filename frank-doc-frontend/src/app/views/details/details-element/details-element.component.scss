@@ -227,3 +227,27 @@ h3 {
     }
   }
 }
+
+.enums {
+ .enum-list {
+   margin: 10px 0;
+   max-width: 960px;
+
+   h4 {
+     font-size: 24px;
+   }
+
+   .enum-options {
+     display: flex;
+     flex-wrap: wrap;
+     gap:  5px 50px;
+
+     span {
+       width: 150px;
+       color: var(--ff-color-dark);
+       font-family: "DM Mono", monospace;
+       font-weight: 500;
+     }
+   }
+ }
+}
