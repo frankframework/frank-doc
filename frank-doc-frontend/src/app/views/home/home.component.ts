@@ -11,7 +11,6 @@ import { SearchQueryParamsService } from '../../search-query-params.service';
 
 @Component({
   selector: 'app-home',
-  standalone: true,
   imports: [SearchComponent, FormsModule, HomeComponentListComponent, HomeFiltersComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

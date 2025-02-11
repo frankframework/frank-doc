@@ -5,7 +5,6 @@ type CaretRotation = 'up' | 'down';
 
 @Component({
   selector: 'app-icon-caret',
-  standalone: true,
   imports: [],
   templateUrl: './icon-caret.component.html',
 })

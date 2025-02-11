@@ -29,7 +29,6 @@ type InheritedProperties = {
 
 @Component({
   selector: 'app-details-element',
-  standalone: true,
   imports: [
     ChipComponent,
     KeyValuePipe,

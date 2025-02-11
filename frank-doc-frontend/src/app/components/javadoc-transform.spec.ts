@@ -5,8 +5,9 @@ import { By } from '@angular/platform-browser';
 
 @Component({
   template: ``,
-  imports: [JavadocTransformDirective],
-  standalone: true,
+  imports: [
+    /*JavadocTransformDirective*/
+  ],
 })
 class TestComponent {}
 

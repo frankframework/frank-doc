@@ -7,7 +7,6 @@ import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-header',
-  standalone: true,
   imports: [IconFfLogoSmallComponent, IconDownloadComponent, RouterLink, RouterLinkActive, IconDarkmodeComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
