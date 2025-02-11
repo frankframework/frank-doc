@@ -36,8 +36,8 @@ importers:
         specifier: ^19.1.5
         version: 19.1.5(@angular/common@19.1.5(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@19.1.5(@angular/animations@19.1.5(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@19.1.5(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       '@frankframework/angular-components':
-        specifier: ^1.0.1
-        version: 1.0.1(@angular/cdk@18.2.14(@angular/common@19.1.5(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))
+        specifier: ^1.1.0
+        version: 1.1.0(@angular/cdk@18.2.14(@angular/common@19.1.5(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))
       fuse.js:
         specifier: ^7.0.0
         version: 7.0.0
@@ -1034,11 +1034,11 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@frankframework/angular-components@1.0.1':
-    resolution: {integrity: sha512-kmzBHML/zMLN6pyX7M1pLU5Mk7n2K2nqbYENHYxo3hFf3I/xU5Iy9Mhdy57an5ghJVXsCnxXdQ6ny2tcaSifKw==}
+  '@frankframework/angular-components@1.1.0':
+    resolution: {integrity: sha512-h1YE8FpjIkyK64JZcZjcYDsKxHjXGxJQEZkSpRUL7Va5sAEN5eCyh5VYCILC69VQYl2bjsehP3rR6FVhzmFmdA==}
     peerDependencies:
-      '@angular/cdk': ^18.2.0
-      '@angular/core': ^18.2.0
+      '@angular/cdk': '>=18.2.0 <20.0.0'
+      '@angular/core': '>=18.2.0 <20.0.0'
 
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -5914,7 +5914,7 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@frankframework/angular-components@1.0.1(@angular/cdk@18.2.14(@angular/common@19.1.5(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))':
+  '@frankframework/angular-components@1.1.0(@angular/cdk@18.2.14(@angular/common@19.1.5(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))':
     dependencies:
       '@angular/cdk': 18.2.14(@angular/common@19.1.5(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.1.5(rxjs@7.8.1)(zone.js@0.15.0)
