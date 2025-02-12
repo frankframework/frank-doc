@@ -4,7 +4,6 @@ import { IconNavigateToExternalComponent } from '../../icons/icon-navigate-to-ex
 
 @Component({
   selector: 'app-footer',
-  standalone: true,
   imports: [IconFfLogoFullComponent, IconNavigateToExternalComponent],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss',

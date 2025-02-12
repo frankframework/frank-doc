@@ -12,7 +12,6 @@ import { NameWbrPipe } from '../../../components/name-wbr.pipe';
 
 @Component({
   selector: 'app-details-search',
-  standalone: true,
   imports: [SearchComponent, FormsModule, NgClass, RouterLink, NameWbrPipe],
   templateUrl: './details-search.component.html',
   styleUrl: './details-search.component.scss',

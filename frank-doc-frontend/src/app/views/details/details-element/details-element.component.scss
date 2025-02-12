@@ -15,7 +15,7 @@ pre {
   border: 1px solid var(--ff-bgcolor-gray);
   font-size: 16px;
   color: var(--ff-color-dark);
-  background: rgba(237, 237, 237, 0.50);
+  background: rgba(237, 237, 237, 0.5);
 }
 
 code {
@@ -78,7 +78,7 @@ h3 {
   border: 1px solid var(--ff-bgcolor-gray);
   font-size: 16px;
   color: var(--ff-color-dark);
-  background: rgba(237, 237, 237, 0.50);
+  background: rgba(237, 237, 237, 0.5);
 
   button {
     position: absolute;
@@ -94,7 +94,7 @@ h3 {
     }
 
     &:active {
-      background: rgba(216, 216, 216, .5);
+      background: rgba(216, 216, 216, 0.5);
     }
   }
 }

@@ -22,7 +22,6 @@ export type HasInheritedProperties = {
 
 @Component({
   selector: 'app-details',
-  standalone: true,
   imports: [
     DetailsElementComponent,
     DetailsSearchComponent,

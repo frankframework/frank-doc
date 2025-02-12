@@ -9,7 +9,6 @@ import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-home-component-list',
-  standalone: true,
   imports: [ButtonComponent, RouterLink, TruncatePipe],
   templateUrl: './home-component-list.component.html',
   styleUrl: './home-component-list.component.scss',

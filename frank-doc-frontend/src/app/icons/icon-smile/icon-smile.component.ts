@@ -3,7 +3,6 @@ import { IconBaseComponent } from '@frankframework/angular-components';
 
 @Component({
   selector: 'app-icon-smile',
-  standalone: true,
   imports: [],
   templateUrl: './icon-smile.component.html',
 })

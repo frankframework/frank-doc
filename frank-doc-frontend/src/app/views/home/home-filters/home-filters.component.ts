@@ -20,7 +20,6 @@ import { ElementLabels } from '../../../frankdoc.types';
 
 @Component({
   selector: 'app-home-filters',
-  standalone: true,
   imports: [ButtonComponent, NgClass, CheckboxComponent, InitFilterToggleDirective, KeyValuePipe],
   templateUrl: './home-filters.component.html',
   styleUrl: './home-filters.component.scss',
