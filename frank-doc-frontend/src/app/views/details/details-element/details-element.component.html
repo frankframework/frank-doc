@@ -112,7 +112,15 @@
                           [innerHTML]="text"
                         ></td>
                       }
-                      <td>{{ attribute.type ?? undefinedType }}</td>
+                      @if (!!attribute.enum) {
+                        <td>
+                          <span (click)="scrollToElement(getEnumShortName(attribute) ?? '')">{{
+                            getEnumShortName(attribute) ?? 'Enum'
+                          }}</span>
+                        </td>
+                      } @else {
+                        <td>{{ attribute.type ?? undefinedType }}</td>
+                      }
                     </tr>
                   } @empty {
                     <tr>
@@ -204,7 +212,15 @@
                           [innerHTML]="text"
                         ></td>
                       }
-                      <td>{{ attribute.type ?? undefinedType }}</td>
+                      @if (!!attribute.enum) {
+                        <td>
+                          <span class="nav-to-enum" (click)="scrollToElement('#' + getEnumShortName(attribute))">{{
+                            getEnumShortName(attribute) ?? 'Enum'
+                          }}</span>
+                        </td>
+                      } @else {
+                        <td>{{ attribute.type ?? undefinedType }}</td>
+                      }
                     </tr>
                   } @empty {
                     <tr>
@@ -357,6 +373,21 @@
             </tbody>
           </table>
         </div>
+      </div>
+    }
+    @if (usedEnums.length > 0) {
+      <div class="section enums">
+        <h3>Enums</h3>
+        @for (enumType of usedEnums; track enumType.name) {
+          <div class="enum-list">
+            <h4 [id]="getEnumShortName(enumType.name)">{{ getEnumShortName(enumType.name) }}</h4>
+            <div class="enum-options">
+              @for (value of enumType.values; track $index; let index = $index) {
+                <span>{{ value.label }}</span>
+              }
+            </div>
+          </div>
+        }
       </div>
     }
   </div>

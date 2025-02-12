@@ -155,6 +155,16 @@ h3 {
         text-align: center;
       }
     }
+
+    .nav-to-enum {
+      color: var(--ff-anchor-default);
+      font-weight: 500;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   .sub-options {
@@ -214,10 +224,41 @@ h3 {
     }
   }
 
+  .enums {
+    table {
+      overflow: auto;
+    }
+  }
+
   .attributes {
     ff-alert {
       display: block;
       margin: 20px 0;
     }
   }
+}
+
+.enums {
+ .enum-list {
+   margin: 13px 0;
+   max-width: 960px;
+
+   h4 {
+     margin-bottom: 6px;
+     font-size: 24px;
+   }
+
+   .enum-options {
+     display: flex;
+     flex-wrap: wrap;
+     gap:  5px 50px;
+
+     span {
+       width: 150px;
+       color: var(--ff-color-dark);
+       font-family: "DM Mono", monospace;
+       font-weight: 500;
+     }
+   }
+ }
 }

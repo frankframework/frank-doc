@@ -49,6 +49,7 @@ type InheritedProperties = {
 export class DetailsElementComponent implements OnInit, OnChanges {
   @Input({ required: true }) element!: Element | null;
   @Input({ required: true }) frankDocElements!: FrankDoc['elements'] | null;
+  @Input({ required: true }) frankDocEnums!: FrankDoc['enums'] | null;
   @Output() hasInheritedProperties = new EventEmitter<HasInheritedProperties>();
 
   protected attributesRequired: Attribute[] = [];
@@ -77,11 +78,13 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   };
   protected loading: boolean = true;
   protected attributesHasDefaults: boolean = false;
+  protected usedEnums: FrankDoc['enums'] = [];
 
   private readonly appService: AppService = inject(AppService);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
   protected readonly filterColours = filterColours;
   protected readonly getLabelColor = this.appService.getLabelColor;
+  protected readonly scrollToElement = this.appService.scrollToElement;
 
   private readonly titleService: Title = inject(Title);
 
@@ -96,6 +99,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
         this.attributesRequired = this.element?.attributes.filter((attribute) => attribute.mandatory === true) ?? [];
         this.attributesOptional = this.element?.attributes.filter((attribute) => !attribute.mandatory) ?? [];
         this.attributesHasDefaults = this.element.attributes.some((attribute) => !!attribute.default);
+        this.usedEnums = this.filterUsedEnums();
       }
       if (this.element?.parent) {
         this.inheritedProperties = {
@@ -153,6 +157,17 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     return `${deprecatedInfo.description ?? 'This has been deprecated!'}${deprecatedInfo.since ? `\nSince ${deprecatedInfo.since}` : ''}`;
   }
 
+  protected getEnumShortName(attribute: Attribute | string): string | null {
+    let fullname = '';
+
+    if (typeof attribute === 'string') fullname = attribute;
+    else if (attribute.enum) fullname = attribute.enum;
+    else return null;
+
+    const nameParts = fullname.split('.');
+    return nameParts[nameParts.length - 1];
+  }
+
   private setInheritedProperties(elementIndex: string): void {
     const element = this.frankDocElements?.[elementIndex];
     if (!element) return;
@@ -177,6 +192,19 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     }
 
     if (element.parent) this.setInheritedProperties(element.parent);
+  }
+
+  private filterUsedEnums(): FrankDoc['enums'] {
+    if (!this.element?.attributes) return [];
+
+    const filteredEnums = new Set<FrankDoc['enums'][0]>();
+    for (const attribute of this.element?.attributes) {
+      if (attribute.enum) {
+        const enumType = this.frankDocEnums?.find((enumItem) => enumItem.name === attribute.enum);
+        if (enumType) filteredEnums.add(enumType);
+      }
+    }
+    return [...filteredEnums];
   }
 
   private getInheritedCollapseOptions(
