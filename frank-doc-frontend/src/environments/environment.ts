@@ -5,4 +5,5 @@ export const environment = {
   frankDocUrl: 'js/frankdoc.json',
   relatedSearchResults: false,
   feedbackButtons: false,
+  hideSnapshotVersion: true,
 };

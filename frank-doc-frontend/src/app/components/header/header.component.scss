@@ -6,7 +6,6 @@ header {
 
   .title {
     display: inline-flex;
-    width: 200px;
     align-items: center;
     gap: 6px;
     font-size: 18px;
@@ -23,7 +22,7 @@ header {
   }
 
   nav {
-    margin: 0 8vw;
+    margin-left: 20px;
     flex: 1;
 
     & > ul {
