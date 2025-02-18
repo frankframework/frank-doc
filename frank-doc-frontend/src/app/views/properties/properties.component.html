@@ -1,0 +1,54 @@
+<div class="page-container">
+  <div class="sidenav">
+    <!--@for (filter of filters(); track filter.name; let index = $index) {
+      <div class="filter-name" [collapse]="filterList" (collapsedChange)="collapsedFilters[filter.name] = $event">
+        <span>{{ filter.name }} ({{ filter.labels.length }})</span>
+        <app-icon-caret
+          [width]="18"
+          [height]="18"
+          [rotation]="collapsedFilters[filter.name] ? 'down' : 'up'"
+        ></app-icon-caret>
+      </div>
+      <ul #filterList>
+        @for (label of filter.labels; track label.name) {
+          <li class="filter-item" (click)="scrollToElement('#' + filter.name + '-' + label.name)">
+            <ff-chip [colour]="getLabelColor(filterColours, index)" slim>{{ label.name.charAt(0) }}</ff-chip>
+            {{ label.name }} ({{ label.elements.length }})
+          </li>
+        }
+      </ul>
+    }-->
+  </div>
+  <div class="page">
+    <h2>AppConstants</h2>
+
+    @for (propertyGroup of properties(); track propertyGroup.name) {
+      <h3 id="{{ propertyGroup.name }}">{{ propertyGroup.name }}</h3>
+      @for (property of propertyGroup.properties | keyvalue; track property.key) {
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Default</th>
+              <th>Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td [innerHTML]="property.key | nameWbr"></td>
+              <td
+                *javadocTransform="
+                  let text of property.value.description ?? DEFAULT_RETURN_CHARACTER;
+                  elements: frankDocElements
+                "
+                [innerHTML]="text"
+              ></td>
+              <td [innerHTML]="property.value.default"></td>
+            </tr>
+          </tbody>
+        </table>
+      }
+    }
+  </div>
+</div>
