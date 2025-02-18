@@ -24,7 +24,12 @@
           <span>{{ elementName }}</span>
         }
       </p>
-      <p class="description">{{ component.item.description | truncate: 150 }}</p>
+      <p
+        class="description"
+        *javadocTransform="let text of component.item.description; elements: elements; asText: true"
+      >
+        {{ text | truncate: 150 }}
+      </p>
       <ff-button
         [routerLink]="
           component.item.labels
