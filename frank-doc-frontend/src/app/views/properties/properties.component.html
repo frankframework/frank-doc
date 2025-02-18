@@ -22,33 +22,44 @@
   <div class="page">
     <h2>AppConstants</h2>
 
-    @for (propertyGroup of properties(); track propertyGroup.name) {
-      <h3 id="{{ propertyGroup.name }}">{{ propertyGroup.name }}</h3>
-      @for (property of propertyGroup.properties | keyvalue; track property.key) {
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Default</th>
-              <th>Flags</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td [innerHTML]="property.key | nameWbr"></td>
-              <td
-                *javadocTransform="
-                  let text of property.value.description ?? DEFAULT_RETURN_CHARACTER;
-                  elements: frankDocElements
-                "
-                [innerHTML]="text"
-              ></td>
-              <td [innerHTML]="property.value.default"></td>
-            </tr>
-          </tbody>
-        </table>
-      }
+    @for (propertyGroup of properties(); track index; let index = $index) {
+      <div class="property-group">
+        <h3 id="{{ propertyGroup.name }}">{{ propertyGroup.name }}</h3>
+        @for (property of propertyGroup.properties; track property) {
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                @if (property.defaultValue) {
+                  <th>Default</th>
+                }
+                @if (property.flags) {
+                  <th>Flags</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td [innerHTML]="property.name | nameWbr: '.'"></td>
+                <td
+                  *javadocTransform="
+                    let text of property.description ?? DEFAULT_RETURN_CHARACTER;
+                    elements: frankDocElements()
+                  "
+                  [innerHTML]="text"
+                ></td>
+                @if (property.defaultValue) {
+                  <td>{{ property.defaultValue }}</td>
+                }
+                @if (property.flags) {
+                  <td>{{ property.flags.join(', ') }}</td>
+                }
+              </tr>
+            </tbody>
+          </table>
+        }
+      </div>
     }
   </div>
 </div>

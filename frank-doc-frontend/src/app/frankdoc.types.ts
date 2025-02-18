@@ -93,5 +93,5 @@ export type Property = {
     description: string;
     defaultValue?: string;
     flags?: string[];
-  };
+  }[];
 };
