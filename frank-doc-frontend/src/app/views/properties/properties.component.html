@@ -1,23 +1,26 @@
 <div class="page-container">
   <div class="sidenav">
-    <!--@for (filter of filters(); track filter.name; let index = $index) {
-      <div class="filter-name" [collapse]="filterList" (collapsedChange)="collapsedFilters[filter.name] = $event">
-        <span>{{ filter.name }} ({{ filter.labels.length }})</span>
+    @for (propertyGroup of properties(); track index; let index = $index) {
+      <div
+        class="property-group-name"
+        [collapse]="propertyList"
+        (collapsedChange)="collapsedFilters[filter.name] = $event"
+      >
+        <span>{{ propertyGroup.name }}</span>
         <app-icon-caret
           [width]="18"
           [height]="18"
           [rotation]="collapsedFilters[filter.name] ? 'down' : 'up'"
         ></app-icon-caret>
       </div>
-      <ul #filterList>
-        @for (label of filter.labels; track label.name) {
-          <li class="filter-item" (click)="scrollToElement('#' + filter.name + '-' + label.name)">
-            <ff-chip [colour]="getLabelColor(filterColours, index)" slim>{{ label.name.charAt(0) }}</ff-chip>
-            {{ label.name }} ({{ label.elements.length }})
+      <ul #propertyList>
+        @for (propertyName of propertyGroup.properties.map((prop) => prop.name); track propertyKV.key) {
+          <li class="filter-item" (click)="scrollToElement('#' + propertyGroup.name + '-' + propertyName)">
+            {{ propertyName }}
           </li>
         }
       </ul>
-    }-->
+    }
   </div>
   <div class="page">
     <h2>AppConstants</h2>
