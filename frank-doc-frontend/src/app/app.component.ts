@@ -6,7 +6,6 @@ import { AlertComponent } from '@frankframework/angular-components';
 import { AppService, Filter } from './app.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Element, Label } from './frankdoc.types';
-import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -15,9 +14,7 @@ import { environment } from '../environments/environment';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  protected version: Signal<string> = computed(() =>
-    this.getVersion(this.appService.frankDoc()?.metadata.version ?? 'unknown'),
-  );
+  protected version: Signal<string> = computed(() => this.appService.frankDoc()?.metadata.version ?? 'unknown');
   protected error: string | null = null;
 
   private appService: AppService = inject(AppService);
@@ -63,11 +60,5 @@ export class AppComponent implements OnInit {
         }
       }
     }
-  }
-
-  private getVersion(versionMetadata: string): string {
-    if (environment.hideSnapshotVersion)
-      return versionMetadata.includes('-') ? `${versionMetadata.split('-')[0]}-NIGHTLY` : versionMetadata;
-    return versionMetadata;
   }
 }

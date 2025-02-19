@@ -18,6 +18,8 @@ header {
 
     .version {
       color: rgba(30, 30, 30, 0.5);
+      white-space: nowrap;
+      overflow: hidden;
     }
   }
 
