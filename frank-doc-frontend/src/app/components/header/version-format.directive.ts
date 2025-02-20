@@ -28,14 +28,17 @@ export class VersionFormatDirective {
   @HostListener('mouseleave')
   onMouseLeave(): void {
     this.cancelAnimation();
-    this.transition(this.shortVersion);
+    this.transition(this.shortVersion, true);
   }
 
-  transition(newText: string): void {
+  transition(newText: string, keepOldTextInTransition: boolean = false): void {
     if (environment.hideSnapshotVersion) {
+      const oldText = this.element.textContent!;
       const beforeWidth = this.getClientWidth();
       this.element.textContent = newText;
       const afterWidth = this.getClientWidth();
+
+      if (keepOldTextInTransition) this.element.textContent = oldText;
 
       this.elementAnimation = this.element.animate(
         { width: [`${beforeWidth}px`, `${afterWidth}px`] },
@@ -46,6 +49,7 @@ export class VersionFormatDirective {
           // NOOP
         })
         .finally(() => {
+          if (keepOldTextInTransition) this.element.textContent = newText;
           this.elementAnimation = null;
         });
     }
