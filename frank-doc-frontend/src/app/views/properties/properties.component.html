@@ -4,18 +4,21 @@
       <div
         class="property-group-name"
         [collapse]="propertyList"
-        (collapsedChange)="collapsedFilters[filter.name] = $event"
+        (collapsedChange)="collapsedFilterGroups[propertyGroup.name] = $event"
       >
-        <span>{{ propertyGroup.name }}</span>
+        <span>{{ getNameOrNull(propertyGroup.name) ?? '(unnamed)' }}</span>
         <app-icon-caret
           [width]="18"
           [height]="18"
-          [rotation]="collapsedFilters[filter.name] ? 'down' : 'up'"
+          [rotation]="collapsedFilterGroups[propertyGroup.name] ? 'down' : 'up'"
         ></app-icon-caret>
       </div>
       <ul #propertyList>
-        @for (propertyName of propertyGroup.properties.map((prop) => prop.name); track propertyKV.key) {
-          <li class="filter-item" (click)="scrollToElement('#' + propertyGroup.name + '-' + propertyName)">
+        @for (propertyName of getPropertyNamesFromGroup(propertyGroup); track index; let index = $index) {
+          <li
+            class="property-item"
+            (click)="scrollToElement('#' + convertToId(propertyGroup.name + '-' + propertyName))"
+          >
             {{ propertyName }}
           </li>
         }
@@ -29,7 +32,7 @@
       <div class="property-group">
         <h3 id="{{ propertyGroup.name }}">{{ propertyGroup.name }}</h3>
         @for (property of propertyGroup.properties; track property) {
-          <table>
+          <table [id]="convertToId(propertyGroup.name + '-' + property.name)">
             <thead>
               <tr>
                 <th>Name</th>
