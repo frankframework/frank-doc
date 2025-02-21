@@ -7,10 +7,11 @@ import { AppService } from '../../../app.service';
 import { TruncatePipe } from '../../../components/truncate.pipe';
 import { environment } from '../../../../environments/environment';
 import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
+import { CardDirective } from './card.directive';
 
 @Component({
   selector: 'app-home-component-list',
-  imports: [ButtonComponent, TruncatePipe],
+  imports: [ButtonComponent, TruncatePipe, JavadocTransformDirective, CardDirective],
   templateUrl: './home-component-list.component.html',
   styleUrl: './home-component-list.component.scss',
 })
@@ -31,5 +32,24 @@ export class HomeComponentListComponent {
       ? ['/', this.getFirstFilter(element.labels), this.getFirstLabel(element.labels), element.name]
       : ['/', element.fullName];
     this.router.navigate(route);
+  }
+
+  protected setActiveHover(card: HTMLElement, active: boolean): void {
+    try {
+      const cardElement = card as unknown as CardDirective;
+      cardElement.activeHover = active;
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+
+  protected checkActiveHover(card: HTMLElement): boolean {
+    try {
+      const cardElement = card as unknown as CardDirective;
+      return cardElement.activeHover;
+    } catch (error) {
+      console.warn(error);
+      return false;
+    }
   }
 }

@@ -13,11 +13,18 @@
 </div>
 <div class="components">
   @for (component of components; track component.item.name) {
-    <div class="card">
+    <div
+      class="card"
+      appCard
+      #card
+      (click)="navigateToElement(component.item)"
+      (mouseenter)="setActiveHover(card, true)"
+      (mouseleave)="setActiveHover(card, false)"
+    >
       <p class="label">
         {{ component.item.labels ? getFirstLabel(component.item.labels) : '' }}
       </p>
-      <p class="name" [title]="component.item.name" (click)="navigateToElement(component.item)">
+      <p class="name" [title]="component.item.name">
         {{ component.item.name }}
       </p>
       <p class="element-names" [title]="component.item.elementNames.join('\n')">
@@ -29,13 +36,12 @@
         }
       </p>
       <p
-        class="description"
         *javadocTransform="let text of component.item.description; elements: elements; asText: true"
-        (click)="navigateToElement(component.item)"
+        class="description"
       >
         {{ text | truncate: 150 }}
       </p>
-      <ff-button (click)="navigateToElement(component.item)">&rarr;</ff-button>
+      <ff-button [active]="checkActiveHover(card)">&rarr;</ff-button>
     </div>
   } @empty {
     <p>No Elements found.</p>

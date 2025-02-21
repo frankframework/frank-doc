@@ -43,6 +43,10 @@
     border: 1px solid var(--ff-bgcolor-gray);
     border-radius: 8px;
 
+    &:hover {
+      border: 1px solid var(--ff-bgcolor-yellow);
+    }
+
     .name,
     .element-names,
     .description {
