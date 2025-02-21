@@ -4,11 +4,18 @@ import { IconDownloadComponent } from '../../icons/icon-download/icon-download.c
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IconDarkmodeComponent } from '../../icons/icon-darkmode/icon-darkmode.component';
 import { environment } from '../../../environments/environment';
+import { VersionFormatDirective } from './version-format.directive';
 
 @Component({
   selector: 'app-header',
-  standalone: true,
-  imports: [IconFfLogoSmallComponent, IconDownloadComponent, RouterLink, RouterLinkActive, IconDarkmodeComponent],
+  imports: [
+    IconFfLogoSmallComponent,
+    IconDownloadComponent,
+    RouterLink,
+    RouterLinkActive,
+    IconDarkmodeComponent,
+    VersionFormatDirective,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })

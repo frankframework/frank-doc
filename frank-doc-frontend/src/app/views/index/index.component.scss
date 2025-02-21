@@ -23,7 +23,7 @@ ff-chip {
 .sidenav {
   padding: 20px 20px 20px 0;
   border-image: linear-gradient(180deg, #fff 0%, var(--ff-color-light-gray) 50px) 1;
-  border-width:  0 1px 0 0;
+  border-width: 0 1px 0 0;
   border-style: solid;
 
   .filter-item {
@@ -52,7 +52,6 @@ ff-chip {
     }
   }
 }
-
 
 .page {
   padding: 20px 0 0 50px;
@@ -94,7 +93,7 @@ ff-chip {
       .elements {
         display: flex;
         flex-wrap: wrap;
-        gap:  5px 50px;
+        gap: 5px 50px;
 
         a {
           display: inline-block;

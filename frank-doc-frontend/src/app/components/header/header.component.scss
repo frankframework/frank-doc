@@ -6,7 +6,6 @@ header {
 
   .title {
     display: inline-flex;
-    width: 200px;
     align-items: center;
     gap: 6px;
     font-size: 18px;
@@ -18,12 +17,14 @@ header {
     }
 
     .version {
-      color: rgba(30, 30, 30, 0.50);
+      color: rgba(30, 30, 30, 0.5);
+      white-space: nowrap;
+      overflow: hidden;
     }
   }
 
   nav {
-    margin: 0 8vw;
+    margin-left: 20px;
     flex: 1;
 
     & > ul {

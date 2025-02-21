@@ -9,7 +9,6 @@ import { Element, Label } from './frankdoc.types';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [HeaderComponent, FooterComponent, RouterOutlet, AlertComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

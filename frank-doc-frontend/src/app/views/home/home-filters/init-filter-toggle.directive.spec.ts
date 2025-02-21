@@ -5,8 +5,9 @@ import { By } from '@angular/platform-browser';
 
 @Component({
   template: ``,
-  imports: [InitFilterToggleDirective],
-  standalone: true,
+  imports: [
+    /*InitFilterToggleDirective*/
+  ],
 })
 class TestComponent {}
 

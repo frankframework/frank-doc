@@ -28,8 +28,12 @@
           <span>{{ elementName }}</span>
         }
       </p>
-      <p class="description" (click)="navigateToElement(component.item)">
-        {{ component.item.description | truncate: 150 }}
+      <p
+        class="description"
+        *javadocTransform="let text of component.item.description; elements: elements; asText: true"
+        (click)="navigateToElement(component.item)"
+      >
+        {{ text | truncate: 150 }}
       </p>
       <ff-button (click)="navigateToElement(component.item)">&rarr;</ff-button>
     </div>

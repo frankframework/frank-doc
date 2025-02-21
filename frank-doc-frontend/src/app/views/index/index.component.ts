@@ -12,7 +12,6 @@ import { NameWbrPipe } from '../../components/name-wbr.pipe';
 
 @Component({
   selector: 'app-index',
-  standalone: true,
   imports: [RouterLink, ChipComponent, IconCaretComponent, CollapseDirective, IconSmileComponent, NgClass, NameWbrPipe],
   templateUrl: './index.component.html',
   styleUrl: './index.component.scss',
