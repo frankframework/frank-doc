@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './views/home/home.component';
 import { IndexComponent } from './views/index/index.component';
 import { DetailsComponent } from './views/details/details.component';
+import { PropertiesComponent } from './views/properties/properties.component';
 
 export const routes: Routes = [
   {
@@ -13,6 +14,11 @@ export const routes: Routes = [
     path: 'index',
     component: IndexComponent,
     title: 'Index | Frank!Doc',
+  },
+  {
+    path: 'appconstants',
+    component: PropertiesComponent,
+    title: 'AppConstants | Frank!Doc',
   },
   {
     path: 'All',
