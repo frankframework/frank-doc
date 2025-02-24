@@ -3,13 +3,14 @@ import { AppService } from '../../app.service';
 import { Element, Property } from '../../frankdoc.types';
 import { NameWbrPipe } from '../../components/name-wbr.pipe';
 import { JavadocTransformDirective } from '../../components/javadoc-transform.directive';
-import { DEFAULT_RETURN_CHARACTER } from '../../app.constants';
+import { DEFAULT_RETURN_CHARACTER, DEFAULT_UNKNOWN_PROPERTY_GROUP } from '../../app.constants';
 import { CollapseDirective } from '../../components/collapse.directive';
 import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.component';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-properties',
-  imports: [NameWbrPipe, JavadocTransformDirective, CollapseDirective, IconCaretComponent],
+  imports: [NameWbrPipe, JavadocTransformDirective, CollapseDirective, IconCaretComponent, NgClass],
   templateUrl: './properties.component.html',
   styleUrl: './properties.component.scss',
 })
@@ -18,7 +19,14 @@ export class PropertiesComponent {
   protected readonly frankDocElements: Signal<Record<string, Element> | null> = computed(
     () => this.appService.frankDoc()?.elements ?? null,
   );
-  protected collapsedFilterGroups: Record<string, boolean> = {};
+  protected expandedFilterGroups: Signal<Record<string, boolean>> = computed(() =>
+    this.properties().reduce<Record<string, boolean>>((acc, propertyGroup, index) => {
+      if (!!this.getNameOrNull(propertyGroup.name)) return acc;
+      acc[`${DEFAULT_UNKNOWN_PROPERTY_GROUP}-${index}`] = true;
+      return acc;
+    }, {}),
+  );
+  protected readonly DEFAULT_UNKNOWN_PROPERTY_GROUP = DEFAULT_UNKNOWN_PROPERTY_GROUP;
 
   private readonly appService: AppService = inject(AppService);
   protected readonly scrollToElement = this.appService.scrollToElement;
@@ -26,6 +34,10 @@ export class PropertiesComponent {
 
   getPropertyNamesFromGroup(group: Property): string[] {
     return group.properties.map((prop) => prop.name);
+  }
+
+  getPropertyGroupKey(name: string, index: number): string {
+    return this.getNameOrNull(name) ? name : `${DEFAULT_UNKNOWN_PROPERTY_GROUP}-${index}`;
   }
 
   getNameOrNull(name: string): string | null {

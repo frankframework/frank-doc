@@ -4,13 +4,14 @@
       <div
         class="property-group-name"
         [collapse]="propertyList"
-        (collapsedChange)="collapsedFilterGroups[propertyGroup.name] = $event"
+        [collapsed]="!!getNameOrNull(propertyGroup.name)"
+        (collapsedChange)="expandedFilterGroups()[getPropertyGroupKey(propertyGroup.name, index)] = !$event"
       >
-        <span>{{ getNameOrNull(propertyGroup.name) ?? '(unnamed)' }}</span>
+        <span>{{ getNameOrNull(propertyGroup.name) ?? DEFAULT_UNKNOWN_PROPERTY_GROUP }}</span>
         <app-icon-caret
           [width]="18"
           [height]="18"
-          [rotation]="collapsedFilterGroups[propertyGroup.name] ? 'down' : 'up'"
+          [rotation]="expandedFilterGroups()[getPropertyGroupKey(propertyGroup.name, index)] ? 'up' : 'down'"
         ></app-icon-caret>
       </div>
       <ul #propertyList>
@@ -29,7 +30,7 @@
     <h2>AppConstants</h2>
     @for (propertyGroup of properties(); track index; let index = $index) {
       <div class="property-group">
-        <h3 id="{{ propertyGroup.name }}">{{ getNameOrNull(propertyGroup.name) ?? '(unnamed)' }}</h3>
+        <h3 id="{{ propertyGroup.name }}">{{ getNameOrNull(propertyGroup.name) ?? DEFAULT_UNKNOWN_PROPERTY_GROUP }}</h3>
         <table>
           <thead>
             <tr>
@@ -43,6 +44,7 @@
             @for (property of propertyGroup.properties; track property) {
               <tr>
                 <td
+                  [ngClass]="{ deprecated: property.flags?.includes('Deprecated') }"
                   [id]="convertToId(propertyGroup.name + '-' + property.name)"
                   [innerHTML]="property.name | nameWbr: '.'"
                 ></td>

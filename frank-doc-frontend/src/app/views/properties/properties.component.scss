@@ -117,6 +117,10 @@ h2 {
         color: var(--ff-color-dark);
         font-family: 'DM Mono', monospace;
         font-weight: 500;
+
+        &.deprecated {
+          text-decoration: line-through;
+        }
       }
 
       &:last-child {
