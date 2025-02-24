@@ -27,27 +27,25 @@
   </div>
   <div class="page">
     <h2>AppConstants</h2>
-
     @for (propertyGroup of properties(); track index; let index = $index) {
       <div class="property-group">
-        <h3 id="{{ propertyGroup.name }}">{{ propertyGroup.name }}</h3>
-        @for (property of propertyGroup.properties; track property) {
-          <table [id]="convertToId(propertyGroup.name + '-' + property.name)">
-            <thead>
+        <h3 id="{{ propertyGroup.name }}">{{ getNameOrNull(propertyGroup.name) ?? '(unnamed)' }}</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Default</th>
+              <th>Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (property of propertyGroup.properties; track property) {
               <tr>
-                <th>Name</th>
-                <th>Description</th>
-                @if (property.defaultValue) {
-                  <th>Default</th>
-                }
-                @if (property.flags) {
-                  <th>Flags</th>
-                }
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td [innerHTML]="property.name | nameWbr: '.'"></td>
+                <td
+                  [id]="convertToId(propertyGroup.name + '-' + property.name)"
+                  [innerHTML]="property.name | nameWbr: '.'"
+                ></td>
                 <td
                   *javadocTransform="
                     let text of property.description ?? DEFAULT_RETURN_CHARACTER;
@@ -55,16 +53,12 @@
                   "
                   [innerHTML]="text"
                 ></td>
-                @if (property.defaultValue) {
-                  <td>{{ property.defaultValue }}</td>
-                }
-                @if (property.flags) {
-                  <td>{{ property.flags.join(', ') }}</td>
-                }
+                <td>{{ property.defaultValue ?? DEFAULT_RETURN_CHARACTER }}</td>
+                <td>{{ property.flags?.join(', ') ?? DEFAULT_RETURN_CHARACTER }}</td>
               </tr>
-            </tbody>
-          </table>
-        }
+            }
+          </tbody>
+        </table>
       </div>
     }
   </div>

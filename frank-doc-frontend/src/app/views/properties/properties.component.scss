@@ -62,31 +62,31 @@ h2 {
   line-height: 0.9;
 }
 
-h3 {
-  color: var(--ff-color-dark);
-  font-size: 32px;
-  font-weight: 600;
-}
-
-// only if sidenav won't be used
-/*.page {
-  padding: 0 24px;
-
-  @media (min-width: 1280px) {
-    padding: 0 50px;
-  }
-}*/
-
 .property-group {
+  position: relative;
   margin: 20px 0;
+
+  h3 {
+    position: sticky;
+    top: 0;
+    color: var(--ff-color-dark);
+    background-color: #fff;
+    font-size: 32px;
+    font-weight: 600;
+    z-index: 10;
+  }
 
   table {
     width: 100%;
+    position: relative;
     //overflow: auto;
 
     th {
+      position: sticky;
+      top: 39px;
       padding: 10px 0;
       color: var(--ff-color-gray);
+      background-color: #fff;
       font-size: 12px;
       font-weight: 600;
       text-align: start;
@@ -123,9 +123,13 @@ h3 {
         padding-right: 18px;
       }
 
-      &:nth-of-type(3), &:nth-of-type(4) {
+      &:nth-of-type(3) {
         word-break: break-all;
-        width: 250px;
+        width: 300px;
+      }
+
+      &:nth-of-type(4) {
+        width: 150px;
       }
     }
   }
