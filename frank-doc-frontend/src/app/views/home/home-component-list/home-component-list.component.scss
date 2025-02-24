@@ -42,12 +42,21 @@
     padding: 20px 40px 20px 20px;
     border: 1px solid var(--ff-bgcolor-gray);
     border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid var(--ff-bgcolor-yellow);
+    }
 
     .name,
     .element-names,
     .description {
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    .name, .description {
+      user-select: none;
     }
 
     .label {
