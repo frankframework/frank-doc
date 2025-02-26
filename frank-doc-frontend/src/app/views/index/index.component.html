@@ -11,8 +11,8 @@
       </div>
       <ul #filterList>
         @for (label of filter.labels; track label.name) {
-          <li class="filter-item" (click)="scrollToElement('#' + filter.name + '-' + label.name)">
-            <ff-chip [colour]="getLabelColor(filterColours, index)" slim>{{ label.name.charAt(0) }}</ff-chip>
+          <li class="filter-item" (click)="appService.scrollToElement('#' + filter.name + '-' + label.name)">
+            <ff-chip [colour]="appService.getLabelColor(filter.name)" slim>{{ label.name.charAt(0) }}</ff-chip>
             {{ label.name }} ({{ label.elements.length }})
           </li>
         }
@@ -40,7 +40,7 @@
             <div class="elements">
               @for (element of label.elements; track $index) {
                 <a [routerLink]="['/', filter.name, label.name, element]"
-                  ><ff-chip [colour]="getLabelColor(filterColours, index)" slim>{{ label.name.charAt(0) }}</ff-chip>
+                  ><ff-chip [colour]="appService.getLabelColor(filter.name)" slim>{{ label.name.charAt(0) }}</ff-chip>
                   <span
                     [ngClass]="{ deprecated: deprecatedElements().includes(element) }"
                     [innerHTML]="element | nameWbr"

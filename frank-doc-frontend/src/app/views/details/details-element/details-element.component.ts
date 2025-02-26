@@ -9,7 +9,7 @@ import { CollapseDirective } from '../../../components/collapse.directive';
 import { IconCaretComponent } from '../../../icons/icon-caret-down/icon-caret.component';
 import { IconArrowRightUpComponent } from '../../../icons/icon-arrow-right-up/icon-arrow-right-up.component';
 import { AppService } from '../../../app.service';
-import { DEFAULT_RETURN_CHARACTER, filterColours } from '../../../app.constants';
+import { DEFAULT_RETURN_CHARACTER } from '../../../app.constants';
 import { HasInheritedProperties } from '../details.component';
 import { Title } from '@angular/platform-browser';
 import { NameWbrPipe } from '../../../components/name-wbr.pipe';
@@ -79,11 +79,8 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   protected attributesHasDefaults: boolean = false;
   protected usedEnums: FrankDoc['enums'] = [];
 
-  private readonly appService: AppService = inject(AppService);
+  protected readonly appService: AppService = inject(AppService);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
-  protected readonly filterColours = filterColours;
-  protected readonly getLabelColor = this.appService.getLabelColor;
-  protected readonly scrollToElement = this.appService.scrollToElement;
 
   private readonly titleService: Title = inject(Title);
 

@@ -36,6 +36,4 @@ export const fuseOptions: IFuseOptions<Element> = {
   ignoreLocation: true,
 };
 
-export const filterColours: string[] = ['#CD55EB', '#037CD4', '#00B31D'];
-
 export const splitOnPascalCaseRegex: RegExp = /(?=[\dA-Z])/;

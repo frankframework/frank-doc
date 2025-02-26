@@ -15,6 +15,12 @@ export type FilterLabels = {
   elements: string[];
 };
 
+type HSL = {
+  hue: number;
+  saturation: number;
+  lightness: number;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -74,8 +80,8 @@ export class AppService {
     return labels[labelGroups[0]][0];
   }
 
-  getLabelColor(colours: string[], index: number): string {
-    return colours[index % colours.length];
+  getLabelColor(name: string): string {
+    return this.HSLToHex(this.createHSLColorFromString(name, 78));
   }
 
   scrollToElement(selectors: string): void {
@@ -88,5 +94,32 @@ export class AppService {
   private getSelectedFiltersLength(selectedFilters: ElementLabels): number {
     if (Object.values(selectedFilters).length === 0) return 0;
     return Object.values(selectedFilters).reduce((acc, val) => acc + val.length, 0);
+  }
+
+  private createHSLColorFromString(string: string, lightness: number): HSL {
+    let hash = 0;
+    for (let i = 0; i < string.length; i++) {
+      hash += string.codePointAt(i) ?? 0;
+    }
+
+    const hue = hash % 360;
+
+    return { hue, saturation: 90, lightness };
+  }
+
+  private HSLToHex(hsl: HSL): string {
+    const { hue, saturation, lightness } = hsl;
+
+    const hDecimal = lightness / 100;
+    const a = (saturation * Math.min(hDecimal, 1 - hDecimal)) / 100;
+    const f = (n: number): string => {
+      const k = (n + hue / 30) % 12;
+      const color = hDecimal - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+
+      return Math.round(255 * color)
+        .toString(16)
+        .padStart(2, '0');
+    };
+    return `#${f(0)}${f(8)}${f(4)}`;
   }
 }
