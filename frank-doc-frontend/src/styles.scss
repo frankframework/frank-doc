@@ -84,3 +84,9 @@ app-root {
 .transforming {
   overflow-y: hidden;
 }
+
+.checkbox-pointer {
+  & label {
+    cursor: pointer;
+  }
+}

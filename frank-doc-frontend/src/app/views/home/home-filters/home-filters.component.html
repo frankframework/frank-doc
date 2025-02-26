@@ -25,6 +25,7 @@
         @for (label of selectedFilter.labels; track label.name) {
           <li>
             <ff-checkbox
+              class="checkbox-pointer"
               [initFilterToggle]="selectedFilterLabels()"
               [initFilterName]="selectedFilter.name"
               [initLabelName]="label.name"

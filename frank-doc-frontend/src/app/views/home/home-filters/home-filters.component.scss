@@ -64,14 +64,13 @@
       list-style: none;
 
       & > li {
-        padding: 8px 25px;
+        padding: 12px 25px;
         color: var(--ff-color-dark);
-        cursor: default;
         font-size: 16px;
         font-weight: 600;
+        cursor: pointer;
 
         &.active {
-          padding: 16px 25px;
           background: var(--ff-bgcolor-yellow);
         }
 
@@ -101,9 +100,17 @@
       }
     }
 
+    &.filters > ul > li:hover:not(.active) {
+      background-color: rgba(253, 195, 0, .35)
+    }
+
+    &.labels > ul > li {
+      cursor: default;
+    }
+
     & > button {
       width: 100%;
-      padding: 18px 25px;
+      padding: 14px 25px;
       border: none;
       border-top: 1px solid var(--ff-color-light-gray);
       border-radius: 0 0 15px 15px;
@@ -113,6 +120,7 @@
       text-align: start;
       background: #fff;
       box-shadow: 0px -2px 10px 0px rgba(237, 237, 237, 0.75);
+      cursor: pointer;
     }
   }
 }
