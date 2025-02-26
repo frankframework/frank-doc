@@ -9,7 +9,7 @@
   @if (element.labels) {
     @for (filter of element.labels | keyvalue; track filter; let index = $index) {
       @for (label of filter.value; track label) {
-        <ff-chip [colour]="getLabelColor(filterColours, index)" rounded>{{ label }}</ff-chip>
+        <ff-chip [colour]="appService.getLabelColor(filter.key)" rounded>{{ label }}</ff-chip>
       }
     }
   }
@@ -114,7 +114,7 @@
                       }
                       @if (!!attribute.enum) {
                         <td>
-                          <span (click)="scrollToElement(getEnumShortName(attribute) ?? '')">{{
+                          <span (click)="appService.scrollToElement(getEnumShortName(attribute) ?? '')">{{
                             getEnumShortName(attribute) ?? 'Enum'
                           }}</span>
                         </td>
@@ -214,9 +214,11 @@
                       }
                       @if (!!attribute.enum) {
                         <td>
-                          <span class="nav-to-enum" (click)="scrollToElement('#' + getEnumShortName(attribute))">{{
-                            getEnumShortName(attribute) ?? 'Enum'
-                          }}</span>
+                          <span
+                            class="nav-to-enum"
+                            (click)="appService.scrollToElement('#' + getEnumShortName(attribute))"
+                            >{{ getEnumShortName(attribute) ?? 'Enum' }}</span
+                          >
                         </td>
                       } @else {
                         <td>{{ attribute.type ?? undefinedType }}</td>

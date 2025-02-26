@@ -6,7 +6,6 @@ import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.compo
 import { CollapseDirective } from '../../components/collapse.directive';
 import { IconSmileComponent } from '../../icons/icon-smile/icon-smile.component';
 import { environment } from '../../../environments/environment';
-import { filterColours } from '../../app.constants';
 import { NgClass } from '@angular/common';
 import { NameWbrPipe } from '../../components/name-wbr.pipe';
 
@@ -28,8 +27,5 @@ export class IndexComponent {
       .map((element) => element.name);
   });
 
-  private readonly appService: AppService = inject(AppService);
-  protected readonly filterColours = filterColours;
-  protected readonly getLabelColor = this.appService.getLabelColor;
-  protected readonly scrollToElement = this.appService.scrollToElement;
+  protected readonly appService: AppService = inject(AppService);
 }
