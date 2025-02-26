@@ -2,6 +2,7 @@ import { IFuseOptions } from 'fuse.js';
 import { Element } from './frankdoc.types';
 
 export const DEFAULT_RETURN_CHARACTER = '-';
+export const DEFAULT_UNKNOWN_PROPERTY_GROUP = '(unnamed)';
 
 export const fuseOptions: IFuseOptions<Element> = {
   keys: [

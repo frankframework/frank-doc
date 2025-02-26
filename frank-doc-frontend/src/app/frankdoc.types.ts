@@ -88,5 +88,10 @@ export type Label = {
 
 export type Property = {
   name: string;
-  properties: Record<string, string>;
+  properties: {
+    name: string;
+    description: string;
+    defaultValue?: string;
+    flags?: string[];
+  }[];
 };

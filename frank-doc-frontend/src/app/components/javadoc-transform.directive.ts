@@ -2,6 +2,7 @@ import { Directive, inject, Input, OnChanges, TemplateRef, ViewContainerRef } fr
 import { FrankDoc } from '../frankdoc.types';
 import { AppService } from '../app.service';
 import { getLinkData, LinkData } from './javadoc';
+import { DEFAULT_RETURN_CHARACTER } from '../app.constants';
 
 export type TemplateContext = { $implicit: string };
 export type LinkTemplateContext = { $implicit: LinkData };
@@ -28,9 +29,14 @@ export class JavadocTransformDirective implements OnChanges {
   private readonly linkRegex = /(?:{@link\s(.*?)})/g;
 
   ngOnChanges(): void {
+    if (this.javadocTransformOf === '') this.javadocTransformOf = DEFAULT_RETURN_CHARACTER;
     if (!this.javadocTransformOf || !this.javadocTransformElements) return;
     const javadocParts = this.javadocTransformAsText ? this.transformAsText() : this.transformAsHtml();
     this.viewContainerRef.clear();
+
+    if (javadocParts.length === 0) {
+      debugger;
+    }
 
     for (const partIndexString in javadocParts) {
       const partIndex = +partIndexString;
