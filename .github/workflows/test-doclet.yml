@@ -90,13 +90,13 @@ jobs:
             frankframework/target/frankdoc/xml/xsd/FrankConfig-compatibility.xsd
 
       - name: Store FrankDoc.json
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: FrankDoc.json
           path: frankframework/target/frankdoc/js/*.json
 
       - name: Store FrankDoc.xsd (Strict and compatibility)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: FrankDoc.xsd
           path: frankframework/target/frankdoc/xml/xsd/*.xsd
