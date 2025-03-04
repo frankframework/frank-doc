@@ -30,7 +30,7 @@
       </ff-alert>
     }
     @for (note of element.notes; track note) {
-      <ff-alert [type]="note.type.toLowerCase()">
+      <ff-alert [type]="getWarningType(note.type)">
         <p *javadocTransform="let text of note.value; elements: frankDocElements" [innerHTML]="text"></p>
       </ff-alert>
     }
