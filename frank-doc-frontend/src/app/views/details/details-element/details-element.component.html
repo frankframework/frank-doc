@@ -43,6 +43,12 @@
   <div class="section quick-links">
     <h3>Quick Links</h3>
     <ul>
+      @for (quickLink of element.links; track quickLink.label) {
+        <li>
+          <app-icon-arrow-right-up width="14" height="14"></app-icon-arrow-right-up
+          ><a [href]="quickLink.url" target="_blank">{{ quickLink.label }}</a>
+        </li>
+      }
       <li>
         <app-icon-arrow-right-up width="14" height="14"></app-icon-arrow-right-up
         ><a [href]="githubUrlOf(element.name)" target="_blank">Github - {{ element.name }} Implementation Examples</a>
