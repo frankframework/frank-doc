@@ -1,8 +1,8 @@
 import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { AlertComponent, ChipComponent } from '@frankframework/angular-components';
+import { AlertComponent, ChipComponent, AlertType } from '@frankframework/angular-components';
 import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Attribute, Child, DeprecationInfo, Element, FrankDoc, ParsedTag } from '../../../frankdoc.types';
+import { Attribute, Child, DeprecationInfo, Element, FrankDoc, Note, ParsedTag } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
 import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
 import { CollapseDirective } from '../../../components/collapse.directive';
@@ -162,6 +162,20 @@ export class DetailsElementComponent implements OnInit, OnChanges {
 
     const nameParts = fullname.split('.');
     return nameParts[nameParts.length - 1];
+  }
+
+  protected getWarningType(type: Note['type']): AlertType {
+    switch (type) {
+      case 'WARNING': {
+        return 'warning';
+      }
+      case 'DANGER': {
+        return 'error';
+      }
+      default: {
+        return 'info';
+      }
+    }
   }
 
   private setInheritedProperties(elementIndex: string): void {
