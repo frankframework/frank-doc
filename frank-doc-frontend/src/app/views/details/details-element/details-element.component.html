@@ -29,6 +29,11 @@
         }
       </ff-alert>
     }
+    @for (note of element.notes; track note) {
+      <ff-alert [type]="getWarningType(note.type)">
+        <p *javadocTransform="let text of note.value; elements: frankDocElements" [innerHTML]="text"></p>
+      </ff-alert>
+    }
     <h3>Explanation</h3>
     <p>
       <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>

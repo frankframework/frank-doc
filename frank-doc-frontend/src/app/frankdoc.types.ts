@@ -21,6 +21,7 @@ export type Element = {
   parameters?: ParsedTag[];
   parametersDescription?: string;
   labels?: ElementLabels; // maybe make this smarter and have key be based on Label (type) name
+  notes?: Note[];
   links?: Link[];
 };
 
@@ -95,6 +96,11 @@ export type Property = {
     defaultValue?: string;
     flags?: string[];
   }[];
+};
+
+export type Note = {
+  type: 'INFO' | 'WARNING' | 'DANGER' | 'TIP';
+  value: string;
 };
 
 export type Link = {
