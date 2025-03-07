@@ -200,7 +200,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		log.trace("Populating schema root builder is done. Going to create the XML string to return");
 
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-			String.format( "<!-- %s -->\n", this.version.getDescription()) +
+			String.format("<!-- %s -->\n", this.version.getDescription()) +
 			xsdRoot.toXML(false);
 	}
 
