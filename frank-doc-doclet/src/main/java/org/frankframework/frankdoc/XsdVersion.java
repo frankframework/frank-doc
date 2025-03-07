@@ -32,8 +32,8 @@ import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addChoice;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSequence;
 
 public enum XsdVersion {
-	STRICT(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED, f -> ! f.isDeprecated(), new DelegateStrict()),
-	COMPATIBILITY(ElementChild.IN_COMPATIBILITY_XSD, ElementChild.EXCLUDED, f -> true, new DelegateCompatibility());
+	STRICT(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED, f -> ! f.isDeprecated(), new DelegateStrict(), "Default FrankDoc, which should be used within an IDE to validate a configuration."),
+	COMPATIBILITY(ElementChild.IN_COMPATIBILITY_XSD, ElementChild.EXCLUDED, f -> true, new DelegateCompatibility(), "Compatibility FrankDoc, not recommended to be used.");
 
 	private static Logger log = LogUtil.getLogger(XsdVersion.class);
 
@@ -41,12 +41,14 @@ public enum XsdVersion {
 	private final @Getter Predicate<ElementChild> childRejector;
 	private final @Getter Predicate<FrankElement> elementFilter;
 	private final Delegate delegate;
+	private final @Getter String description;
 
-	private XsdVersion(Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, Predicate<FrankElement> elementFilter, Delegate delegate) {
+	private XsdVersion(Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, Predicate<FrankElement> elementFilter, Delegate delegate, String description) {
 		this.childSelector = childSelector;
 		this.childRejector = childRejector;
 		this.elementFilter = elementFilter;
 		this.delegate = delegate;
+		this.description = description;
 	}
 
 	Predicate<FrankElement> getHasRelevantChildrenPredicate(Class<? extends ElementChild> kind) {
