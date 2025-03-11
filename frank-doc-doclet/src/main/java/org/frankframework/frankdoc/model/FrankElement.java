@@ -68,7 +68,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	public static final String LABEL = "org.frankframework.doc.Label";
 	public static final String LABEL_NAME = "name";
 
-	private static final Pattern JAVADOC_SEE_PATTERN = Pattern.compile("<a href=[\"'](.*?)[\"']>(.*?)<\\/a>");
+	private static final Pattern JAVADOC_SEE_PATTERN = Pattern.compile("<a href=[\"'](.*?)[\"']>(.*?)<\\/a>(.*)");
 
 	private static Logger log = LogUtil.getLogger(FrankElement.class);
 
