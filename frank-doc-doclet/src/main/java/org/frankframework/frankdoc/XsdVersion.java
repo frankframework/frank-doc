@@ -32,8 +32,8 @@ import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addChoice;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSequence;
 
 public enum XsdVersion {
-	STRICT(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED, f -> ! f.isDeprecated(), new DelegateStrict(), "Default FrankDoc, which should be used within an IDE to validate a configuration."),
-	COMPATIBILITY(ElementChild.IN_COMPATIBILITY_XSD, ElementChild.EXCLUDED, f -> true, new DelegateCompatibility(), "Compatibility FrankDoc, not recommended to be used.");
+	STRICT(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED, f -> ! f.isDeprecated(), new DelegateStrict(), "Public FrankDoc XSD, should be used within an IDE to validate a configuration."),
+	COMPATIBILITY(ElementChild.IN_COMPATIBILITY_XSD, ElementChild.EXCLUDED, f -> true, new DelegateCompatibility(), "Compatibility XSD, internal use only!");
 
 	private static Logger log = LogUtil.getLogger(XsdVersion.class);
 
