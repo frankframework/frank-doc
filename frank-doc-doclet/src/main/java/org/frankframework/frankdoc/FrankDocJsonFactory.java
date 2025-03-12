@@ -514,10 +514,10 @@ public class FrankDocJsonFactory {
 	private JsonObject credentialProviderToJson(CredentialProvider credentialProvider) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
 
-		b.add("name", credentialProvider.getSimpleName());
-		b.add("fullName", credentialProvider.getFullName());
-		if (credentialProvider.getDescription() != null) {
-			b.add("description", credentialProvider.getDescription());
+		b.add("name", credentialProvider.simpleName());
+		b.add("fullName", credentialProvider.fullName());
+		if (credentialProvider.description() != null) {
+			b.add("description", credentialProvider.description());
 		}
 
 		return b.build();
