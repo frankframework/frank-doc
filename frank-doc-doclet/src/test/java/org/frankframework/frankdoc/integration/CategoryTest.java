@@ -1,7 +1,5 @@
 package org.frankframework.frankdoc.integration;
 
-import org.frankframework.frankdoc.AttributeTypeStrategy;
-import org.frankframework.frankdoc.XsdVersion;
 import org.junit.jupiter.api.Test;
 
 public class CategoryTest extends BaseIntegrationTest {
