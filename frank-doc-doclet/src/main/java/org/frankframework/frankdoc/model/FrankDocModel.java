@@ -959,10 +959,12 @@ public class FrankDocModel {
 					cls.getSimpleName(),
 					cls.getPackageName() + "." + cls.getSimpleName(),
 					Description.getInstance().valueOf(cls),
-					Arrays.stream(cls.getDeclaredMethods()).map(method -> new ServletAuthenticatorMethod(
-						WordUtils.uncapitalize(method.getName().replace("get", "")),
-						Description.getInstance().valueOf(method))
-					).toList()
+					Arrays.stream(cls.getDeclaredMethods())
+						.filter(method -> method.getName().startsWith("set") && method.getParameterCount() == 1)
+						.map(method -> new ServletAuthenticatorMethod(
+							WordUtils.uncapitalize(method.getName().replace("set", "")),
+							Description.getInstance().valueOf(method))
+						).toList()
 				)
 			).toList();
 	}

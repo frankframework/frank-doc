@@ -16,8 +16,8 @@ public class DummyServletAuthenticator implements IAuthenticator {
 	/**
 	 * Documentation for the username!
 	 */
-	public String getUsername() {
-		return this.username;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	/**
@@ -25,12 +25,12 @@ public class DummyServletAuthenticator implements IAuthenticator {
 	 *
 	 * {@value VALUE}
 	 */
-	public String getPassword() {
-		return this.password;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public String getDoSomethingCool() {
-		return this.doSomethingCool;
+	public void setDoSomethingCool(String doSomethingCool) {
+		this.doSomethingCool = doSomethingCool;
 	}
 
 }
