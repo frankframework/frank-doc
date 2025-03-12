@@ -70,7 +70,20 @@
         {
             "name": "DummyServletAuthenticator",
             "fullName": "org.frankframework.lifecycle.servlets.DummyServletAuthenticator",
-            "description": "Sample documentation\n\n VALUE"
+            "description": "Sample documentation\n\n VALUE",
+            "methods": [
+                {
+                    "name": "username",
+                    "description": "Documentation for the username!"
+                },
+                {
+                    "name": "password",
+                    "description": "More advanced documentation.\n\n VALUE"
+                },
+                {
+                    "name": "doSomethingCool"
+                }
+            ]
         }
     ]
 }

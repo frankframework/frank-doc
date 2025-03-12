@@ -18,6 +18,7 @@ package org.frankframework.frankdoc.model;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.WordUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Default;
@@ -955,9 +956,14 @@ public class FrankDocModel {
 	public void parseAuthenticators() throws FrankDocException {
 		this.servletAuthenticators = classRepository.findDescendents(classRepository.findClass(AUTHENTICATOR_INTERFACE))
 			.stream().map(cls -> new ServletAuthenticator(
-				cls.getSimpleName(),
-				cls.getPackageName() + "." + cls.getSimpleName(),
-				Description.getInstance().valueOf(cls))
+					cls.getSimpleName(),
+					cls.getPackageName() + "." + cls.getSimpleName(),
+					Description.getInstance().valueOf(cls),
+					Arrays.stream(cls.getDeclaredMethods()).map(method -> new ServletAuthenticatorMethod(
+						WordUtils.uncapitalize(method.getName().replace("get", "")),
+						Description.getInstance().valueOf(method))
+					).toList()
+				)
 			).toList();
 	}
 
