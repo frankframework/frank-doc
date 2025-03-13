@@ -28,7 +28,9 @@
             "fullName": "org.frankframework.frankdoc.testtarget.entity.reference.Adapter",
             "description": "The Adapter is the central manager in the IBIS Adapterframework, that has knowledge\n and uses Receiver and a PipeLine.",
             "elementNames": [
-                "Adapter"
+                {
+                    "name": "Adapter"
+                }
             ],
             "attributes": [
                 {
@@ -42,7 +44,9 @@
             "fullName": "org.frankframework.frankdoc.testtarget.entity.reference.Configuration",
             "description": "The Configuration is placeholder of all configuration objects. Besides that, it provides\n functions for starting and stopping adapters as a facade.",
             "elementNames": [
-                "Configuration"
+                {
+                    "name": "Configuration"
+                }
             ],
             "attributes": [
                 {
@@ -74,13 +78,15 @@
             "fullName": "Module",
             "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
             "elementNames": [
-                "Module"
-            ],
-            "labels": {
-                "FrankDocGroup": [
-                    "Other"
-                ]
-            }
+                {
+                    "labels": {
+                        "FrankDocGroup": [
+                            "Other"
+                        ]
+                    },
+                    "name": "Module"
+                }
+            ]
         },
         "java.lang.Object": {
             "name": "Object",
