@@ -15,18 +15,10 @@ limitations under the License.
 */
 package org.frankframework.frankdoc.model;
 
-import lombok.Getter;
-
-public class CredentialProvider {
-
-	private @Getter String simpleName;
-	private @Getter String fullName;
-	private @Getter String description;
-
-	public CredentialProvider(final String simpleName, final String fullName, final String description) {
-		this.simpleName = simpleName;
-		this.fullName = fullName;
-		this.description = description;
-	}
+public record CredentialProvider(
+	String simpleName,
+	String fullName,
+	String description
+) {
 
 }

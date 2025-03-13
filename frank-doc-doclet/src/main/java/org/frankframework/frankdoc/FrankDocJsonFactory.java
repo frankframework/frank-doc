@@ -173,13 +173,10 @@ public class FrankDocJsonFactory {
 		result.add("name", Constants.MODULE_ELEMENT_NAME);
 		result.add("fullName", Constants.MODULE_ELEMENT_NAME);
 		addDescription(result, Constants.MODULE_ELEMENT_DESCRIPTION);
-		JsonArrayBuilder xmlElementNames = bf.createArrayBuilder();
-		xmlElementNames.add(Constants.MODULE_ELEMENT_NAME);
-		result.add("elementNames", xmlElementNames.build());
 
-		final var labelBuilder = bf.createObjectBuilder();
-		labelBuilder.add("FrankDocGroup", bf.createArrayBuilder(List.of(Constants.MODULE_ELEMENT_FRANK_DOC_GROUP)));
-		result.add("labels", labelBuilder);
+		JsonArrayBuilder xmlElementNames = bf.createArrayBuilder();
+		xmlElementNames.add(getElementName(Constants.MODULE_ELEMENT_NAME, Map.of("FrankDocGroup", List.of(Constants.MODULE_ELEMENT_FRANK_DOC_GROUP))));
+		result.add("elementNames", xmlElementNames.build());
 
 		return result.build();
 	}
@@ -211,9 +208,11 @@ public class FrankDocJsonFactory {
 
 		addDescription(result, frankElement.getDescription());
 		addIfNotNull(result, "parent", getParentOrNull(frankElement));
+
 		JsonArrayBuilder xmlElementNames = bf.createArrayBuilder();
-		frankElement.getXmlElementNames().forEach(xmlElementNames::add);
+		frankElement.getXmlElementNames().forEach(elementName -> xmlElementNames.add(getElementName(elementName, frankElement.getLabels())));
 		result.add("elementNames", xmlElementNames);
+
 		JsonArray attributes = getAttributes(frankElement, getParentOrNull(frankElement) == null);
 		if (!attributes.isEmpty()) {
 			result.add("attributes", attributes);
@@ -241,12 +240,7 @@ public class FrankDocJsonFactory {
 			frankElement.getForwards().forEach(f -> builder.add(getJsonForForward(f)));
 			result.add("forwards", builder.build());
 		}
-		if (!frankElement.getLabels().isEmpty()) {
-			final var builder = bf.createObjectBuilder();
 
-			frankElement.getLabels().forEach((label, value) -> builder.add(label, bf.createArrayBuilder(value)));
-			result.add("labels", builder.build());
-		}
 		if (!frankElement.getQuickLinks().isEmpty()) {
 			final var builder = bf.createArrayBuilder();
 			frankElement.getQuickLinks().forEach(quickLink -> {
@@ -271,6 +265,33 @@ public class FrankDocJsonFactory {
 			});
 			result.add("notes", builder.build());
 		}
+		return result.build();
+	}
+
+	private JsonObject getElementName(String elementName, Map<String, List<String>> labels) {
+		final var result = bf.createObjectBuilder();
+
+		if (!labels.isEmpty()) {
+			final var builder = bf.createObjectBuilder();
+
+			labels.forEach((category, value) -> {
+				// TODO: This is a bandage fix for validators and pipes. Pipes and validators currently share the same
+				// implementation, but we want the labels to be different. The elementName (automatically generated based
+				// on the interfaces it implements) is compared against a string to manually exclude specific labels.
+				if (elementName.toLowerCase().contains("pipe")) {
+					value = value.stream().filter(label -> !label.toLowerCase().contains("validator")).toList();
+				} else if (elementName.toLowerCase().contains("validator")) {
+					value = value.stream().filter(label -> !label.toLowerCase().contains("pipe")).toList();
+				}
+
+				builder.add(category, bf.createArrayBuilder(value));
+			});
+			result.add("labels", builder.build());
+		}
+
+		result.add("name", elementName);
+
+
 		return result.build();
 	}
 
@@ -517,10 +538,10 @@ public class FrankDocJsonFactory {
 	private JsonObject credentialProviderToJson(CredentialProvider credentialProvider) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
 
-		b.add("name", credentialProvider.getSimpleName());
-		b.add("fullName", credentialProvider.getFullName());
-		if (credentialProvider.getDescription() != null) {
-			b.add("description", credentialProvider.getDescription());
+		b.add("name", credentialProvider.simpleName());
+		b.add("fullName", credentialProvider.fullName());
+		if (credentialProvider.description() != null) {
+			b.add("description", credentialProvider.description());
 		}
 
 		return b.build();
