@@ -63,6 +63,7 @@ public class FrankDocModel {
 	private static final String ENUM = "Enum";
 	private static final List<String> EXPECTED_HTML_TAGS = Arrays.asList("a", "b", "br", "code", "h1", "h2", "h3", "h4", "i", "li", "ol", "p", "pre", "strong", "table", "td", "th", "tr", "ul");
 	private static final String UNSAFE_ANNOTATION_CLASSNAME = "org.frankframework.doc.Unsafe";
+	private static final String CREDENTIALS_FACTORY_INTERFACE = "org.frankframework.credentialprovider.ICredentialFactory";
 
 	private final FrankClassRepository classRepository;
 
@@ -86,6 +87,8 @@ public class FrankDocModel {
 	private final AttributeEnumFactory attributeEnumFactory = new AttributeEnumFactory();
 	private final @Getter String rootClassName;
 	private final LabelValues labelValues = new LabelValues();
+
+	private @Getter List<CredentialProvider> credentialProviders = new ArrayList<>();
 
 	FrankDocModel(FrankClassRepository classRepository, String rootClassName) {
 		this.classRepository = classRepository;
@@ -116,6 +119,7 @@ public class FrankDocModel {
 			result.setElementNamesOfFrankElements(rootClassName);
 			result.addLeftOverConfigChildren();
 			result.parsePropertyGroups(appConstantsPropertiesUrl);
+			result.parseCredentialProviders();
 		} catch(Exception e) {
 			log.fatal("Could not populate FrankDocModel", e);
 			return null;
@@ -934,6 +938,19 @@ public class FrankDocModel {
 
 		PropertyParser parser = new PropertyParser();
 		this.propertyGroups = parser.parse(reader);
+	}
+
+	public void parseCredentialProviders() throws FrankDocException {
+		FrankClass credentialFactoryClass = classRepository.findClass(CREDENTIALS_FACTORY_INTERFACE);
+
+		this.credentialProviders = classRepository.getAllClasses().stream()
+			.filter(cls -> !cls.isAbstract() && !cls.isInterface() && cls.extendsOrImplements(credentialFactoryClass))
+			.map(cls -> new CredentialProvider(
+				cls.getSimpleName(),
+				cls.getPackageName() + "." + cls.getSimpleName(),
+				Description.getInstance().valueOf(cls))
+			)
+			.toList();
 	}
 
 	public List<String> getAllLabels() {

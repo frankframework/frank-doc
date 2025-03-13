@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.AttributeType;
 import org.frankframework.frankdoc.model.ConfigChild;
+import org.frankframework.frankdoc.model.CredentialProvider;
 import org.frankframework.frankdoc.model.DeprecationInfo;
 import org.frankframework.frankdoc.model.ElementChild;
 import org.frankframework.frankdoc.model.ElementType;
@@ -80,6 +81,7 @@ public class FrankDocJsonFactory {
 			result.add("enums", getEnums());
 			getLabels().ifPresent(l -> result.add("labels", l));
 			getProperties().ifPresent(p -> result.add("properties", p));
+			getCredentialProviders().ifPresent(p -> result.add("credentialProviders", p));
 			return result.build();
 		} catch(JsonException e) {
 			log.error("Error producing JSON", e);
@@ -492,6 +494,31 @@ public class FrankDocJsonFactory {
 		var ab = bf.createArrayBuilder();
 		group.getProperties().stream().map(this::propertyToJson).forEach(ab::add);
 		b.add("properties", ab);
+
+		return b.build();
+	}
+
+	private Optional<JsonArray> getCredentialProviders() {
+		if (model.getCredentialProviders().isEmpty()) {
+			return Optional.empty();
+		}
+
+		final var builder = bf.createArrayBuilder();
+		model.getCredentialProviders().stream()
+			.map(this::credentialProviderToJson)
+			.forEach(builder::add);
+
+		return Optional.of(builder.build());
+	}
+
+	private JsonObject credentialProviderToJson(CredentialProvider credentialProvider) {
+		JsonObjectBuilder b = bf.createObjectBuilder();
+
+		b.add("name", credentialProvider.simpleName());
+		b.add("fullName", credentialProvider.fullName());
+		if (credentialProvider.description() != null) {
+			b.add("description", credentialProvider.description());
+		}
 
 		return b.build();
 	}

@@ -24,6 +24,7 @@ import org.frankframework.frankdoc.util.LogUtil;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -124,6 +125,10 @@ public class FrankClassRepository {
 
 	public FrankNonCompiledClassDoclet findOrCreateNonCompiledClass(final String fullName) {
 		return nonFrankClassesByName.computeIfAbsent(fullName, FrankNonCompiledClassDoclet::new);
+	}
+
+	public List<FrankClass> getAllClasses() {
+		return new ArrayList<>(this.classesByName.values());
 	}
 
 	/**
