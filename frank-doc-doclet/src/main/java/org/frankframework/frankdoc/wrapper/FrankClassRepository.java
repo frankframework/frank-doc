@@ -20,6 +20,8 @@ import com.sun.source.util.DocTrees;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.feature.Description;
+import org.frankframework.frankdoc.model.CredentialProvider;
 import org.frankframework.frankdoc.util.LogUtil;
 
 import javax.lang.model.element.Element;
@@ -113,6 +115,12 @@ public class FrankClassRepository {
 		} catch (Exception e) {
 			throw new FrankDocException(e.getMessage(), e.getCause());
 		}
+	}
+
+	public List<FrankClass> findDescendents(FrankClass parent) {
+		return this.getAllClasses().stream()
+			.filter(cls -> !cls.isAbstract() && !cls.isInterface() && cls.extendsOrImplements(parent))
+			.toList();
 	}
 
 	public FrankClass findMatchingClass(String simpleClassName) {

@@ -33,6 +33,8 @@ import org.frankframework.frankdoc.model.FrankElement;
 import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.ParsedJavaDocTag;
+import org.frankframework.frankdoc.model.ServletAuthenticator;
+import org.frankframework.frankdoc.model.ServletAuthenticatorMethod;
 import org.frankframework.frankdoc.properties.Group;
 import org.frankframework.frankdoc.properties.Property;
 import org.frankframework.frankdoc.model.Forward;
@@ -82,6 +84,7 @@ public class FrankDocJsonFactory {
 			getLabels().ifPresent(l -> result.add("labels", l));
 			getProperties().ifPresent(p -> result.add("properties", p));
 			getCredentialProviders().ifPresent(p -> result.add("credentialProviders", p));
+			getServletAuthenticators().ifPresent(s -> result.add("servletAuthenticators", s));
 			return result.build();
 		} catch(JsonException e) {
 			log.error("Error producing JSON", e);
@@ -542,6 +545,52 @@ public class FrankDocJsonFactory {
 		}
 
 		return b.build();
+	}
+
+	private Optional<JsonArray> getServletAuthenticators() {
+		if (model.getServletAuthenticators().isEmpty()) {
+			return Optional.empty();
+		}
+
+		final var builder = bf.createArrayBuilder();
+		model.getServletAuthenticators().stream()
+			.map(this::servletAuthenticatorTojson)
+			.forEach(builder::add);
+
+		return Optional.of(builder.build());
+	}
+
+	private JsonObject servletAuthenticatorTojson(ServletAuthenticator servletAuthenticator) {
+		JsonObjectBuilder b = bf.createObjectBuilder();
+
+		b.add("name", servletAuthenticator.simpleName());
+		b.add("fullName", servletAuthenticator.fullName());
+		if (servletAuthenticator.description() != null) {
+			b.add("description", servletAuthenticator.description());
+		}
+
+		if (!servletAuthenticator.methods().isEmpty()) {
+			b.add("methods", getServletAuthenticatorMethods(servletAuthenticator.methods()));
+		}
+
+		return b.build();
+	}
+
+	private JsonArray getServletAuthenticatorMethods(List<ServletAuthenticatorMethod> methods) {
+		final JsonArrayBuilder result = bf.createArrayBuilder();
+
+		for (ServletAuthenticatorMethod method : methods) {
+			JsonObjectBuilder methodObject = bf.createObjectBuilder();
+
+			methodObject.add("name", method.name());
+			if (method.description() != null) {
+				methodObject.add("description", method.description());
+			}
+
+			result.add(methodObject.build());
+		}
+
+		return result.build();
 	}
 
 }
