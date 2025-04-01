@@ -38,10 +38,22 @@ export class AppComponent implements OnInit {
   }
 
   private processFrankDoc(rawDoc: RawFrankDoc): FrankDoc {
-    const frankdoc = { ...rawDoc };
-    frankdoc.elements = frankdoc.elements.map((element) => {
+    const frankdoc: FrankDoc = {
+      ...rawDoc,
+      elements: {},
+    };
 
-    });
+    for (const rawElement of Object.values(rawDoc.elements)) {
+      for (const elementName of Object.values(rawElement.elementNames)) {
+        const index = `${rawElement.fullName}.${elementName.name}`;
+        frankdoc.elements[index] = {
+          ...rawElement,
+          name: elementName.name,
+          labels: elementName.labels,
+          className: rawElement.fullName,
+        };
+      }
+    }
 
     return frankdoc;
   }

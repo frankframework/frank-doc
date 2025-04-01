@@ -13,6 +13,7 @@
       }
     }
   }
+  <p class="classname">{{ element.className }}</p>
 
   <div class="section explanation">
     @if (element.deprecated) {
@@ -55,7 +56,7 @@
       </li>
       <li>
         <app-icon-arrow-right-up width="14" height="14"></app-icon-arrow-right-up
-        ><a [href]="javaDocUrlOf(element.fullName)" target="_blank">Javadoc - {{ element.name }}</a>
+        ><a [href]="javaDocUrlOf(element.className)" target="_blank">Javadoc - {{ element.name }}</a>
       </li>
     </ul>
   </div>

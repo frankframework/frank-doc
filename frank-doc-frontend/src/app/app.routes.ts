@@ -25,7 +25,7 @@ export const routes: Routes = [
     redirectTo: '',
   },
   {
-    path: ':fullname',
+    path: ':name',
     component: DetailsComponent,
     title: 'Element details | Frank!Doc',
   },

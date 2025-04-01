@@ -14,7 +14,7 @@
                   getFirstLabel(searchElement.item.labels),
                   searchElement.item.name,
                 ]
-              : ['/', searchElement.item.fullName]
+              : ['/', searchElement.item.className]
           "
           [innerHTML]="searchElement.item.name | nameWbr"
         ></a>
@@ -38,7 +38,7 @@
                     getFirstLabel(relatedElement.item.labels),
                     relatedElement.item.name,
                   ]
-                : ['/', relatedElement.item.fullName]
+                : ['/', relatedElement.item.className]
             "
             [innerHTML]="relatedElement.item.name | nameWbr"
           ></a>

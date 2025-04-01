@@ -26,7 +26,7 @@ export const getLinkData = function (
 
   const element = findElement(elements, appService, elementParts[0]);
   if (!element) return name;
-  return { href: `${element.fullName}`, text: name };
+  return { href: `${element.className}.${element.name}`, text: name };
 };
 
 export const getInternalMethodReference = function (captureGroup: string, hashPosition: number): string {
