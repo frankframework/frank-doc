@@ -1,28 +1,45 @@
-export interface FrankDoc {
+type FrankDocBase = {
   metadata: Metadata;
   types: TypeElement[];
-  elements: Record<string, Element>;
   enums: Enum[];
   labels: Label[];
   properties: Property[];
-}
+};
 
-export type Element = {
+export type FrankDoc = FrankDocBase & {
+  elements: Record<string, Element>;
+};
+
+export type RawFrankDoc = FrankDocBase & {
+  elements: Record<string, RawElement>;
+};
+
+type ElementBase = {
   name: string;
-  fullName: string;
   abstract?: boolean;
   description?: string;
   parent?: string;
-  elementNames: string[];
   attributes?: Attribute[];
   children?: Child[];
   forwards?: ParsedTag[];
   deprecated?: DeprecationInfo;
   parameters?: ParsedTag[];
   parametersDescription?: string;
-  labels?: ElementLabels; // maybe make this smarter and have key be based on Label (type) name
   notes?: Note[];
   links?: Link[];
+};
+
+export type Element = ElementBase & {
+  className: string;
+  labels?: ElementLabels; // maybe make this smarter and have key be based on Label (type) name
+};
+
+export type RawElement = ElementBase & {
+  fullName: string;
+  elementNames: {
+    name: string;
+    labels: ElementLabels;
+  }[];
 };
 
 export type Attribute = {

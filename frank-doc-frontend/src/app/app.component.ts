@@ -5,7 +5,7 @@ import { RouterOutlet } from '@angular/router';
 import { AlertComponent } from '@frankframework/angular-components';
 import { AppService, Filter } from './app.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Element, Label } from './frankdoc.types';
+import { Element, FrankDoc, Label, RawFrankDoc } from './frankdoc.types';
 
 @Component({
   selector: 'app-root',
@@ -22,16 +22,40 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.appService.getFrankDoc().subscribe({
       next: (data) => {
-        this.appService.frankDoc.set(data);
+        const frankDoc = this.processFrankDoc(data);
+        this.appService.frankDoc.set(frankDoc);
+
         const filters = this.getFiltersFromLabels(data.labels);
-        this.assignFrankDocElementsToFilters(filters, data.elements);
+        this.assignFrankDocElementsToFilters(filters, frankDoc.elements);
         this.appService.filters.set(filters);
         this.appService.triggerApplicationLoaded();
       },
       error: (error: HttpErrorResponse) => {
         this.error = `Couldn't retrieve FrankDoc file: ${error.statusText}`;
+        console.error(error);
       },
     });
+  }
+
+  private processFrankDoc(rawDoc: RawFrankDoc): FrankDoc {
+    const frankdoc: FrankDoc = {
+      ...rawDoc,
+      elements: {},
+    };
+
+    for (const rawElement of Object.values(rawDoc.elements)) {
+      for (const elementName of Object.values(rawElement.elementNames)) {
+        const index = `${rawElement.fullName}.${elementName.name}`;
+        frankdoc.elements[index] = {
+          ...rawElement,
+          name: elementName.name,
+          labels: elementName.labels,
+          className: rawElement.fullName,
+        };
+      }
+    }
+
+    return frankdoc;
   }
 
   private getFiltersFromLabels(labels: Label[]): Filter[] {

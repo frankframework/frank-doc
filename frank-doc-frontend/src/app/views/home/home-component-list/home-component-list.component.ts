@@ -30,7 +30,7 @@ export class HomeComponentListComponent {
   protected navigateToElement(element: Element): void {
     const route = element.labels
       ? ['/', this.getFirstFilter(element.labels), this.getFirstLabel(element.labels), element.name]
-      : ['/', element.fullName];
+      : ['/', element.className];
     this.router.navigate(route);
   }
 

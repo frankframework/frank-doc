@@ -27,14 +27,6 @@
       <p class="name" [title]="component.item.name">
         {{ component.item.name }}
       </p>
-      <p class="element-names" [title]="component.item.elementNames.join('\n')">
-        @for (elementName of component.item.elementNames; track elementName; let first = $first) {
-          @if (!first) {
-            &bull;
-          }
-          <span>{{ elementName }}</span>
-        }
-      </p>
       <p
         *javadocTransform="let text of component.item.description; elements: elements; asText: true"
         class="description"
