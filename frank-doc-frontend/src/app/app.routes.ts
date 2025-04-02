@@ -3,22 +3,28 @@ import { HomeComponent } from './views/home/home.component';
 import { IndexComponent } from './views/index/index.component';
 import { DetailsComponent } from './views/details/details.component';
 import { PropertiesComponent } from './views/properties/properties.component';
+import { CredentialProvidersComponent } from './views/credential-providers/credential-providers.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    title: 'Home | Frank!Doc',
+    title: 'Home',
   },
   {
     path: 'index',
     component: IndexComponent,
-    title: 'Index | Frank!Doc',
+    title: 'Index',
   },
   {
     path: 'appconstants',
     component: PropertiesComponent,
-    title: 'AppConstants | Frank!Doc',
+    title: 'AppConstants',
+  },
+  {
+    path: 'credential-providers',
+    component: CredentialProvidersComponent,
+    title: 'CredentialProviders',
   },
   {
     path: 'All',
@@ -27,18 +33,18 @@ export const routes: Routes = [
   {
     path: ':name',
     component: DetailsComponent,
-    title: 'Element details | Frank!Doc',
+    title: 'Element details',
   },
   {
     // old url structure, only checks element short name
     path: ':label/:element',
     component: DetailsComponent,
-    title: 'Element details | Frank!Doc',
+    title: 'Element details',
   },
   {
     path: ':filter/:label/:element',
     component: DetailsComponent,
-    title: 'Element details | Frank!Doc',
+    title: 'Element details',
   },
   {
     path: '**',

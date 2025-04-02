@@ -24,6 +24,73 @@ app-root {
   }
 }
 
+.page-container {
+  display: flex;
+  max-width: 100%;
+  margin: 0 50px;
+
+  .sidenav {
+    width: 300px;
+    flex: 0 0 auto;
+  }
+
+  .page {
+    width: 100%;
+    margin-bottom: 30px;
+    padding: 20px 0 0 50px;
+    flex: 1 1 auto;
+  }
+}
+
+.sidenav {
+  padding: 20px 20px 20px 0;
+  border-image: linear-gradient(180deg, #fff 0%, var(--ff-color-light-gray) 50px) 1;
+  border-width: 0 1px 0 0;
+  border-style: solid;
+
+  .nav-group-name,
+  .nav-item {
+    cursor: pointer;
+  }
+
+  .nav-group-name {
+    margin-bottom: 5px;
+    color: var(--ff-color-dark);
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  ul {
+    padding-left: 13px;
+    list-style: none;
+    margin-bottom: 25px;
+
+    li {
+      margin: 5px 0;
+      color: var(--ff-color-dark);
+      font-size: 16px;
+      font-weight: 500;
+      text-transform: capitalize;
+      word-break: break-all;
+    }
+  }
+}
+
+h2.page-title {
+  margin-bottom: 10px;
+  color: var(--ff-color-dark);
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 0.9;
+}
+
+h3.sub-title {
+  color: var(--ff-color-dark);
+  font-size: 32px;
+  font-weight: 600;
+}
+
 .feedback-btn {
   position: fixed;
   bottom: 25px;
