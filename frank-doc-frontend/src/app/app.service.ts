@@ -2,7 +2,7 @@ import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Element, ElementLabels, FrankDoc } from './frankdoc.types';
+import { Element, ElementLabels, FrankDoc, RawFrankDoc } from './frankdoc.types';
 import { DEFAULT_RETURN_CHARACTER } from './app.constants';
 
 export type Filter = {
@@ -42,8 +42,8 @@ export class AppService {
     this.applicationLoadedSubject.complete();
   }
 
-  getFrankDoc(): Observable<FrankDoc> {
-    return this.http.get<FrankDoc>(`${environment.frankDocUrl}?cache=${Date.now()}`);
+  getFrankDoc(): Observable<RawFrankDoc> {
+    return this.http.get<RawFrankDoc>(`${environment.frankDocUrl}?cache=${Date.now()}`);
   }
 
   fullNameToSimpleName(fullName: string): string {

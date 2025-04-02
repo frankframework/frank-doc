@@ -56,17 +56,17 @@ export class DetailsComponent implements OnInit {
 
   private route: ActivatedRoute = inject(ActivatedRoute);
   private elementFilterProperties: ElementFilterProperties | null = null;
-  private fullElementName: string | null = null;
+  private elementIndexOrClassName: string | null = null;
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      const fullName: string | undefined = params['fullname'];
+      const indexOrClassName: string | undefined = params['name'];
       const filterName: string | undefined = params['filter'];
       const labelName: string | undefined = params['label'];
       const elementName: string | undefined = params['element'];
 
-      if (fullName) {
-        this.fullElementName = fullName;
+      if (indexOrClassName) {
+        this.elementIndexOrClassName = indexOrClassName;
       } else if (labelName && elementName) {
         this.elementFilterProperties = { filterName, labelName, elementName };
       }
@@ -92,7 +92,7 @@ export class DetailsComponent implements OnInit {
 
   private findElement(frankDocElements: FrankDoc['elements'] | null): FrankDoc['elements'][string] | null {
     if (!frankDocElements) return null;
-    if (this.fullElementName) return this.getElementByFullName(frankDocElements, this.fullElementName);
+    if (this.elementIndexOrClassName) return this.getElementByFullName(frankDocElements, this.elementIndexOrClassName);
     if (!this.elementFilterProperties) return null;
     return this.getElementByFilterLabelNames(frankDocElements, this.elementFilterProperties);
   }
@@ -119,6 +119,10 @@ export class DetailsComponent implements OnInit {
   }
 
   private getElementByFullName(frankDocElements: FrankDoc['elements'], fullName: string): Element | null {
-    return frankDocElements[fullName] ?? null;
+    return (
+      frankDocElements[fullName] ??
+      Object.values(frankDocElements).find((element) => element.className === fullName) ??
+      null
+    );
   }
 }
