@@ -1,7 +1,7 @@
 <div class="page-container">
   <div class="sidenav">
     @for (filter of filters(); track filter.name; let index = $index) {
-      <div class="filter-name" [collapse]="filterList" (collapsedChange)="collapsedFilters[filter.name] = $event">
+      <div class="nav-group-name" [collapse]="filterList" (collapsedChange)="collapsedFilters[filter.name] = $event">
         <span>{{ filter.name }} ({{ filter.labels.length }})</span>
         <app-icon-caret
           [width]="18"
@@ -11,7 +11,7 @@
       </div>
       <ul #filterList>
         @for (label of filter.labels; track label.name) {
-          <li class="filter-item" (click)="appService.scrollToElement('#' + filter.name + '-' + label.name)">
+          <li class="nav-item" (click)="appService.scrollToElement('#' + filter.name + '-' + label.name)">
             <ff-chip [colour]="appService.getLabelColor(filter.name)" slim>{{ label.name.charAt(0) }}</ff-chip>
             {{ label.name }} ({{ label.elements.length }})
           </li>

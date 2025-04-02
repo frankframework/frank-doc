@@ -4,6 +4,7 @@ type FrankDocBase = {
   enums: Enum[];
   labels: Label[];
   properties: Property[];
+  credentialProviders: CredentialProvider[];
 };
 
 export type FrankDoc = FrankDocBase & {
@@ -113,6 +114,12 @@ export type Property = {
     defaultValue?: string;
     flags?: string[];
   }[];
+};
+
+export type CredentialProvider = {
+  name: string;
+  fullName: string;
+  description?: string;
 };
 
 export type Note = {

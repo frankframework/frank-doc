@@ -2,7 +2,7 @@
   <div class="sidenav">
     @for (propertyGroup of properties(); track index; let index = $index) {
       <div
-        class="property-group-name"
+        class="nav-group-name"
         [collapse]="propertyList"
         [collapsed]="!!getNameOrNull(propertyGroup.name)"
         (collapsedChange)="expandedFilterGroups()[getPropertyGroupKey(propertyGroup.name, index)] = !$event"
@@ -16,10 +16,7 @@
       </div>
       <ul #propertyList>
         @for (propertyName of getPropertyNamesFromGroup(propertyGroup); track index; let index = $index) {
-          <li
-            class="property-item"
-            (click)="scrollToElement('#' + convertToId(propertyGroup.name + '-' + propertyName))"
-          >
+          <li class="nav-item" (click)="scrollToElement('#' + convertToId(propertyGroup.name + '-' + propertyName))">
             {{ propertyName }}
           </li>
         }

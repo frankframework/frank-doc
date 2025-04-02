@@ -4,39 +4,6 @@ ff-chip {
   margin-right: 3px;
 }
 
-.sidenav {
-  padding: 20px 20px 20px 0;
-  border-image: linear-gradient(180deg, #fff 0%, var(--ff-color-light-gray) 50px) 1;
-  border-width: 0 1px 0 0;
-  border-style: solid;
-
-  .filter-item {
-    cursor: pointer;
-  }
-
-  .filter-name {
-    margin-bottom: 5px;
-    color: var(--ff-color-dark);
-    font-size: 18px;
-    font-weight: 600;
-    text-transform: capitalize;
-  }
-
-  ul {
-    padding-left: 13px;
-    list-style: none;
-    margin-bottom: 25px;
-
-    li {
-      margin: 5px 0;
-      color: var(--ff-color-dark);
-      font-size: 16px;
-      font-weight: 500;
-      text-transform: capitalize;
-    }
-  }
-}
-
 .page {
   .description {
     max-width: 900px;
