@@ -27,10 +27,12 @@
     }
   </div>
   <div class="page">
-    <h2>AppConstants</h2>
+    <h2 class="page-title">AppConstants</h2>
     @for (propertyGroup of properties(); track index; let index = $index) {
       <div class="property-group">
-        <h3 id="{{ propertyGroup.name }}">{{ getNameOrNull(propertyGroup.name) ?? DEFAULT_UNKNOWN_PROPERTY_GROUP }}</h3>
+        <h3 class="sub-title" id="{{ propertyGroup.name }}">
+          {{ getNameOrNull(propertyGroup.name) ?? DEFAULT_UNKNOWN_PROPERTY_GROUP }}
+        </h3>
         <table>
           <thead>
             <tr>

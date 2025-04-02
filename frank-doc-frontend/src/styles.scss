@@ -24,6 +24,38 @@ app-root {
   }
 }
 
+.page-container {
+  display: flex;
+  max-width: 100%;
+  margin: 0 50px;
+
+  .sidenav {
+    width: 300px;
+    flex: 0 0 auto;
+  }
+
+  .page {
+    width: 100%;
+    margin-bottom: 30px;
+    padding: 20px 0 0 50px;
+    flex: 1 1 auto;
+  }
+}
+
+h2.page-title {
+  margin-bottom: 10px;
+  color: var(--ff-color-dark);
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 0.9;
+}
+
+h3.sub-title {
+  color: var(--ff-color-dark);
+  font-size: 32px;
+  font-weight: 600;
+}
+
 .feedback-btn {
   position: fixed;
   bottom: 25px;

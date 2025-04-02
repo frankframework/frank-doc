@@ -35,14 +35,14 @@
         <p *javadocTransform="let text of note.value; elements: frankDocElements" [innerHTML]="text"></p>
       </ff-alert>
     }
-    <h3>Explanation</h3>
+    <h3 class="sub-title">Explanation</h3>
     <p>
       <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>
     </p>
   </div>
 
   <div class="section quick-links">
-    <h3>Quick Links</h3>
+    <h3 class="sub-title">Quick Links</h3>
     <ul>
       @for (quickLink of element.links; track quickLink.label) {
         <li>
@@ -62,7 +62,7 @@
   </div>
 
   <div class="section syntax">
-    <h3>Syntax</h3>
+    <h3 class="sub-title">Syntax</h3>
     @if (element.abstract) {
       <ff-alert type="warning">Abstract elements may not be used directly and has no syntax</ff-alert>
     } @else {
@@ -70,7 +70,7 @@
     }
   </div>
   <div class="section options">
-    <h3>Component Options</h3>
+    <h3 class="sub-title">Component Options</h3>
     @if (element.attributes || hasAnyInheritedProperties()) {
       <div class="sub-options attributes">
         <div
@@ -391,7 +391,7 @@
     }
     @if (usedEnums.length > 0) {
       <div class="section enums">
-        <h3>Enums</h3>
+        <h3 class="sub-title">Enums</h3>
         @for (enumType of usedEnums; track enumType.name) {
           <div class="enum-list">
             <h4 [id]="getEnumShortName(enumType.name)">{{ getEnumShortName(enumType.name) }}</h4>

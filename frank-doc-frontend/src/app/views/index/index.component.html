@@ -20,7 +20,7 @@
     }
   </div>
   <div class="page">
-    <h2>Index</h2>
+    <h2 class="page-title">Index</h2>
     <p class="description">
       Welcome to the index page! Here, you'll find all groups, categories, and elements conveniently gathered in one
       place. On the left side, you can browse categories organized by their respective groups. Simply click on a
@@ -33,7 +33,7 @@
 
     @for (filter of filters(); track filter.name; let index = $index) {
       <div class="filter-container">
-        <h3>{{ filter.name }}</h3>
+        <h3 class="sub-title">{{ filter.name }}</h3>
         @for (label of filter.labels; track label.name) {
           <div class="label-container">
             <h4 id="{{ filter.name }}-{{ label.name }}">{{ label.name }}</h4>
