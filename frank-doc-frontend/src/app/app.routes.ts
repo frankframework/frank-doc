@@ -4,6 +4,7 @@ import { IndexComponent } from './views/index/index.component';
 import { DetailsComponent } from './views/details/details.component';
 import { PropertiesComponent } from './views/properties/properties.component';
 import { CredentialProvidersComponent } from './views/credential-providers/credential-providers.component';
+import { ServletAuthenticatorsComponent } from './views/servlet-authenticators/servlet-authenticators.component';
 
 export const routes: Routes = [
   {
@@ -24,7 +25,12 @@ export const routes: Routes = [
   {
     path: 'credential-providers',
     component: CredentialProvidersComponent,
-    title: 'CredentialProviders',
+    title: 'Credential Providers',
+  },
+  {
+    path: 'servlet-authenticators',
+    component: ServletAuthenticatorsComponent,
+    title: 'Servlet Authenticators',
   },
   {
     path: 'All',

@@ -1,0 +1,52 @@
+<div class="page-container">
+  <div class="sidenav">
+    <ul>
+      @for (authenticator of servletAuthenticators(); track authenticator.name) {
+        <li class="nav-item" (click)="scrollToElement('#' + authenticator.name)">
+          {{ authenticator.name }}
+        </li>
+      }
+    </ul>
+  </div>
+  <div class="page">
+    <h2 class="page-title">Servlet Authenticators</h2>
+    @for (authenticator of servletAuthenticators(); track authenticator.fullName) {
+      <div class="servlet-group" [id]="authenticator.name">
+        <h3 class="sub-title" id="{{ authenticator.name }}">{{ authenticator.name }}</h3>
+        <p class="fullname">{{ authenticator.fullName }}</p>
+        <p
+          class="description javadoc"
+          *javadocTransform="
+            let text of authenticator.description ?? DEFAULT_RETURN_CHARACTER;
+            elements: frankDocElements()
+          "
+          [innerHTML]="text"
+        ></p>
+        @if (authenticator.methods && authenticator.methods.length > 0) {
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (method of authenticator.methods; track method.name) {
+                <tr>
+                  <td [innerHTML]="method.name | nameWbr"></td>
+                  <td
+                    *javadocTransform="
+                      let text of method.description ?? DEFAULT_RETURN_CHARACTER;
+                      elements: frankDocElements()
+                    "
+                    [innerHTML]="text"
+                  ></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+    }
+  </div>
+</div>
