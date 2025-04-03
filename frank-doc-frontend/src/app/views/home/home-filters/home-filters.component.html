@@ -1,26 +1,33 @@
-@for (selectedFilterGroup of selectedFilterLabels() | keyvalue; track selectedFilterGroup.key) {
-  @for (selectedFilter of selectedFilterGroup.value; track selectedFilter; let index = $index) {
-    <span class="selected-filter"
-      ><span>{{ selectedFilter }}</span
-      ><span class="close-button" (click)="removeSelectedFilterLabel(selectedFilterGroup.key, index)"
-        >&times;</span
-      ></span
-    >
+<div class="selected-filters">
+  <ff-button toggleable [(active)]="open" (activeChange)="toggleDropdown()">&plus; Add Filter</ff-button>
+  @for (selectedFilterGroup of selectedFilterLabels() | keyvalue; track selectedFilterGroup.key) {
+    @for (selectedFilter of selectedFilterGroup.value; track selectedFilter; let index = $index) {
+      <span class="selected-filters__item"
+        ><span>{{ selectedFilter }}</span
+        ><span class="close-button" (click)="removeSelectedFilterLabel(selectedFilterGroup.key, index)"
+          >&times;</span
+        ></span
+      >
+    }
   }
-}
-<ff-button toggleable [(active)]="open" (activeChange)="toggleDropdown()">&plus; Add Filter</ff-button>
+</div>
 <div #menu class="menu">
   <div class="menu-card filters">
     <ul>
       @for (filter of filters(); track filter.name) {
-        <li (click)="toggleFilterMenu(filter)" [ngClass]="{ active: selectedFilter === filter }">{{ filter.name }}</li>
+        <li
+          (mouseover)="toggleFilterMenu(filter)"
+          (click)="toggleFilterMenu(filter, true)"
+          [ngClass]="{ active: selectedFilter === filter && selectedFilterLocked }"
+        >
+          {{ filter.name }}
+        </li>
       }
     </ul>
-    <button (click)="clearFilters()">Clear all filters</button>
+    <button (click)="clearFilters()" [class.disabled]="areAllFilterGroupsEmpty()">Clear all filters</button>
   </div>
   @if (selectedFilter) {
     <div class="menu-card labels">
-      <p class="menu-title">{{ selectedFilter.name }}</p>
       <ul>
         @for (label of selectedFilter.labels; track label.name) {
           <li>
@@ -35,7 +42,9 @@
           </li>
         }
       </ul>
-      <button (click)="clearSelectedLabels()">Clear selected filters</button>
+      <button (click)="clearSelectedLabels()" [class.disabled]="isFilterGroupEmpty(selectedFilter.name)">
+        Clear selected filters
+      </button>
     </div>
   }
 </div>

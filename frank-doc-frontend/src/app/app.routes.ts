@@ -6,25 +6,26 @@ import { PropertiesComponent } from './views/properties/properties.component';
 import { CredentialProvidersComponent } from './views/credential-providers/credential-providers.component';
 
 export const routes: Routes = [
+  { path: '', redirectTo: '/search', pathMatch: 'full' },
   {
-    path: '',
+    path: 'search',
     component: HomeComponent,
-    title: 'Home',
+    title: 'Search',
   },
   {
-    path: 'index',
+    path: 'components',
     component: IndexComponent,
     title: 'Index',
   },
   {
-    path: 'appconstants',
+    path: 'properties',
     component: PropertiesComponent,
-    title: 'AppConstants',
+    title: 'Properties',
   },
   {
     path: 'credential-providers',
     component: CredentialProvidersComponent,
-    title: 'CredentialProviders',
+    title: 'Credential Providers',
   },
   {
     path: 'All',

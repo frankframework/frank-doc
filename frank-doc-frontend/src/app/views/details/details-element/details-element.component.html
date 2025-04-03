@@ -13,7 +13,6 @@
       }
     }
   }
-  <p class="classname">{{ element.className }}</p>
 
   <div class="section explanation">
     @if (element.deprecated) {
@@ -30,15 +29,16 @@
         }
       </ff-alert>
     }
+    <h3 class="sub-title">Explanation</h3>
+    <p>
+      <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>
+    </p>
+    <br />
     @for (note of element.notes; track note) {
       <ff-alert [type]="getWarningType(note.type)">
         <p *javadocTransform="let text of note.value; elements: frankDocElements" [innerHTML]="text"></p>
       </ff-alert>
     }
-    <h3 class="sub-title">Explanation</h3>
-    <p>
-      <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>
-    </p>
   </div>
 
   <div class="section quick-links">
@@ -56,7 +56,7 @@
       </li>
       <li>
         <app-icon-arrow-right-up width="14" height="14"></app-icon-arrow-right-up
-        ><a [href]="javaDocUrlOf(element.className)" target="_blank">Javadoc - {{ element.name }}</a>
+        ><a [href]="javaDocUrlOf(element.className)" target="_blank">Javadoc - {{ element.className }}</a>
       </li>
     </ul>
   </div>
@@ -142,7 +142,8 @@
                 </tbody>
               </table>
             </ng-template>
-            <ff-alert type="warning" id="attributes-required">The attributes below are required</ff-alert>
+<!--            <ff-alert type="warning" id="attributes-required">The attributes below are required</ff-alert>-->
+            <span class="options-sub-title" id="attributes-required">Required</span>
             <ng-container
               *ngTemplateOutlet="attributesRequiredTemplate; context: { $implicit: attributesRequired }"
             ></ng-container>
@@ -244,7 +245,7 @@
                 </tbody>
               </table>
             </ng-template>
-            <ff-alert type="info">The attributes below are optional</ff-alert>
+<!--            <ff-alert type="info">The attributes below are optional</ff-alert>-->
             <span class="options-sub-title" id="attributes-optional">Optional</span>
             <ng-container
               *ngTemplateOutlet="attributesOptionalTemplate; context: { $implicit: attributesOptional }"

@@ -1,30 +1,35 @@
-.selected-filter {
-  display: inline-flex;
-  margin-right: 10px;
-  padding-left: 16px;
-  border-radius: 50px;
-  border: 1px solid var(--ff-bgcolor-yellow);
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: default;
+.selected-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 
-  &:hover {
-    overflow: hidden;
-  }
-
-  span {
-    padding: 9px 0;
-  }
-
-  .close-button {
-    margin-left: 12px;
-    padding: 9px 16px 9px 12px;
-    border-left: 1px solid var(--ff-bgcolor-yellow);
+  &__item {
+    display: flex;
+    padding-left: 16px;
+    border-radius: 50px;
+    border: 1px solid var(--ff-bgcolor-yellow);
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: default;
 
     &:hover {
-      background: var(--ff-bgcolor-yellow);
+      overflow: hidden;
+    }
+
+    span {
+      padding: 9px 0;
+    }
+
+    .close-button {
+      margin-left: 12px;
+      padding: 9px 16px 9px 12px;
+      border-left: 1px solid var(--ff-bgcolor-yellow);
+
+      &:hover {
+        background: var(--ff-bgcolor-yellow);
+      }
     }
   }
 }
@@ -44,11 +49,11 @@
   }
 
   .menu-card {
-    width: 300px;
+    min-width: 200px;
     margin: 10px 10px 0 0;
     border-radius: 15px;
     background: #fff;
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
     user-select: none;
     overflow: hidden;
 
@@ -72,6 +77,10 @@
 
         &.active {
           background: var(--ff-bgcolor-yellow);
+        }
+
+        ff-checkbox {
+          margin-left: 10px;
         }
 
         label {
@@ -100,7 +109,7 @@
       }
     }
 
-    &.filters > ul > li:hover:not(.active) {
+    & > ul > li:hover:not(.active) {
       background-color: rgba(253, 195, 0, .35)
     }
 
@@ -114,13 +123,22 @@
       border: none;
       border-top: 1px solid var(--ff-color-light-gray);
       border-radius: 0 0 15px 15px;
-      color: #b2b2b2;
+      color: #1e1e1e;
       font-size: 16px;
       font-weight: 500;
       text-align: start;
       background: #fff;
       box-shadow: 0px -2px 10px 0px rgba(237, 237, 237, 0.75);
       cursor: pointer;
+
+      &.disabled {
+        color: #b2b2b2;
+        cursor: auto;
+      }
+
+      &:hover:not(.disabled) {
+        background: var(--ff-bgcolor-yellow);
+      }
     }
   }
 }
