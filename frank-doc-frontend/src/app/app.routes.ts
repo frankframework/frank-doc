@@ -15,7 +15,7 @@ export const routes: Routes = [
   {
     path: 'components',
     component: IndexComponent,
-    title: 'Index',
+    title: 'Components',
   },
   {
     path: 'properties',
