@@ -5,6 +5,7 @@ type FrankDocBase = {
   labels: Label[];
   properties: Property[];
   credentialProviders: CredentialProvider[];
+  servletAuthenticators: ServletAuthenticator[];
 };
 
 export type FrankDoc = FrankDocBase & {
@@ -122,6 +123,13 @@ export type CredentialProvider = {
   description?: string;
 };
 
+export type ServletAuthenticator = {
+  name: string;
+  fullName: string;
+  description?: string;
+  methods?: Method[];
+};
+
 export type Note = {
   type: 'INFO' | 'WARNING' | 'DANGER' | 'TIP';
   value: string;
@@ -130,4 +138,9 @@ export type Note = {
 export type Link = {
   label: string;
   url: string;
+};
+
+export type Method = {
+  name: string;
+  description?: string;
 };
