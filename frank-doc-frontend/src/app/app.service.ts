@@ -26,6 +26,7 @@ type HSL = {
 })
 export class AppService {
   readonly frankDoc: WritableSignal<FrankDoc | null> = signal(null);
+  readonly rawFrankDoc: WritableSignal<RawFrankDoc | null> = signal(null);
   readonly filters: WritableSignal<Filter[]> = signal([]);
   readonly darkmode: WritableSignal<boolean> = signal(false);
   hasLoaded: boolean = false;
