@@ -1,8 +1,28 @@
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  Signal,
+  SimpleChanges,
+} from '@angular/core';
 import { AlertComponent, ChipComponent, AlertType } from '@frankframework/angular-components';
 import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Attribute, Child, DeprecationInfo, Element, FrankDoc, Note, ParsedTag } from '../../../frankdoc.types';
+import {
+  Attribute,
+  Child,
+  DeprecationInfo,
+  Element,
+  FrankDoc,
+  Note,
+  ParsedTag,
+  RawFrankDoc,
+} from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
 import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
 import { CollapseDirective } from '../../../components/collapse.directive';
@@ -51,6 +71,9 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   @Input({ required: true }) frankDocEnums!: FrankDoc['enums'] | null;
   @Output() hasInheritedProperties = new EventEmitter<HasInheritedProperties>();
 
+  protected readonly rawElements: Signal<RawFrankDoc['elements'] | null> = computed(
+    () => this.appService.rawFrankDoc()?.elements ?? null,
+  );
   protected attributesRequired: Attribute[] = [];
   protected attributesOptional: Attribute[] = [];
   protected inheritedProperties: InheritedProperties = {
@@ -179,7 +202,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   }
 
   private setInheritedProperties(elementIndex: string): void {
-    const element = this.frankDocElements?.[elementIndex];
+    const element = this.rawElements()?.[elementIndex];
     if (!element) return;
 
     if (element.attributes) {

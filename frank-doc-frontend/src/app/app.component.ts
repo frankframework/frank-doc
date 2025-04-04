@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.appService.getFrankDoc().subscribe({
       next: (data) => {
+        this.appService.rawFrankDoc.set(data);
         const frankDoc = this.processFrankDoc(data);
         this.appService.frankDoc.set(frankDoc);
 
