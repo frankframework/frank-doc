@@ -121,7 +121,7 @@ h3 {
     }
 
     th {
-      padding: 10px 0;
+      padding: 10px 3px;
       color: var(--ff-color-gray);
       font-size: 12px;
       font-weight: 600;
@@ -176,8 +176,6 @@ h3 {
   }
 
   .sub-options {
-    padding: 0 0 20px 30px;
-
     .options-title {
       display: flex;
       margin-bottom: 20px;
@@ -198,14 +196,12 @@ h3 {
     }
 
     .options-sub-title {
-      padding-left: 18px;
       color: var(--ff-color-dark);
       font-size: 18px;
       font-weight: 600;
     }
 
     .options-list {
-      padding-left: 15px;
       overflow: auto;
     }
 
@@ -213,7 +209,7 @@ h3 {
       display: flex;
       border-radius: 10px;
       margin-top: 10px;
-      padding: 15px 20px;
+      //padding: 15px 20px;
       background: var(--ff-bgcolor-white);
       color: var(--ff-color-dark);
       font-size: 16px;

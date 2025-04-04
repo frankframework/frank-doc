@@ -7,20 +7,21 @@ import { CredentialProvidersComponent } from './views/credential-providers/crede
 import { ServletAuthenticatorsComponent } from './views/servlet-authenticators/servlet-authenticators.component';
 
 export const routes: Routes = [
+  { path: '', redirectTo: '/search', pathMatch: 'full' },
   {
-    path: '',
+    path: 'search',
     component: HomeComponent,
-    title: 'Home',
+    title: 'Search',
   },
   {
-    path: 'index',
+    path: 'components',
     component: IndexComponent,
-    title: 'Index',
+    title: 'Components',
   },
   {
-    path: 'appconstants',
+    path: 'properties',
     component: PropertiesComponent,
-    title: 'AppConstants',
+    title: 'Properties',
   },
   {
     path: 'credential-providers',

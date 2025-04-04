@@ -24,7 +24,11 @@
     }
   </div>
   <div class="page">
-    <h2 class="page-title">AppConstants</h2>
+    <h2 class="page-title">Properties</h2>
+    <p class="description">
+      Here you can find all properties of the Frank!Framework. The properties are grouped by their respective categories.
+      You can find the categories on the left, and by clicking on a category, you will be scrolled to it. Please note not all categories have been defined yet, so you may find 'unnamed' categories.
+    </p>
     @for (propertyGroup of properties(); track index; let index = $index) {
       <div class="property-group">
         <h3 class="sub-title" id="{{ propertyGroup.name }}">

@@ -6,17 +6,18 @@
   </div>
   <nav>
     <ul>
-      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a></li>
-      <li><a routerLink="/index" routerLinkActive="active">Index</a></li>
-      <li><a routerLink="/appconstants" routerLinkActive="active">AppConstants</a></li>
+      <li><a routerLink="/search" routerLinkActive="active">Search</a></li>
+      <li><a routerLink="/components" routerLinkActive="active">Components</a></li>
+      <li><a routerLink="/properties" routerLinkActive="active">Properties</a></li>
       <li><a routerLink="/credential-providers" routerLinkActive="active">Credential Providers</a></li>
       <li><a routerLink="/servlet-authenticators" routerLinkActive="active">Servlet Authenticators</a></li>
     </ul>
   </nav>
   <div class="actions">
-    <button class="switch-theme-button" title="Dark/light Mode">
-      <app-icon-darkmode width="20" height="20" colour="var(--ff-color-gray)"></app-icon-darkmode>
-    </button>
+    <!--    TODO: Add Darkmode -->
+    <!--    <button class="switch-theme-button" title="Dark/light Mode">-->
+    <!--      <app-icon-darkmode width="20" height="20" colour="var(&#45;&#45;ff-color-gray)"></app-icon-darkmode>-->
+    <!--    </button>-->
     <button class="download-xsd-button" title="Download XSD" (click)="downloadXSD()">
       <app-icon-download width="20" height="20"></app-icon-download>
     </button>

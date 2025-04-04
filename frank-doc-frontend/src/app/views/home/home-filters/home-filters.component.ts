@@ -33,6 +33,7 @@ export class HomeFiltersComponent implements OnDestroy {
   protected open: boolean = false;
   protected selectedFilter: Filter | null = null;
   protected selectedFilterLabels: WritableSignal<ElementLabels> = signal({});
+  protected selectedFilterLocked = false;
 
   private onOutsideClick: (event: MouseEvent) => void = (event: MouseEvent): void => this.outsideClickHandler(event);
 
@@ -55,14 +56,16 @@ export class HomeFiltersComponent implements OnDestroy {
     menuElement.classList.remove('open');
     document.removeEventListener('click', this.onOutsideClick);
     this.selectedFilter = null;
+    this.selectedFilterLocked = false;
   }
 
-  protected toggleFilterMenu(filter: Filter): void {
-    if (this.selectedFilter === filter) {
-      this.selectedFilter = null;
-      return;
+  protected toggleFilterMenu(filter: Filter, clicked = false): void {
+    if (clicked && this.selectedFilter === filter) {
+      this.selectedFilterLocked = !this.selectedFilterLocked;
     }
-    this.selectedFilter = filter;
+    if (!this.selectedFilterLocked || clicked) {
+      this.selectedFilter = filter;
+    }
   }
 
   protected toggleMenuLabel(filterName: string, labelName: string): void {
@@ -79,6 +82,19 @@ export class HomeFiltersComponent implements OnDestroy {
 
   protected clearFilters(): void {
     this.updateSelectedFilters({});
+  }
+
+  protected isFilterGroupEmpty(filterGroup: string): boolean {
+    const selectedFilters = this.selectedFilterLabels();
+    return !selectedFilters[filterGroup] || selectedFilters[filterGroup].length === 0;
+  }
+
+  protected areAllFilterGroupsEmpty(): boolean {
+    const selectedFilters = this.selectedFilterLabels();
+    if (Object.keys(selectedFilters).length === 0) {
+      return true;
+    }
+    return Object.values(selectedFilters).every((group) => group.length === 0);
   }
 
   protected clearSelectedLabels(): void {
