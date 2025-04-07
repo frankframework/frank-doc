@@ -115,10 +115,10 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['element']) {
       if (this.element?.attributes) {
-        this.attributesRequired = this.element?.attributes.filter((attribute) => attribute.mandatory === true) ?? [];
-        this.attributesOptional = this.element?.attributes.filter((attribute) => !attribute.mandatory) ?? [];
+        this.attributesRequired = this.element.attributes.filter((attribute) => attribute.mandatory === true) ?? [];
+        this.attributesOptional = this.element.attributes.filter((attribute) => !attribute.mandatory) ?? [];
         this.attributesHasDefaults = this.element.attributes.some((attribute) => !!attribute.default);
-        this.usedEnums = this.filterUsedEnums();
+        this.usedEnums = this.filterUsedEnums(this.element.attributes);
       }
       if (this.element?.parent) {
         this.inheritedProperties = {
@@ -224,14 +224,15 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       }
     }
 
+    this.usedEnums.push(...this.filterUsedEnums(element.attributes));
+
     if (element.parent) this.setInheritedProperties(element.parent);
   }
 
-  private filterUsedEnums(): FrankDoc['enums'] {
-    if (!this.element?.attributes) return [];
-
+  private filterUsedEnums(attributes?: Attribute[]): FrankDoc['enums'] {
+    if (!attributes) return [];
     const filteredEnums = new Set<FrankDoc['enums'][0]>();
-    for (const attribute of this.element?.attributes) {
+    for (const attribute of attributes) {
       if (attribute.enum) {
         const enumType = this.frankDocEnums?.find((enumItem) => enumItem.name === attribute.enum);
         if (enumType) filteredEnums.add(enumType);
