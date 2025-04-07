@@ -7,7 +7,6 @@ import { CredentialProvidersComponent } from './views/credential-providers/crede
 import { ServletAuthenticatorsComponent } from './views/servlet-authenticators/servlet-authenticators.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/search', pathMatch: 'full' },
   {
     path: 'search',
     component: HomeComponent,
@@ -35,7 +34,7 @@ export const routes: Routes = [
   },
   {
     path: 'All',
-    redirectTo: '',
+    redirectTo: 'search',
   },
   {
     path: ':name',
@@ -55,6 +54,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'search',
   },
 ];

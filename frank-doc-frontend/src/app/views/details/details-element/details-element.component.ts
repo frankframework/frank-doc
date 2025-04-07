@@ -44,7 +44,8 @@ type InheritedProperties = {
   attributesOptional: InheritedParentElementProperties<Attribute>[];
   parameters: InheritedParentElementProperties<ParsedTag>[];
   children: InheritedParentElementProperties<Child>[];
-  forwards: InheritedParentElementProperties<ParsedTag>[];
+  // forwards: InheritedParentElementProperties<ParsedTag>[];
+  forwards: ParsedTag[];
 };
 
 @Component({
@@ -114,6 +115,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['element']) {
+      this.resetInheritedProperties();
       if (this.element?.attributes) {
         this.attributesRequired = this.element.attributes.filter((attribute) => attribute.mandatory === true) ?? [];
         this.attributesOptional = this.element.attributes.filter((attribute) => !attribute.mandatory) ?? [];
@@ -201,6 +203,20 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     }
   }
 
+  private resetInheritedProperties(): void {
+    this.inheritedProperties = {
+      attributesRequired: [],
+      attributesOptional: [],
+      parameters: [],
+      children: [],
+      forwards: [],
+    };
+    this._hasInheritedProperties = {
+      required: false,
+      optional: false,
+    };
+  }
+
   private setInheritedProperties(elementIndex: string): void {
     const element = this.rawElements()?.[elementIndex];
     if (!element) return;
@@ -225,6 +241,10 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     }
 
     this.usedEnums.push(...this.filterUsedEnums(element.attributes));
+
+    if (element.forwards) {
+      this.inheritedProperties.forwards.push(...element.forwards);
+    }
 
     if (element.parent) this.setInheritedProperties(element.parent);
   }

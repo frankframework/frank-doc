@@ -1,18 +1,20 @@
 @if (element) {
-  <h2 [ngClass]="{ deprecated: element.deprecated }" [innerHTML]="element.name | nameWbr"></h2>
-  @if (element.abstract) {
-    <ff-chip class="abstract-label" slim colour="#FDC300">Abstract</ff-chip>
-  }
-  @if (element.deprecated) {
-    <ff-chip class="abstract-label" slim>Deprecated</ff-chip>
-  }
-  @if (element.labels) {
-    @for (filter of element.labels | keyvalue; track filter; let index = $index) {
-      @for (label of filter.value; track label) {
-        <ff-chip [colour]="appService.getLabelColor(filter.key)" rounded>{{ label }}</ff-chip>
+  <h2 id="element" [ngClass]="{ deprecated: element.deprecated }" [innerHTML]="element.name | nameWbr"></h2>
+  <div class="chips">
+    @if (element.abstract) {
+      <ff-chip class="abstract-label" slim colour="#FDC300">Abstract</ff-chip>
+    }
+    @if (element.deprecated) {
+      <ff-chip class="abstract-label" slim>Deprecated</ff-chip>
+    }
+    @if (element.labels) {
+      @for (filter of element.labels | keyvalue; track filter; let index = $index) {
+        @for (label of filter.value; track label) {
+          <ff-chip [colour]="appService.getLabelColor(filter.key)" rounded>{{ label }}</ff-chip>
+        }
       }
     }
-  }
+  </div>
 
   <div class="section explanation">
     @if (element.deprecated) {
@@ -29,7 +31,6 @@
         }
       </ff-alert>
     }
-    <h3 class="sub-title">Explanation</h3>
     <p>
       <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>
     </p>
@@ -41,8 +42,8 @@
     }
   </div>
 
-  <div class="section quick-links">
-    <h3 class="sub-title">Quick Links</h3>
+  <div id="seeAlso" class="section see-also">
+    <h3>See also</h3>
     <ul>
       @for (quickLink of element.links; track quickLink.label) {
         <li>
@@ -61,8 +62,8 @@
     </ul>
   </div>
 
-  <div class="section syntax">
-    <h3 class="sub-title">Syntax</h3>
+  <div id="syntax" class="section syntax">
+    <h3>Syntax</h3>
     @if (element.abstract) {
       <ff-alert type="warning">Abstract elements may not be used directly and has no syntax</ff-alert>
     } @else {
@@ -70,10 +71,10 @@
     }
   </div>
   <div class="section options">
-    <h3 class="sub-title">Component Options</h3>
     @if (element.attributes || hasAnyInheritedProperties()) {
       <div class="sub-options attributes">
         <div
+          id="attributes"
           class="options-title"
           [collapse]="attributes"
           [animationSpeed]="600"
@@ -82,7 +83,7 @@
           <span>Attributes</span>
           <app-icon-caret [rotation]="collapsedOptions.attributes ? 'down' : 'up'"></app-icon-caret>
         </div>
-        <div class="options-list" id="attributes" #attributes>
+        <div class="options-list" #attributes>
           @if (attributesRequired.length > 0 || inheritedProperties.attributesRequired.length > 0) {
             <ng-template #attributesRequiredTemplate let-attributesRequired>
               <table>
@@ -142,8 +143,7 @@
                 </tbody>
               </table>
             </ng-template>
-            <!--<ff-alert type="warning" id="attributes-required">The attributes below are required</ff-alert>-->
-            <span class="options-sub-title" id="attributes-required">Required</span>
+            <div class="options-sub-title" id="attributes-required">Required</div>
             <ng-container
               *ngTemplateOutlet="attributesRequiredTemplate; context: { $implicit: attributesRequired }"
             ></ng-container>
@@ -245,8 +245,7 @@
                 </tbody>
               </table>
             </ng-template>
-            <!--<ff-alert type="info">The attributes below are optional</ff-alert>-->
-            <span class="options-sub-title" id="attributes-optional">Optional</span>
+            <div class="options-sub-title" id="attributes-optional">Optional</div>
             <ng-container
               *ngTemplateOutlet="attributesOptionalTemplate; context: { $implicit: attributesOptional }"
             ></ng-container>
@@ -358,7 +357,8 @@
         </div>
       </div>
     }
-    @if (element.forwards) {
+    <!-- Temp solution, see issue https://github.com/frankframework/frank-doc/issues/348 -->
+    @if (element.forwards || inheritedProperties.forwards.length > 0) {
       <div class="sub-options forwards" id="forwards">
         <div class="options-title" [collapse]="forwards" (collapsedChange)="collapsedOptions.forwards = $event">
           <span>Forwards</span>
@@ -373,17 +373,32 @@
               </tr>
             </thead>
             <tbody>
-              @for (forward of element.forwards; track forward.name) {
-                <tr>
-                  <td [innerHTML]="forward.name | nameWbr"></td>
-                  <td
-                    *javadocTransform="
-                      let text of forward.description ?? DEFAULT_RETURN_CHARACTER;
-                      elements: frankDocElements
-                    "
-                    [innerHTML]="text"
-                  ></td>
-                </tr>
+              @if (element.forwards) {
+                @for (forward of inheritedProperties.forwards; track forward.name) {
+                  <tr>
+                    <td [innerHTML]="forward.name | nameWbr"></td>
+                    <td
+                      *javadocTransform="
+                        let text of forward.description ?? DEFAULT_RETURN_CHARACTER;
+                        elements: frankDocElements
+                      "
+                      [innerHTML]="text"
+                    ></td>
+                  </tr>
+                }
+              } @else {
+                @for (forward of inheritedProperties.forwards; track forward.name) {
+                  <tr>
+                    <td [innerHTML]="forward.name | nameWbr"></td>
+                    <td
+                      *javadocTransform="
+                        let text of forward.description ?? DEFAULT_RETURN_CHARACTER;
+                        elements: frankDocElements
+                      "
+                      [innerHTML]="text"
+                    ></td>
+                  </tr>
+                }
               }
             </tbody>
           </table>

@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { IconFfLogoSmallComponent } from '../../icons/icon-reference/icon-ff-logo-small.component';
 import { IconDownloadComponent } from '../../icons/icon-download/icon-download.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { IconDarkmodeComponent } from '../../icons/icon-darkmode/icon-darkmode.component';
 import { environment } from '../../../environments/environment';
 import { VersionFormatDirective } from './version-format.directive';
 
@@ -13,7 +12,7 @@ import { VersionFormatDirective } from './version-format.directive';
     IconDownloadComponent,
     RouterLink,
     RouterLinkActive,
-    IconDarkmodeComponent,
+    /*IconDarkmodeComponent,*/
     VersionFormatDirective,
   ],
   templateUrl: './header.component.html',
