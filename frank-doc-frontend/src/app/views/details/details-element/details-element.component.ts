@@ -44,7 +44,8 @@ type InheritedProperties = {
   attributesOptional: InheritedParentElementProperties<Attribute>[];
   parameters: InheritedParentElementProperties<ParsedTag>[];
   children: InheritedParentElementProperties<Child>[];
-  forwards: InheritedParentElementProperties<ParsedTag>[];
+  // forwards: InheritedParentElementProperties<ParsedTag>[];
+  forwards: ParsedTag[];
 };
 
 @Component({
@@ -222,6 +223,10 @@ export class DetailsElementComponent implements OnInit, OnChanges {
         });
         this._hasInheritedProperties.optional = true;
       }
+    }
+
+    if (element.forwards) {
+      this.inheritedProperties.forwards.push(...element.forwards);
     }
 
     if (element.parent) this.setInheritedProperties(element.parent);
