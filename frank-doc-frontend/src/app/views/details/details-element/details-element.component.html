@@ -357,7 +357,8 @@
         </div>
       </div>
     }
-    @if (element.forwards) {
+    <!-- Temp solution, see issue https://github.com/frankframework/frank-doc/issues/348 -->
+    @if (element.forwards || inheritedProperties.forwards.length > 0) {
       <div class="sub-options forwards" id="forwards">
         <div class="options-title" [collapse]="forwards" (collapsedChange)="collapsedOptions.forwards = $event">
           <span>Forwards</span>
@@ -372,17 +373,32 @@
               </tr>
             </thead>
             <tbody>
-              @for (forward of element.forwards; track forward.name) {
-                <tr>
-                  <td [innerHTML]="forward.name | nameWbr"></td>
-                  <td
-                    *javadocTransform="
-                      let text of forward.description ?? DEFAULT_RETURN_CHARACTER;
-                      elements: frankDocElements
-                    "
-                    [innerHTML]="text"
-                  ></td>
-                </tr>
+              @if (element.forwards) {
+                @for (forward of inheritedProperties.forwards; track forward.name) {
+                  <tr>
+                    <td [innerHTML]="forward.name | nameWbr"></td>
+                    <td
+                      *javadocTransform="
+                        let text of forward.description ?? DEFAULT_RETURN_CHARACTER;
+                        elements: frankDocElements
+                      "
+                      [innerHTML]="text"
+                    ></td>
+                  </tr>
+                }
+              } @else {
+                @for (forward of inheritedProperties.forwards; track forward.name) {
+                  <tr>
+                    <td [innerHTML]="forward.name | nameWbr"></td>
+                    <td
+                      *javadocTransform="
+                        let text of forward.description ?? DEFAULT_RETURN_CHARACTER;
+                        elements: frankDocElements
+                      "
+                      [innerHTML]="text"
+                    ></td>
+                  </tr>
+                }
               }
             </tbody>
           </table>
