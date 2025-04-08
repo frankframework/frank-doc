@@ -101,6 +101,10 @@ h3.sub-title {
 
 .javadoc,
 .details .section {
+  p {
+    margin: 10px 0 5px;
+  }
+
   pre {
     padding: 8px;
     border-radius: 8px;
@@ -140,6 +144,10 @@ h3.sub-title {
   code {
     font-family: 'DM Mono', monospace;
   }
+}
+
+.javadoc {
+  white-space: pre-wrap;
 }
 
 .collapsed {
