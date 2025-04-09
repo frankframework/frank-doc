@@ -31,15 +31,14 @@
         }
       </ff-alert>
     }
-    <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>
-    @if (element.notes) {
-      <div class="notes">
-        @for (note of element.notes; track note) {
-          <ff-alert [type]="getWarningType(note.type)">
-            <p *javadocTransform="let text of note.value; elements: frankDocElements" [innerHTML]="text"></p>
-          </ff-alert>
-        }
-      </div>
+    <p>
+      <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>
+    </p>
+    <br />
+    @for (note of element.notes; track note) {
+      <ff-alert [type]="getWarningType(note.type)">
+        <p *javadocTransform="let text of note.value; elements: frankDocElements" [innerHTML]="text"></p>
+      </ff-alert>
     }
   </div>
 

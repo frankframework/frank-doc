@@ -27,7 +27,6 @@ export class JavadocTransformDirective implements OnChanges {
   private readonly markdownLinkRegex = /\[(.*?)]\((.+?)\)/g; // old regex: /\[(.*?)\]\((.+?)\)/g
   private readonly tagsRegex = /<[^>]*>?/gm;
   private readonly linkRegex = /(?:{@link\s(.*?)})/g;
-  private readonly newLineWithSpaceRegex = /\n +/g;
 
   ngOnChanges(): void {
     if (this.javadocTransformOf === '') this.javadocTransformOf = DEFAULT_RETURN_CHARACTER;
@@ -62,6 +61,7 @@ export class JavadocTransformDirective implements OnChanges {
   transformAsHtml(): string[] {
     let value = `${this.javadocTransformOf}`;
     value = value.replace(this.markdownLinkRegex, '<a target="_blank" href="$2" alt="$1">$1</a>');
+    value = value.replaceAll('\\"', '"');
 
     if (this.javadocTransformLink) {
       value = value.replace(this.linkRegex, (_, captureGroup) => {
@@ -76,29 +76,23 @@ export class JavadocTransformDirective implements OnChanges {
       if (typeof linkData === 'string') return linkData;
       return this.defaultLinkTransformation(linkData);
     });
-
-    value = this.escapePreformatCharacters(value);
     return [value];
   }
 
   transformAsText(): string[] {
     let value = `${this.javadocTransformOf}`;
     value = value.replace(this.markdownLinkRegex, '$1($2)');
+    value = value.replaceAll('\\"', '"');
     value = value.replace(this.tagsRegex, '');
     value = value.replace(this.linkRegex, (_: string, captureGroup: string) => {
       const linkData = getLinkData(captureGroup, this.javadocTransformElements!, this.appService);
       if (typeof linkData === 'string') return linkData;
       return `${linkData.text}(${linkData.href})`;
     });
-    value = this.escapePreformatCharacters(value);
     return [value];
   }
 
   private defaultLinkTransformation(linkData: LinkData): string {
     return `<a href="#/${linkData.href}">${linkData.text}</a>`;
-  }
-
-  private escapePreformatCharacters(value: string): string {
-    return value.replaceAll(this.newLineWithSpaceRegex, '\n').replaceAll('\\"', '"');
   }
 }

@@ -53,19 +53,13 @@ h3 {
 }
 
 .explanation {
-  & > span {
+  & > ff-alert {
+    display: block;
+    margin-bottom: 8px;
+  }
+  & > p {
     color: var(--ff-color-dark-gray);
     font-size: 16px;
-    white-space: pre-wrap;
-  }
-
-  .notes {
-    margin-top: 8px;
-
-    ff-alert {
-      display: block;
-      margin-bottom: 8px;
-    }
   }
 }
 
