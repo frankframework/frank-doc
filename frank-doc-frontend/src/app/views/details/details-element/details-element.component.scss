@@ -56,11 +56,14 @@ h3 {
   & > span {
     color: var(--ff-color-dark-gray);
     font-size: 16px;
-    white-space: pre-wrap;
+
+    p {
+      margin: 1em 0;
+    }
   }
 
   .notes {
-    margin-top: 8px;
+    margin-top: 1em;
 
     ff-alert {
       display: block;
