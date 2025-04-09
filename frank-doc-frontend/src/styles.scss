@@ -142,7 +142,8 @@ h3.sub-title {
   }
 }
 
-.javadoc p {
+.javadoc p,
+.explanation > span p {
   margin: 1em 0;
 }
 
