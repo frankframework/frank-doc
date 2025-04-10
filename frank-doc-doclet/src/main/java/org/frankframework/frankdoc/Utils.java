@@ -32,11 +32,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonWriter;
-import javax.json.JsonWriterFactory;
+import javax.json.*;
 import javax.json.stream.JsonGenerator;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
@@ -240,6 +236,52 @@ public final class Utils {
 		}
 
 		return sw.toString().trim();
+	}
+
+	public static String jsonOrder(String json) {
+		JsonReader reader = Json.createReader(new StringReader(json));
+		JsonObject jsonObject = reader.readObject();
+
+		// Recursively sort the JSON object
+		JsonObject sortedJsonObject = sortJsonObject(jsonObject);
+
+		return sortedJsonObject.toString(); // Return the string representation of the sorted JSON
+	}
+
+	private static JsonObject sortJsonObject(JsonObject jsonObject) {
+		JsonObjectBuilder builder = Json.createObjectBuilder();
+
+		// Sort keys alphabetically
+		jsonObject.keySet().stream()
+			.sorted()
+			.forEach(key -> {
+				JsonValue value = jsonObject.get(key);
+				if (value instanceof JsonObject) {
+					// Recursively sort nested objects
+					builder.add(key, sortJsonObject((JsonObject) value));
+				} else if (value instanceof JsonArray) {
+					// Recursively sort nested arrays
+					builder.add(key, sortJsonArray((JsonArray) value));
+				} else {
+					builder.add(key, value);
+				}
+			});
+
+		return builder.build();
+	}
+
+	private static JsonArray sortJsonArray(JsonArray jsonArray) {
+		JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+		jsonArray.forEach(value -> {
+			if (value instanceof JsonObject) {
+				arrayBuilder.add(sortJsonObject((JsonObject) value)); // Sort objects inside arrays
+			} else if (value instanceof JsonArray) {
+				arrayBuilder.add(sortJsonArray((JsonArray) value)); // Sort arrays inside arrays
+			} else {
+				arrayBuilder.add(value);
+			}
+		});
+		return arrayBuilder.build();
 	}
 
 	public static String flattenJavaDocLinksToLastWords(String text) {

@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import static org.frankframework.frankdoc.Utils.isConfigChildSetter;
 import static org.frankframework.frankdoc.Utils.replacePattern;
 import static org.frankframework.frankdoc.Utils.*;
+import static org.frankframework.frankdoc.wrapper.TestUtil.assertJsonEqual;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UtilsTest {
@@ -136,6 +137,97 @@ public class UtilsTest {
 	@Test
 	public void equalObjectsAreEqualNullable() {
 		assertTrue(Utils.equalsNullable("this", "thi" + "s"));
+	}
+
+	@Test
+	public void whenJsonObjectsHaveDifferentKeyOrderThenTheyShouldBeEqual() {
+		TestUtil.assertJsonEqual("Comparing objects with differently ordered elements", "{\"a\":1,\"b\":2}", "{\"b\":2,\"a\":1}");
+	}
+
+	@Test
+	public void whenJsonObjectsHaveDifferentFormattingThenTheyShouldBeEqual() {
+		TestUtil.assertJsonEqual("Comparing json objects", "{\"a\":1,\"b\":2 }", "{ \"a\" :1,\"b\":2}");
+	}
+
+	@Test
+	public void whenJsonObjectIsSimpleAndUnsortedThenItShouldBeOrderedCorrectly() {
+		String input = "{\"z\":\"last\",\"a\":\"first\",\"m\":\"middle\"}";
+		String expected = "{\"a\":\"first\",\"m\":\"middle\",\"z\":\"last\"}";
+
+		String actual = Utils.jsonOrder(input);
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void whenJsonObjectIsAlreadySortedThenItShouldRemainUnchanged() {
+		String input = "{\"a\":1,\"b\":2,\"c\":3}";
+		String expected = "{\"a\":1,\"b\":2,\"c\":3}";
+
+		String actual = Utils.jsonOrder(input);
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void whenJsonObjectHasReversedKeysThenItShouldBeOrderedCorrectly() {
+		String input = "{\"c\":3,\"b\":2,\"a\":1}";
+		String expected = "{\"a\":1,\"b\":2,\"c\":3}";
+
+		String actual = Utils.jsonOrder(input);
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void whenJsonObjectHasMixedValueTypesThenItShouldBeOrderedCorrectly() {
+		String input = "{\"z\":true,\"a\":123,\"m\":\"text\"}";
+		String expected = "{\"a\":123,\"m\":\"text\",\"z\":true}";
+
+		String actual = Utils.jsonOrder(input);
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void whenJsonObjectIsEmptyThenItShouldRemainEmpty() {
+		String input = "{}";
+		String expected = "{}";
+
+		String actual = Utils.jsonOrder(input);
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void whenJsonObjectsAreOrderedDifferentlyThenTheyShouldBeEqual() {
+		String expected = "{\"a\":1,\"b\":2,\"c\":3}";
+		String actual = "{\"c\":3,\"b\":2,\"a\":1}";
+
+		// Should not throw
+		TestUtil.assertJsonEqual("JSON objects should be equal", expected, actual);
+	}
+
+	@Test
+	public void whenJsonObjectsDifferInValuesThenTheyShouldNotBeEqual() {
+		String expected = "{\"a\":1,\"b\":2}";
+		String actual = "{\"a\":1,\"b\":3}";
+
+		// Should throw AssertionError
+		assertThrows(AssertionError.class, () ->
+			TestUtil.assertJsonEqual("JSON mismatch", expected, actual)
+		);
+	}
+
+	@Test
+	public void whenJsonObjectsAreIdenticalThenTheyShouldBeEqual() {
+		String expected = "{\"x\":\"y\"}";
+		String actual = "{\"x\":\"y\"}";
+
+		TestUtil.assertJsonEqual("Identical JSON should match", expected, actual);
+	}
+
+	@Test
+	public void whenJsonObjectsHaveWhitespaceDifferencesThenTheyShouldBeEqual() {
+		String expected = "{ \"a\": 1, \"b\": 2 }";
+		String actual = "{\"b\":2,\"a\":1}";
+
+		TestUtil.assertJsonEqual("Whitespace and order differences should be ignored", expected, actual);
 	}
 
 	@Test
