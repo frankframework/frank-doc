@@ -129,10 +129,10 @@ public final class TestUtil {
 
 	public static void assertJsonEqual(String description, String jsonExp, String jsonAct) {
 		// Order the JSON objects so that the order of the elements does not matter.
-		String ExpectedJson = Utils.jsonOrder(jsonExp);
-		String ActualJson = Utils.jsonOrder(jsonAct);
+		String expectedJson = Utils.jsonOrder(jsonExp);
+		String actualJson = Utils.jsonOrder(jsonAct);
 
-		assertEquals(ExpectedJson, ActualJson, description);
+		assertEquals(expectedJson, actualJson, description);
 	}
 
 	public static String getTestFile(String file) throws IOException {
