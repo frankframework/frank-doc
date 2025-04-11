@@ -2,7 +2,7 @@ package org.frankframework.frankdoc.testtarget.examples.inheritdoc;
 
 /**
  * Description of child.
- * {@inheritDoc}
+ * {@inheritClassDoc}
  */
 public class Child extends Parent {
 

@@ -31,14 +31,14 @@
             "elementNames": [
                 {
                     "labels": {
+                        "CategoryA": [
+                            "CategoryAValue_2"
+                        ],
                         "CategoryC": [
                             "CategoryCValue_2"
                         ],
                         "CategoryB": [
                             "CategoryBValue_2"
-                        ],
-                        "CategoryA": [
-                            "CategoryAValue_2"
                         ]
                     },
                     "name": "ChildConfigChildARoleNameIChild"
@@ -152,15 +152,15 @@
             "elementNames": [
                 {
                     "labels": {
+                        "CategoryA": [
+                            "CategoryAValue_1"
+                        ],
                         "CategoryC": [
                             "CategoryCValue_3",
                             "CategoryCValue_4"
                         ],
                         "CategoryB": [
                             "CategoryBValue_1"
-                        ],
-                        "CategoryA": [
-                            "CategoryAValue_1"
                         ]
                     },
                     "name": "Start"
