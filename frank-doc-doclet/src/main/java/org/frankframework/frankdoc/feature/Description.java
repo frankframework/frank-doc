@@ -27,7 +27,7 @@ public class Description {
 	private static final Description INSTANCE = new Description();
 
 	public static final String INHERIT_DOC_TAG = "{@inheritDoc}";
-	public static final String INHERIT_CLASS_DOC_TAG = "{@inheritClassDoc }";
+	public static final String INHERIT_CLASS_DOC_TAG = "{@inheritClassDoc }"; // The space is intentional, due to the way tags are parsed.
 
 	public static Description getInstance() {
 		return INSTANCE;
