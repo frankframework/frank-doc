@@ -3,7 +3,7 @@ package org.frankframework.frankdoc.testtarget.notes;
 /**
  * First line of documentation.
  * Second line of documentation.
- * {@inheritDoc}
+ * {@inheritClassDoc}
  *
  * @ff.info First line
  * Second line

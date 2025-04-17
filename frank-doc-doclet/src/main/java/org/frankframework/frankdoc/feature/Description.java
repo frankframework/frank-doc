@@ -27,6 +27,7 @@ public class Description {
 	private static final Description INSTANCE = new Description();
 
 	public static final String INHERIT_DOC_TAG = "{@inheritDoc}";
+	public static final String INHERIT_CLASS_DOC_TAG = "{@inheritClassDoc }"; // The space is intentional, due to the way tags are parsed.
 
 	public static Description getInstance() {
 		return INSTANCE;
@@ -64,13 +65,13 @@ public class Description {
 		}
 
 		String parentJavaDoc = valueOf(superClazz);
-		return childJavaDoc.replace(INHERIT_DOC_TAG, parentJavaDoc == null ? "" : parentJavaDoc).strip();
+		return childJavaDoc.replace(INHERIT_CLASS_DOC_TAG, parentJavaDoc == null ? "" : parentJavaDoc).strip();
 	}
 
 	public String valueOf(FrankClass clazz) {
 		String result = clazz.getJavaDoc();
 
-		if (result != null && result.contains(INHERIT_DOC_TAG)) {
+		if (result != null && result.contains(INHERIT_CLASS_DOC_TAG)) {
 			FrankClass superClazz = clazz.getSuperclass();
 			result = replaceInheritDocInResult(superClazz, result);
 		}
