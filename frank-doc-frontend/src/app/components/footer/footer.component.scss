@@ -17,15 +17,24 @@ footer {
     align-self: flex-start;
   }
 
-  .links > a {
-    color: var(--ff-bgcolor-dark-gray);
-    font-size: 16px;
-    font-weight: 500;
-    text-decoration-line: underline;
-    text-transform: capitalize;
+  .links {
+    display: flex;
+    gap: 1em;
 
-    & + a {
-      margin-left: 15px;
+    & > a {
+      display: flex;
+      gap: 0.25em;
+
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--ff-bgcolor-dark-gray);
+      font-size: 16px;
+      font-weight: 500;
+      text-transform: capitalize;
+
+      &:hover {
+        text-decoration-line: underline;
+      }
     }
   }
 }
