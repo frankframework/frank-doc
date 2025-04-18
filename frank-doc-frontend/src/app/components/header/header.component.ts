@@ -20,16 +20,4 @@ import { VersionFormatDirective } from './version-format.directive';
 })
 export class HeaderComponent {
   @Input() version: string = '';
-
-  downloadXSD(): void {
-    const downloadUrl = environment.xsdUrl;
-
-    const link = document.createElement('a');
-    link.setAttribute('target', '_blank');
-    link.setAttribute('href', downloadUrl);
-    link.setAttribute('download', '');
-    document.body.append(link);
-    link.click();
-    link.remove();
-  }
 }
