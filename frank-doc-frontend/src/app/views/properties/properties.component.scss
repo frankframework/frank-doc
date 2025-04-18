@@ -19,6 +19,7 @@
   table {
     width: 100%;
     position: relative;
+    border-collapse: collapse;
     //overflow: auto;
 
     th {
@@ -32,49 +33,73 @@
       text-align: start;
       letter-spacing: 1.8px;
       text-transform: uppercase;
+    }
 
-      &:first-child {
-        padding-left: 18px;
-        width: 250px;
+    tr.border-top {
+      td {
+        padding-top: 1em;
+        border-top: 1px solid var(--ff-color-light-gray);
       }
+    }
 
-      &:last-child {
-        padding-right: 18px;
+    tr.padding-bottom {
+      td {
+        padding-bottom: 1em;
       }
     }
 
     td {
-      padding: 13px 3px;
-      border-top: 1px solid var(--ff-color-light-gray);
+      padding: 0.25em 0.25em;
       color: var(--ff-border-gray);
       font-size: 16px;
       font-weight: 400;
-      vertical-align: text-top;
-      word-break: normal;
+      word-break: break-word;
+      vertical-align: top;
+    }
 
-      &:first-child {
-        padding-left: 18px;
-        color: var(--ff-color-dark);
-        font-family: 'DM Mono', monospace;
-        font-weight: 500;
+    .property-name {
+      color: var(--ff-color-dark);
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
 
-        &.deprecated {
-          text-decoration: line-through;
+      &.deprecated {
+        text-decoration: line-through;
+      }
+    }
+
+    .property-info {
+      position: relative;
+
+      .icon {
+        cursor: pointer;
+
+        &:hover + .property-info__flags {
+          display: block;
         }
       }
 
-      &:last-child {
-        padding-right: 18px;
+      &__flags {
+        position: absolute;
+        top: 3em;
+        width: max-content;
+        padding: 0.5em;
+        border-radius: 0.25em;
+        display: none;
+        background: #1e1e1e;
+        color: white;
+        left: 50%;
+        transform: translateX(-50%);
       }
+    }
 
-      &:nth-of-type(3) {
-        word-break: break-all;
-        width: 300px;
-      }
+    .property-default-value {
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
+      word-break: break-all;
+    }
 
-      &:nth-of-type(4) {
-        width: 150px;
-      }
+    .property-description:first-letter {
+      text-transform: capitalize;
     }
   }
 }

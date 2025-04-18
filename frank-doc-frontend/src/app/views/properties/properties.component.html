@@ -26,8 +26,9 @@
   <div class="page">
     <h2 class="page-title">Properties</h2>
     <p class="description">
-      Here you can find all properties of the Frank!Framework. The properties are grouped by their respective categories.
-      You can find the categories on the left, and by clicking on a category, you will be scrolled to it. Please note not all categories have been defined yet, so you may find 'unnamed' categories.
+      Here you can find all properties of the Frank!Framework. The properties are grouped by their respective
+      categories. You can find the categories on the left, and by clicking on a category, you will be scrolled to it.
+      Please note not all categories have been defined yet, so you may find 'unnamed' categories.
     </p>
     @for (propertyGroup of properties(); track index; let index = $index) {
       <div class="property-group">
@@ -37,30 +38,42 @@
         <table>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Default</th>
-              <th>Flags</th>
+              <th style="width: 30px"></th>
+              <th style="width: 25%">Property name & Description</th>
+              <th>Default value</th>
             </tr>
           </thead>
           <tbody>
             @for (property of propertyGroup.properties; track property) {
-              <tr>
+              @let propertyName = property.name | nameWbr: '.';
+              <tr class="border-top" [ngClass]="{ 'padding-bottom': !property.description }">
+                <td class="property-info">
+                  @if (property.flags) {
+                    <app-icon-help class="icon" height="16px" width="16px" colour="grey"></app-icon-help>
+                    <span class="property-info__flags">
+                      {{ property.flags?.join(', ') }}
+                    </span>
+                  }
+                </td>
                 <td
+                  class="property-name"
                   [ngClass]="{ deprecated: property.flags?.includes('Deprecated') }"
                   [id]="convertToId(propertyGroup.name + '-' + property.name)"
-                  [innerHTML]="property.name | nameWbr: '.'"
+                  [innerHTML]="propertyName"
                 ></td>
-                <td
-                  *javadocTransform="
-                    let text of property.description ?? DEFAULT_RETURN_CHARACTER;
-                    elements: frankDocElements()
-                  "
-                  [innerHTML]="text"
-                ></td>
-                <td>{{ property.defaultValue ?? DEFAULT_RETURN_CHARACTER }}</td>
-                <td>{{ property.flags?.join(', ') ?? DEFAULT_RETURN_CHARACTER }}</td>
+                <td class="property-default-value" [innerHTML]="property.defaultValue ?? DEFAULT_RETURN_CHARACTER"></td>
               </tr>
+              @if (property.description) {
+                <tr class="padding-bottom">
+                  <td></td>
+                  <td
+                    class="property-description"
+                    colspan="2"
+                    *javadocTransform="let text of property.description; elements: frankDocElements()"
+                    [innerHTML]="text"
+                  ></td>
+                </tr>
+              }
             }
           </tbody>
         </table>
