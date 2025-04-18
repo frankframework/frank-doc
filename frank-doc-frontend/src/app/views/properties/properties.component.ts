@@ -7,10 +7,11 @@ import { DEFAULT_RETURN_CHARACTER, DEFAULT_UNKNOWN_PROPERTY_GROUP } from '../../
 import { CollapseDirective } from '../../components/collapse.directive';
 import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.component';
 import { NgClass } from '@angular/common';
+import { IconHelpComponent } from '../../icons/icon-help/icon-help.component';
 
 @Component({
   selector: 'app-properties',
-  imports: [NameWbrPipe, JavadocTransformDirective, CollapseDirective, IconCaretComponent, NgClass],
+  imports: [NameWbrPipe, JavadocTransformDirective, CollapseDirective, IconCaretComponent, NgClass, IconHelpComponent],
   templateUrl: './properties.component.html',
   styleUrl: './properties.component.scss',
 })
