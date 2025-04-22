@@ -77,7 +77,7 @@ export class JavadocTransformDirective implements OnChanges {
       return this.defaultLinkTransformation(linkData);
     });
 
-    value = this.escapePreformatCharacters(value);
+    value = value.replaceAll('\\"', '"');
     return [value];
   }
 
@@ -90,15 +90,11 @@ export class JavadocTransformDirective implements OnChanges {
       if (typeof linkData === 'string') return linkData;
       return `${linkData.text}(${linkData.href})`;
     });
-    value = this.escapePreformatCharacters(value);
+    value = value.replaceAll('\\"', '"');
     return [value];
   }
 
   private defaultLinkTransformation(linkData: LinkData): string {
     return `<a href="#/${linkData.href}">${linkData.text}</a>`;
-  }
-
-  private escapePreformatCharacters(value: string): string {
-    return value.replaceAll(this.newLineWithSpaceRegex, '\n').replaceAll('\\"', '"');
   }
 }
