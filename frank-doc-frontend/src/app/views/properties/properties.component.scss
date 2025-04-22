@@ -71,8 +71,6 @@
       position: relative;
 
       .icon {
-        cursor: pointer;
-
         &:hover + .property-info__flags {
           display: block;
         }
