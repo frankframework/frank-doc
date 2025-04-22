@@ -27,7 +27,6 @@ export class JavadocTransformDirective implements OnChanges {
   private readonly markdownLinkRegex = /\[(.*?)]\((.+?)\)/g; // old regex: /\[(.*?)\]\((.+?)\)/g
   private readonly tagsRegex = /<[^>]*>?/gm;
   private readonly linkRegex = /(?:{@link\s(.*?)})/g;
-  private readonly newLineWithSpaceRegex = /\n +/g;
 
   ngOnChanges(): void {
     if (this.javadocTransformOf === '') this.javadocTransformOf = DEFAULT_RETURN_CHARACTER;
