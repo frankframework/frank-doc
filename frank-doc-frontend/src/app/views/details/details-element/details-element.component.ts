@@ -228,6 +228,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       required: false,
       optional: false,
     };
+    this.usedEnums = [];
   }
 
   private setInheritedProperties(elementIndex: string): void {

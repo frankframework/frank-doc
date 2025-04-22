@@ -31,7 +31,9 @@
         }
       </ff-alert>
     }
-    <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>
+    @if (element.description) {
+      <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>
+    }
     @if (element.notes) {
       <div class="notes">
         @for (note of element.notes; track note) {
