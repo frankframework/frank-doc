@@ -283,11 +283,35 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     return map.get(parentElementName) ?? defaultValue;
   }
 
+  private getAllRequiredAttributes(): Attribute[] {
+    return [
+      ...this.inheritedProperties.attributesRequired.flatMap((item) => item.properties),
+      ...this.attributesRequired,
+    ];
+  }
+
   private generateElementSyntax(): void {
     if (this.element) {
+      const requiredAttributes = this.getAllRequiredAttributes()
+        .map((attribute) => `${attribute.name}="${attribute.default ?? this.getTypeDefaultValue(attribute.type)}"`)
+        .join(' ');
       this.elementSyntax = `
-<${this.element.name} name="my-${this.element.name.toLowerCase()}" />
+<${this.element.name} ${requiredAttributes}/>
 `.trim();
+    }
+  }
+
+  private getTypeDefaultValue(type: Attribute['type']): string {
+    switch (type) {
+      case 'int': {
+        return '0';
+      }
+      case 'boolean': {
+        return 'false';
+      }
+      default: {
+        return '';
+      }
     }
   }
 }
