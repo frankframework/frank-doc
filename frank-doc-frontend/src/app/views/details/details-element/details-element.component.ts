@@ -92,7 +92,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     inheritedRequired: new Map<string, boolean>(),
     inheritedOptional: new Map<string, boolean>(),
   };
-  protected undefinedType = 'string';
   protected elementSyntax: string = '';
   protected collapsedInheritedThreshold = 1;
   protected _hasInheritedProperties: HasInheritedProperties = {
@@ -199,6 +198,20 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       }
       default: {
         return 'info';
+      }
+    }
+  }
+
+  protected getFriendlyType(type: Attribute['type']): string {
+    switch (type) {
+      case 'int': {
+        return 'number';
+      }
+      case 'boolean': {
+        return 'boolean';
+      }
+      default: {
+        return 'text';
       }
     }
   }
