@@ -39,7 +39,11 @@ export class HomeComponent implements OnInit {
     });
     this.initializeSearchFilters();
     this.loading = !this.appService.hasLoaded;
-    this.searchQuery = this.appService.previousSearchQuery;
+
+    if (this.appService.previousSearchQuery !== '') {
+      this.searchQuery = this.appService.previousSearchQuery;
+      this.search(this.searchQuery);
+    }
   }
 
   protected search(query: string): void {
