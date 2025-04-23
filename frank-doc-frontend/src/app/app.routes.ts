@@ -28,7 +28,17 @@ export const routes: Routes = [
     title: 'Credential Providers',
   },
   {
+    path: 'credential-providers/:name',
+    component: CredentialProvidersComponent,
+    title: 'Credential Providers',
+  },
+  {
     path: 'servlet-authenticators',
+    component: ServletAuthenticatorsComponent,
+    title: 'Servlet Authenticators',
+  },
+  {
+    path: 'servlet-authenticators/:name',
     component: ServletAuthenticatorsComponent,
     title: 'Servlet Authenticators',
   },
