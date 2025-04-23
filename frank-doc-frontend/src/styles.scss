@@ -1,9 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 @use "sass:meta";
+@use "sass:map";
 
 @use '@frankframework/angular-components';
 @use '@frankframework/angular-components/styles/variables';
 
+$custom-variables: ('bgcolor-light-gray': #e5e5e5);
 
 @font-face {
   font-family: 'DM Mono';
@@ -22,7 +24,11 @@ app-root {
   @each $key, $value in meta.module-variables('variables') {
     --#{$key}: #{$value};
   }
+  @each $key, $value in $custom-variables {
+    --#{$key}: #{$value};
+  }
 }
+
 
 .page-container {
   display: flex;
@@ -114,7 +120,19 @@ h3.sub-title {
 
     code {
       white-space: pre;
+      padding: 0;
+      font-size: 100%;
+      background: transparent;
+      border-radius: 0;
     }
+  }
+
+  code {
+    padding: .2em .4em;
+    font-family: 'DM Mono', monospace;
+    font-size: 85%;
+    background: map.get($custom-variables, 'bgcolor-light-gray');
+    border-radius: 5px;
   }
 
   a {
@@ -135,10 +153,6 @@ h3.sub-title {
       text-underline-offset: auto;
       text-underline-position: from-font;
     }
-  }
-
-  code {
-    font-family: 'DM Mono', monospace;
   }
 }
 
