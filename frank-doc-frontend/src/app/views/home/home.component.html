@@ -2,7 +2,7 @@
   <div class="search-container">
     <p class="subtitle">Technical documentation of our FF! Components</p>
     <h2 class="title">What are you looking for?</h2>
-    <ff-search [(ngModel)]="searchQuery" (ngModelChange)="search($event)"></ff-search>
+    <ff-search autofocus [(ngModel)]="searchQuery" (ngModelChange)="search($event)"></ff-search>
     <app-home-filters
       [initialFilters]="initialFilters"
       (selectedFilters)="updateSelectedFilters($event)"

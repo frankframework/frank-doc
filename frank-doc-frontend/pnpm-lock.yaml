@@ -36,8 +36,8 @@ importers:
         specifier: ^19.1.5
         version: 19.2.0(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@19.2.0(@angular/animations@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0)))(rxjs@7.8.2)
       '@frankframework/angular-components':
-        specifier: ^1.1.4
-        version: 1.1.4(@angular/cdk@19.2.1(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))
+        specifier: ^1.1.6
+        version: 1.1.6(@angular/cdk@19.2.1(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))
       fuse.js:
         specifier: ^7.0.0
         version: 7.1.0
@@ -1183,8 +1183,8 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@frankframework/angular-components@1.1.4':
-    resolution: {integrity: sha512-eHkadMocBVg8+Ze8Uu+ZNMYBzg4QPnD5eCGnDvSt+HDgHd8fRrIrU2ixbFFKo6K9YHDWCTYYVGHe7vyAxZCt8g==}
+  '@frankframework/angular-components@1.1.6':
+    resolution: {integrity: sha512-2XTgzW/WsGQkdzpxVFz3F0iVl6gKvgYQt/rrmsqUK8ZvYCT7HPrZ2Uva92p+on2Rizyeya4PRbGoswpc+Ff8vg==}
     peerDependencies:
       '@angular/cdk': '>=18.2.0 <20.0.0'
       '@angular/core': '>=18.2.0 <20.0.0'
@@ -6146,7 +6146,7 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@frankframework/angular-components@1.1.4(@angular/cdk@19.2.1(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))':
+  '@frankframework/angular-components@1.1.6(@angular/cdk@19.2.1(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))':
     dependencies:
       '@angular/cdk': 19.2.1(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2)
       '@angular/core': 19.2.0(rxjs@7.8.2)(zone.js@0.15.0)

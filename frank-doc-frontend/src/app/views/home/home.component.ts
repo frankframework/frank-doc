@@ -1,5 +1,5 @@
 import { Component, computed, inject, isDevMode, OnInit, Signal } from '@angular/core';
-import { SearchComponent } from '@frankframework/angular-components';
+import { SearchComponent, AutoFocusDirective } from '@frankframework/angular-components';
 import { FormsModule } from '@angular/forms';
 import { HomeComponentListComponent } from './home-component-list/home-component-list.component';
 import { AppService } from '../../app.service';
@@ -11,7 +11,7 @@ import { SearchQueryParamsService } from '../../search-query-params.service';
 
 @Component({
   selector: 'app-home',
-  imports: [SearchComponent, FormsModule, HomeComponentListComponent, HomeFiltersComponent],
+  imports: [SearchComponent, FormsModule, HomeComponentListComponent, HomeFiltersComponent, AutoFocusDirective],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
