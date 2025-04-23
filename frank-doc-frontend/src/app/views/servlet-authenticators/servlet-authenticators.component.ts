@@ -44,7 +44,7 @@ export class ServletAuthenticatorsComponent {
     return authenticators.find((authenticator) => authenticator.name === authenticatorName) || null;
   });
 
-  protected handleSelectedAuthenticator(provider: CredentialProvider): void {
-    this.router.navigate(['servlet-authenticators', provider.name]);
+  protected handleSelectedAuthenticator(authenticator: ServletAuthenticator): void {
+    this.router.navigate(['servlet-authenticators', authenticator.name]);
   }
 }
