@@ -365,7 +365,7 @@ public final class Utils {
 	}
 
 	private static String replaceLiteralValue(String text) {
-		return replacePattern(text, JAVADOC_LITERAL_START_DELIMITER, Utils::getCodeValueReplacement);
+		return replacePattern(text, JAVADOC_LITERAL_START_DELIMITER, Utils::getLiteralValueReplacement);
 	}
 
 	private static String replaceCodeValue(String text) {
@@ -378,6 +378,10 @@ public final class Utils {
 
 	private static String getCodeValueReplacement(String codeBlock) {
 		return "<code>" + StringEscapeUtils.escapeHtml4(codeBlock) + "</code>";
+	}
+
+	private static String getLiteralValueReplacement(String codeBlock) {
+		return "<pre>" + StringEscapeUtils.escapeHtml4(codeBlock) + "</pre>";
 	}
 
 	private static String getClassFieldValueReplacement(String ref, FrankClass context) {

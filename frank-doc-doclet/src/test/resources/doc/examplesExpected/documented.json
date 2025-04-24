@@ -103,7 +103,7 @@
             "parameters": [
                 {
                     "name": "stubFilename",
-                    "description": "will <u>not</u> be handed to the sender\n and it is used at runtime instead of the `stubFilename` specified by the attribute. A lookup of the\n file for this stubFilename will be done at runtime, while the file for the stubFilename specified\n as an attribute will be done at configuration time."
+                    "description": "will <u>not</u> be handed to the sender\n and it is used at runtime instead of the <pre>stubFilename</pre> specified by the attribute. A lookup of the\n file for this stubFilename will be done at runtime, while the file for the stubFilename specified\n as an attribute will be done at configuration time."
                 }
             ],
             "forwards": [
@@ -117,11 +117,11 @@
                     "name": "presumedTimeout"
                 },
                 {
-                    "name": "`interrupt`"
+                    "name": "<pre>interrupt</pre>"
                 },
                 {
                     "name": "&lt;defined-by-sender&gt;",
-                    "description": "any `forward`, as returned by name by {@link ISender sender}"
+                    "description": "any <pre>forward</pre>, as returned by name by {@link ISender sender}"
                 }
             ]
         },

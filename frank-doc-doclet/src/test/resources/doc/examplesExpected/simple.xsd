@@ -4,7 +4,7 @@
   <xs:element name="Start">
     <xs:annotation>
       <xs:documentation>Description of Start. Value of VARIABLE is &lt;code&gt;variable value&lt;/code&gt;. Value of TheEnum.ENUM_CONSTANT is &lt;code&gt;enum constant&lt;/code&gt;.
- Value of literal is `This is a literal`.</xs:documentation>
+ Value of literal is &lt;pre&gt;This is a literal&lt;/pre&gt;.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
