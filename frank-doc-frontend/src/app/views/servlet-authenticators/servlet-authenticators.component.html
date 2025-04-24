@@ -15,6 +15,22 @@
   </div>
   <div class="page">
     <h2 class="page-title">Servlet Authenticators</h2>
+    <p class="description">
+      In a Java application, servlet authenticators are used to authenticate users and regulate access to web resources.
+      In the Frank!Framework, these authenticators are applied to various endpoints, such as <code>/api/</code> for
+      RESTful traffic, <code>/services/</code> for SOAP-based HTTP messaging, and <code>/metrics/</code> for Prometheus
+      metrics.
+    </p>
+    <p class="description">
+      These HTTP endpoints can be secured using servlet authenticators, which are configured on a per-endpoint basis.
+      Each servlet may have its own dedicated authenticator. By default, the Frank!Framework application is secured with
+      the <code>SealedAuthenticator</code>, which blocks all traffic to the application unless explicitly configured
+      otherwise. This default setup ensures that no unauthenticated access is allowed, requiring users to configure
+      security measures intentionally.
+    </p>
+    <p class="description">
+      For detailed guidance on implementing authentication in your configuration, refer to the Frank!Framework Manual.
+    </p>
     @if (selectedAuthenticator() !== null) {
       <div class="servlet-group" [id]="selectedAuthenticator()?.name">
         <h3 class="sub-title" id="{{ selectedAuthenticator()?.name }}">{{ selectedAuthenticator()?.name }}</h3>
