@@ -108,22 +108,20 @@ h3.sub-title {
 .javadoc,
 .details .section {
   pre {
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid variables.$ff-bgcolor-gray;
-    color: variables.$ff-color-dark;
-    background: rgba(237, 237, 237, 0.50);
-    word-break: break-all;
-    word-wrap: break-word;
-    white-space: normal;
-    overflow: auto;
+    display: inline-block;
 
-    code {
+    & > code {
+      display: inline-block;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid variables.$ff-bgcolor-gray;
+      color: variables.$ff-color-dark;
+      background: rgba(237, 237, 237, 0.50);
+      word-break: break-all;
+      word-wrap: break-word;
+      overflow: auto;
       white-space: pre;
-      padding: 0;
       font-size: 100%;
-      background: transparent;
-      border-radius: 0;
     }
   }
 
