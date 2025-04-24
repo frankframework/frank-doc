@@ -10,7 +10,7 @@ import {
   Signal,
   SimpleChanges,
 } from '@angular/core';
-import { AlertComponent, ChipComponent, AlertType } from '@frankframework/angular-components';
+import { AlertComponent, AlertType, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import {
@@ -22,6 +22,7 @@ import {
   Note,
   ParsedTag,
   RawFrankDoc,
+  Value,
 } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
 import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
@@ -99,8 +100,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     optional: false,
   };
   protected loading: boolean = true;
-  protected attributesHasDefaults: boolean = false;
-  protected usedEnums: FrankDoc['enums'] = [];
 
   protected readonly appService: AppService = inject(AppService);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
@@ -118,8 +117,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       if (this.element?.attributes) {
         this.attributesRequired = this.element.attributes.filter((attribute) => attribute.mandatory === true) ?? [];
         this.attributesOptional = this.element.attributes.filter((attribute) => !attribute.mandatory) ?? [];
-        this.attributesHasDefaults = this.element.attributes.some((attribute) => !!attribute.default);
-        this.usedEnums = this.filterUsedEnums(this.element.attributes);
       }
       if (this.element?.parent) {
         this.inheritedProperties = {
@@ -135,10 +132,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       this.generateElementSyntax();
       if (this.element?.name) this.titleService.setTitle(`${this.element?.name} | Frank!Doc`);
     }
-  }
-
-  protected getInheritedRequiredCollapseOptions(parentElementName: string, defaultValue: boolean): boolean {
-    return this.getInheritedCollapseOptions(this.collapsedOptions.inheritedRequired, parentElementName, defaultValue);
   }
 
   protected getInheritedOptionalCollapseOptions(parentElementName: string, defaultValue: boolean): boolean {
@@ -177,17 +170,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     return `${deprecatedInfo.description ?? 'This has been deprecated!'}${deprecatedInfo.since ? `\nSince ${deprecatedInfo.since}` : ''}`;
   }
 
-  protected getEnumShortName(attribute: Attribute | string): string | null {
-    let fullname = '';
-
-    if (typeof attribute === 'string') fullname = attribute;
-    else if (attribute.enum) fullname = attribute.enum;
-    else return null;
-
-    const nameParts = fullname.split('.');
-    return nameParts[nameParts.length - 1];
-  }
-
   protected getWarningType(type: Note['type']): AlertType {
     switch (type) {
       case 'WARNING': {
@@ -207,6 +189,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       case 'int': {
         return 'number';
       }
+      case 'bool':
       case 'boolean': {
         return 'boolean';
       }
@@ -214,6 +197,14 @@ export class DetailsElementComponent implements OnInit, OnChanges {
         return 'text';
       }
     }
+  }
+
+  protected getEnumValues(enumName: string): Value[] | undefined {
+    return this.frankDocEnums?.find((enumItem) => enumItem.name === enumName)?.values;
+  }
+
+  protected enumValuesHaveDescriptions(enumValues: Value[]): boolean {
+    return enumValues.some((value) => !!value.description);
   }
 
   private resetInheritedProperties(): void {
@@ -228,7 +219,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       required: false,
       optional: false,
     };
-    this.usedEnums = [];
   }
 
   private setInheritedProperties(elementIndex: string): void {
@@ -254,25 +244,11 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       }
     }
 
-    this.usedEnums.push(...this.filterUsedEnums(element.attributes));
-
     if (element.forwards) {
       this.inheritedProperties.forwards.push(...element.forwards);
     }
 
     if (element.parent) this.setInheritedProperties(element.parent);
-  }
-
-  private filterUsedEnums(attributes?: Attribute[]): FrankDoc['enums'] {
-    if (!attributes) return [];
-    const filteredEnums = new Set<FrankDoc['enums'][0]>();
-    for (const attribute of attributes) {
-      if (attribute.enum) {
-        const enumType = this.frankDocEnums?.find((enumItem) => enumItem.name === attribute.enum);
-        if (enumType) filteredEnums.add(enumType);
-      }
-    }
-    return [...filteredEnums];
   }
 
   private getInheritedCollapseOptions(
@@ -306,6 +282,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       case 'int': {
         return '0';
       }
+      case 'bool':
       case 'boolean': {
         return 'false';
       }
