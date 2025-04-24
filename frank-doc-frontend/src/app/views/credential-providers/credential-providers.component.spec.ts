@@ -4,6 +4,7 @@ import { CredentialProvidersComponent } from './credential-providers.component';
 import { AppService } from '../../app.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 
 describe('CredentialProvidersComponent', () => {
   let component: CredentialProvidersComponent;
@@ -12,7 +13,7 @@ describe('CredentialProvidersComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CredentialProvidersComponent],
-      providers: [AppService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [AppService, provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CredentialProvidersComponent);

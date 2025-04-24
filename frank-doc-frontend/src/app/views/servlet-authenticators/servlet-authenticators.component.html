@@ -1,8 +1,13 @@
 <div class="page-container">
   <div class="sidenav">
+    <span class="title">Servlet Authenticators</span>
     <ul>
       @for (authenticator of servletAuthenticators(); track authenticator.name) {
-        <li class="nav-item" (click)="scrollToElement('#' + authenticator.name)">
+        <li
+          class="nav-item"
+          (click)="handleSelectedAuthenticator(authenticator)"
+          [ngClass]="{ active: selectedAuthenticator()?.name === authenticator.name }"
+        >
           {{ authenticator.name }}
         </li>
       }
@@ -10,19 +15,35 @@
   </div>
   <div class="page">
     <h2 class="page-title">Servlet Authenticators</h2>
-    @for (authenticator of servletAuthenticators(); track authenticator.fullName) {
-      <div class="servlet-group" [id]="authenticator.name">
-        <h3 class="sub-title" id="{{ authenticator.name }}">{{ authenticator.name }}</h3>
-        <p class="fullname">{{ authenticator.fullName }}</p>
+    <p class="description">
+      In a Java application, servlet authenticators are used to authenticate users and regulate access to web resources.
+      In the Frank!Framework, these authenticators are applied to various endpoints, such as <code>/api/</code> for
+      RESTful traffic, <code>/services/</code> for SOAP-based HTTP messaging, and <code>/metrics/</code> for Prometheus
+      metrics.
+    </p>
+    <p class="description">
+      These HTTP endpoints can be secured using servlet authenticators, which are configured on a per-endpoint basis.
+      Each servlet may have its own dedicated authenticator. By default, the Frank!Framework application is secured with
+      the <code>SealedAuthenticator</code>, which blocks all traffic to the application unless explicitly configured
+      otherwise. This default setup ensures that no unauthenticated access is allowed, requiring users to configure
+      security measures intentionally.
+    </p>
+    <p class="description">
+      For detailed guidance on implementing authentication in your configuration, refer to the Frank!Framework Manual.
+    </p>
+    @if (selectedAuthenticator() !== null) {
+      <div class="servlet-group" [id]="selectedAuthenticator()?.name">
+        <h3 class="sub-title" id="{{ selectedAuthenticator()?.name }}">{{ selectedAuthenticator()?.name }}</h3>
+        <p class="fullname">{{ selectedAuthenticator()?.fullName }}</p>
         <p
           class="description javadoc"
           *javadocTransform="
-            let text of authenticator.description ?? DEFAULT_RETURN_CHARACTER;
+            let text of selectedAuthenticator()?.description ?? DEFAULT_RETURN_CHARACTER;
             elements: frankDocElements()
           "
           [innerHTML]="text"
         ></p>
-        @if (authenticator.methods && authenticator.methods.length > 0) {
+        @if (selectedAuthenticator()?.methods && (selectedAuthenticator()?.methods?.length ?? 0) > 0) {
           <table>
             <thead>
               <tr>
@@ -31,7 +52,7 @@
               </tr>
             </thead>
             <tbody>
-              @for (method of authenticator.methods; track method.name) {
+              @for (method of selectedAuthenticator()?.methods; track method.name) {
                 <tr>
                   <td [innerHTML]="method.name | nameWbr"></td>
                   <td
@@ -47,6 +68,12 @@
           </table>
         }
       </div>
+    } @else {
+      @if (selectedAuthenticatorName() !== null) {
+        <h3 class="sub-title">Servlet Authenticator not found</h3>
+        <p class="description">The selected Servlet Authenticator {{ selectedAuthenticatorName() }} was not found.</p>
+      }
+      <p>Select a Servlet Authenticator from the list on the left.</p>
     }
   </div>
 </div>
