@@ -99,7 +99,7 @@
               </thead>
               <tbody>
                 <ng-container
-                  *ngTemplateOutlet="attributesRequiredTemplate; context: { $implicit: attributesRequired }"
+                  *ngTemplateOutlet="attributesTableBodyTemplate; context: { $implicit: attributesRequired }"
                 ></ng-container>
                 @for (
                   inheritedAttributesRequired of inheritedProperties.attributesRequired;
@@ -108,7 +108,7 @@
                 ) {
                   <ng-container
                     *ngTemplateOutlet="
-                      attributesRequiredTemplate;
+                      attributesTableBodyTemplate;
                       context: { $implicit: inheritedAttributesRequired.properties }
                     "
                   ></ng-container>
@@ -304,8 +304,8 @@
   </div>
 }
 
-<ng-template #attributesRequiredTemplate let-attributesRequired>
-  @for (attribute of attributesRequired; track attribute.name) {
+<ng-template #attributesTableBodyTemplate let-attributes>
+  @for (attribute of attributes; track attribute.name) {
     <tr
       class="border-top"
       [ngClass]="{
@@ -357,7 +357,7 @@
             </ul>
           } @else {
             @for (value of enumValues; let index = $index; track value) {
-              <code [ngClass]="{ deprecated: !value.deprecated }">{{ value.label }}</code>
+              <code [ngClass]="{ deprecated: value.deprecated }">{{ value.label }}</code>
               @if (enumValues && index < enumValues.length - 1) {
                 <span>, </span>
               }
@@ -379,68 +379,9 @@
       </tr>
     </thead>
     <tbody>
-      @for (attribute of attributesOptional; track attribute.name) {
-        <tr
-          class="border-top"
-          [ngClass]="{
-            'padding-bottom': !attribute.enum && !attribute.description,
-            deprecated: attribute.deprecated,
-            forRemoval: attribute.deprecated && (attribute.deprecated.forRemoval ?? false),
-          }"
-        >
-          <td
-            class="name"
-            [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''"
-            [innerHTML]="attribute.name | nameWbr"
-          ></td>
-          <td>{{ attribute.enum ? 'options' : getFriendlyType(attribute.type) }}</td>
-          <td
-            class="attribute-default-value"
-            *javadocTransform="let text of attribute.default ?? DEFAULT_RETURN_CHARACTER; elements: frankDocElements"
-            [innerHTML]="text"
-          ></td>
-        </tr>
-        @if (attribute.description) {
-          <tr [ngClass]="{ 'padding-bottom': !attribute.enum }">
-            <td
-              colspan="3"
-              class="description"
-              *javadocTransform="let text of attribute.description; elements: frankDocElements"
-              [innerHTML]="text"
-            ></td>
-          </tr>
-        }
-        @if (attribute.enum) {
-          <tr class="padding-bottom">
-            <td colspan="3">
-              Available Options:
-              @let enumValues = getEnumValues(attribute.enum);
-              @if (enumValuesHaveDescriptions(enumValues ?? [])) {
-                <ul class="enum-options-list">
-                  @for (value of enumValues; let index = $index; track value) {
-                    <li>
-                      <code [ngClass]="{ deprecated: value.deprecated }">{{ value.label }}</code>
-                      @if (value.description) {
-                        <span
-                          *javadocTransform="let text of value.description; elements: frankDocElements"
-                          [innerHTML]="' ' + text"
-                        ></span>
-                      }
-                    </li>
-                  }
-                </ul>
-              } @else {
-                @for (value of enumValues; let index = $index; track value) {
-                  <code [ngClass]="{ deprecated: !value.deprecated }">{{ value.label }}</code>
-                  @if (enumValues && index < enumValues.length - 1) {
-                    <span>, </span>
-                  }
-                }
-              }
-            </td>
-          </tr>
-        }
-      }
+      <ng-container
+        *ngTemplateOutlet="attributesTableBodyTemplate; context: { $implicit: attributesOptional }"
+      ></ng-container>
     </tbody>
   </table>
 </ng-template>
