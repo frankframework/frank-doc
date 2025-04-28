@@ -87,7 +87,7 @@ public class PropertyParser {
 			line = line.substring(PROPERTY_TOKEN.length()).trim();
 		}
 
-		final String[] keyValue = line.split("=");
+		final String[] keyValue = line.split("=", 2);
 
 		currentProperty.setName(keyValue[0]);
 		if (keyValue.length > 1) {
