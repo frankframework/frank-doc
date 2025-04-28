@@ -1,8 +1,8 @@
 package org.frankframework.frankdoc.testtarget.examples.parameters;
 
 /**
- * @ff.parameter first This is the first parameter.
- * @ff.parameter second This is the second parameter.
+ * @ff.parameter first	This is the first parameter.
+ * @ff.parameter    second	 This is the second parameter.
  * @ff.parameter third
  *
  * @author martijn
