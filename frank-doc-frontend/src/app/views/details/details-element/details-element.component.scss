@@ -131,147 +131,138 @@ h3 {
     }
 
     th {
-      padding: 10px 3px;
+      padding: 10px 0;
       color: var(--ff-color-gray);
       font-size: 12px;
       font-weight: 600;
       text-align: left;
       letter-spacing: 1.8px;
       text-transform: uppercase;
+    }
 
-      &:first-child {
-        padding-left: 18px;
+    tr.border-top {
+      td {
+        padding-top: 1em;
+        border-top: 1px solid var(--ff-color-light-gray);
       }
+    }
 
-      &:last-child {
-        padding-right: 18px;
+    tr.padding-bottom {
+      td {
+        padding-bottom: 1em;
       }
     }
 
     td {
-      padding: 13px 3px;
       color: var(--ff-border-gray);
       font-size: 16px;
       font-weight: 400;
-      vertical-align: text-top;
-      word-break: normal;
-
-      &:first-child {
-        padding-left: 18px;
-        color: var(--ff-color-dark);
-        font-family: 'DM Mono', monospace;
-        font-weight: 500;
-      }
-
-      &:last-child {
-        padding-right: 18px;
-      }
-
-      & > .empty-table {
-        display: block;
-        text-align: center;
-      }
+      word-break: break-word;
+      vertical-align: top;
     }
 
-    .nav-to-enum {
-      color: var(--ff-anchor-default);
+    .name {
+      color: var(--ff-color-dark);
+      font-family: 'DM Mono', monospace;
       font-weight: 500;
-      cursor: pointer;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  .sub-options {
-    .options-title {
-      display: flex;
-      margin-bottom: 20px;
-      padding: 15px 0;
-      border-bottom: 1px solid var(--ff-color-dark);
-      color: var(--ff-color-dark);
-      font-size: 2rem;
-      font-weight: 600;
-
-      span {
-        flex: 1 1 auto;
-      }
-
-      app-icon-caret {
-        margin-right: 12px;
-        flex: 0 0 auto;
-      }
     }
 
-    .options-sub-title {
-      color: var(--ff-color-dark);
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-top: 1em;
-    }
-
-    .options-list {
-      overflow: auto;
-    }
-
-    .parent-element-title {
-      display: flex;
-      border-radius: 10px;
-      margin-top: 10px;
-      padding: 15px 20px;
-      background: var(--ff-color-light-gray);
-      color: var(--ff-color-dark);
-      font-size: 16px;
-      font-weight: 600;
-      line-height: normal;
-      letter-spacing: 2.4px;
-
-      span {
-        flex: 1 1 auto;
-      }
-
-      app-icon-caret {
-        flex: 0 0 auto;
-      }
-    }
-  }
-
-  .enums {
-    table {
-      overflow: auto;
-    }
-  }
-
-  .attributes {
-    ff-alert {
+    & > .empty-table {
       display: block;
-      margin: 20px 0;
+      text-align: center;
+    }
+  }
+
+  .nav-to-enum {
+    color: var(--ff-anchor-default);
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+  }
+
+  .attribute-default-value {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    word-break: break-all;
+  }
+
+  .description:first-letter {
+    text-transform: capitalize;
+  }
+}
+
+.sub-options {
+  .options-title {
+    display: flex;
+    margin-bottom: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--ff-color-dark);
+    color: var(--ff-color-dark);
+    font-size: 2rem;
+    font-weight: 600;
+
+    span {
+      flex: 1 1 auto;
+    }
+
+    app-icon-caret {
+      margin-right: 12px;
+      flex: 0 0 auto;
+    }
+  }
+
+  .options-sub-title {
+    color: var(--ff-color-dark);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 1em;
+  }
+
+  .options-list {
+    overflow: auto;
+  }
+
+  .parent-element-title {
+    display: flex;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 15px 20px;
+    background: var(--ff-color-light-gray);
+    color: var(--ff-color-dark);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 2.4px;
+
+    span {
+      flex: 1 1 auto;
+    }
+
+    app-icon-caret {
+      flex: 0 0 auto;
     }
   }
 }
 
-.enums {
- .enum-list {
-   margin: 13px 0;
-   max-width: 960px;
+.attributes {
+  ff-alert {
+    display: block;
+    margin: 20px 0;
+  }
+}
 
-   h4 {
-     margin-bottom: 6px;
-     font-size: 24px;
-   }
+code.deprecated {
+  text-decoration: line-through;
+}
 
-   .enum-options {
-     display: flex;
-     flex-wrap: wrap;
-     gap:  5px 50px;
+.enum-options-list > li {
+  margin-bottom: 10px;
+}
 
-     span {
-       width: 150px;
-       color: var(--ff-color-dark);
-       font-family: "DM Mono", monospace;
-       font-weight: 500;
-     }
-   }
- }
+p.description {
+  color: var(--ff-color-gray);
 }
