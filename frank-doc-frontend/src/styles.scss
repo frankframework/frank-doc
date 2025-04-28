@@ -1,9 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @use "sass:meta";
+@use "sass:map";
 
 @use '@frankframework/angular-components';
 @use '@frankframework/angular-components/styles/variables';
-
 
 @font-face {
   font-family: 'DM Mono';
@@ -27,6 +27,7 @@ app-root {
     --#{$key}: #{$value};
   }
 }
+
 
 .page-container {
   display: flex;
@@ -132,19 +133,30 @@ h3.sub-title {
 .javadoc,
 .details .section {
   pre {
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid variables.$ff-bgcolor-gray;
-    color: variables.$ff-color-dark;
-    background: rgba(237, 237, 237, 0.50);
-    word-break: break-all;
-    word-wrap: break-word;
-    white-space: normal;
-    overflow: auto;
+    display: inline-block;
 
-    code {
+    & > code {
+      display: inline-block;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid variables.$ff-bgcolor-gray;
+      color: variables.$ff-color-dark;
+      background: rgba(237, 237, 237, 0.50);
+      word-break: break-all;
+      word-wrap: break-word;
+      overflow: auto;
       white-space: pre;
+      font-size: 100%;
     }
+  }
+
+  code {
+    padding: 0 .4em;
+    font-family: 'DM Mono', monospace;
+    font-size: 85%;
+    background: rgba(237, 237, 237, 0.5);
+    border: 1px solid var(--ff-bgcolor-gray);
+    border-radius: 5px;
   }
 
   a {
@@ -165,10 +177,6 @@ h3.sub-title {
       text-underline-offset: auto;
       text-underline-position: from-font;
     }
-  }
-
-  code {
-    font-family: 'DM Mono', monospace;
   }
 }
 

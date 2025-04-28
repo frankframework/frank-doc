@@ -22,7 +22,6 @@ import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.EnumValue;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClass;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.FrankType;
 import org.xml.sax.ContentHandler;
@@ -45,9 +44,7 @@ import javax.json.stream.JsonGenerator;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
@@ -64,7 +61,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Utility methods for the Frank!Doc.
@@ -384,8 +380,8 @@ public final class Utils {
 		return "<code>" + StringEscapeUtils.escapeHtml4(codeBlock) + "</code>";
 	}
 
-	private static String getLiteralValueReplacement(String value) {
-		return String.format("`%s`", StringEscapeUtils.escapeHtml4(value));
+	private static String getLiteralValueReplacement(String codeBlock) {
+		return "<pre>" + StringEscapeUtils.escapeHtml4(codeBlock) + "</pre>";
 	}
 
 	private static String getClassFieldValueReplacement(String ref, FrankClass context) {
