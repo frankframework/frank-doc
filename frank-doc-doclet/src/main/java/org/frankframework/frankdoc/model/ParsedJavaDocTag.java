@@ -85,12 +85,12 @@ public class ParsedJavaDocTag {
 	private static int getNameDescriptionSplitIndex(String javadocTagParameter) throws FrankDocException {
 		int idx = 0;
 		while (idx < javadocTagParameter.length()) {
-			idx = ParsedJavaDocTag.getIndexFirstMatchFromIndex(javadocTagParameter, idx, " ", Utils.JAVADOC_VALUE_START_DELIMITER);
+			idx = ParsedJavaDocTag.getIndexFirstMatchFromIndex(javadocTagParameter, idx, " ", "\t", Utils.JAVADOC_VALUE_START_DELIMITER);
 			if (idx < 0) {
 				// Not found
 				return idx;
 			}
-			if (javadocTagParameter.charAt(idx) == ' ') {
+			if (Character.isWhitespace(javadocTagParameter.charAt(idx))) {
 				// Found the first space
 				return idx;
 			}

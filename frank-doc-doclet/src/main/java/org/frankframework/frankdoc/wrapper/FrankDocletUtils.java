@@ -71,7 +71,7 @@ final class FrankDocletUtils {
 			return null;
 		}
 		for (DocTree docTree : docCommentTree.getBlockTags()) {
-			String foundTagName = docTree.toString().split(" ")[0];
+			String foundTagName = docTree.toString().split("\\s+")[0];
 			if (foundTagName.equals(tagName)) {
 				return docTree.toString().substring(foundTagName.length()).trim();
 			}

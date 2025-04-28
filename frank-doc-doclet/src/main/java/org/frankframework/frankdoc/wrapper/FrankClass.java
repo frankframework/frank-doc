@@ -393,11 +393,11 @@ public class FrankClass implements FrankType {
 		}
 		ArrayList<String> tagValues = new ArrayList<>();
 		for (DocTree docTree : docCommentTree.getBlockTags()) {
-			String foundTagName = docTree.toString().split(" ")[0];
+			String foundTagName = docTree.toString().split("\\s+")[0];
 			if (foundTagName.equals(tagName)) {
 				tagValues.add(docTree.toString().substring(foundTagName.length()).trim());
 			}
-		}
+ 		}
 		return tagValues;
 	}
 
