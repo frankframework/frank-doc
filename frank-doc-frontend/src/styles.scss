@@ -5,8 +5,6 @@
 @use '@frankframework/angular-components';
 @use '@frankframework/angular-components/styles/variables';
 
-$custom-variables: ('bgcolor-light-gray': #e5e5e5);
-
 @font-face {
   font-family: 'DM Mono';
   font-style: normal;
@@ -22,9 +20,6 @@ $custom-variables: ('bgcolor-light-gray': #e5e5e5);
 
 app-root {
   @each $key, $value in meta.module-variables('variables') {
-    --#{$key}: #{$value};
-  }
-  @each $key, $value in $custom-variables {
     --#{$key}: #{$value};
   }
 }
@@ -126,10 +121,11 @@ h3.sub-title {
   }
 
   code {
-    padding: .2em .4em;
+    padding: 0 .4em;
     font-family: 'DM Mono', monospace;
     font-size: 85%;
-    background: map.get($custom-variables, 'bgcolor-light-gray');
+    background: rgba(237, 237, 237, 0.5);
+    border: 1px solid var(--ff-bgcolor-gray);
     border-radius: 5px;
   }
 
