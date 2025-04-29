@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FeedbackComponent } from './feedback.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('FeedbackComponent', () => {
   let component: FeedbackComponent;
@@ -8,9 +9,9 @@ describe('FeedbackComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FeedbackComponent]
-    })
-    .compileComponents();
+      imports: [FeedbackComponent],
+      providers: [provideHttpClient()],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FeedbackComponent);
     component = fixture.componentInstance;
