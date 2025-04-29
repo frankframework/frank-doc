@@ -40,6 +40,7 @@ export class CollapseDirective implements AfterViewInit {
 
   private setInitialState(): void {
     if (this.collapsed) {
+      this.clientHeight = this.collapse.clientHeight;
       this.collapse.classList.add('collapsed');
     }
   }
