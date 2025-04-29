@@ -16,10 +16,12 @@ export class FeedbackComponent {
   onFeedbackClick(): void {
     const currentPage = this.router.url;
     const frankDocVersion = this.appService.frankDoc()?.metadata.version ?? 'unknown';
+    const selectedText = window.getSelection()?.toString().trim() || 'None';
 
     const markdown = `
 **Current Page:** \`${currentPage}\`
 **Frank!Doc Version:** \`${frankDocVersion}\`
+**Selected Text:** \`${selectedText}\`
 `;
 
     const encodedMarkdown = encodeURIComponent(markdown.trim());
