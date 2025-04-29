@@ -1,5 +1,5 @@
 <div class="page-container">
-  <div class="sidenav">
+  <div class="sidenav fixed-sidenav">
     @for (filter of filters(); track filter.name; let index = $index) {
       <div class="nav-group-name" [collapse]="filterList" (collapsedChange)="collapsedFilters[filter.name] = $event">
         <span>{{ filter.name }} ({{ filter.labels.length }})</span>
