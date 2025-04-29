@@ -14,7 +14,7 @@ export class CollapseDirective implements AfterViewInit {
   private clientHeight: number = 0;
 
   ngAfterViewInit(): void {
-    this.updateState();
+    this.setInitialState();
   }
 
   @HostListener('click')
@@ -35,6 +35,13 @@ export class CollapseDirective implements AfterViewInit {
       this.collapseElement();
     } else {
       this.expandElement();
+    }
+  }
+
+  private setInitialState(): void {
+    if (this.collapsed) {
+      this.clientHeight = this.collapse.clientHeight;
+      this.collapse.classList.add('collapsed');
     }
   }
 
