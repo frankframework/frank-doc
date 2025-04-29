@@ -120,23 +120,30 @@ h3.sub-title {
   font-weight: 600;
 }
 
-.feedback-btn {
-  position: fixed;
-  bottom: 25px;
-  right: 50px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  outline: none;
-}
-
 .javadoc,
 .details .section {
+
+  // Inline literals
   pre {
     display: inline-block;
+  }
 
-    & > code {
-      display: inline-block;
+  // Inline code
+  code {
+    padding: 0 .4em;
+    font-family: 'DM Mono', monospace;
+    font-size: 85%;
+    background: rgba(237, 237, 237, 0.5);
+    border: 1px solid var(--ff-bgcolor-gray);
+    border-radius: 5px;
+  }
+
+  // Code blocks
+  pre:has(code) {
+    display: block;
+
+    code {
+      display: block;
       padding: 8px;
       border-radius: 8px;
       border: 1px solid variables.$ff-bgcolor-gray;
@@ -148,15 +155,6 @@ h3.sub-title {
       white-space: pre;
       font-size: 100%;
     }
-  }
-
-  code {
-    padding: 0 .4em;
-    font-family: 'DM Mono', monospace;
-    font-size: 85%;
-    background: rgba(237, 237, 237, 0.5);
-    border: 1px solid var(--ff-bgcolor-gray);
-    border-radius: 5px;
   }
 
   a {

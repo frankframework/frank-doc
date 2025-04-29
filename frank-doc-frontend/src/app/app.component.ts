@@ -6,10 +6,11 @@ import { AlertComponent } from '@frankframework/angular-components';
 import { AppService, Filter } from './app.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Element, FrankDoc, Label, RawFrankDoc } from './frankdoc.types';
+import { FeedbackComponent } from './components/feedback/feedback.component';
 
 @Component({
   selector: 'app-root',
-  imports: [HeaderComponent, FooterComponent, RouterOutlet, AlertComponent],
+  imports: [HeaderComponent, FooterComponent, RouterOutlet, AlertComponent, FeedbackComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

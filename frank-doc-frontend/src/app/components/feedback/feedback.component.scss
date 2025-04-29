@@ -1,0 +1,40 @@
+:host {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+.feedback {
+  position: absolute;
+  right: 3em;
+  bottom: 3em;
+  padding: 1em;
+  border-radius: 100%;
+  background: var(--ff-color-dark);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
+  border: none;
+  outline: none;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--ff-bgcolor-yellow);
+  }
+
+  &:hover &__popup {
+    display: block;
+  }
+
+  &__popup {
+    position: absolute;
+    width: max-content;
+    padding: 0.5em;
+    border-radius: 0.25em;
+    display: none;
+    font-size: 16px;
+    background: var(--ff-color-dark);
+    color: white;
+    right: calc(24px + 2.5em); // Icon + Spacing
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

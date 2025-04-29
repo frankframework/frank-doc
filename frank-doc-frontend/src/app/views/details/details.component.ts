@@ -7,7 +7,6 @@ import { DetailsSearchComponent } from './details-search/details-search.componen
 import { IconLikeComponent } from '../../icons/icon-like/icon-like.component';
 import { IconDislikeComponent } from '../../icons/icon-dislike/icon-dislike.component';
 import { environment } from '../../../environments/environment';
-import { IconSmileComponent } from '../../icons/icon-smile/icon-smile.component';
 
 type ElementFilterProperties = {
   filterName?: string;
@@ -22,13 +21,7 @@ export type HasInheritedProperties = {
 
 @Component({
   selector: 'app-details',
-  imports: [
-    DetailsElementComponent,
-    DetailsSearchComponent,
-    IconLikeComponent,
-    IconDislikeComponent,
-    IconSmileComponent,
-  ],
+  imports: [DetailsElementComponent, DetailsSearchComponent, IconLikeComponent, IconDislikeComponent],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
