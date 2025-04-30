@@ -98,6 +98,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   protected _hasInheritedProperties: HasInheritedProperties = {
     required: false,
     optional: false,
+    forwards: false,
   };
   protected loading: boolean = true;
 
@@ -218,6 +219,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     this._hasInheritedProperties = {
       required: false,
       optional: false,
+      forwards: false,
     };
   }
 
@@ -246,6 +248,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
 
     if (element.forwards) {
       this.inheritedProperties.forwards.push(...element.forwards);
+      this._hasInheritedProperties.forwards = true;
     }
 
     if (element.parent) this.setInheritedProperties(element.parent);

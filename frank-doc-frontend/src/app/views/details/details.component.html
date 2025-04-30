@@ -7,48 +7,28 @@
       [element]="getFoundElement()"
       [frankDocElements]="frankDocElements()"
       [frankDocEnums]="frankDocEnums()"
-      (hasInheritedProperties)="hasInheritedProperties = $event"
+      (hasInheritedProperties)="updateElementDetailInfo($event)"
     ></app-details-element>
   </div>
-  @if (getFoundElement()) {
+  @if (showNavigation) {
     <div class="side-navigation">
       <div class="sticky">
         <ul>
-          <li (click)="scrollToElement('#element')">{{ getFoundElement()?.name }}</li>
-          <li (click)="scrollToElement('#seeAlso')">See also</li>
-          <li (click)="scrollToElement('#syntax')">Syntax</li>
-          @if (getFoundElement()?.attributes || hasAnyInheritedProperties()) {
-            <li>
-              <span (click)="scrollToElement('#attributes')">Attributes</span>
-              <ul>
-                @if (hasAnyRequiredProperities()) {
-                  <li (click)="scrollToElement('#attributes-required')">Required</li>
-                }
-                <li (click)="scrollToElement('#attributes-optional')">Optional</li>
-              </ul>
-            </li>
-          }
-          @if (getFoundElement()?.parameters) {
-            <li (click)="scrollToElement('#parameters')">Parameters</li>
-          }
-          @if (getFoundElement()?.children) {
-            <li (click)="scrollToElement('#nested-elements')">Nested Elements</li>
-          }
-          @if (getFoundElement()?.forwards) {
-            <li (click)="scrollToElement('#forwards')">Forwards</li>
+          @for (entry of tableOfContents; track entry.name) {
+            @if (entry.children) {
+              <li [ngClass]="{ active: entry.active }">
+                <span (click)="scrollToElement(entry.anchor)">{{ entry.name }}</span>
+                <ul>
+                  @for (child of entry.children; track child.name) {
+                    <li (click)="scrollToElement(child.anchor)">{{ child.name }}</li>
+                  }
+                </ul>
+              </li>
+            } @else {
+              <li [ngClass]="{ active: entry.active }" (click)="scrollToElement(entry.anchor)">{{ entry.name }}</li>
+            }
           }
         </ul>
-        @if (showFeedback) {
-          <div class="feedback">
-            <p>Was this helpful?</p>
-            <button>
-              <app-icon-like width="20" height="20"></app-icon-like>
-            </button>
-            <button>
-              <app-icon-dislike width="20" height="20"></app-icon-dislike>
-            </button>
-          </div>
-        }
       </div>
     </div>
   }
