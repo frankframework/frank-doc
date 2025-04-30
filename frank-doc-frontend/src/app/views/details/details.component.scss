@@ -66,6 +66,8 @@
       margin: 0;
       padding-left: 16px;
       cursor: pointer;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       & + li {
         margin: 10px 0 0;
@@ -73,7 +75,6 @@
 
       &.active {
         margin-left: -1px;
-        padding-left: 29px;
         border-left: 1px solid var(--ff-color-dark);
         color: var(--ff-color-dark);
         font-weight: 700;
@@ -87,28 +88,6 @@
           padding-left: 16px;
         }
       }
-    }
-  }
-
-  .feedback {
-    margin: 16px 0 0 16px;
-
-    @media (min-width: 1600px) {
-      margin: 16px 0 0 28px;
-    }
-
-    p {
-      color: #000;
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    button {
-      margin: 10px 0 10px 20px;
-      padding: 0;
-      border: none;
-      background: transparent;
-      outline: none;
     }
   }
 }

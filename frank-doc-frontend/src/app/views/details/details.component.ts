@@ -1,12 +1,10 @@
-import { Component, computed, inject, OnInit, Signal } from '@angular/core';
+import { Component, computed, HostListener, inject, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Element, FrankDoc } from '../../frankdoc.types';
 import { AppService } from '../../app.service';
 import { DetailsElementComponent } from './details-element/details-element.component';
 import { DetailsSearchComponent } from './details-search/details-search.component';
-import { IconLikeComponent } from '../../icons/icon-like/icon-like.component';
-import { IconDislikeComponent } from '../../icons/icon-dislike/icon-dislike.component';
-import { environment } from '../../../environments/environment';
+import { NgClass } from '@angular/common';
 
 type ElementFilterProperties = {
   filterName?: string;
@@ -14,14 +12,22 @@ type ElementFilterProperties = {
   elementName: string;
 };
 
+type TOCEntry = {
+  name: string;
+  anchor: string;
+  active: boolean;
+  children?: TOCEntry[];
+};
+
 export type HasInheritedProperties = {
   required: boolean;
   optional: boolean;
+  forwards: boolean;
 };
 
 @Component({
   selector: 'app-details',
-  imports: [DetailsElementComponent, DetailsSearchComponent, IconLikeComponent, IconDislikeComponent],
+  imports: [DetailsElementComponent, DetailsSearchComponent, NgClass],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -38,11 +44,13 @@ export class DetailsComponent implements OnInit {
     if (elements) return this.findElement(elements);
     return null;
   });
-  protected readonly showFeedback: boolean = environment.feedbackButtons;
   protected hasInheritedProperties: HasInheritedProperties = {
     required: false,
     optional: false,
+    forwards: false,
   };
+  protected tableOfContents: TOCEntry[] = [];
+  protected showNavigation: boolean = false;
 
   private appService: AppService = inject(AppService);
   protected readonly scrollToElement = this.appService.scrollToElement;
@@ -68,19 +76,64 @@ export class DetailsComponent implements OnInit {
     });
   }
 
+  @HostListener('window:scroll')
+  updateActiveTOC(): void {
+    let activeIndex = 0;
+    for (const key in this.tableOfContents) {
+      const index = Number(key);
+      const entry = this.tableOfContents[index];
+      const elementRef = document.querySelector(entry.anchor);
+
+      entry.active = false;
+      if (elementRef && elementRef.getBoundingClientRect().top < 30) {
+        activeIndex = index;
+      }
+    }
+    this.tableOfContents[activeIndex].active = true;
+  }
+
   protected getFoundElement(): Element | null {
     return this.elementByRoute ?? this.elementBySignal();
   }
 
-  protected hasAnyInheritedProperties(): boolean {
-    return this.hasInheritedProperties.required || this.hasInheritedProperties.optional;
+  protected updateElementDetailInfo(info: HasInheritedProperties): void {
+    this.hasInheritedProperties = info;
+    this.updateTableOfContents();
+    this.showNavigation = true;
+    this.updateActiveTOC();
   }
 
-  protected hasAnyRequiredProperities(): boolean {
+  protected hasAnyRequiredProperties(): boolean {
     return (
       this.hasInheritedProperties.required ||
       (this.getFoundElement()?.attributes?.filter((attribute) => attribute.mandatory).length ?? 0) > 0
     );
+  }
+
+  protected updateTableOfContents(): void {
+    const tableOfContents: TOCEntry[] = [];
+    const element = this.getFoundElement();
+    if (!element) return;
+
+    tableOfContents.push(
+      { name: element.name, anchor: '#element', active: false },
+      { name: 'See also', anchor: '#seeAlso', active: false },
+      { name: 'Syntax', anchor: '#syntax', active: false },
+    );
+    if (element.attributes || this.hasInheritedProperties.required || this.hasInheritedProperties.optional) {
+      const length = tableOfContents.push({ name: 'Attributes', anchor: '#attributes', active: false, children: [] });
+      const index = length - 1;
+      if (this.hasAnyRequiredProperties()) {
+        tableOfContents[index].children!.push({ name: 'Required', anchor: '#attributes-required', active: false });
+      }
+      tableOfContents[index].children!.push({ name: 'Optional', anchor: '#attributes-optional', active: false });
+    }
+    if (element.parameters) tableOfContents.push({ name: 'Parameters', anchor: '#parameters', active: false });
+    if (element.children) tableOfContents.push({ name: 'Nested Elements', anchor: '#nested-elements', active: false });
+    if (element.forwards || this.hasInheritedProperties.forwards)
+      tableOfContents.push({ name: 'Forwards', anchor: '#forwards', active: false });
+
+    this.tableOfContents = tableOfContents;
   }
 
   private findElement(frankDocElements: FrankDoc['elements'] | null): FrankDoc['elements'][string] | null {

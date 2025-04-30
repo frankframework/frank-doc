@@ -4,6 +4,5 @@ export const environment = {
   githubWikiBaseUrl: 'https://github.com/frankframework/frankframework/wiki',
   frankDocUrl: '/js/frankdoc.json',
   relatedSearchResults: true,
-  feedbackButtons: true,
   hideSnapshotVersion: true,
 };
