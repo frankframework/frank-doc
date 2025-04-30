@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, Signal } from '@angular/core';
+import { Component, computed, HostListener, inject, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Element, FrankDoc } from '../../frankdoc.types';
 import { AppService } from '../../app.service';
@@ -76,6 +76,22 @@ export class DetailsComponent implements OnInit {
     });
   }
 
+  @HostListener('window:scroll')
+  updateActiveTOC(): void {
+    let activeIndex = 0;
+    for (const key in this.tableOfContents) {
+      const index = Number(key);
+      const entry = this.tableOfContents[index];
+      const elementRef = document.querySelector(entry.anchor);
+
+      entry.active = false;
+      if (elementRef && elementRef.getBoundingClientRect().top < 30) {
+        activeIndex = index;
+      }
+    }
+    this.tableOfContents[activeIndex].active = true;
+  }
+
   protected getFoundElement(): Element | null {
     return this.elementByRoute ?? this.elementBySignal();
   }
@@ -84,6 +100,7 @@ export class DetailsComponent implements OnInit {
     this.hasInheritedProperties = info;
     this.updateTableOfContents();
     this.showNavigation = true;
+    this.updateActiveTOC();
   }
 
   protected hasAnyRequiredProperties(): boolean {
