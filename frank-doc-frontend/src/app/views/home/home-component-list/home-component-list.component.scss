@@ -96,3 +96,8 @@
     }
   }
 }
+
+.deprecated {
+  color: rgba(0, 0, 0, 0.5) !important;
+  text-decoration: line-through;
+}

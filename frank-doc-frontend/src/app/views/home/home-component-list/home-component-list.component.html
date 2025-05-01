@@ -24,12 +24,13 @@
       <p class="label">
         {{ component.item.labels ? getFirstLabel(component.item.labels) : '' }}
       </p>
-      <p class="name" [title]="component.item.name">
+      <p class="name" [ngClass]="{ deprecated: component.item.deprecated }" [title]="component.item.name">
         {{ component.item.name }}
       </p>
       <p
-        *javadocTransform="let text of component.item.description; elements: elements; asText: true"
         class="description"
+        [ngClass]="{ deprecated: component.item.deprecated }"
+        *javadocTransform="let text of component.item.description; elements: elements; asText: true"
       >
         {{ text | truncate: 150 }}
       </p>
