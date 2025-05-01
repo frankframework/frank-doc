@@ -22,3 +22,8 @@ ff-search {
     vertical-align: middle;
   }
 }
+
+.deprecated {
+  color: rgba(0, 0, 0, 0.5) !important;
+  text-decoration: line-through;
+}
