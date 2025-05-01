@@ -24,6 +24,6 @@ ff-search {
 }
 
 .deprecated {
-  color: rgba(0, 0, 0, 0.5) !important;
+  color: var(--ff-color-gray) !important;
   text-decoration: line-through;
 }
