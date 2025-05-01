@@ -26,9 +26,7 @@ export class HomeComponent implements OnInit {
 
   private readonly appService: AppService = inject(AppService);
   private readonly searchParamsService: SearchQueryParamsService = inject(SearchQueryParamsService);
-  private readonly elementsList: Signal<Element[]> = computed(() =>
-    Object.values(this.elements()).filter((element) => !element.deprecated),
-  );
+  private readonly elementsList: Signal<Element[]> = computed(() => Object.values(this.elements()));
   private readonly fuse: Signal<Fuse<Element>> = computed(() => new Fuse(this.elementsList(), fuseOptions));
   private selectedFilters: ElementLabels = {};
 
