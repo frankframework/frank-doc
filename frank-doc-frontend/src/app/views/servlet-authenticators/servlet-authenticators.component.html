@@ -56,6 +56,7 @@
                 <tr>
                   <td [innerHTML]="method.name | nameWbr"></td>
                   <td
+                    class="javadoc"
                     *javadocTransform="
                       let text of method.description ?? DEFAULT_RETURN_CHARACTER;
                       elements: frankDocElements()
