@@ -2,10 +2,10 @@
   <h2 id="element" [ngClass]="{ deprecated: element.deprecated }" [innerHTML]="element.name | nameWbr"></h2>
   <div class="chips">
     @if (element.abstract) {
-      <ff-chip class="abstract-label" slim colour="#FDC300">Abstract</ff-chip>
+      <ff-chip class="abstract-label" colour="#FDC300">Abstract</ff-chip>
     }
     @if (element.deprecated) {
-      <ff-chip class="abstract-label" slim>Deprecated</ff-chip>
+      <ff-chip class="abstract-label" colour="#1E1E1E">Deprecated</ff-chip>
     }
     @if (element.labels) {
       @for (filter of element.labels | keyvalue; track filter; let index = $index) {
@@ -16,34 +16,32 @@
     }
   </div>
 
-  <div class="section explanation">
-    @if (element.deprecated) {
+  @if (element.deprecated) {
+    <div class="section notes">
       <ff-alert [type]="element.deprecated.forRemoval ? 'error' : 'warning'">
-        @if (element.deprecated.description) {
-          <p>{{ element.deprecated.description }}</p>
-        } @else {
-          <p>This element is deprecated!</p>
-        }
+        <p>{{ element.deprecated.description ?? 'This element is deprecated!' }}</p>
         @if (element.deprecated.since) {
           <p>
             <small>Since: {{ element.deprecated.since }}</small>
           </p>
         }
       </ff-alert>
-    }
-    @if (element.description) {
+    </div>
+  }
+  @if (element.description) {
+    <div class="section explanation">
       <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>
-    }
-    @if (element.notes) {
-      <div class="notes">
-        @for (note of element.notes; track note) {
-          <ff-alert [type]="getWarningType(note.type)">
-            <p *javadocTransform="let text of note.value; elements: frankDocElements" [innerHTML]="text"></p>
-          </ff-alert>
-        }
-      </div>
-    }
-  </div>
+    </div>
+  }
+  @if (element.notes) {
+    <div class="section notes">
+      @for (note of element.notes; track note) {
+        <ff-alert [type]="getWarningType(note.type)">
+          <p *javadocTransform="let text of note.value; elements: frankDocElements" [innerHTML]="text"></p>
+        </ff-alert>
+      }
+    </div>
+  }
 
   <div id="seeAlso" class="section see-also">
     <h3>See also</h3>
