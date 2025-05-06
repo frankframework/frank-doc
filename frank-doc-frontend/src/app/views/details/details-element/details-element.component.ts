@@ -128,8 +128,8 @@ export class DetailsElementComponent implements OnInit, OnChanges {
           forwards: [],
         };
         this.setInheritedProperties(this.element.parent);
-        this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
       }
+      this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
       this.generateElementSyntax();
       if (this.element?.name) this.titleService.setTitle(`${this.element?.name} | ${environment.applicationName}`);
     }

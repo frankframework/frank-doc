@@ -1,10 +1,11 @@
-import { Component, computed, HostListener, inject, OnInit, Signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Element, FrankDoc } from '../../frankdoc.types';
 import { AppService } from '../../app.service';
 import { DetailsElementComponent } from './details-element/details-element.component';
 import { DetailsSearchComponent } from './details-search/details-search.component';
 import { NgClass } from '@angular/common';
+import { fromEvent, Subscription, throttleTime } from 'rxjs';
 
 type ElementFilterProperties = {
   filterName?: string;
@@ -31,7 +32,7 @@ export type HasInheritedProperties = {
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit, OnDestroy {
   protected readonly frankDocElements: Signal<FrankDoc['elements'] | null> = computed(
     () => this.appService.frankDoc()?.elements ?? null,
   );
@@ -58,6 +59,7 @@ export class DetailsComponent implements OnInit {
   private route: ActivatedRoute = inject(ActivatedRoute);
   private elementFilterProperties: ElementFilterProperties | null = null;
   private elementIndexOrClassName: string | null = null;
+  private scrollEvent: Subscription | null = null;
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -74,9 +76,16 @@ export class DetailsComponent implements OnInit {
 
       this.elementByRoute = this.findElement(this.frankDocElements());
     });
+
+    this.scrollEvent = fromEvent(window, 'scroll')
+      .pipe(throttleTime(50))
+      .subscribe(() => this.updateActiveTOC());
   }
 
-  @HostListener('window:scroll')
+  ngOnDestroy(): void {
+    this.scrollEvent?.unsubscribe();
+  }
+
   updateActiveTOC(): void {
     let activeIndex = 0;
     for (const key in this.tableOfContents) {
