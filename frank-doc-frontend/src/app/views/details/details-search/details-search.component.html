@@ -22,30 +22,28 @@
     }
   </ul>
 </div>
-@if (showRelated) {
-  <div class="search-related">
-    <span class="title">Related</span>
-    <span class="count">{{ relatedElements.length }}</span>
-    <ul>
-      @for (relatedElement of relatedElements; track relatedElement.item.name) {
-        @if (!relatedElement.item.deprecated) {
-          <li [ngClass]="{ active: relatedElement.item.name === element?.name }">
-            <a
-              [routerLink]="
-                relatedElement.item.labels
-                  ? [
-                      '/',
-                      getFirstFilter(relatedElement.item.labels),
-                      getFirstLabel(relatedElement.item.labels),
-                      relatedElement.item.name,
-                    ]
-                  : ['/', relatedElement.item.className]
-              "
-              [innerHTML]="relatedElement.item.name | nameWbr"
-            ></a>
-          </li>
-        }
+<div class="search-related">
+  <span class="title">Related</span>
+  <span class="count">{{ relatedElements.length }}</span>
+  <ul>
+    @for (relatedElement of relatedElements; track relatedElement.item.name) {
+      @if (!relatedElement.item.deprecated) {
+        <li [ngClass]="{ active: relatedElement.item.name === element?.name }">
+          <a
+            [routerLink]="
+              relatedElement.item.labels
+                ? [
+                    '/',
+                    getFirstFilter(relatedElement.item.labels),
+                    getFirstLabel(relatedElement.item.labels),
+                    relatedElement.item.name,
+                  ]
+                : ['/', relatedElement.item.className]
+            "
+            [innerHTML]="relatedElement.item.name | nameWbr"
+          ></a>
+        </li>
       }
-    </ul>
-  </div>
-}
+    }
+  </ul>
+</div>

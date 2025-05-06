@@ -131,7 +131,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
         this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
       }
       this.generateElementSyntax();
-      if (this.element?.name) this.titleService.setTitle(`${this.element?.name} | Frank!Doc`);
+      if (this.element?.name) this.titleService.setTitle(`${this.element?.name} | ${environment.applicationName}`);
     }
   }
 
