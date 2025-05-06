@@ -9,6 +9,6 @@ export class ViewTitleStrategy extends TitleStrategy {
 
   updateTitle(snapshot: RouterStateSnapshot): void {
     const title = this.buildTitle(snapshot);
-    this.title.setTitle(`${title} | ${environment.applicationName}`);
+    this.title.setTitle(`${environment.applicationName} | ${title}`);
   }
 }

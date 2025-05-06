@@ -131,7 +131,9 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       }
       this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
       this.generateElementSyntax();
-      if (this.element?.name) this.titleService.setTitle(`${this.element?.name} | ${environment.applicationName}`);
+
+      if (this.element?.name)
+        this.titleService.setTitle(`${environment.applicationName} | ${this.element?.name ?? 'Element details'}`);
     }
   }
 
