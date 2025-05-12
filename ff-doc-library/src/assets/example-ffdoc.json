@@ -1,0 +1,248 @@
+{
+  "metadata": {
+    "version": "1.2.3-EXAMPLE"
+  },
+  "types": {
+    "org.frankframework.core.ISender": [
+      "org.frankframework.senders.FixedResultSender"
+    ],
+    "org.frankframework.core.IListener": [
+      "org.frankframework.http.RestListener"
+    ]
+  },
+  "elements": {
+    "org.frankframework.senders.FixedResultSender": {
+      "name": "FixedResultSender",
+      "description": "FixedResultSender, same behaviour as {@link FixedResultPipe}, but now as a ISender.",
+      "parent": "org.frankframework.senders.AbstractSenderWithParameters",
+      "attributes": {
+        "substituteVars": {
+          "description": "should values between ${ and } be resolved from the pipelinesession",
+          "default": "false",
+          "type": "bool"
+        },
+        "filename": {
+          "description": "Name of the file containing the result message"
+        },
+        "returnString": {
+          "description": "returned message"
+        },
+        "replaceFrom": {},
+        "replaceTo": {},
+        "styleSheetName": {}
+      },
+      "parametersDescription": "Any parameters defined on the sender will be used for replacements. Each occurrence of <code>${name-of-parameter}</code> in the file fileName will be replaced by its corresponding value-of-parameter. This works only with files, not with values supplied in attribute {@link #setReturnString(String) returnString}."
+    },
+    "org.frankframework.http.RestListener": {
+      "name": "RestListener",
+      "description": "Listener that allows a {@link Receiver} to receive messages as a REST webservice.\n Prepends the configured URI pattern with <code>rest/</code>. When you are writing a new Frank config, you are recommended\n to use an {@link ApiListener} instead. You can find all serviced URI patterns\n in the Frank!Console: main menu item Webservice, heading Available REST Services.\n\n <p>\n Note:\n Servlets' multipart configuration expects a Content-Type of <code>multipart/form-data</code> (see http://docs.oracle.com/javaee/6/api/javax/servlet/annotation/MultipartConfig.html).\n So do not use other multipart content types like <code>multipart/related</code>\n </p>",
+      "parent": "org.frankframework.http.PushingListenerAdapter",
+      "attributes": {
+        "uriPattern": {
+          "description": "Uri pattern to match, the {uri} part in https://mydomain.com/ibis4something/rest/{uri}, where mydomain.com and ibis4something refer to 'your ibis'."
+        },
+        "method": {
+          "description": "Method (e.g. GET or POST) to match"
+        },
+        "etagSessionKey": {
+          "description": "Key of session variable to store etag"
+        },
+        "contentTypeSessionKey": {
+          "description": "Key of Session variable that determines requested content type, overrides {@link #setProduces(MediaTypes) produces}"
+        },
+        "restPath":  {
+          "description": "Can be either <code>/rest</code> or <code>/rest-public</code> and must correspond with the available RestListenerServlet path(s)."
+        },
+        "authRoles": {
+          "description": "Comma separated list of authorization roles which are granted for this rest service",
+          "default": "IbisWebService,IbisObserver,IbisDataAdmin,IbisAdmin,IbisTester"
+        },
+        "writeToSecLog": {
+          "type": "bool"
+        },
+        "writeSecLogMessage": {
+          "type": "bool"
+        },
+        "retrieveMultipart": {
+          "description": "Indicates whether the parts of a multipart entity should be retrieved and put in session keys. This can only be done once!",
+          "default": "true",
+          "type": "bool"
+        },
+        "consumes": {
+          "description": "Mediatype (e.g. XML, JSON, TEXT) the {@link RestServiceDispatcher} receives as input",
+          "default": "XML",
+          "enum": "org.frankframework.http.RestListener.MediaTypes"
+        },
+        "produces": {
+          "description": "Mediatype (e.g. XML, JSON, TEXT) the {@link RestServiceDispatcher} sends as output, if set to json the ibis will automatically try to convert the xml message",
+          "default": "XML",
+          "enum": "org.frankframework.http.RestListener.MediaTypes"
+        },
+        "validateEtag": {
+          "description": "If set to true the ibis will automatically validate and process etags",
+          "default": "false",
+          "type": "bool"
+        },
+        "generateEtag": {
+          "description": "If set to true the ibis will automatically create an etag",
+          "default": "false",
+          "type": "bool"
+        },
+        "automaticallyTransformToAndFromJson":  {
+          "description": "Uses an JsonPipe to convert the json-input to xml, and xml-output to json.\n Use with caution, a properly configured Input/Output-wrapper can do much more and is more robust!",
+          "default": "true",
+          "type": "bool"
+        }
+      }
+    }
+  },
+  "elementNames": {
+    "FixedResultSender": {
+      "labels": {
+        "Components": "Senders",
+        "EIP": "Endpoint"
+      },
+      "className": "org.frankframework.senders.FixedResultSender"
+    },
+    "RestListener": {
+      "labels": {
+        "Components": "Listeners",
+        "EIP": "Listener"
+      },
+      "className": "org.frankframework.http.RestListener"
+    }
+  },
+  "enums": {
+    "org.frankframework.extensions.esb.EsbJmsListener.MessageProtocol": {
+      "FF": {
+        "description": "Fire &amp; Forget protocol"
+      },
+      "RR": {
+        "description": "Request-Reply protocol"
+      }
+    },
+    "org.frankframework.http.RestListener.MediaTypes": {
+      "XML": {},
+      "JSON": {},
+      "TEXT": {}
+    },
+    "org.frankframework.http.rest.ApiListener.HttpMethod": {
+      "GET": {},
+      "PUT": {},
+      "POST": {},
+      "PATCH": {},
+      "DELETE": {},
+      "HEAD": {},
+      "OPTIONS": {}
+    }
+  },
+  "labels": {
+    "Components": [
+      "Senders",
+      "Listeners"
+    ],
+    "EIP": [
+      "Listener",
+      "Endpoint"
+    ]
+  },
+  "properties": [
+    {
+      "name": "Flow",
+      "properties": [
+        {
+          "name": "flow.adapter.dir",
+          "defaultValue": "${ibis.tmpdir}/flow/adapter"
+        },
+        {
+          "name": "flow.config.dir",
+          "defaultValue": "${ibis.tmpdir}/flow/config"
+        },
+        {
+          "name": "flow.generator",
+          "defaultValue": "org.frankframework.util.flow.MermaidFlowGenerator"
+        },
+        {
+          "name": "flow.javascript.engines",
+          "defaultValue": "org.frankframework.javascript.J2V8"
+        }
+      ]
+    },
+    {
+      "name": "Cache",
+      "properties": [
+        {
+          "name": "cache.dir",
+          "description": "cache.dir is used by caches, to store data on disk.",
+          "defaultValue": "${log.dir}"
+        },
+        {
+          "name": "cache.default.maxElementsInMemory",
+          "defaultValue": "100"
+        },
+        {
+          "name": "cache.default.memoryStoreEvictionPolicy",
+          "defaultValue": "LRU"
+        },
+        {
+          "name": "cache.default.eternal",
+          "defaultValue": "false"
+        },
+        {
+          "name": "cache.default.timeToLiveSeconds",
+          "defaultValue": "36000"
+        },
+        {
+          "name": "cache.default.timeToIdleSeconds",
+          "defaultValue": "36000"
+        },
+        {
+          "name": "cache.default.overflowToDisk",
+          "defaultValue": "false"
+        },
+        {
+          "name": "cache.default.maxElementsOnDisk",
+          "defaultValue": "10000"
+        },
+        {
+          "name": "cache.default.diskPersistent",
+          "defaultValue": "false"
+        },
+        {
+          "name": "cache.default.diskExpiryThreadIntervalSeconds",
+          "defaultValue": "600"
+        }
+      ]
+    }
+  ],
+  "credentialProviders": {
+    "FileSystemCredentialFactory": {
+      "fullName": "org.frankframework.credentialprovider.FileSystemCredentialFactory",
+      "description": "<p>CredentialFactory implementation that reads secrets from the file system.</p>\n\n <p>It reads the username and password from files in a directory. The directory is set by the property <code>credentialFactory.filesystem.root</code>.</p>\n\n <p>It reads the username from a file with the name set by the property <code>credentialFactory.filesystem.usernamefile</code> and the password from a file with the name set by\n the property <code>credentialFactory.filesystem.passwordfile</code>. These values are relative to the <code>credentialFactory.filesystem.root</code></p>\n\n <p>By default, the default values <code>username</code> and <code>password</code> are used for these files.</p>"
+    },
+    "PropertyFileCredentialFactory": {
+      "fullName": "org.frankframework.credentialprovider.PropertyFileCredentialFactory",
+      "description": "<p>CredentialFactory that reads its credentials from a plain (unencrypted) .properties file.</p>\n\n <p>Credentials are stored in the properties file as key/value pairs, where the key is the alias and the value is the password.</p>"
+    }
+  },
+  "servletAuthenticators": {
+    "InMemoryAuthenticator": {
+      "fullName": "org.frankframework.lifecycle.servlets.InMemoryAuthenticator",
+      "description": "Authenticator for in-memory authentication.\n <p>\n This authenticator provides a simple way to authenticate using a single username and password stored in memory.\n </p>\n <p>\n This authenticator should be configured by setting its type to 'IN_MEMORY', for example:\n <pre><code>application.security.console.authentication.type=IN_MEMORY\n application.security.console.authentication.username=admin\n application.security.console.authentication.password=secret</code></pre>\n </p>",
+      "methods": [
+        {
+          "name": "username",
+          "description": "The username to use for authentication."
+        },
+        {
+          "name": "password",
+          "description": "The password to use for authentication."
+        }
+      ]
+    },
+    "NoOpAuthenticator": {
+      "fullName": "org.frankframework.lifecycle.servlets.NoOpAuthenticator",
+      "description": "NoOp authenticator, all requests are allowed.\n <p>\n This authenticator is used to allow all requests without authentication.\n </p>\n <p>\n This is useful for testing purposes or when no authentication is required.\n </p>\n <p>\n This authenticator should be configured by setting its type to 'NONE', for example:\n <pre><code>application.security.console.authentication.type=NONE</code></pre>\n </p>"
+    }
+  }
+}

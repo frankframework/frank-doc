@@ -1,0 +1,19 @@
+{
+  "name": "@frankframework/ff-doc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "author": "",
+  "license": "Apache-2.0",
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "",
+    "directory": "projects/ff-doc"
+  },
+  "optionalDependencies": {
+    "@angular/core": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
