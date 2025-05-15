@@ -1,0 +1,8 @@
+<h2>Elements</h2>
+
+@for (element of elements() | keyvalue; track element.key) {
+  <section>
+    <h3>{{ element.key }}</h3>
+    <p *fdJavadocTransform="let text of element.value.description; elements: elements()" [innerHTML]="text"></p>
+  </section>
+}
