@@ -32,6 +32,8 @@ export class JavadocTransformDirective implements OnChanges {
     for (const partIndexString in javadocParts) {
       const partIndex = +partIndexString;
       const part = javadocParts[partIndex];
+
+      // links are always add odd positions in the array
       if (this.fdJavadocTransformLink && partIndex % 2 !== 0 && part.startsWith('{')) {
         try {
           const linkData: LinkData = JSON.parse(part);

@@ -25,6 +25,8 @@ function javadocTransform(
   for (const partIndexString in javadocParts) {
     const partIndex = +partIndexString;
     const part = javadocParts[partIndex];
+
+    // links are always add odd positions in the array
     if (hasCustomLinkTransform && partIndex % 2 !== 0 && part.startsWith('{')) {
       try {
         const linkData: LinkData = JSON.parse(part);
