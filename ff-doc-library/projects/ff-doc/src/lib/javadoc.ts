@@ -72,7 +72,7 @@ export function getLinkData(captureGroup: string, elements: Record<string, Eleme
   return { href: element.name, text: name };
 }
 
-export function getInternalMethodReference(captureGroup: string, hashPosition: number): string {
+function getInternalMethodReference(captureGroup: string, hashPosition: number): string {
   const method = captureGroup.slice(hashPosition),
     methodParts = method.split(' ');
   return methodParts.length === 2
@@ -80,7 +80,7 @@ export function getInternalMethodReference(captureGroup: string, hashPosition: n
     : method.slice(1, method.indexOf('('));
 }
 
-export function parseLinkName(elementParts: string[], isMethod: boolean, captureGroup: string): string {
+function parseLinkName(elementParts: string[], isMethod: boolean, captureGroup: string): string {
   const elementName = elementParts.at(-1)!; // element name/label
   if (isMethod) {
     const method = captureGroup.split('#')[1],
@@ -90,7 +90,7 @@ export function parseLinkName(elementParts: string[], isMethod: boolean, capture
   return elementName;
 }
 
-export function findElement(elements: Record<string, ElementClass>, simpleName: string): ElementClass | null {
+function findElement(elements: Record<string, ElementClass>, simpleName: string): ElementClass | null {
   if (Object.keys(elements).length === 0) return null;
   const element = elements[simpleName];
   if (element) return element;
