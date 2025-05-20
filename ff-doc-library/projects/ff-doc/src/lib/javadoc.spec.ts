@@ -13,19 +13,25 @@ const docElements: Record<string, ElementClass> = {
 };
 describe('Javadoc', () => {
   it('should convert link taglet to LinkData', () => {
-    /* {@link FixedResultSender sender} => 'FixedResultSender sender' */
+    /* Reference to class / XMLElement
+     * {@link FixedResultSender sender} => 'FixedResultSender sender'
+     */
     expect(getLinkData('FixedResultSender sender', docElements)).toEqual({
       href: 'FixedResultSender',
       text: 'sender',
     });
 
-    /* {@link FixedResultSender#configure()} => 'FixedResultSender#configure()' */
+    /* Reference to class with method without a label
+     * {@link FixedResultSender#configure()} => 'FixedResultSender#configure()'
+     */
     expect(getLinkData('FixedResultSender#configure()', docElements)).toEqual({
       href: 'FixedResultSender',
       text: 'FixedResultSender.configure()',
     });
 
-    /* {@link #doPipe(Message, PipeLineSession) doPipe} => '#doPipe(Message, PipeLineSession) doPipe' */
+    /* Internal method reference with a label
+     * {@link #doPipe(Message, PipeLineSession) doPipe} => '#doPipe(Message, PipeLineSession) doPipe'
+     */
     expect(getLinkData('#doPipe(Message, PipeLineSession) doPipe', docElements)).toEqual({
       text: 'doPipe',
     });
