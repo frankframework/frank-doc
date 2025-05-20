@@ -9,6 +9,8 @@
   },
   "include": [
     "src/**/*.spec.ts",
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "projects/ff-doc/src/**/*.spec.ts",
+    "projects/ff-doc/src/**/*.d.ts"
   ]
 }
