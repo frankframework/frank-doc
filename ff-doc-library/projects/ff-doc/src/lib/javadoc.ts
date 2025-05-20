@@ -39,7 +39,6 @@ export function transformAsText(javadoc: string, elements: Record<string, Elemen
   value = value.replaceAll(tagsRegex, '');
   value = value.replaceAll(linkRegex, (_: string, captureGroup: string) => {
     const linkData = getLinkData(captureGroup, elements);
-    if (linkData.href) return `${linkData.text}(${linkData.href})`;
     return linkData.text;
   });
   value = value.replaceAll(String.raw`\"`, '"');
