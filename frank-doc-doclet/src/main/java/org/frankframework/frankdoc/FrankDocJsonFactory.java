@@ -55,12 +55,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class FrankDocJsonFactory {
-	private static Logger log = LogUtil.getLogger(FrankDocJsonFactory.class);
+	private static final Logger log = LogUtil.getLogger(FrankDocJsonFactory.class);
 
 	private static final String DESCRIPTION = "description";
 
-	private FrankDocModel model;
-	private JsonBuilderFactory bf;
+	private final FrankDocModel model;
+	private final JsonBuilderFactory bf;
 	List<FrankElement> elementsOutsideChildren;
 	private final String frankFrameworkVersion;
 
@@ -98,43 +98,36 @@ public class FrankDocJsonFactory {
 		return metadata.build();
 	}
 
-	private JsonArray getTypes() {
-		JsonArrayBuilder result = bf.createArrayBuilder();
-		List<ElementType> sortedTypes = new ArrayList<>(model.getAllTypes().values());
-		Collections.sort(sortedTypes);
-		for(ElementType elementType: sortedTypes) {
-			result.add(getType(elementType));
-		}
-		elementsOutsideChildren.forEach(f -> result.add(getNonChildType(f)));
-		result.add(getTypeReferencedEntityRoot());
+	private JsonObject getTypes() {
+		JsonObjectBuilder result = bf.createObjectBuilder();
+		model
+			.getAllTypes()
+			.entrySet()
+			.stream()
+			.sorted(Map.Entry.comparingByKey())
+			.forEach(type -> addType(type.getValue(), result));
+		elementsOutsideChildren.forEach(element -> addNonChildType(element, result));
+		getTypeReferencedEntityRoot(result);
 		return result.build();
 	}
 
-	private JsonObject getTypeReferencedEntityRoot() {
-		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", Constants.MODULE_ELEMENT_NAME);
+	// But why??
+	private void getTypeReferencedEntityRoot(JsonObjectBuilder result) {
 		JsonArrayBuilder members = bf.createArrayBuilder();
 		members.add(Constants.MODULE_ELEMENT_NAME);
-		result.add("members", members);
-		return result.build();
+		result.add(Constants.MODULE_ELEMENT_NAME, members);
 	}
 
-	private JsonObject getType(ElementType elementType) {
-		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", elementType.getFullName());
+	private void addType(ElementType elementType, JsonObjectBuilder result) {
 		final JsonArrayBuilder members = bf.createArrayBuilder();
 		elementType.getSyntax2Members().forEach(f -> members.add(f.getFullName()));
-		result.add("members", members);
-		return result.build();
+		result.add(elementType.getFullName(), members);
 	}
 
-	private JsonObject getNonChildType(FrankElement frankElement) {
-		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", frankElement.getFullName());
+	private void addNonChildType(FrankElement frankElement, JsonObjectBuilder result) {
 		final JsonArrayBuilder members = bf.createArrayBuilder();
 		members.add(frankElement.getFullName());
-		result.add("members", members);
-		return result.build();
+		result.add(frankElement.getFullName(), members);
 	}
 
 	private JsonObject getElements() throws JsonException {
@@ -144,7 +137,7 @@ public class FrankDocJsonFactory {
 		sortKeys.add(Constants.MODULE_ELEMENT_NAME);
 		Collections.sort(sortKeys);
 
-		final var builder = bf.createObjectBuilder();
+		final JsonObjectBuilder builder = bf.createObjectBuilder();
 
 		for (String sortKey: sortKeys) {
 			if(sortKey.equals(Constants.MODULE_ELEMENT_NAME)) {
@@ -194,7 +187,7 @@ public class FrankDocJsonFactory {
 	}
 
 	private JsonObject getElement(FrankElement frankElement) throws JsonException {
-		JsonObjectBuilder result = bf.createObjectBuilder();
+		final JsonObjectBuilder result = bf.createObjectBuilder();
 		result.add("name", getElementNameForJson(frankElement));
 		result.add("fullName", frankElement.getFullName());
 		if (frankElement.isAbstract()) {
@@ -422,18 +415,11 @@ public class FrankDocJsonFactory {
 		return result.build();
 	}
 
-	private JsonArray getEnums() {
-		final JsonArrayBuilder result = bf.createArrayBuilder();
-		for(AttributeEnum attributeEnum: model.getAllAttributeEnumInstances()) {
-			result.add(getAttributeEnum(attributeEnum));
-		}
-		return result.build();
-	}
-
-	private JsonObject getAttributeEnum(AttributeEnum en) {
+	private JsonObject getEnums() {
 		final JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", en.getFullName());
-		result.add("values", getAttributeEnumValues(en));
+		for(AttributeEnum attributeEnum: model.getAllAttributeEnumInstances()) {
+			result.add(attributeEnum.getFullName(), getAttributeEnumValues(attributeEnum));
+		}
 		return result.build();
 	}
 
@@ -456,20 +442,15 @@ public class FrankDocJsonFactory {
 	// We omit the "labels" element if there are no labels. This
 	// makes no different in production because the F!F sources
 	// do have labels. This way, we can omit labels from unit tests.
-	private Optional<JsonArray> getLabels() {
+	private Optional<JsonObject> getLabels() {
 		if(model.getAllLabels().isEmpty()) {
 			return Optional.empty();
 		}
-		final JsonArrayBuilder result = bf.createArrayBuilder();
-		for(String label: model.getAllLabels()) {
-			JsonObjectBuilder labelObject = bf.createObjectBuilder();
+		final JsonObjectBuilder result = bf.createObjectBuilder();
+		for(String label : model.getAllLabels()) {
 			JsonArrayBuilder labelValuesObject = bf.createArrayBuilder();
-			for(String value: model.getAllValuesOfLabel(label)) {
-				labelValuesObject.add(value);
-			}
-			labelObject.add("label", label);
-			labelObject.add("values", labelValuesObject.build());
-			result.add(labelObject.build());
+			model.getAllValuesOfLabel(label).forEach(labelValuesObject::add);
+			result.add(label, labelValuesObject.build());
 		}
 		return Optional.of(result.build());
 	}
@@ -522,15 +503,15 @@ public class FrankDocJsonFactory {
 		return b.build();
 	}
 
-	private Optional<JsonArray> getCredentialProviders() {
+	private Optional<JsonObject> getCredentialProviders() {
 		if (model.getCredentialProviders().isEmpty()) {
 			return Optional.empty();
 		}
 
-		final var builder = bf.createArrayBuilder();
-		model.getCredentialProviders().stream()
-			.map(this::credentialProviderToJson)
-			.forEach(builder::add);
+		final JsonObjectBuilder builder = bf.createObjectBuilder();
+		for (CredentialProvider credentialProvider : model.getCredentialProviders()) {
+			builder.add(credentialProvider.simpleName(), credentialProviderToJson(credentialProvider));
+		}
 
 		return Optional.of(builder.build());
 	}
@@ -538,7 +519,6 @@ public class FrankDocJsonFactory {
 	private JsonObject credentialProviderToJson(CredentialProvider credentialProvider) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
 
-		b.add("name", credentialProvider.simpleName());
 		b.add("fullName", credentialProvider.fullName());
 		if (credentialProvider.description() != null) {
 			b.add("description", credentialProvider.description());
@@ -547,15 +527,15 @@ public class FrankDocJsonFactory {
 		return b.build();
 	}
 
-	private Optional<JsonArray> getServletAuthenticators() {
+	private Optional<JsonObject> getServletAuthenticators() {
 		if (model.getServletAuthenticators().isEmpty()) {
 			return Optional.empty();
 		}
 
-		final var builder = bf.createArrayBuilder();
-		model.getServletAuthenticators().stream()
-			.map(this::servletAuthenticatorTojson)
-			.forEach(builder::add);
+		final var builder = bf.createObjectBuilder();
+		for (ServletAuthenticator servletAuthenticator : model.getServletAuthenticators()) {
+			builder.add(servletAuthenticator.simpleName(), servletAuthenticatorTojson(servletAuthenticator));
+		}
 
 		return Optional.of(builder.build());
 	}
@@ -563,7 +543,6 @@ public class FrankDocJsonFactory {
 	private JsonObject servletAuthenticatorTojson(ServletAuthenticator servletAuthenticator) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
 
-		b.add("name", servletAuthenticator.simpleName());
 		b.add("fullName", servletAuthenticator.fullName());
 		if (servletAuthenticator.description() != null) {
 			b.add("description", servletAuthenticator.description());

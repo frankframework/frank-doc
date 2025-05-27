@@ -2,28 +2,19 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "types": [
-        {
-            "name": "org.frankframework.frankdoc.testtarget.category.IChild",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.category.ChildConfigChildA",
-                "org.frankframework.frankdoc.testtarget.category.ChildConfigChildB",
-                "org.frankframework.frankdoc.testtarget.category.ChildConfigChildC"
-            ]
-        },
-        {
-            "name": "org.frankframework.frankdoc.testtarget.category.Start",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.category.Start"
-            ]
-        },
-        {
-            "name": "Module",
-            "members": [
-                "Module"
-            ]
-        }
-    ],
+    "types": {
+        "org.frankframework.frankdoc.testtarget.category.IChild": [
+            "org.frankframework.frankdoc.testtarget.category.ChildConfigChildA",
+            "org.frankframework.frankdoc.testtarget.category.ChildConfigChildB",
+            "org.frankframework.frankdoc.testtarget.category.ChildConfigChildC"
+        ],
+        "org.frankframework.frankdoc.testtarget.category.Start": [
+            "org.frankframework.frankdoc.testtarget.category.Start"
+        ],
+        "Module": [
+            "Module"
+        ]
+    },
     "elements": {
         "org.frankframework.frankdoc.testtarget.category.ChildConfigChildA": {
             "name": "ChildConfigChildA",
