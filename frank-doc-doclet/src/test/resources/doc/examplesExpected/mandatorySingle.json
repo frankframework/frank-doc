@@ -2,77 +2,59 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "types": [
-        {
-            "name": "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Child",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Child"
-            ]
-        },
-        {
-            "name": "org.frankframework.frankdoc.testtarget.examples.mandatory.single.IInterface",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.examples.mandatory.single.InterfaceImpl"
-            ]
-        },
-        {
-            "name": "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Master",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Master"
-            ]
-        },
-        {
-            "name": "Module",
-            "members": [
-                "Module"
-            ]
-        }
-    ],
+    "types": {
+        "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Child": [
+            "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Child"
+        ],
+        "org.frankframework.frankdoc.testtarget.examples.mandatory.single.IInterface": [
+            "org.frankframework.frankdoc.testtarget.examples.mandatory.single.InterfaceImpl"
+        ],
+        "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Master": [
+            "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Master"
+        ],
+        "Module": [
+            "Module"
+        ]
+    },
     "elements": {
         "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Child": {
             "name": "B",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Child",
             "elementNames": [
                 {
                     "name": "B"
                 }
             ],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         },
         "org.frankframework.frankdoc.testtarget.examples.mandatory.single.InterfaceImpl": {
             "name": "InterfaceImpl",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.mandatory.single.InterfaceImpl",
             "elementNames": [
                 {
                     "name": "InterfaceImplA"
                 }
             ],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         },
         "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Master": {
             "name": "Master",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.mandatory.single.Master",
             "elementNames": [
                 {
                     "name": "Master"
                 }
             ],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ],
+            },
             "children": [
                 {
                     "multiple": true,
@@ -96,7 +78,6 @@
         },
         "Module": {
             "name": "Module",
-            "fullName": "Module",
             "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
             "elementNames": [
                 {
@@ -111,15 +92,13 @@
         },
         "java.lang.Object": {
             "name": "Object",
-            "fullName": "java.lang.Object",
             "elementNames": [],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         }
     },
-    "enums": []
+    "enums": {}
 }

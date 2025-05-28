@@ -2,57 +2,40 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "types": [
-        {
-            "name": "org.frankframework.frankdoc.testtarget.examples.config.children.IChild",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.examples.config.children.My1"
-            ]
-        },
-        {
-            "name": "org.frankframework.frankdoc.testtarget.examples.config.children.IChild2",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.examples.config.children.My2"
-            ]
-        },
-        {
-            "name": "org.frankframework.frankdoc.testtarget.examples.config.children.ILevel",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.examples.config.children.Level1",
-                "org.frankframework.frankdoc.testtarget.examples.config.children.Level2",
-                "org.frankframework.frankdoc.testtarget.examples.config.children.Level3",
-                "org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulative",
-                "org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulativeNoReuse"
-            ]
-        },
-        {
-            "name": "org.frankframework.frankdoc.testtarget.examples.config.children.Master",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.examples.config.children.Master"
-            ]
-        },
-        {
-            "name": "Module",
-            "members": [
-                "Module"
-            ]
-        }
-    ],
+    "types": {
+        "org.frankframework.frankdoc.testtarget.examples.config.children.IChild": [
+            "org.frankframework.frankdoc.testtarget.examples.config.children.My1"
+        ],
+        "org.frankframework.frankdoc.testtarget.examples.config.children.IChild2": [
+            "org.frankframework.frankdoc.testtarget.examples.config.children.My2"
+        ],
+        "org.frankframework.frankdoc.testtarget.examples.config.children.ILevel": [
+            "org.frankframework.frankdoc.testtarget.examples.config.children.Level1",
+            "org.frankframework.frankdoc.testtarget.examples.config.children.Level2",
+            "org.frankframework.frankdoc.testtarget.examples.config.children.Level3",
+            "org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulative",
+            "org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulativeNoReuse"
+        ],
+        "org.frankframework.frankdoc.testtarget.examples.config.children.Master": [
+            "org.frankframework.frankdoc.testtarget.examples.config.children.Master"
+        ],
+        "Module": [
+            "Module"
+        ]
+    },
     "elements": {
         "org.frankframework.frankdoc.testtarget.examples.config.children.Level1": {
             "name": "Level1",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.config.children.Level1",
             "elementNames": [
                 {
                     "name": "Level1A"
                 }
             ],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ],
+            },
             "children": [
                 {
                     "multiple": true,
@@ -68,7 +51,6 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.config.children.Level2": {
             "name": "Level2",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.config.children.Level2",
             "parent": "org.frankframework.frankdoc.testtarget.examples.config.children.Level1",
             "elementNames": [
                 {
@@ -85,7 +67,6 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.config.children.Level3": {
             "name": "Level3",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.config.children.Level3",
             "parent": "org.frankframework.frankdoc.testtarget.examples.config.children.Level2",
             "elementNames": [
                 {
@@ -108,7 +89,6 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulative": {
             "name": "LevelWithCumulative",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulative",
             "parent": "org.frankframework.frankdoc.testtarget.examples.config.children.Level3",
             "elementNames": [
                 {
@@ -125,7 +105,6 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulativeNoReuse": {
             "name": "LevelWithCumulativeNoReuse",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulativeNoReuse",
             "parent": "org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulative",
             "elementNames": [
                 {
@@ -142,18 +121,16 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.config.children.Master": {
             "name": "Master",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.config.children.Master",
             "elementNames": [
                 {
                     "name": "Master"
                 }
             ],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ],
+            },
             "children": [
                 {
                     "multiple": true,
@@ -170,7 +147,6 @@
         },
         "Module": {
             "name": "Module",
-            "fullName": "Module",
             "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
             "elementNames": [
                 {
@@ -185,7 +161,6 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.config.children.My1": {
             "name": "My1",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.config.children.My1",
             "elementNames": [
                 {
                     "name": "My1A"
@@ -200,16 +175,14 @@
                     "name": "My1D"
                 }
             ],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         },
         "org.frankframework.frankdoc.testtarget.examples.config.children.My2": {
             "name": "My2",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.config.children.My2",
             "elementNames": [
                 {
                     "name": "My2A"
@@ -218,24 +191,21 @@
                     "name": "My2B"
                 }
             ],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         },
         "java.lang.Object": {
             "name": "Object",
-            "fullName": "java.lang.Object",
             "elementNames": [],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         }
     },
-    "enums": []
+    "enums": {}
 }

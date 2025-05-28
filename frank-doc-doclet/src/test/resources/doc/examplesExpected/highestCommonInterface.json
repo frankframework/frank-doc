@@ -2,47 +2,33 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "types": [
-        {
-            "name": "org.frankframework.frankdoc.testtarget.highest.commonInterface.IExtension",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
-            ]
-        },
-        {
-            "name": "org.frankframework.frankdoc.testtarget.highest.commonInterface.IListener",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
-            ]
-        },
-        {
-            "name": "org.frankframework.frankdoc.testtarget.highest.commonInterface.Master",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.highest.commonInterface.Master"
-            ]
-        },
-        {
-            "name": "Module",
-            "members": [
-                "Module"
-            ]
-        }
-    ],
+    "types": {
+        "org.frankframework.frankdoc.testtarget.highest.commonInterface.IExtension": [
+            "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
+        ],
+        "org.frankframework.frankdoc.testtarget.highest.commonInterface.IListener": [
+            "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
+        ],
+        "org.frankframework.frankdoc.testtarget.highest.commonInterface.Master": [
+            "org.frankframework.frankdoc.testtarget.highest.commonInterface.Master"
+        ],
+        "Module": [
+            "Module"
+        ]
+    },
     "elements": {
         "org.frankframework.frankdoc.testtarget.highest.commonInterface.Master": {
             "name": "Master",
-            "fullName": "org.frankframework.frankdoc.testtarget.highest.commonInterface.Master",
             "elementNames": [
                 {
                     "name": "Master"
                 }
             ],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ],
+            },
             "children": [
                 {
                     "multiple": true,
@@ -64,7 +50,6 @@
         },
         "Module": {
             "name": "Module",
-            "fullName": "Module",
             "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
             "elementNames": [
                 {
@@ -79,7 +64,6 @@
         },
         "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener": {
             "name": "MyListener",
-            "fullName": "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener",
             "elementNames": [
                 {
                     "name": "MyA"
@@ -88,24 +72,21 @@
                     "name": "MyB"
                 }
             ],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         },
         "java.lang.Object": {
             "name": "Object",
-            "fullName": "java.lang.Object",
             "elementNames": [],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         }
     },
-    "enums": []
+    "enums": {}
 }
