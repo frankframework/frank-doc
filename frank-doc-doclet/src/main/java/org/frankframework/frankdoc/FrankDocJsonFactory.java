@@ -47,12 +47,9 @@ import javax.json.JsonBuilderFactory;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FrankDocJsonFactory {
 	private static final Logger log = LogUtil.getLogger(FrankDocJsonFactory.class);
@@ -142,11 +139,10 @@ public class FrankDocJsonFactory {
 		for (String sortKey: sortKeys) {
 			if(sortKey.equals(Constants.MODULE_ELEMENT_NAME)) {
 				JsonObject element = getElementReferencedEntityRoot();
-				builder.add(element.getString("fullName"), element);
+				builder.add(Constants.MODULE_ELEMENT_NAME, element);
 			} else {
-				elementsByName.get(sortKey).stream()
-						.map(this::getElement)
-						.forEach(element -> builder.add(element.getString("fullName"), element));
+				elementsByName.get(sortKey)
+					.forEach(element -> builder.add(element.getFullName(), getElement(element)));
 			}
 		}
 		return builder.build();
@@ -164,7 +160,6 @@ public class FrankDocJsonFactory {
 	private JsonObject getElementReferencedEntityRoot() {
 		JsonObjectBuilder result = bf.createObjectBuilder();
 		result.add("name", Constants.MODULE_ELEMENT_NAME);
-		result.add("fullName", Constants.MODULE_ELEMENT_NAME);
 		addDescription(result, Constants.MODULE_ELEMENT_DESCRIPTION);
 
 		JsonArrayBuilder xmlElementNames = bf.createArrayBuilder();
@@ -189,7 +184,6 @@ public class FrankDocJsonFactory {
 	private JsonObject getElement(FrankElement frankElement) throws JsonException {
 		final JsonObjectBuilder result = bf.createObjectBuilder();
 		result.add("name", getElementNameForJson(frankElement));
-		result.add("fullName", frankElement.getFullName());
 		if (frankElement.isAbstract()) {
 			result.add("abstract", true);
 		}
@@ -206,7 +200,7 @@ public class FrankDocJsonFactory {
 		frankElement.getXmlElementNames().forEach(elementName -> xmlElementNames.add(getElementName(elementName, frankElement.getLabels())));
 		result.add("elementNames", xmlElementNames);
 
-		JsonArray attributes = getAttributes(frankElement, getParentOrNull(frankElement) == null);
+		JsonObject attributes = getAttributes(frankElement, getParentOrNull(frankElement) == null);
 		if (!attributes.isEmpty()) {
 			result.add("attributes", attributes);
 		}
@@ -224,13 +218,13 @@ public class FrankDocJsonFactory {
 			result.add("parametersDescription", frankElement.getMeaningOfParameters());
 		}
 		if (!frankElement.getSpecificParameters().isEmpty()) {
-			final var builder = bf.createArrayBuilder();
-			frankElement.getSpecificParameters().forEach(sp -> builder.add(getParsedJavaDocTag(sp)));
+			final JsonObjectBuilder builder = bf.createObjectBuilder();
+			frankElement.getSpecificParameters().forEach(parameter -> builder.add(parameter.getName(), getParsedJavaDocTag(parameter)));
 			result.add("parameters", builder.build());
 		}
 		if(!frankElement.getForwards().isEmpty()) {
-			final var builder = bf.createArrayBuilder();
-			frankElement.getForwards().forEach(f -> builder.add(getJsonForForward(f)));
+			final JsonObjectBuilder builder = bf.createObjectBuilder();
+			frankElement.getForwards().forEach(forward -> builder.add(forward.name(), getJsonForForward(forward)));
 			result.add("forwards", builder.build());
 		}
 
@@ -290,7 +284,6 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getParsedJavaDocTag(ParsedJavaDocTag parsedJavaDocTag) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
-		b.add("name", parsedJavaDocTag.getName());
 		if(parsedJavaDocTag.getDescription() != null) {
 			b.add("description", parsedJavaDocTag.getDescription());
 		}
@@ -299,7 +292,6 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getJsonForForward(Forward forward) {
 		final var builder = bf.createObjectBuilder();
-		builder.add("name", forward.name());
 		if(forward.description() != null) {
 			builder.add("description", forward.description());
 		}
@@ -317,20 +309,19 @@ public class FrankDocJsonFactory {
 		return null;
 	}
 
-	private JsonArray getAttributes(FrankElement frankElement, boolean addAttributeActive) throws JsonException {
-		JsonArrayBuilder result = bf.createArrayBuilder();
-		for(FrankAttribute attribute: frankElement.getAttributes(ElementChild.IN_COMPATIBILITY_XSD)) {
-			result.add(getAttribute(attribute));
+	private JsonObject getAttributes(FrankElement frankElement, boolean addAttributeActive) throws JsonException {
+		JsonObjectBuilder result = bf.createObjectBuilder();
+		for (FrankAttribute attribute: frankElement.getAttributes(ElementChild.IN_COMPATIBILITY_XSD)) {
+			result.add(attribute.getName(), getAttribute(attribute));
 		}
-		if(addAttributeActive) {
-			result.add(getAttributeActive());
+		if (addAttributeActive) {
+			result.add("active", getAttributeActive());
 		}
 		return result.build();
 	}
 
 	private JsonObject getAttribute(FrankAttribute frankAttribute) throws JsonException {
 		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", frankAttribute.getName());
 		DeprecationInfo deprecationInfo = frankAttribute.getDeprecationInfo();
 		if (deprecationInfo != null) {
 			JsonObject deprecationInfoJsonObject = getDeprecated(deprecationInfo);
@@ -358,7 +349,6 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getAttributeActive() {
 		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", "active");
 		result.add("description", "If defined and empty or false, then this element and all its children are ignored");
 		return result.build();
 	}
