@@ -49,7 +49,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FrankDocJsonFactory {
 	private static final Logger log = LogUtil.getLogger(FrankDocJsonFactory.class);
@@ -413,18 +412,17 @@ public class FrankDocJsonFactory {
 		return result.build();
 	}
 
-	private JsonArray getAttributeEnumValues(AttributeEnum en) {
-		JsonArrayBuilder result = bf.createArrayBuilder();
-		for(EnumValue v: en.getValues()) {
+	private JsonObject getAttributeEnumValues(AttributeEnum en) {
+		JsonObjectBuilder result = bf.createObjectBuilder();
+		for(EnumValue enumValue: en.getValues()) {
 			JsonObjectBuilder valueBuilder = bf.createObjectBuilder();
-			valueBuilder.add("label", v.getLabel());
-			if(v.getDescription() != null) {
-				valueBuilder.add("description", v.getDescription());
+			if(enumValue.getDescription() != null) {
+				valueBuilder.add("description", enumValue.getDescription());
 			}
-			if(v.isDeprecated()) {
+			if(enumValue.isDeprecated()) {
 				valueBuilder.add("deprecated", true);
 			}
-			result.add(valueBuilder.build());
+			result.add(enumValue.getLabel(), valueBuilder.build());
 		}
 		return result.build();
 	}
