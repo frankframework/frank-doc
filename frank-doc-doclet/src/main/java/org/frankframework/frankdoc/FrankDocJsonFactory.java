@@ -76,6 +76,7 @@ public class FrankDocJsonFactory {
 			}
 			result.add("types", getTypes());
 			result.add("elements", getElements());
+			result.add("elementNames", getElementNames());
 			result.add("enums", getEnums());
 			getLabels().ifPresent(l -> result.add("labels", l));
 			getProperties().ifPresent(p -> result.add("properties", p));
@@ -127,28 +128,30 @@ public class FrankDocJsonFactory {
 	}
 
 	private JsonObject getElements() throws JsonException {
-		Map<String, List<FrankElement>> elementsByName = model.getAllElements().values().stream()
-				.collect(Collectors.groupingBy(this::getElementNameForJson));
-		List<String> sortKeys = new ArrayList<>(elementsByName.keySet());
-		sortKeys.add(Constants.MODULE_ELEMENT_NAME);
-		Collections.sort(sortKeys);
-
 		final JsonObjectBuilder builder = bf.createObjectBuilder();
 
-		for (String sortKey: sortKeys) {
-			if(sortKey.equals(Constants.MODULE_ELEMENT_NAME)) {
-				JsonObject element = getElementReferencedEntityRoot();
-				builder.add(Constants.MODULE_ELEMENT_NAME, element);
-			} else {
-				elementsByName.get(sortKey)
-					.forEach(element -> builder.add(element.getFullName(), getElement(element)));
+		Map<String, List<FrankElement>> elementsByName = getAllElements();
+		builder.add(Constants.MODULE_ELEMENT_NAME, getRootElementObject());
+
+		for (List<FrankElement> elementsPerClass : elementsByName.values()) {
+			for (FrankElement element : elementsPerClass) {
+				builder.add(element.getFullName(), getElement(element));
 			}
 		}
+
 		return builder.build();
 	}
 
+	private Map<String, List<FrankElement>> getAllElements() {
+		return model
+			.getAllElements()
+			.values()
+			.stream()
+			.collect(Collectors.groupingBy(this::getElementNameForJson));
+	}
+
 	private String getElementNameForJson(FrankElement f) {
-		boolean useXmlElementName = (! f.isInterfaceBased()) && f.hasOnePossibleXmlElementName();
+		boolean useXmlElementName = (!f.isInterfaceBased()) && f.hasOnePossibleXmlElementName();
 		if(useXmlElementName) {
 			return f.getTheSingleXmlElementName();
 		} else {
@@ -156,15 +159,10 @@ public class FrankDocJsonFactory {
 		}
 	}
 
-	private JsonObject getElementReferencedEntityRoot() {
+	private JsonObject getRootElementObject() {
 		JsonObjectBuilder result = bf.createObjectBuilder();
 		result.add("name", Constants.MODULE_ELEMENT_NAME);
 		addDescription(result, Constants.MODULE_ELEMENT_DESCRIPTION);
-
-		JsonArrayBuilder xmlElementNames = bf.createArrayBuilder();
-		xmlElementNames.add(getElementName(Constants.MODULE_ELEMENT_NAME, Map.of("FrankDocGroup", List.of(Constants.MODULE_ELEMENT_FRANK_DOC_GROUP))));
-		result.add("elementNames", xmlElementNames.build());
-
 		return result.build();
 	}
 
@@ -194,10 +192,6 @@ public class FrankDocJsonFactory {
 
 		addDescription(result, frankElement.getDescription());
 		addIfNotNull(result, "parent", getParentOrNull(frankElement));
-
-		JsonArrayBuilder xmlElementNames = bf.createArrayBuilder();
-		frankElement.getXmlElementNames().forEach(elementName -> xmlElementNames.add(getElementName(elementName, frankElement.getLabels())));
-		result.add("elementNames", xmlElementNames);
 
 		JsonObject attributes = getAttributes(frankElement, getParentOrNull(frankElement) == null);
 		if (!attributes.isEmpty()) {
@@ -254,29 +248,28 @@ public class FrankDocJsonFactory {
 		return result.build();
 	}
 
-	private JsonObject getElementName(String elementName, Map<String, List<String>> labels) {
+	private JsonObject getElementName(String elementName,String fullName, Map<String, List<String>> labelGroups) {
 		final var result = bf.createObjectBuilder();
+		result.add("className", fullName);
 
-		if (!labels.isEmpty()) {
-			final var builder = bf.createObjectBuilder();
+		if (!labelGroups.isEmpty()) {
+			final JsonObjectBuilder labelsBuilder = bf.createObjectBuilder();
 
-			labels.forEach((category, value) -> {
+			labelGroups.forEach((group, labels) -> {
 				// TODO: This is a bandage fix for validators and pipes. Pipes and validators currently share the same
 				// implementation, but we want the labels to be different. The elementName (automatically generated based
 				// on the interfaces it implements) is compared against a string to manually exclude specific labels.
 				if (elementName.toLowerCase().contains("pipe")) {
-					value = value.stream().filter(label -> !label.toLowerCase().contains("validator")).toList();
+					labels = labels.stream().filter(label -> !label.toLowerCase().contains("validator")).toList();
 				} else if (elementName.toLowerCase().contains("validator")) {
-					value = value.stream().filter(label -> !label.toLowerCase().contains("pipe")).toList();
+					labels = labels.stream().filter(label -> !label.toLowerCase().contains("pipe")).toList();
 				}
 
-				builder.add(category, bf.createArrayBuilder(value));
+				labelsBuilder.add(group, labels.get(0));
 			});
-			result.add("labels", builder.build());
+
+			result.add("labels", labelsBuilder.build());
 		}
-
-		result.add("name", elementName);
-
 
 		return result.build();
 	}
@@ -401,6 +394,22 @@ public class FrankDocJsonFactory {
 		if(child instanceof ObjectConfigChild) {
 			result.add("type", ((ObjectConfigChild) child).getElementType().getFullName());
 		}
+		return result.build();
+	}
+
+	private JsonObject getElementNames() {
+		final JsonObjectBuilder result = bf.createObjectBuilder();
+		result.add(Constants.MODULE_ELEMENT_NAME, getElementName(Constants.MODULE_ELEMENT_NAME, Constants.MODULE_ELEMENT_NAME, Map.of("FrankDocGroup", List.of(Constants.MODULE_ELEMENT_FRANK_DOC_GROUP))));
+
+		Map<String, List<FrankElement>> elements = getAllElements();
+		for (List<FrankElement> elementsPerClass : elements.values()) {
+			for (FrankElement frankElement : elementsPerClass) {
+				for (String elementName : frankElement.getXmlElementNames()) {
+					result.add(elementName, getElementName(elementName, frankElement.getFullName(), frankElement.getLabels()));
+				}
+			}
+		}
+
 		return result.build();
 	}
 
