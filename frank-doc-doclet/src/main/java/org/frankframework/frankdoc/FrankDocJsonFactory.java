@@ -265,7 +265,10 @@ public class FrankDocJsonFactory {
 					labels = labels.stream().filter(label -> !label.toLowerCase().contains("pipe")).toList();
 				}
 
-				labelsBuilder.add(group, labels.get(0));
+				if (!labels.isEmpty()) {
+					// Only get the first label since, most if not all categories have only one label
+					labelsBuilder.add(group, labels.get(0));
+				}
 			});
 
 			result.add("labels", labelsBuilder.build());
