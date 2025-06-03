@@ -1,5 +1,4 @@
 import { Component, computed, inject, Signal } from '@angular/core';
-import { JavadocTransformDirective } from '../../components/javadoc-transform.directive';
 import { CredentialProvider, Element, ServletAuthenticator } from '../../frankdoc.types';
 import { AppService } from '../../app.service';
 import { DEFAULT_RETURN_CHARACTER } from '../../app.constants';
@@ -11,7 +10,7 @@ import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-servlet-authenticators',
-  imports: [JavadocTransformDirective, NameWbrPipe, NgClass],
+  imports: [NameWbrPipe, NgClass],
   templateUrl: './servlet-authenticators.component.html',
   styleUrl: './servlet-authenticators.component.scss',
 })

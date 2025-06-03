@@ -2,7 +2,6 @@ import { Component, computed, inject, Signal } from '@angular/core';
 import { AppService } from '../../app.service';
 import { Element, Property } from '../../frankdoc.types';
 import { NameWbrPipe } from '../../components/name-wbr.pipe';
-import { JavadocTransformDirective } from '../../components/javadoc-transform.directive';
 import { DEFAULT_RETURN_CHARACTER, DEFAULT_UNKNOWN_PROPERTY_GROUP } from '../../app.constants';
 import { CollapseDirective } from '../../components/collapse.directive';
 import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.component';
@@ -11,7 +10,7 @@ import { IconHelpComponent } from '../../icons/icon-help/icon-help.component';
 
 @Component({
   selector: 'app-properties',
-  imports: [NameWbrPipe, JavadocTransformDirective, CollapseDirective, IconCaretComponent, NgClass, IconHelpComponent],
+  imports: [NameWbrPipe, CollapseDirective, IconCaretComponent, NgClass, IconHelpComponent],
   templateUrl: './properties.component.html',
   styleUrl: './properties.component.scss',
 })

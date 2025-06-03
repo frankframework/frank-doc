@@ -25,7 +25,6 @@ import {
   Value,
 } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
-import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
 import { CollapseDirective } from '../../../components/collapse.directive';
 import { IconCaretComponent } from '../../../icons/icon-caret-down/icon-caret.component';
 import { IconArrowRightUpComponent } from '../../../icons/icon-arrow-right-up/icon-arrow-right-up.component';
@@ -56,7 +55,6 @@ type InheritedProperties = {
     KeyValuePipe,
     RouterLink,
     AlertComponent,
-    JavadocTransformDirective,
     CollapseDirective,
     NgTemplateOutlet,
     IconCaretComponent,

@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "^19.1.5",
     "@angular/router": "^19.1.5",
     "@frankframework/angular-components": "^1.1.6",
+    "@frankframework/ff-doc": "file:../ff-doc-library/dist/ff-doc/frankframework-ff-doc-1.0.0.tgz",
     "fuse.js": "^7.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

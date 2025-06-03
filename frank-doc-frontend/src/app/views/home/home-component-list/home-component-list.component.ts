@@ -6,13 +6,12 @@ import { Router } from '@angular/router';
 import { AppService } from '../../../app.service';
 import { TruncatePipe } from '../../../components/truncate.pipe';
 import { environment } from '../../../../environments/environment';
-import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
 import { CardDirective } from './card.directive';
 import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-home-component-list',
-  imports: [ButtonComponent, TruncatePipe, JavadocTransformDirective, CardDirective, NgClass],
+  imports: [ButtonComponent, TruncatePipe, CardDirective, NgClass],
   templateUrl: './home-component-list.component.html',
   styleUrl: './home-component-list.component.scss',
 })

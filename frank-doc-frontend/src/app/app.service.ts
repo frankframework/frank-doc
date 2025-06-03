@@ -1,19 +1,7 @@
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { Element, ElementLabels, FrankDoc, RawFrankDoc } from './frankdoc.types';
 import { DEFAULT_RETURN_CHARACTER } from './app.constants';
-
-export type Filter = {
-  name: string;
-  labels: FilterLabels[];
-};
-
-export type FilterLabels = {
-  name: string;
-  elements: string[];
-};
+import { Elements, NgFFDoc } from '@frankframework/ff-doc';
 
 type HSL = {
   hue: number;
@@ -25,9 +13,6 @@ type HSL = {
   providedIn: 'root',
 })
 export class AppService {
-  readonly frankDoc: WritableSignal<FrankDoc | null> = signal(null);
-  readonly rawFrankDoc: WritableSignal<RawFrankDoc | null> = signal(null);
-  readonly filters: WritableSignal<Filter[]> = signal([]);
   readonly darkmode: WritableSignal<boolean> = signal(false);
   hasLoaded: boolean = false;
   previousSearchQuery: string = '';
@@ -35,7 +20,11 @@ export class AppService {
   private readonly applicationLoadedSubject: Subject<void> = new Subject();
   readonly applicationLoaded$: Observable<void> = this.applicationLoadedSubject.asObservable();
 
-  private readonly http: HttpClient = inject(HttpClient);
+  private ffDoc: NgFFDoc = new NgFFDoc();
+
+  getFFDoc(): NgFFDoc {
+    return this.ffDoc;
+  }
 
   triggerApplicationLoaded(): void {
     this.hasLoaded = true;
@@ -43,15 +32,11 @@ export class AppService {
     this.applicationLoadedSubject.complete();
   }
 
-  getFrankDoc(): Observable<RawFrankDoc> {
-    return this.http.get<RawFrankDoc>(`${environment.frankDocUrl}?cache=${Date.now()}`);
-  }
-
   fullNameToSimpleName(fullName: string): string {
     return fullName.slice(fullName.lastIndexOf('.') + 1);
   }
 
-  filterElementsBySelectedFilters(elements: Element[], selectedFilters: ElementLabels): Element[] {
+  filterElementsBySelectedFilters(elements: Elements, selectedFilters: ElementLabels): Elements {
     if (this.getSelectedFiltersLength(selectedFilters) === 0) return elements;
     return elements.filter((element) => {
       if (!element.labels) return false;
