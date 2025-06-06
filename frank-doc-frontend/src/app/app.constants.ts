@@ -11,10 +11,6 @@ export const fuseOptions: IFuseOptions<ElementDetails> = {
       weight: 2,
     },
     {
-      name: 'fullName',
-      weight: 2,
-    },
-    {
       name: 'elementNames', // default weight is 1.0
     },
     {

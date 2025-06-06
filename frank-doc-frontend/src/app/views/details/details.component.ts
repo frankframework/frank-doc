@@ -1,11 +1,11 @@
 import { Component, computed, inject, OnDestroy, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Element, FrankDoc } from '../../frankdoc.types';
-import { AppService } from '../../app.service';
+import { AppService, ElementEntry } from '../../app.service';
 import { DetailsElementComponent } from './details-element/details-element.component';
 import { DetailsSearchComponent } from './details-search/details-search.component';
 import { NgClass } from '@angular/common';
 import { fromEvent, Subscription, throttleTime } from 'rxjs';
+import { Elements, NgFFDoc } from '@frankframework/ff-doc';
 
 type ElementFilterProperties = {
   filterName?: string;
@@ -33,15 +33,9 @@ export type HasInheritedProperties = {
   styleUrl: './details.component.scss',
 })
 export class DetailsComponent implements OnInit, OnDestroy {
-  protected readonly frankDocElements: Signal<FrankDoc['elements'] | null> = computed(
-    () => this.appService.frankDoc()?.elements ?? null,
-  );
-  protected readonly frankDocEnums: Signal<FrankDoc['enums'] | null> = computed(
-    () => this.appService.frankDoc()?.enums ?? null,
-  );
-  protected elementByRoute: Element | null = null;
-  protected readonly elementBySignal: Signal<Element | null> = computed(() => {
-    const elements = this.frankDocElements();
+  protected elementByRoute: ElementEntry | null = null;
+  protected readonly elementBySignal: Signal<ElementEntry | null> = computed(() => {
+    const elements = this.ffDoc.elements();
     if (elements) return this.findElement(elements);
     return null;
   });
@@ -55,6 +49,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   private appService: AppService = inject(AppService);
   protected readonly scrollToElement = this.appService.scrollToElement;
+  protected readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
 
   private route: ActivatedRoute = inject(ActivatedRoute);
   private elementFilterProperties: ElementFilterProperties | null = null;
@@ -74,7 +69,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
         this.elementFilterProperties = { filterName, labelName, elementName };
       }
 
-      this.elementByRoute = this.findElement(this.frankDocElements());
+      this.elementByRoute = this.findElement(this.ffDoc.elements());
     });
 
     this.scrollEvent = fromEvent(window, 'scroll')
@@ -101,7 +96,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.tableOfContents[activeIndex].active = true;
   }
 
-  protected getFoundElement(): Element | null {
+  protected getFoundElement(): ElementEntry | null {
     return this.elementByRoute ?? this.elementBySignal();
   }
 
@@ -145,18 +140,18 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.tableOfContents = tableOfContents;
   }
 
-  private findElement(frankDocElements: FrankDoc['elements'] | null): FrankDoc['elements'][string] | null {
-    if (!frankDocElements) return null;
-    if (this.elementIndexOrClassName) return this.getElementByFullName(frankDocElements, this.elementIndexOrClassName);
+  private findElement(elements: Elements | null): ElementEntry | null {
+    if (!elements) return null;
+    if (this.elementIndexOrClassName) return this.getElementByFullName(elements, this.elementIndexOrClassName);
     if (!this.elementFilterProperties) return null;
-    return this.getElementByFilterLabelNames(frankDocElements, this.elementFilterProperties);
+    return this.getElementByFilterLabelNames(elements, this.elementFilterProperties);
   }
 
   private getElementByFilterLabelNames(
-    frankDocElements: FrankDoc['elements'],
+    elements: Elements,
     elementFilterProperties: ElementFilterProperties,
   ): FrankDoc['elements'][string] | null {
-    const elements = Object.values(frankDocElements);
+    const elements = Object.values(elements);
     const { filterName, labelName, elementName } = elementFilterProperties;
 
     if (!filterName) {
@@ -169,14 +164,14 @@ export class DetailsComponent implements OnInit, OnDestroy {
     return filteredElement ?? null;
   }
 
-  private getElementByShortName(frankDocElements: Element[], shortName: string): Element | null {
-    return frankDocElements.find((element) => element.name === shortName) ?? null;
+  private getElementByShortName(elements: Elements, shortName: string): ElementEntry | null {
+    return elements.find((element) => element.name === shortName) ?? null;
   }
 
-  private getElementByFullName(frankDocElements: FrankDoc['elements'], fullName: string): Element | null {
+  private getElementByFullName(elements: Elements, fullName: string): Element | null {
     return (
-      frankDocElements[fullName] ??
-      Object.values(frankDocElements).find((element) => element.className === fullName) ??
+      elements[fullName] ??
+      Object.values(elements).find((element) => element.className === fullName) ??
       null
     );
   }

@@ -1,5 +1,4 @@
 import { Component, computed, inject, Signal } from '@angular/core';
-import { CredentialProvider, Element, ServletAuthenticator } from '../../frankdoc.types';
 import { AppService } from '../../app.service';
 import { DEFAULT_RETURN_CHARACTER } from '../../app.constants';
 import { NameWbrPipe } from '../../components/name-wbr.pipe';
@@ -7,43 +6,43 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { NgClass } from '@angular/common';
+import { Elements, JavadocTransformDirective, NgFFDoc, ServletAuthenticator } from '@frankframework/ff-doc';
 
 @Component({
   selector: 'app-servlet-authenticators',
-  imports: [NameWbrPipe, NgClass],
+  imports: [NameWbrPipe, NgClass, JavadocTransformDirective],
   templateUrl: './servlet-authenticators.component.html',
   styleUrl: './servlet-authenticators.component.scss',
 })
 export class ServletAuthenticatorsComponent {
-  protected readonly servletAuthenticators: Signal<ServletAuthenticator[]> = computed(
-    () => this.appService.frankDoc()?.servletAuthenticators.sort((a, b) => a.name.localeCompare(b.name)) ?? [],
+  protected readonly servletAuthenticatorNames: Signal<string[]> = computed(
+    () => Object.keys(this.ffDoc.servletAuthenticators()).sort((a, b) => a.localeCompare(b)) ?? [],
   );
-  protected readonly frankDocElements: Signal<Record<string, Element> | null> = computed(
-    () => this.appService.frankDoc()?.elements ?? null,
-  );
-
-  private readonly appService: AppService = inject(AppService);
+  protected readonly elements: Signal<Elements | null> = computed(() => this.ffDoc.elements() ?? null);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
 
+  private readonly appService: AppService = inject(AppService);
   private readonly router: Router = inject(Router);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
 
   protected readonly selectedAuthenticatorName = toSignal(
     this.route.paramMap.pipe(map((params) => params.get('name'))),
   );
 
-  protected readonly selectedAuthenticator = computed(() => {
-    const authenticatorName = this.selectedAuthenticatorName();
-    const authenticators = this.servletAuthenticators();
+  protected readonly selectedAuthenticator: Signal<{ name: string; authenticator: ServletAuthenticator } | null> =
+    computed(() => {
+      const authenticatorName = this.selectedAuthenticatorName();
+      const authenticators = this.ffDoc.servletAuthenticators();
 
-    if (!authenticatorName || authenticators.length === 0) {
-      return null;
-    }
+      if (!authenticatorName || Object.keys(authenticators).length === 0) {
+        return null;
+      }
 
-    return authenticators.find((authenticator) => authenticator.name === authenticatorName) || null;
-  });
+      return { name: authenticatorName, authenticator: authenticators[authenticatorName] } || null;
+    });
 
-  protected handleSelectedAuthenticator(authenticator: ServletAuthenticator): void {
-    this.router.navigate(['servlet-authenticators', authenticator.name]);
+  protected handleSelectedAuthenticator(authenticator: string): void {
+    this.router.navigate(['servlet-authenticators', authenticator]);
   }
 }

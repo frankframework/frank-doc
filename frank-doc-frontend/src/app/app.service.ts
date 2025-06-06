@@ -1,7 +1,10 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { DEFAULT_RETURN_CHARACTER } from './app.constants';
-import { Elements, NgFFDoc } from '@frankframework/ff-doc';
+import { ElementDetails, Elements, FilterLabels, NgFFDoc } from '@frankframework/ff-doc';
+
+export type FilterGroups = Record<string, string[]>;
+export type ElementEntry = { name: string; element: ElementDetails };
 
 type HSL = {
   hue: number;
@@ -26,44 +29,36 @@ export class AppService {
     return this.ffDoc;
   }
 
+  getLabelEntries(filterLabels: FilterLabels): { name: string; labels: string[] }[] {
+    return Object.entries(filterLabels).map(([name, labels]) => ({ name, labels }));
+  }
+
   triggerApplicationLoaded(): void {
     this.hasLoaded = true;
     this.applicationLoadedSubject.next();
     this.applicationLoadedSubject.complete();
   }
 
-  fullNameToSimpleName(fullName: string): string {
-    return fullName.slice(fullName.lastIndexOf('.') + 1);
-  }
-
-  filterElementsBySelectedFilters(elements: Elements, selectedFilters: ElementLabels): Elements {
-    if (this.getSelectedFiltersLength(selectedFilters) === 0) return elements;
-    return elements.filter((element) => {
+  filterElementsBySelectedFilters(elements: Elements, selectedFilters: FilterGroups): ElementDetails[] {
+    const elementsList = Object.values(elements);
+    if (this.getSelectedFiltersLength(selectedFilters) === 0) return elementsList;
+    return elementsList.filter((element) => {
       if (!element.labels) return false;
-      for (const labelKey of Object.keys(element.labels)) {
-        if (!selectedFilters[labelKey]) continue;
-        for (const labelItem of element.labels[labelKey]) {
-          if (selectedFilters[labelKey].includes(labelItem)) {
-            return true;
-          }
-        }
+      for (const labelGroup of Object.keys(element.labels)) {
+        if (!selectedFilters[labelGroup]) continue;
+        const label = element.labels[labelGroup];
+        if (selectedFilters[labelGroup].includes(label)) return true;
       }
       return false;
     });
   }
 
-  getFirstFilter(labels?: Record<string, string[]>): string {
-    if (!labels) return DEFAULT_RETURN_CHARACTER;
-    const labelGroups = Object.keys(labels);
-    if (labelGroups.length === 0) return DEFAULT_RETURN_CHARACTER;
+  getFirstLabelGroup(filters?: Record<string, string>): [string, string] {
+    const defaultLabelGroup: [string, string] = [DEFAULT_RETURN_CHARACTER, DEFAULT_RETURN_CHARACTER];
+    if (!filters) return defaultLabelGroup;
+    const labelGroups = Object.entries(filters);
+    if (labelGroups.length === 0) return defaultLabelGroup;
     return labelGroups[0];
-  }
-
-  getFirstLabel(labels?: Record<string, string[]>): string {
-    if (!labels) return DEFAULT_RETURN_CHARACTER;
-    const labelGroups = Object.keys(labels);
-    if (labelGroups.length === 0) return DEFAULT_RETURN_CHARACTER;
-    return labels[labelGroups[0]][0];
   }
 
   getLabelColor(name: string): string {
@@ -77,9 +72,10 @@ export class AppService {
     }
   }
 
-  private getSelectedFiltersLength(selectedFilters: ElementLabels): number {
-    if (Object.values(selectedFilters).length === 0) return 0;
-    return Object.values(selectedFilters).reduce((acc, val) => acc + val.length, 0);
+  private getSelectedFiltersLength(selectedFilters: FilterGroups): number {
+    const filterLabels = Object.values(selectedFilters);
+    if (filterLabels.length === 0) return 0;
+    return filterLabels.reduce((acc, labels) => acc + labels.length, 0);
   }
 
   private createHSLColorFromString(string: string, lightness: number): HSL {

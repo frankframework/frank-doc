@@ -13,10 +13,15 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { ButtonComponent, CheckboxComponent } from '@frankframework/angular-components';
-import { AppService, Filter } from '../../../app.service';
+import { AppService, FilterGroups } from '../../../app.service';
 import { KeyValuePipe, NgClass } from '@angular/common';
 import { InitFilterToggleDirective } from './init-filter-toggle.directive';
-import { ElementLabels } from '../../../frankdoc.types';
+import { FilterLabels, NgFFDoc } from '@frankframework/ff-doc';
+
+type FilterEntry = {
+  name: string;
+  filter: FilterLabels;
+};
 
 @Component({
   selector: 'app-home-filters',
@@ -26,19 +31,24 @@ import { ElementLabels } from '../../../frankdoc.types';
 })
 export class HomeFiltersComponent implements OnDestroy {
   @ViewChild('menu') menuElementRef!: ElementRef<HTMLDivElement>;
-  @Output() selectedFilters: EventEmitter<ElementLabels> = new EventEmitter<ElementLabels>();
+  @Output() selectedFilters: EventEmitter<FilterGroups> = new EventEmitter<FilterGroups>();
 
-  private appService: AppService = inject(AppService);
-  protected filters: Signal<Filter[]> = computed(() => this.appService.filters());
+  protected filters: Signal<FilterEntry[]> = computed(() =>
+    Object.entries(this.ffDoc.filters()).map(([name, filter]) => ({ name, filter })),
+  );
   protected open: boolean = false;
-  protected selectedFilter: Filter | null = null;
-  protected selectedFilterLabels: WritableSignal<ElementLabels> = signal({});
+  protected selectedFilter: FilterEntry | null = null;
+  protected selectedFilterLabels: WritableSignal<FilterGroups> = signal({});
   protected selectedFilterLocked = false;
 
+  private readonly appService: AppService = inject(AppService);
+  protected getLabelEntries = this.appService.getLabelEntries;
+
+  private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
   private onOutsideClick: (event: MouseEvent) => void = (event: MouseEvent): void => this.outsideClickHandler(event);
 
   @Input()
-  set initialFilters(initialFilters: ElementLabels) {
+  set initialFilters(initialFilters: FilterGroups) {
     this.selectedFilterLabels.set(initialFilters);
   }
 
@@ -59,8 +69,8 @@ export class HomeFiltersComponent implements OnDestroy {
     this.selectedFilterLocked = false;
   }
 
-  protected toggleFilterMenu(filter: Filter, clicked = false): void {
-    if (clicked && this.selectedFilter === filter) {
+  protected toggleFilterMenu(filter: FilterEntry, clicked = false): void {
+    if (clicked && this.selectedFilter?.name === filter.name) {
       this.selectedFilterLocked = !this.selectedFilterLocked;
     }
     if (!this.selectedFilterLocked || clicked) {
@@ -100,7 +110,7 @@ export class HomeFiltersComponent implements OnDestroy {
   protected clearSelectedLabels(): void {
     if (!this.selectedFilter) return;
     const selectedFilterLabels = this.selectedFilterLabels();
-    delete selectedFilterLabels[this.selectedFilter.name];
+    delete selectedFilterLabels[this.selectedFilter['name']];
     this.updateSelectedFilters(selectedFilterLabels);
   }
 
@@ -110,7 +120,7 @@ export class HomeFiltersComponent implements OnDestroy {
     this.updateSelectedFilters(selectedFilterLabels);
   }
 
-  private updateSelectedFilters(selectedFilters: ElementLabels): void {
+  private updateSelectedFilters(selectedFilters: FilterGroups): void {
     // using spread to have directive input's update, maybe input signals will improve this so no spreading is needed
     this.selectedFilterLabels.set({ ...selectedFilters });
     this.selectedFilters.emit(this.selectedFilterLabels());

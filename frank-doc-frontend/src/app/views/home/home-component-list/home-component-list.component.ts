@@ -1,36 +1,34 @@
 import { Component, inject, Input } from '@angular/core';
 import { ButtonComponent } from '@frankframework/angular-components';
 import { FuseResult } from 'fuse.js';
-import { Element } from '../../../frankdoc.types';
 import { Router } from '@angular/router';
-import { AppService } from '../../../app.service';
+import { AppService, ElementEntry } from '../../../app.service';
 import { TruncatePipe } from '../../../components/truncate.pipe';
 import { environment } from '../../../../environments/environment';
 import { CardDirective } from './card.directive';
 import { NgClass } from '@angular/common';
+import { Elements, JavadocTransformDirective } from '@frankframework/ff-doc';
 
 @Component({
   selector: 'app-home-component-list',
-  imports: [ButtonComponent, TruncatePipe, CardDirective, NgClass],
+  imports: [ButtonComponent, TruncatePipe, CardDirective, NgClass, JavadocTransformDirective],
   templateUrl: './home-component-list.component.html',
   styleUrl: './home-component-list.component.scss',
 })
 export class HomeComponentListComponent {
-  @Input() components: FuseResult<Element>[] = [];
-  @Input() elements: Record<string, Element> = {};
+  @Input() components: FuseResult<ElementEntry>[] = [];
+  @Input() elements: Elements = {};
 
-  protected relatedComponents: FuseResult<Element>[] = [];
+  protected relatedComponents: FuseResult<ElementEntry>[] = [];
   protected showRelated: boolean = environment.relatedSearchResults;
 
-  private router: Router = inject(Router);
-  private appService: AppService = inject(AppService);
-  protected getFirstFilter = this.appService.getFirstFilter;
-  protected getFirstLabel = this.appService.getFirstLabel;
+  private readonly router: Router = inject(Router);
+  private readonly appService: AppService = inject(AppService);
+  protected getFirstLabelGroup = this.appService.getFirstLabelGroup;
 
-  protected navigateToElement(element: Element): void {
-    const route = element.labels
-      ? ['/', this.getFirstFilter(element.labels), this.getFirstLabel(element.labels), element.name]
-      : ['/', element.className];
+  protected navigateToElement({ name, element }: ElementEntry): void {
+    const [labelGroup, label] = this.getFirstLabelGroup(element.labels);
+    const route = element.labels ? ['/', labelGroup, label, element.name] : ['/', name];
     this.router.navigate(route);
   }
 

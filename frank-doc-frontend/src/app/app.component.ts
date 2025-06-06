@@ -22,8 +22,8 @@ export class AppComponent implements OnInit {
   });
   protected error: string | null = null;
 
-  private appService: AppService = inject(AppService);
-  private ffDoc: NgFFDoc = this.appService.getFFDoc();
+  private readonly appService: AppService = inject(AppService);
+  private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
 
   ngOnInit(): void {
     this.ffDoc.initialize(environment.frankDocUrl);

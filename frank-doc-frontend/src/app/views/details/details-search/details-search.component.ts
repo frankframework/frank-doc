@@ -2,13 +2,13 @@ import { Component, inject, Input, isDevMode, OnChanges, SimpleChanges } from '@
 import { SearchComponent } from '@frankframework/angular-components';
 import { FormsModule } from '@angular/forms';
 import Fuse, { FuseResult } from 'fuse.js';
-import { Element, ElementLabels, FrankDoc } from '../../../frankdoc.types';
+import { Element, ElementLabels } from '../../../frankdoc.types';
 import { AppService } from '../../../app.service';
 import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { environment } from '../../../../environments/environment';
 import { fuseOptions, splitOnPascalCaseRegex } from '../../../app.constants';
 import { NameWbrPipe } from '../../../components/name-wbr.pipe';
+import { Elements, NgFFDoc } from '@frankframework/ff-doc';
 
 @Component({
   selector: 'app-details-search',
@@ -18,26 +18,24 @@ import { NameWbrPipe } from '../../../components/name-wbr.pipe';
 })
 export class DetailsSearchComponent implements OnChanges {
   @Input({ required: true }) element!: Element | null;
-  @Input({ required: true }) frankDocElements!: FrankDoc['elements'] | null;
 
   protected searchQuery = '';
   protected relatedSearchQuery = '';
   protected filteredElements: FuseResult<Element>[] = [];
   protected relatedElements: FuseResult<Element>[] = [];
-  protected showRelated: boolean = environment.relatedSearchResults;
 
   private appService: AppService = inject(AppService);
-  protected getFirstFilter = this.appService.getFirstFilter;
-  protected getFirstLabel = this.appService.getFirstLabel;
+  protected readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
+  protected getFirstLabelGroup = this.appService.getFirstLabelGroup;
 
-  private elementsList: Element[] = [];
-  private exclusiveElementsList: Element[] = [];
+  private elementsList: Elements = {};
+  private exclusiveElementsList: Elements = {};
   private fuse: Fuse<Element> = new Fuse(this.elementsList, fuseOptions);
   private fuseRelated: Fuse<Element> = new Fuse(this.elementsList, { ...fuseOptions, shouldSort: false });
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['frankDocElements']) {
-      this.elementsList = Object.values(this.frankDocElements ?? {});
+      this.elementsList = Object.values(this.ffDoc.elements() ?? {});
       this.fuse.setCollection(this.elementsList);
     }
     if (changes['element']) {
