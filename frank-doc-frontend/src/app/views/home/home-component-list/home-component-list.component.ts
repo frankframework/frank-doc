@@ -2,12 +2,12 @@ import { Component, inject, Input } from '@angular/core';
 import { ButtonComponent } from '@frankframework/angular-components';
 import { FuseResult } from 'fuse.js';
 import { Router } from '@angular/router';
-import { AppService, ElementEntry } from '../../../app.service';
+import { AppService } from '../../../app.service';
 import { TruncatePipe } from '../../../components/truncate.pipe';
 import { environment } from '../../../../environments/environment';
 import { CardDirective } from './card.directive';
 import { NgClass } from '@angular/common';
-import { Elements, JavadocTransformDirective } from '@frankframework/ff-doc';
+import { ElementDetails, Elements, JavadocTransformDirective } from '@frankframework/ff-doc';
 
 @Component({
   selector: 'app-home-component-list',
@@ -16,19 +16,19 @@ import { Elements, JavadocTransformDirective } from '@frankframework/ff-doc';
   styleUrl: './home-component-list.component.scss',
 })
 export class HomeComponentListComponent {
-  @Input() components: FuseResult<ElementEntry>[] = [];
+  @Input() components: FuseResult<ElementDetails>[] = [];
   @Input() elements: Elements = {};
 
-  protected relatedComponents: FuseResult<ElementEntry>[] = [];
+  protected relatedComponents: FuseResult<ElementDetails>[] = [];
   protected showRelated: boolean = environment.relatedSearchResults;
 
   private readonly router: Router = inject(Router);
   private readonly appService: AppService = inject(AppService);
   protected getFirstLabelGroup = this.appService.getFirstLabelGroup;
 
-  protected navigateToElement({ name, element }: ElementEntry): void {
+  protected navigateToElement(element: ElementDetails): void {
     const [labelGroup, label] = this.getFirstLabelGroup(element.labels);
-    const route = element.labels ? ['/', labelGroup, label, element.name] : ['/', name];
+    const route = element.labels ? ['/', labelGroup, label, element.name] : ['/', element.className];
     this.router.navigate(route);
   }
 

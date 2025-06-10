@@ -30,14 +30,14 @@
   }
   @if (element.description) {
     <div class="section explanation">
-      <span *javadocTransform="let text of element.description; elements: frankDocElements" [innerHTML]="text"></span>
+      <span *javadocTransform="let text of element.description; elements: ffDocElements" [innerHTML]="text"></span>
     </div>
   }
   @if (element.notes) {
     <div class="section notes">
       @for (note of element.notes; track note) {
         <ff-alert [type]="getWarningType(note.type)">
-          <p *javadocTransform="let text of note.value; elements: frankDocElements" [innerHTML]="text"></p>
+          <p *javadocTransform="let text of note.value; elements: ffDocElements" [innerHTML]="text"></p>
         </ff-alert>
       }
     </div>
@@ -190,7 +190,7 @@
                     class="description"
                     *javadocTransform="
                       let text of parameter.description ?? DEFAULT_RETURN_CHARACTER;
-                      elements: frankDocElements
+                      elements: ffDocElements
                     "
                     [innerHTML]="text"
                   ></td>
@@ -224,7 +224,7 @@
                     class="description"
                     *javadocTransform="
                       let text of nestedElement.description ?? DEFAULT_RETURN_CHARACTER;
-                      elements: frankDocElements
+                      elements: ffDocElements
                     "
                     [innerHTML]="text"
                   ></td>
@@ -260,7 +260,7 @@
                       class="description"
                       *javadocTransform="
                         let text of forward.description ?? DEFAULT_RETURN_CHARACTER;
-                        elements: frankDocElements
+                        elements: ffDocElements
                       "
                       [innerHTML]="text"
                     ></td>
@@ -274,7 +274,7 @@
                       class="description"
                       *javadocTransform="
                         let text of forward.description ?? DEFAULT_RETURN_CHARACTER;
-                        elements: frankDocElements
+                        elements: ffDocElements
                       "
                       [innerHTML]="text"
                     ></td>
@@ -320,7 +320,7 @@
       <td>{{ attribute.enum ? 'options' : getFriendlyType(attribute.type) }}</td>
       <td
         class="attribute-default-value"
-        *javadocTransform="let text of attribute.default ?? DEFAULT_RETURN_CHARACTER; elements: frankDocElements"
+        *javadocTransform="let text of attribute.default ?? DEFAULT_RETURN_CHARACTER; elements: ffDocElements"
         [innerHTML]="text"
       ></td>
     </tr>
@@ -329,7 +329,7 @@
         <td
           colspan="3"
           class="description"
-          *javadocTransform="let text of attribute.description; elements: frankDocElements"
+          *javadocTransform="let text of attribute.description; elements: ffDocElements"
           [innerHTML]="text"
         ></td>
       </tr>
@@ -346,7 +346,7 @@
                   <code [ngClass]="{ deprecated: value.deprecated }">{{ value.label }}</code>
                   @if (value.description) {
                     <span
-                      *javadocTransform="let text of value.description; elements: frankDocElements"
+                      *fdJavadocTransform="let text of value.description; elements: ffDocElements"
                       [innerHTML]="' ' + text"
                     ></span>
                   }

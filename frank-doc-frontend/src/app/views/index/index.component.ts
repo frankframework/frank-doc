@@ -16,10 +16,11 @@ import { FilterLabels, NgFFDoc } from '@frankframework/ff-doc';
 })
 export class IndexComponent {
   protected collapsedFilters: Record<string, boolean> = {};
-  protected readonly filters: Signal<{ name: string; filter: FilterLabels }[]> = computed(() =>
+  protected readonly filters: Signal<{ name: string; filter: FilterLabels; filterCount: number }[]> = computed(() =>
     Object.entries(this.ffDoc.filters()).map(([name, filter]) => ({
       name,
       filter,
+      filterCount: Object.keys(filter).length,
     })),
   );
   protected readonly deprecatedElements: Signal<string[]> = computed(() => {

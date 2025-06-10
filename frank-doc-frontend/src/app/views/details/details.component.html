@@ -1,12 +1,10 @@
 <div class="page">
   <div class="side-search fixed-sidenav">
-    <app-details-search [element]="getFoundElement()" [frankDocElements]="frankDocElements()"></app-details-search>
+    <app-details-search [element]="getFoundElement()"></app-details-search>
   </div>
   <div class="details">
     <app-details-element
       [element]="getFoundElement()"
-      [frankDocElements]="frankDocElements()"
-      [frankDocEnums]="frankDocEnums()"
       (hasInheritedProperties)="updateElementDetailInfo($event)"
     ></app-details-element>
   </div>
@@ -16,6 +14,7 @@
         <ul>
           @for (entry of tableOfContents; track entry.name) {
             @if (entry.children) {
+
               <li [ngClass]="{ active: entry.active }">
                 <span (click)="scrollToElement(entry.anchor)">{{ entry.name }}</span>
                 <ul>

@@ -13,17 +13,7 @@ import {
 import { AlertComponent, AlertType, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import {
-  Attribute,
-  Child,
-  DeprecationInfo,
-  Element,
-  FrankDoc,
-  Note,
-  ParsedTag,
-  RawFrankDoc,
-  Value,
-} from '../../../frankdoc.types';
+import { Attribute, Child, DeprecationInfo, Note, ParsedTag } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
 import { CollapseDirective } from '../../../components/collapse.directive';
 import { IconCaretComponent } from '../../../icons/icon-caret-down/icon-caret.component';
@@ -33,6 +23,7 @@ import { DEFAULT_RETURN_CHARACTER } from '../../../app.constants';
 import { HasInheritedProperties } from '../details.component';
 import { Title } from '@angular/platform-browser';
 import { NameWbrPipe } from '../../../components/name-wbr.pipe';
+import { ElementDetails, Elements, EnumValue, FFDocJson, NgFFDoc } from '@frankframework/ff-doc';
 
 type InheritedParentElementProperties<T> = {
   parentElementName: string;
@@ -66,11 +57,11 @@ type InheritedProperties = {
   styleUrl: './details-element.component.scss',
 })
 export class DetailsElementComponent implements OnInit, OnChanges {
-  @Input({ required: true }) element!: Element | null;
-  @Input({ required: true }) frankDocElements!: FrankDoc['elements'] | null;
-  @Input({ required: true }) frankDocEnums!: FrankDoc['enums'] | null;
+  @Input({ required: true }) element!: ElementDetails | null;
   @Output() hasInheritedProperties = new EventEmitter<HasInheritedProperties>();
 
+  protected readonly ffDocElements: Signal<Elements | null> = computed(() => this.ffDoc.elements());
+  protected readonly ffDocEnums: Signal<FFDocJson['enums'] | null> = computed(() => this.ffDoc.enums());
   protected readonly rawElements: Signal<RawFrankDoc['elements'] | null> = computed(
     () => this.appService.rawFrankDoc()?.elements ?? null,
   );
@@ -104,6 +95,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
 
   private readonly titleService: Title = inject(Title);
+  protected readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
 
   ngOnInit(): void {
     this.appService.applicationLoaded$.subscribe(() => (this.loading = false));
@@ -200,11 +192,12 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     }
   }
 
-  protected getEnumValues(enumName: string): Value[] | undefined {
-    return this.frankDocEnums?.find((enumItem) => enumItem.name === enumName)?.values;
+  protected getEnumValues(enumName: string): EnumValue[] | null {
+    const enums = this.ffDocEnums();
+    return enums ? enums[enumName] : null;
   }
 
-  protected enumValuesHaveDescriptions(enumValues: Value[]): boolean {
+  protected enumValuesHaveDescriptions(enumValues: EnumValue[]): boolean {
     return enumValues.some((value) => !!value.description);
   }
 

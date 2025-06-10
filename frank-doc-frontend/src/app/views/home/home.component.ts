@@ -2,7 +2,7 @@ import { Component, computed, inject, isDevMode, OnInit, Signal } from '@angular
 import { SearchComponent } from '@frankframework/angular-components';
 import { FormsModule } from '@angular/forms';
 import { HomeComponentListComponent } from './home-component-list/home-component-list.component';
-import { AppService, ElementEntry, FilterGroups } from '../../app.service';
+import { AppService, FilterGroups } from '../../app.service';
 import Fuse, { FuseResult } from 'fuse.js';
 import { HomeFiltersComponent } from './home-filters/home-filters.component';
 import { fuseOptions } from '../../app.constants';
@@ -18,7 +18,7 @@ import { ElementDetails, Elements, NgFFDoc } from '@frankframework/ff-doc';
 export class HomeComponent implements OnInit {
   protected searchQuery = '';
   protected readonly elements: Signal<Elements> = computed(() => this.ffDoc.elements() ?? {});
-  protected filteredElements: FuseResult<ElementEntry>[] = [];
+  protected filteredElements: FuseResult<ElementDetails>[] = [];
   protected initialFilters: FilterGroups = {};
   protected loading: boolean = true;
 

@@ -1,11 +1,11 @@
 import { Component, computed, inject, OnDestroy, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AppService, ElementEntry } from '../../app.service';
+import { AppService } from '../../app.service';
 import { DetailsElementComponent } from './details-element/details-element.component';
 import { DetailsSearchComponent } from './details-search/details-search.component';
 import { NgClass } from '@angular/common';
 import { fromEvent, Subscription, throttleTime } from 'rxjs';
-import { Elements, NgFFDoc } from '@frankframework/ff-doc';
+import { ElementDetails, Elements, NgFFDoc } from '@frankframework/ff-doc';
 
 type ElementFilterProperties = {
   filterName?: string;
@@ -33,8 +33,8 @@ export type HasInheritedProperties = {
   styleUrl: './details.component.scss',
 })
 export class DetailsComponent implements OnInit, OnDestroy {
-  protected elementByRoute: ElementEntry | null = null;
-  protected readonly elementBySignal: Signal<ElementEntry | null> = computed(() => {
+  protected elementByRoute: ElementDetails | null = null;
+  protected readonly elementBySignal: Signal<ElementDetails | null> = computed(() => {
     const elements = this.ffDoc.elements();
     if (elements) return this.findElement(elements);
     return null;
@@ -96,7 +96,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.tableOfContents[activeIndex].active = true;
   }
 
-  protected getFoundElement(): ElementEntry | null {
+  protected getFoundElement(): ElementDetails | null {
     return this.elementByRoute ?? this.elementBySignal();
   }
 
@@ -110,7 +110,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
   protected hasAnyRequiredProperties(): boolean {
     return (
       this.hasInheritedProperties.required ||
-      (this.getFoundElement()?.attributes?.filter((attribute) => attribute.mandatory).length ?? 0) > 0
+      (Object.values(this.getFoundElement()?.attributes ?? {})?.filter((attribute) => attribute.mandatory).length ??
+        0) > 0
     );
   }
 
@@ -140,7 +141,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.tableOfContents = tableOfContents;
   }
 
-  private findElement(elements: Elements | null): ElementEntry | null {
+  private findElement(elements: Elements | null): ElementDetails | null {
     if (!elements) return null;
     if (this.elementIndexOrClassName) return this.getElementByFullName(elements, this.elementIndexOrClassName);
     if (!this.elementFilterProperties) return null;
@@ -150,29 +151,20 @@ export class DetailsComponent implements OnInit, OnDestroy {
   private getElementByFilterLabelNames(
     elements: Elements,
     elementFilterProperties: ElementFilterProperties,
-  ): FrankDoc['elements'][string] | null {
-    const elements = Object.values(elements);
+  ): ElementDetails | null {
     const { filterName, labelName, elementName } = elementFilterProperties;
 
     if (!filterName) {
-      return this.getElementByShortName(elements, elementName);
+      return elements[elementName] ?? null;
     }
 
-    const filteredElement = elements.find((element) => {
+    const filteredElement = Object.values(elements).find((element) => {
       return element.name === elementName && element.labels?.[filterName]?.includes(labelName);
     });
     return filteredElement ?? null;
   }
 
-  private getElementByShortName(elements: Elements, shortName: string): ElementEntry | null {
-    return elements.find((element) => element.name === shortName) ?? null;
-  }
-
-  private getElementByFullName(elements: Elements, fullName: string): Element | null {
-    return (
-      elements[fullName] ??
-      Object.values(elements).find((element) => element.className === fullName) ??
-      null
-    );
+  private getElementByFullName(elements: Elements, fullName: string): ElementDetails | null {
+    return Object.values(elements).find((element) => element.className === fullName) ?? null;
   }
 }

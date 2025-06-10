@@ -4,7 +4,6 @@ import { DEFAULT_RETURN_CHARACTER } from './app.constants';
 import { ElementDetails, Elements, FilterLabels, NgFFDoc } from '@frankframework/ff-doc';
 
 export type FilterGroups = Record<string, string[]>;
-export type ElementEntry = { name: string; element: ElementDetails };
 
 type HSL = {
   hue: number;
@@ -39,10 +38,9 @@ export class AppService {
     this.applicationLoadedSubject.complete();
   }
 
-  filterElementsBySelectedFilters(elements: Elements, selectedFilters: FilterGroups): ElementDetails[] {
-    const elementsList = Object.values(elements);
-    if (this.getSelectedFiltersLength(selectedFilters) === 0) return elementsList;
-    return elementsList.filter((element) => {
+  filterElementsBySelectedFilters(elements: ElementDetails[], selectedFilters: FilterGroups): ElementDetails[] {
+    if (this.getSelectedFiltersLength(selectedFilters) === 0) return elements;
+    return elements.filter((element) => {
       if (!element.labels) return false;
       for (const labelGroup of Object.keys(element.labels)) {
         if (!selectedFilters[labelGroup]) continue;
