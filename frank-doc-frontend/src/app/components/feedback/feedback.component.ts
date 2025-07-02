@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { IconDocumentAddComponent } from '../../icons/icon-document-add/icon-document-add.component';
 import { AppService } from '../../app.service';
+import { NgFFDoc } from '@frankframework/ff-doc';
 
 @Component({
   selector: 'app-feedback',
@@ -10,17 +11,18 @@ import { AppService } from '../../app.service';
   styleUrl: './feedback.component.scss',
 })
 export class FeedbackComponent {
-  private appService: AppService = inject(AppService);
-  private router: Router = inject(Router);
+  private readonly appService: AppService = inject(AppService);
+  private readonly router: Router = inject(Router);
+  private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
+  private readonly ffDocVersion: Signal<string> = computed(() => this.ffDoc.ffDoc()?.metadata.version ?? 'unknown');
 
   onFeedbackClick(): void {
     const currentPage = this.router.url;
-    const frankDocVersion = this.appService.frankDoc()?.metadata.version ?? 'unknown';
     const selectedText = window.getSelection()?.toString().trim() || 'None';
 
     const markdown = `
 **Current Page:** \`${currentPage}\`
-**Frank!Doc Version:** \`${frankDocVersion}\`
+**Frank!Doc Version:** \`${this.ffDocVersion()}\`
 **Selected Text:** \`${selectedText}\`
 `;
 

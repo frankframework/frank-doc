@@ -55,7 +55,9 @@ export class HomeComponent implements OnInit {
 
   protected updateSelectedFilters(selectedFilters: FilterGroups): void {
     this.selectedFilters = selectedFilters;
-    this.fuse().setCollection(this.appService.filterElementsBySelectedFilters(this.elements(), selectedFilters));
+    this.fuse().setCollection(
+      this.appService.filterElementsBySelectedFilters(Object.values(this.elements()), selectedFilters),
+    );
     this.search(this.searchQuery);
     if (isDevMode()) console.log('Selected Filters', selectedFilters);
   }

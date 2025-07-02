@@ -86,6 +86,9 @@ export class DetailsSearchComponent implements OnChanges {
 
   private filterExclusiveElements(): void {
     this.exclusiveElementsList = this.elementsList().filter((element) => element.name !== this.element?.name);
-    this.updateSelectedFiltersInRelated(this.element?.labels ?? {});
+    const selectedFilterEntries: [string, string[]][] = Object.entries(this.element?.labels ?? {}).map(
+      ([filterGroup, label]) => [filterGroup, [label]],
+    );
+    this.updateSelectedFiltersInRelated(Object.fromEntries(selectedFilterEntries));
   }
 }

@@ -1,19 +1,7 @@
-import {
-  Component,
-  computed,
-  EventEmitter,
-  inject,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  Signal,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AlertComponent, AlertType, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Attribute, Child, DeprecationInfo, Note, ParsedTag } from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
 import { CollapseDirective } from '../../../components/collapse.directive';
 import { IconCaretComponent } from '../../../icons/icon-caret-down/icon-caret.component';
@@ -23,20 +11,11 @@ import { DEFAULT_RETURN_CHARACTER } from '../../../app.constants';
 import { HasInheritedProperties } from '../details.component';
 import { Title } from '@angular/platform-browser';
 import { NameWbrPipe } from '../../../components/name-wbr.pipe';
-import { ElementDetails, Elements, EnumValue, FFDocJson, NgFFDoc } from '@frankframework/ff-doc';
+import { DeprecationInfo, ElementDetails, EnumValue, InheritedProperties, NgFFDoc, Note } from '@frankframework/ff-doc';
 
-type InheritedParentElementProperties<T> = {
-  parentElementName: string;
-  properties: T[];
-};
-
-type InheritedProperties = {
-  attributesRequired: InheritedParentElementProperties<Attribute>[];
-  attributesOptional: InheritedParentElementProperties<Attribute>[];
-  parameters: InheritedParentElementProperties<ParsedTag>[];
-  children: InheritedParentElementProperties<Child>[];
-  // forwards: InheritedParentElementProperties<ParsedTag>[];
-  forwards: ParsedTag[];
+type EnumValueEntry = {
+  valueName: string;
+  value: EnumValue;
 };
 
 @Component({
@@ -60,11 +39,10 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   @Input({ required: true }) element!: ElementDetails | null;
   @Output() hasInheritedProperties = new EventEmitter<HasInheritedProperties>();
 
-  protected readonly ffDocElements: Signal<Elements | null> = computed(() => this.ffDoc.elements());
-  protected readonly ffDocEnums: Signal<FFDocJson['enums'] | null> = computed(() => this.ffDoc.enums());
-  protected readonly rawElements: Signal<RawFrankDoc['elements'] | null> = computed(
-    () => this.appService.rawFrankDoc()?.elements ?? null,
-  );
+  // protected readonly ffDocElements: Signal<Elements | null> = computed(() => this.ffDoc.elements());
+  // protected readonly rawElements: Signal<RawFrankDoc['elements'] | null> = computed(
+  //   () => this.appService.rawFrankDoc()?.elements ?? null,
+  // );
   protected attributesRequired: Attribute[] = [];
   protected attributesOptional: Attribute[] = [];
   protected inheritedProperties: InheritedProperties = {
@@ -192,13 +170,16 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     }
   }
 
-  protected getEnumValues(enumName: string): EnumValue[] | null {
-    const enums = this.ffDocEnums();
-    return enums ? enums[enumName] : null;
+  protected getEnumValues(enumName: string): EnumValueEntry[] {
+    const enums = this.ffDoc.enums();
+    return Object.entries(enums[enumName]).map(([enumValueName, enumValue]) => ({
+      valueName: enumValueName,
+      value: enumValue,
+    }));
   }
 
-  protected enumValuesHaveDescriptions(enumValues: EnumValue[]): boolean {
-    return enumValues.some((value) => !!value.description);
+  protected enumValuesHaveDescriptions(enumValuesEntries: EnumValueEntry[]): boolean {
+    return enumValuesEntries.some((entry) => !!entry.value.description);
   }
 
   private resetInheritedProperties(): void {

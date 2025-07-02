@@ -5,15 +5,11 @@
   <ul>
     @for (searchElement of filteredElements; track searchElement.item.name) {
       <li [ngClass]="{ active: searchElement.item.name === element?.name, deprecated: searchElement.item.deprecated }">
+        @let labelGroup = getFirstLabelGroup(searchElement.item.labels);
         <a
           [routerLink]="
             searchElement.item.labels
-              ? [
-                  '/',
-                  getFirstLabelGroup(searchElement.item.labels),
-                  getFirstLabel(searchElement.item.labels),
-                  searchElement.item.name,
-                ]
+              ? ['/', labelGroup[0], labelGroup[1], searchElement.item.name]
               : ['/', searchElement.item.className]
           "
           [innerHTML]="searchElement.item.name | nameWbr"
