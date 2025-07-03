@@ -1,4 +1,15 @@
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  Signal,
+  SimpleChanges,
+} from '@angular/core';
 import { AlertComponent, AlertType, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -11,7 +22,18 @@ import { DEFAULT_RETURN_CHARACTER } from '../../../app.constants';
 import { HasInheritedProperties } from '../details.component';
 import { Title } from '@angular/platform-browser';
 import { NameWbrPipe } from '../../../components/name-wbr.pipe';
-import { DeprecationInfo, ElementDetails, EnumValue, InheritedProperties, NgFFDoc, Note } from '@frankframework/ff-doc';
+import {
+  Attribute,
+  DeprecationInfo,
+  ElementClass,
+  ElementDetails,
+  EnumValue,
+  getInheritedProperties,
+  InheritedProperties,
+  NgFFDoc,
+  Note,
+} from '@frankframework/ff-doc';
+import { groupAttributesByMandatory } from '@frankframework/ff-doc/lib/frankdoc.utilities';
 
 type EnumValueEntry = {
   valueName: string;
@@ -39,18 +61,19 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   @Input({ required: true }) element!: ElementDetails | null;
   @Output() hasInheritedProperties = new EventEmitter<HasInheritedProperties>();
 
-  // protected readonly ffDocElements: Signal<Elements | null> = computed(() => this.ffDoc.elements());
-  // protected readonly rawElements: Signal<RawFrankDoc['elements'] | null> = computed(
-  //   () => this.appService.rawFrankDoc()?.elements ?? null,
-  // );
-  protected attributesRequired: Attribute[] = [];
-  protected attributesOptional: Attribute[] = [];
+  protected readonly classElement: Signal<ElementClass | null> = computed(() => {
+    const classElements = this.ffDoc.ffDoc()?.elements;
+    return classElements && this.element ? classElements[this.element?.className] : null;
+  });
+  protected attributesRequired: Record<string, Attribute> = {};
+  protected attributesOptional: Record<string, Attribute> = {};
+  protected allRequiredAttributes: Record<string, Attribute> = {};
   protected inheritedProperties: InheritedProperties = {
+    parentElements: [],
     attributesRequired: [],
     attributesOptional: [],
-    parameters: [],
-    children: [],
-    forwards: [],
+    forwards: {},
+    enums: {},
   };
   protected collapsedOptions = {
     attributes: false,
@@ -73,7 +96,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
 
   private readonly titleService: Title = inject(Title);
-  protected readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
+  private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
 
   ngOnInit(): void {
     this.appService.applicationLoaded$.subscribe(() => (this.loading = false));
@@ -83,19 +106,21 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['element']) {
       this.resetInheritedProperties();
-      if (this.element?.attributes) {
-        this.attributesRequired = this.element.attributes.filter((attribute) => attribute.mandatory === true) ?? [];
-        this.attributesOptional = this.element.attributes.filter((attribute) => !attribute.mandatory) ?? [];
+      const classElement = this.classElement();
+      if (classElement?.attributes) {
+        // this.attributesRequired = classElement.attributes.filter((attribute) => attribute.mandatory === true) ?? [];
+        // this.attributesOptional = classElement.attributes.filter((attribute) => !attribute.mandatory) ?? [];
+        const { required, optional } = groupAttributesByMandatory(classElement.attributes);
+        this.attributesRequired = required;
+        this.allRequiredAttributes = required;
+        this.attributesOptional = optional;
       }
       if (this.element?.parent) {
-        this.inheritedProperties = {
-          attributesRequired: [],
-          attributesOptional: [],
-          parameters: [],
-          children: [],
-          forwards: [],
-        };
-        this.setInheritedProperties(this.element.parent);
+        this.inheritedProperties = getInheritedProperties(
+          this.classElement,
+          this.ffDoc.ffDoc()?.elements ?? {},
+          this.ffDoc.ffDoc()?.enums ?? {},
+        );
       }
       this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
       this.generateElementSyntax();
@@ -184,48 +209,17 @@ export class DetailsElementComponent implements OnInit, OnChanges {
 
   private resetInheritedProperties(): void {
     this.inheritedProperties = {
+      parentElements: [],
       attributesRequired: [],
       attributesOptional: [],
-      parameters: [],
-      children: [],
-      forwards: [],
+      forwards: {},
+      enums: {},
     };
     this._hasInheritedProperties = {
       required: false,
       optional: false,
       forwards: false,
     };
-  }
-
-  private setInheritedProperties(elementIndex: string): void {
-    const element = this.rawElements()?.[elementIndex];
-    if (!element) return;
-
-    if (element.attributes) {
-      const attributesRequired = element.attributes.filter((attribute) => attribute.mandatory === true);
-      const attributesOptional = element.attributes.filter((attribute) => !attribute.mandatory);
-      if (attributesRequired.length > 0) {
-        this.inheritedProperties.attributesRequired.push({
-          parentElementName: element.name,
-          properties: attributesRequired,
-        });
-        this._hasInheritedProperties.required = true;
-      }
-      if (attributesOptional.length > 0) {
-        this.inheritedProperties.attributesOptional.push({
-          parentElementName: element.name,
-          properties: attributesOptional,
-        });
-        this._hasInheritedProperties.optional = true;
-      }
-    }
-
-    if (element.forwards) {
-      this.inheritedProperties.forwards.push(...element.forwards);
-      this._hasInheritedProperties.forwards = true;
-    }
-
-    if (element.parent) this.setInheritedProperties(element.parent);
   }
 
   private getInheritedCollapseOptions(
@@ -236,17 +230,22 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     return map.get(parentElementName) ?? defaultValue;
   }
 
-  private getAllRequiredAttributes(): Attribute[] {
-    return [
-      ...this.inheritedProperties.attributesRequired.flatMap((item) => item.properties),
+  private getAllRequiredAttributes(): Record<string, Attribute> {
+    return {
+      ...this.inheritedProperties.attributesRequired
+        .map((item) => item.properties)
+        .reduce((mergedAttributes, attributes) => ({ ...mergedAttributes, ...attributes }), {}),
       ...this.attributesRequired,
-    ];
+    };
   }
 
   private generateElementSyntax(): void {
     if (this.element) {
-      const requiredAttributes = this.getAllRequiredAttributes()
-        .map((attribute) => `${attribute.name}="${attribute.default ?? this.getTypeDefaultValue(attribute.type)}"`)
+      const requiredAttributes = Object.entries(this.getAllRequiredAttributes())
+        .map(
+          ([attributeName, attribute]) =>
+            `${attributeName}="${attribute.default ?? this.getTypeDefaultValue(attribute.type)}"`,
+        )
         .join(' ');
       this.elementSyntax = `
 <${this.element.name} ${requiredAttributes}/>
