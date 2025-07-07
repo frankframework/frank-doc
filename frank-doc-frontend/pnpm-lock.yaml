@@ -39,8 +39,8 @@ importers:
         specifier: ^1.1.6
         version: 1.2.0(@angular/cdk@19.2.19(@angular/common@19.2.14(@angular/core@19.2.14(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.14(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.14(rxjs@7.8.2)(zone.js@0.15.1))
       '@frankframework/ff-doc':
-        specifier: file:../ff-doc-library/dist/ff-doc/frankframework-ff-doc-1.0.0.tgz
-        version: file:../ff-doc-library/dist/ff-doc/frankframework-ff-doc-1.0.0.tgz(rxjs@7.8.2)(zone.js@0.15.1)
+        specifier: ^1.0.0
+        version: 1.0.0(rxjs@7.8.2)(zone.js@0.15.1)
       fuse.js:
         specifier: ^7.0.0
         version: 7.1.0
@@ -1064,9 +1064,8 @@ packages:
       '@angular/cdk': '>=18.2.0 <20.0.0'
       '@angular/core': '>=18.2.0 <20.0.0'
 
-  '@frankframework/ff-doc@file:../ff-doc-library/dist/ff-doc/frankframework-ff-doc-1.0.0.tgz':
-    resolution: {integrity: sha512-CGIjqRxL9aEbwd8WGtuPXrSSwx1YYdXzd2eyu87EdwAywbubLiwPGYM9l/y62oxzkyRG+c25qOcsfDWhXTMbtA==, tarball: file:../ff-doc-library/dist/ff-doc/frankframework-ff-doc-1.0.0.tgz}
-    version: 1.0.0
+  '@frankframework/ff-doc@1.0.0':
+    resolution: {integrity: sha512-oXI+7KQW2W+CqxFkSWNz5YnTCq2S1TaNKP/nZn/3KQ6IQOr2DMft2MT0s0iKMMXhO8z9z6IK9IKChTzKHha21A==}
 
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -6061,7 +6060,7 @@ snapshots:
       '@angular/core': 19.2.14(rxjs@7.8.2)(zone.js@0.15.1)
       tslib: 2.8.1
 
-  '@frankframework/ff-doc@file:../ff-doc-library/dist/ff-doc/frankframework-ff-doc-1.0.0.tgz(rxjs@7.8.2)(zone.js@0.15.1)':
+  '@frankframework/ff-doc@1.0.0(rxjs@7.8.2)(zone.js@0.15.1)':
     dependencies:
       tslib: 2.8.1
     optionalDependencies:
