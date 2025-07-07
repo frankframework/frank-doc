@@ -33,8 +33,8 @@ export class DetailsSearchComponent implements OnChanges {
     return elementsList;
   });
   private exclusiveElementsList: ElementDetails[] = [];
-  private fuse: Fuse<ElementDetails> = new Fuse(this.elementsList(), fuseOptions);
-  private fuseRelated: Fuse<ElementDetails> = new Fuse(this.elementsList(), { ...fuseOptions, shouldSort: false });
+  private fuse: Fuse<ElementDetails> = new Fuse([], fuseOptions);
+  private fuseRelated: Fuse<ElementDetails> = new Fuse([], { ...fuseOptions, shouldSort: false });
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['element']) {

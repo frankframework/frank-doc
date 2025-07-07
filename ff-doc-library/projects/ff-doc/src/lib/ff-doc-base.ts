@@ -40,6 +40,7 @@ export abstract class FFDocBase {
       elements[elementName] = {
         ...addInheritedPropertiesToElement(elementClassData, json.elements, json.enums),
         ...elementValue,
+        name: elementName,
       };
     }
     return elements;

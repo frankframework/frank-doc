@@ -29,19 +29,6 @@ function filterUsedEnums(attributes: Record<string, Attribute>, enums: FFDocJson
   return filteredEnums;
 }
 
-// eslint-disable-next-line sonarjs/no-commented-code
-/*export function getElementByLabel(
-  labelGroup: string,
-  label: string,
-  name: string,
-  elements: Elements,
-): ElementDetails | null {
-  return (
-    Object.values(elements).find((element) => element.name === name && element.labels?.[labelGroup]?.includes(label)) ??
-    null
-  );
-}*/
-
 export function groupAttributesByMandatory(attributes: Record<string, Attribute>): {
   required: Record<string, Attribute>;
   optional: Record<string, Attribute>;

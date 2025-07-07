@@ -8,10 +8,8 @@
       <ff-chip class="abstract-label" colour="#1E1E1E">Deprecated</ff-chip>
     }
     @if (element.labels) {
-      @for (filter of element.labels | keyvalue; track filter; let index = $index) {
-        @for (label of filter.value; track label) {
-          <ff-chip [colour]="appService.getLabelColor(filter.key)" rounded>{{ label }}</ff-chip>
-        }
+      @for (label of element.labels | keyvalue; track label.key; let index = $index) {
+        <ff-chip [colour]="appService.getLabelColor(label.key)" rounded>{{ label.value }}</ff-chip>
       }
     }
   </div>
@@ -30,14 +28,14 @@
   }
   @if (element.description) {
     <div class="section explanation">
-      <span *javadocTransform="let text of element.description; elements: ffDocElements" [innerHTML]="text"></span>
+      <span *fdJavadocTransform="let text of element.description; elements: elements()" [innerHTML]="text"></span>
     </div>
   }
   @if (element.notes) {
     <div class="section notes">
       @for (note of element.notes; track note) {
         <ff-alert [type]="getWarningType(note.type)">
-          <p *javadocTransform="let text of note.value; elements: ffDocElements" [innerHTML]="text"></p>
+          <p *fdJavadocTransform="let text of note.value; elements: elements()" [innerHTML]="text"></p>
         </ff-alert>
       }
     </div>
@@ -72,7 +70,7 @@
     }
   </div>
   <div class="section options">
-    @if (element.attributes || hasAnyInheritedProperties()) {
+    @if (element.attributes) {
       <div class="sub-options attributes">
         <div
           id="attributes"
@@ -86,7 +84,7 @@
         </div>
         <div class="options-list" #attributes>
           <div class="options-sub-title" id="attributes-required">Required</div>
-          @if (attributesRequired.length > 0 || inheritedProperties.attributesRequired.length > 0) {
+          @if (isRecordGreaterThanZero(attributesRequired) || inheritedProperties.attributesRequired.length > 0) {
             <table>
               <thead>
                 <tr>
@@ -117,7 +115,7 @@
             <p class="description">This component has no required attributes</p>
           }
           <div class="options-sub-title" id="attributes-optional">Optional</div>
-          @if (attributesOptional.length > 0) {
+          @if (isRecordGreaterThanZero(attributesOptional)) {
             <ng-container
               *ngTemplateOutlet="attributesOptionalTemplate; context: { $implicit: attributesOptional }"
             ></ng-container>
@@ -183,14 +181,14 @@
               </tr>
             </thead>
             <tbody>
-              @for (parameter of element.parameters; track parameter.name) {
+              @for (parameterEntry of getRecordEntries(element.parameters); track parameterEntry.name) {
                 <tr class="border-top padding-bottom">
-                  <td class="name" [innerHTML]="parameter.name | nameWbr"></td>
+                  <td class="name" [innerHTML]="parameterEntry.name | nameWbr"></td>
                   <td
                     class="description"
-                    *javadocTransform="
-                      let text of parameter.description ?? DEFAULT_RETURN_CHARACTER;
-                      elements: ffDocElements
+                    *fdJavadocTransform="
+                      let text of parameterEntry.value.description ?? DEFAULT_RETURN_CHARACTER;
+                      elements: elements()
                     "
                     [innerHTML]="text"
                   ></td>
@@ -222,9 +220,9 @@
                   <td class="name" [innerHTML]="nestedElement.roleName | nameWbr"></td>
                   <td
                     class="description"
-                    *javadocTransform="
+                    *fdJavadocTransform="
                       let text of nestedElement.description ?? DEFAULT_RETURN_CHARACTER;
-                      elements: ffDocElements
+                      elements: elements()
                     "
                     [innerHTML]="text"
                   ></td>
@@ -237,7 +235,7 @@
       </div>
     }
     <!-- Temp solution, see issue https://github.com/frankframework/frank-doc/issues/348 -->
-    @if (element.forwards || inheritedProperties.forwards.length > 0) {
+    @if (element.forwards) {
       <div class="sub-options forwards" id="forwards">
         <div class="options-title" [collapse]="forwards" (collapsedChange)="collapsedOptions.forwards = $event">
           <span>Forwards</span>
@@ -252,34 +250,18 @@
               </tr>
             </thead>
             <tbody>
-              @if (element.forwards) {
-                @for (forward of inheritedProperties.forwards; track forward.name) {
-                  <tr class="border-top padding-bottom">
-                    <td class="name" [innerHTML]="forward.name | nameWbr"></td>
-                    <td
-                      class="description"
-                      *javadocTransform="
-                        let text of forward.description ?? DEFAULT_RETURN_CHARACTER;
-                        elements: ffDocElements
-                      "
-                      [innerHTML]="text"
-                    ></td>
-                  </tr>
-                }
-              } @else {
-                @for (forward of inheritedProperties.forwards; track forward.name) {
-                  <tr class="border-top padding-bottom">
-                    <td class="name" [innerHTML]="forward.name | nameWbr"></td>
-                    <td
-                      class="description"
-                      *javadocTransform="
-                        let text of forward.description ?? DEFAULT_RETURN_CHARACTER;
-                        elements: ffDocElements
-                      "
-                      [innerHTML]="text"
-                    ></td>
-                  </tr>
-                }
+              @for (forwardEntry of getRecordEntries(element.forwards!); track forwardEntry.name) {
+                <tr class="border-top padding-bottom">
+                  <td class="name" [innerHTML]="forwardEntry.name | nameWbr"></td>
+                  <td
+                    class="description"
+                    *fdJavadocTransform="
+                      let text of forwardEntry.value.description ?? DEFAULT_RETURN_CHARACTER;
+                      elements: elements()
+                    "
+                    [innerHTML]="text"
+                  ></td>
+                </tr>
               }
             </tbody>
           </table>
@@ -303,24 +285,25 @@
 }
 
 <ng-template #attributesTableBodyTemplate let-attributes>
-  @for (attribute of attributes; track attribute.name) {
+  @for (attributeEntry of getRecordEntries(attributes); track attributeEntry.name) {
+    @let attribute = castToAttribute(attributeEntry.value);
     <tr
       class="border-top"
       [ngClass]="{
         'padding-bottom': !attribute.enum && !attribute.description,
         deprecated: attribute.deprecated,
-        forRemoval: attribute.deprecated && (attribute.deprecated.forRemoval ?? false),
+        forRemoval: attribute.deprecated && attribute.deprecated.forRemoval,
       }"
     >
       <td
         class="name"
         [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''"
-        [innerHTML]="attribute.name | nameWbr"
+        [innerHTML]="attributeEntry.name | nameWbr"
       ></td>
       <td>{{ attribute.enum ? 'options' : getFriendlyType(attribute.type) }}</td>
       <td
         class="attribute-default-value"
-        *javadocTransform="let text of attribute.default ?? DEFAULT_RETURN_CHARACTER; elements: ffDocElements"
+        *fdJavadocTransform="let text of attribute.default ?? DEFAULT_RETURN_CHARACTER; elements: elements()"
         [innerHTML]="text"
       ></td>
     </tr>
@@ -329,7 +312,7 @@
         <td
           colspan="3"
           class="description"
-          *javadocTransform="let text of attribute.description; elements: ffDocElements"
+          *fdJavadocTransform="let text of attribute.description; elements: elements()"
           [innerHTML]="text"
         ></td>
       </tr>
@@ -341,12 +324,13 @@
           @let enumValues = getEnumValues(attribute.enum);
           @if (enumValuesHaveDescriptions(enumValues ?? [])) {
             <ul class="enum-options-list">
-              @for (value of enumValues; let index = $index; track value) {
+              @for (valueEntry of enumValues; track valueEntry.valueName) {
+                @let value = valueEntry.value;
                 <li>
-                  <code [ngClass]="{ deprecated: value.deprecated }">{{ value.label }}</code>
+                  <code [ngClass]="{ deprecated: value.deprecated }">{{ valueEntry.valueName }}</code>
                   @if (value.description) {
                     <span
-                      *fdJavadocTransform="let text of value.description; elements: ffDocElements"
+                      *fdJavadocTransform="let text of value.description; elements: elements()"
                       [innerHTML]="' ' + text"
                     ></span>
                   }
@@ -354,8 +338,9 @@
               }
             </ul>
           } @else {
-            @for (value of enumValues; let index = $index; track value) {
-              <code [ngClass]="{ deprecated: value.deprecated }">{{ value.label }}</code>
+            @for (valueEntry of enumValues; let index = $index; track valueEntry.valueName) {
+              @let value = valueEntry.value;
+              <code [ngClass]="{ deprecated: value.deprecated }">{{ valueEntry.valueName }}</code>
               @if (enumValues && index < enumValues.length - 1) {
                 <span>, </span>
               }

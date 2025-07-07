@@ -27,17 +27,24 @@ import {
   DeprecationInfo,
   ElementClass,
   ElementDetails,
+  Elements,
   EnumValue,
   getInheritedProperties,
   InheritedProperties,
+  JavadocTransformDirective,
   NgFFDoc,
   Note,
 } from '@frankframework/ff-doc';
-import { groupAttributesByMandatory } from '@frankframework/ff-doc/lib/frankdoc.utilities';
+import { groupAttributesByMandatory } from '@frankframework/ff-doc';
 
 type EnumValueEntry = {
   valueName: string;
   value: EnumValue;
+};
+
+type RecordEntry<T> = {
+  name: string;
+  value: T;
 };
 
 @Component({
@@ -53,6 +60,7 @@ type EnumValueEntry = {
     IconArrowRightUpComponent,
     NgClass,
     NameWbrPipe,
+    JavadocTransformDirective,
   ],
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',
@@ -61,10 +69,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   @Input({ required: true }) element!: ElementDetails | null;
   @Output() hasInheritedProperties = new EventEmitter<HasInheritedProperties>();
 
-  protected readonly classElement: Signal<ElementClass | null> = computed(() => {
-    const classElements = this.ffDoc.ffDoc()?.elements;
-    return classElements && this.element ? classElements[this.element?.className] : null;
-  });
+  protected elements: Signal<Elements> = computed(() => this.ffDoc.elements() ?? {});
   protected attributesRequired: Record<string, Attribute> = {};
   protected attributesOptional: Record<string, Attribute> = {};
   protected allRequiredAttributes: Record<string, Attribute> = {};
@@ -106,22 +111,20 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['element']) {
       this.resetInheritedProperties();
-      const classElement = this.classElement();
+      const classElement = this.getClassElement();
       if (classElement?.attributes) {
-        // this.attributesRequired = classElement.attributes.filter((attribute) => attribute.mandatory === true) ?? [];
-        // this.attributesOptional = classElement.attributes.filter((attribute) => !attribute.mandatory) ?? [];
         const { required, optional } = groupAttributesByMandatory(classElement.attributes);
         this.attributesRequired = required;
-        this.allRequiredAttributes = required;
         this.attributesOptional = optional;
       }
-      if (this.element?.parent) {
+      if (classElement?.parent) {
         this.inheritedProperties = getInheritedProperties(
-          this.classElement,
+          classElement,
           this.ffDoc.ffDoc()?.elements ?? {},
           this.ffDoc.ffDoc()?.enums ?? {},
         );
       }
+      this.allRequiredAttributes = groupAttributesByMandatory(this.element?.attributes ?? {});
       this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
       this.generateElementSyntax();
 
@@ -203,8 +206,26 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     }));
   }
 
+  protected getRecordEntries<T>(Record: Record<string, T>): RecordEntry<T>[] {
+    return Object.entries(Record).map(([name, value]) => ({ name, value }));
+  }
+
   protected enumValuesHaveDescriptions(enumValuesEntries: EnumValueEntry[]): boolean {
     return enumValuesEntries.some((entry) => !!entry.value.description);
+  }
+
+  protected isRecordGreaterThanZero(record: Record<string, unknown>): boolean {
+    return Object.keys(record).length > 0;
+  }
+
+  // stupid badly untyped angular templates
+  protected castToAttribute(value: unknown): Attribute {
+    return value as Attribute;
+  }
+
+  private getClassElement(): ElementClass | null {
+    const classElements = this.ffDoc.ffDoc()?.elements;
+    return classElements && this.element ? classElements[this.element?.className] : null;
   }
 
   private resetInheritedProperties(): void {

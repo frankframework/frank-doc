@@ -82,6 +82,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   updateActiveTOC(): void {
+    if (this.tableOfContents.length === 0) return;
+
     let activeIndex = 0;
     for (const key in this.tableOfContents) {
       const index = Number(key);

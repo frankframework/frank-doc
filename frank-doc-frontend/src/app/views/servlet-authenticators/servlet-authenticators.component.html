@@ -39,13 +39,10 @@
         <p class="fullname">{{ authenticator.fullName }}</p>
         <p
           class="description javadoc"
-          *fdJavadocTransform="
-            let text of authenticator.description ?? DEFAULT_RETURN_CHARACTER;
-            elements: frankDocElements()
-          "
+          *fdJavadocTransform="let text of authenticator.description ?? DEFAULT_RETURN_CHARACTER; elements: elements()"
           [innerHTML]="text"
         ></p>
-        @if (authenticator.methods && (authenticator.methods.length ?? 0) > 0) {
+        @if (authenticator.methods && authenticator.methods.length > 0) {
           <table>
             <thead>
               <tr>
