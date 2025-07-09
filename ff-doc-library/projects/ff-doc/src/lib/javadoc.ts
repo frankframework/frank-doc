@@ -39,7 +39,6 @@ export function transformAsText(javadoc: string, elements: Record<string, Elemen
   value = value.replaceAll(tagsRegex, '');
   value = value.replaceAll(linkRegex, (_: string, captureGroup: string) => {
     const linkData = getLinkData(captureGroup, elements);
-    if (linkData.href) return `${linkData.text}(${linkData.href})`;
     return linkData.text;
   });
   value = value.replaceAll(String.raw`\"`, '"');
@@ -50,12 +49,13 @@ export function defaultLinkTransformation(linkData: LinkData): string {
   return `<a href="#/${linkData.href}">${linkData.text}</a>`;
 }
 
+/**
+ * Creates LinkData object from `@link` taglet's data
+ * @param captureGroup cature group received from regex matching with the `@link` taglet,
+ * e.g. 'PipeLineSession pipeLineSession' for `{@link PipeLineSession pipeLineSession}`
+ * @param elements
+ */
 export function getLinkData(captureGroup: string, elements: Record<string, ElementClass>): LinkData {
-  /* {@link PipeLineSession pipeLineSession} -> 'PipeLineSession pipeLineSession'
-   * {@link IPipe#configure()} -> 'IPipe#configure()'
-   * {@link #doPipe(Message, PipeLineSession) doPipe} -> '#doPipe(Message, PipeLineSession) doPipe'
-   */
-
   const hashPosition = captureGroup.indexOf('#'),
     isMethod = hashPosition !== -1,
     elementString = isMethod ? captureGroup.split('#')[0] : captureGroup;
@@ -72,7 +72,8 @@ export function getLinkData(captureGroup: string, elements: Record<string, Eleme
   return { href: element.name, text: name };
 }
 
-export function getInternalMethodReference(captureGroup: string, hashPosition: number): string {
+/** Handle links to internal class methods  */
+function getInternalMethodReference(captureGroup: string, hashPosition: number): string {
   const method = captureGroup.slice(hashPosition),
     methodParts = method.split(' ');
   return methodParts.length === 2
@@ -80,7 +81,7 @@ export function getInternalMethodReference(captureGroup: string, hashPosition: n
     : method.slice(1, method.indexOf('('));
 }
 
-export function parseLinkName(elementParts: string[], isMethod: boolean, captureGroup: string): string {
+function parseLinkName(elementParts: string[], isMethod: boolean, captureGroup: string): string {
   const elementName = elementParts.at(-1)!; // element name/label
   if (isMethod) {
     const method = captureGroup.split('#')[1],
@@ -90,7 +91,7 @@ export function parseLinkName(elementParts: string[], isMethod: boolean, capture
   return elementName;
 }
 
-export function findElement(elements: Record<string, ElementClass>, simpleName: string): ElementClass | null {
+function findElement(elements: Record<string, ElementClass>, simpleName: string): ElementClass | null {
   if (Object.keys(elements).length === 0) return null;
   const element = elements[simpleName];
   if (element) return element;
