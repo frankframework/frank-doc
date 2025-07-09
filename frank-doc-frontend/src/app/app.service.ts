@@ -1,7 +1,7 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { DEFAULT_RETURN_CHARACTER } from './app.constants';
-import { ElementDetails, Elements, FilterLabels, NgFFDoc } from '@frankframework/ff-doc';
+import { ElementDetails, FilterLabels, NgFFDoc } from '@frankframework/ff-doc';
 
 export type FilterGroups = Record<string, string[]>;
 
@@ -15,9 +15,14 @@ type HSL = {
   providedIn: 'root',
 })
 export class AppService {
-  readonly darkmode: WritableSignal<boolean> = signal(false);
   hasLoaded: boolean = false;
   previousSearchQuery: string = '';
+  readonly darkmode: WritableSignal<boolean> = signal(false);
+  readonly ffDocVersion: Signal<string> = computed(() => {
+    const ffDoc = this.ffDoc.ffDoc();
+    if (!this.hasLoaded && ffDoc) this.triggerApplicationLoaded();
+    return ffDoc?.metadata.version ?? 'unknown';
+  });
 
   private readonly applicationLoadedSubject: Subject<void> = new Subject();
   readonly applicationLoaded$: Observable<void> = this.applicationLoadedSubject.asObservable();

@@ -108,7 +108,6 @@ public class FrankDocJsonFactory {
 		return result.build();
 	}
 
-	// But why??
 	private void getTypeReferencedEntityRoot(JsonObjectBuilder result) {
 		JsonArrayBuilder members = bf.createArrayBuilder();
 		members.add(Constants.MODULE_ELEMENT_NAME);

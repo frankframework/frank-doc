@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, Signal } from '@angular/core';
+import { Component, inject, OnInit, Signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgFFDoc } from '@frankframework/ff-doc';
 import { HeaderComponent } from './components/header/header.component';
@@ -15,15 +15,11 @@ import { environment } from '../environments/environment';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  protected version: Signal<string> = computed(() => {
-    const ffDoc = this.ffDoc.ffDoc();
-    if (ffDoc) this.appService.triggerApplicationLoaded();
-    return ffDoc?.metadata.version ?? 'unknown';
-  });
   protected error: string | null = null;
 
   private readonly appService: AppService = inject(AppService);
   private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
+  protected readonly version: Signal<string> = this.appService.ffDocVersion;
 
   ngOnInit(): void {
     this.ffDoc.initialize(environment.frankDocUrl);

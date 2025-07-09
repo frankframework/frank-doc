@@ -35,7 +35,7 @@
       @let authenticatorName = selectedAuthenticator()!.name;
       @let authenticator = selectedAuthenticator()!.authenticator;
       <div class="servlet-group" [id]="authenticatorName">
-        <h3 class="sub-title" id="{{ authenticatorName }}">{{ authenticatorName }}</h3>
+        <h3 class="sub-title" [id]="authenticatorName">{{ authenticatorName }}</h3>
         <p class="fullname">{{ authenticator.fullName }}</p>
         <p
           class="description javadoc"

@@ -14,7 +14,6 @@
         <ul>
           @for (entry of tableOfContents; track entry.name) {
             @if (entry.children) {
-
               <li [ngClass]="{ active: entry.active }">
                 <span (click)="scrollToElement(entry.anchor)">{{ entry.name }}</span>
                 <ul>
