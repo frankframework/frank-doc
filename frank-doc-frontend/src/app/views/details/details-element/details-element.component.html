@@ -70,7 +70,7 @@
     }
   </div>
   <div class="section options">
-    @if (element.attributes) {
+    @if (element.attributes && isRecordGreaterThanZero(element.attributes)) {
       <div class="sub-options attributes">
         <div
           id="attributes"
@@ -166,7 +166,7 @@
         </div>
       </div>
     }
-    @if (element.parameters) {
+    @if (element.parameters && isRecordGreaterThanZero(element.parameters)) {
       <div class="sub-options parameters" id="parameters">
         <div class="options-title" [collapse]="parameters" (collapsedChange)="collapsedOptions.parameters = $event">
           <span>Parameters</span>
@@ -199,7 +199,7 @@
         </div>
       </div>
     }
-    @if (element.children) {
+    @if (element.children && element.children.length > 0) {
       <div class="sub-options nested-elements" id="nested-elements">
         <div class="options-title" [collapse]="nestedElements" (collapsedChange)="collapsedOptions.children = $event">
           <span>Nested Components</span>
@@ -235,7 +235,7 @@
       </div>
     }
     <!-- Temp solution, see issue https://github.com/frankframework/frank-doc/issues/348 -->
-    @if (element.forwards) {
+    @if (element.forwards && isRecordGreaterThanZero(element.forwards)) {
       <div class="sub-options forwards" id="forwards">
         <div class="options-title" [collapse]="forwards" (collapsedChange)="collapsedOptions.forwards = $event">
           <span>Forwards</span>
