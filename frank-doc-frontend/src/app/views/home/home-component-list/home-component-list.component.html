@@ -13,6 +13,7 @@
 </div>
 <div class="components">
   @for (component of components; track component.item.name) {
+    @let element = component.item;
     <div
       class="card"
       appCard
@@ -22,15 +23,15 @@
       (mouseleave)="setActiveHover(card, false)"
     >
       <p class="label">
-        {{ component.item.labels ? getFirstLabel(component.item.labels) : '' }}
+        {{ element.labels ? getFirstLabelGroup(element.labels)[1] : '' }}
       </p>
-      <p class="name" [ngClass]="{ deprecated: component.item.deprecated }" [title]="component.item.name">
-        {{ component.item.name }}
+      <p class="name" [ngClass]="{ deprecated: element.deprecated }" [title]="component.item.name">
+        {{ element.name }}
       </p>
       <p
         class="description"
-        [ngClass]="{ deprecated: component.item.deprecated }"
-        *javadocTransform="let text of component.item.description; elements: elements; asText: true"
+        [ngClass]="{ deprecated: element.deprecated }"
+        *fdJavadocTransform="let text of element.description; elements: elements; asText: true"
       >
         {{ text | truncate: 150 }}
       </p>

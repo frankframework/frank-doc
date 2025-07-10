@@ -3,7 +3,7 @@ export type FFDocJson = {
   types: Record<string, string[]>;
   elements: Record<string, ElementClass>;
   elementNames: Record<string, ElementInfo>;
-  enums: Record<string, Enum>;
+  enums: Record<string, EnumValues>;
   labels: Record<string, string[]>;
   properties: Property[];
   credentialProviders: Record<string, CredentialProvider>;
@@ -73,7 +73,7 @@ export type ElementInfo = {
   className: string;
 };
 
-export type Enum = Record<string, EnumValue>;
+export type EnumValues = Record<string, EnumValue>;
 
 export type EnumValue = {
   description?: string;

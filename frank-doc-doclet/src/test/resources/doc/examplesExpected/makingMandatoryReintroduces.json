@@ -2,89 +2,51 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "types": [
-        {
-            "name": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild"
-            ]
-        },
-        {
-            "name": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild2",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild2"
-            ]
-        },
-        {
-            "name": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.IInterface",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Child",
-                "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Parent"
-            ]
-        },
-        {
-            "name": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master"
-            ]
-        },
-        {
-            "name": "Module",
-            "members": [
-                "Module"
-            ]
-        }
-    ],
+    "types": {
+        "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild": [
+            "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild"
+        ],
+        "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild2": [
+            "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild2"
+        ],
+        "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.IInterface": [
+            "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Child",
+            "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Parent"
+        ],
+        "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master": [
+            "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master"
+        ],
+        "Module": [
+            "Module"
+        ]
+    },
     "elements": {
         "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild": {
             "name": "B",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild",
-            "elementNames": [
-                {
-                    "name": "B"
-                }
-            ],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         },
         "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild2": {
             "name": "C",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild2",
-            "elementNames": [
-                {
-                    "name": "C"
-                }
-            ],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         },
         "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Child": {
             "name": "Child",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Child",
             "parent": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Parent",
-            "elementNames": [
-                {
-                    "name": "ChildA"
+            "attributes": {
+                "mandatoryAttributeThatBecomesOptional": {},
+                "myAttribute": {
+                    "description": "This attribute is not mandatory here.",
+                    "mandatory": true
                 }
-            ],
-            "attributes": [
-                {
-                    "name": "myAttribute",
-                    "mandatory": true,
-                    "description": "This attribute is not mandatory here."
-                },
-                {
-                    "name": "mandatoryAttributeThatBecomesOptional"
-                }
-            ],
+            },
             "children": [
                 {
                     "multiple": true,
@@ -95,18 +57,11 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master": {
             "name": "Master",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master",
-            "elementNames": [
-                {
-                    "name": "Master"
-                }
-            ],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ],
+            },
             "children": [
                 {
                     "multiple": true,
@@ -123,56 +78,32 @@
         },
         "Module": {
             "name": "Module",
-            "fullName": "Module",
-            "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
-            "elementNames": [
-                {
-                    "labels": {
-                        "FrankDocGroup": [
-                            "Other"
-                        ]
-                    },
-                    "name": "Module"
-                }
-            ]
+            "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations."
         },
         "java.lang.Object": {
             "name": "Object",
-            "fullName": "java.lang.Object",
-            "elementNames": [],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         },
         "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Parent": {
             "name": "Parent",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Parent",
-            "elementNames": [
-                {
-                    "name": "ParentA"
-                }
-            ],
-            "attributes": [
-                {
-                    "name": "myAttribute",
+            "attributes": {
+                "mandatoryAttributeThatBecomesOptional": {
+                    "mandatory": true
+                },
+                "mandatoryAttributeThatRemainsMandatory": {
+                    "mandatory": true
+                },
+                "myAttribute": {
                     "description": "This attribute is not mandatory here."
                 },
-                {
-                    "name": "mandatoryAttributeThatBecomesOptional",
-                    "mandatory": true
-                },
-                {
-                    "name": "mandatoryAttributeThatRemainsMandatory",
-                    "mandatory": true
-                },
-                {
-                    "name": "active",
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ],
+            },
             "children": [
                 {
                     "mandatory": true,
@@ -189,5 +120,28 @@
             ]
         }
     },
-    "enums": []
+    "elementNames": {
+        "B": {
+            "className": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild"
+        },
+        "C": {
+            "className": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.ConfigChild2"
+        },
+        "ChildA": {
+            "className": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Child"
+        },
+        "Master": {
+            "className": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Master"
+        },
+        "Module": {
+            "className": "Module",
+            "labels": {
+                "FrankDocGroup": "Other"
+            }
+        },
+        "ParentA": {
+            "className": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Parent"
+        }
+    },
+    "enums": {}
 }

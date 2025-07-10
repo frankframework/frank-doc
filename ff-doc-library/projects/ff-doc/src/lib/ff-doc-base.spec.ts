@@ -1,5 +1,6 @@
 import { Elements, FFDocBase, Filters } from './ff-doc-base';
 import { FFDocJson } from './frankdoc.types';
+/* eslint-disable sonarjs/no-duplicate-string */
 
 const labels: FFDocJson['labels'] = {
   Components: ['Senders', 'Listeners'],
@@ -52,6 +53,7 @@ class TestFFDoc extends FFDocBase {
         FixedResultSender: {
           name: 'FixedResultSender',
           description: 'FixedResultSender, same behaviour as {@link FixedResultPipe}, but now as a ISender.',
+          className: 'org.frankframework.senders.FixedResultSender',
           labels: {
             Components: 'Senders',
             EIP: 'Endpoint',
@@ -74,6 +76,7 @@ class TestFFDoc extends FFDocBase {
           name: 'RestListener',
           description:
             "Listener that allows a {@link Receiver} to receive messages as a REST webservice.\n Prepends the configured URI pattern with <code>rest/</code>. When you are writing a new Frank config, you are recommended\n to use an {@link ApiListener} instead. You can find all serviced URI patterns\n in the Frank!Console: main menu item Webservice, heading Available REST Services.\n\n <p>\n Note:\n Servlets' multipart configuration expects a Content-Type of <code>multipart/form-data</code> (see http://docs.oracle.com/javaee/6/api/javax/servlet/annotation/MultipartConfig.html).\n So do not use other multipart content types like <code>multipart/related</code>\n </p>",
+          className: 'org.frankframework.http.RestListener',
           labels: {
             Components: 'Listeners',
             EIP: 'Listener',

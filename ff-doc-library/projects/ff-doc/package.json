@@ -1,14 +1,14 @@
 {
   "name": "@frankframework/ff-doc",
   "version": "1.0.0",
-  "description": "",
+  "description": "A powerful and easy-to-use library designed to extract and process information from the FF! Doc JSON.",
   "main": "",
-  "author": "",
+  "author": "Vivy Booman",
   "license": "Apache-2.0",
-  "homepage": "",
+  "homepage": "https://frankframework.org",
   "repository": {
     "type": "git",
-    "url": "",
+    "url": "https://github.com/frankframework/frank-doc.git",
     "directory": "projects/ff-doc"
   },
   "optionalDependencies": {

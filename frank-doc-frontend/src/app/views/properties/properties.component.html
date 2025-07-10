@@ -57,7 +57,7 @@
                 </td>
                 <td
                   class="property-name"
-                  [ngClass]="{ deprecated: property.flags?.includes('Deprecated') }"
+                  [ngClass]="{ deprecated: property.flags && property.flags.includes('Deprecated') }"
                   [id]="convertToId(propertyGroup.name + '-' + property.name)"
                   [innerHTML]="propertyName"
                 ></td>
@@ -69,7 +69,7 @@
                   <td
                     class="property-description"
                     colspan="2"
-                    *javadocTransform="let text of property.description; elements: frankDocElements()"
+                    *fdJavadocTransform="let text of property.description; elements: elements()"
                     [innerHTML]="text"
                   ></td>
                 </tr>

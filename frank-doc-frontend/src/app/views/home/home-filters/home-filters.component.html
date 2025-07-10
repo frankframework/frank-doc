@@ -14,13 +14,13 @@
 <div #menu class="menu">
   <div class="menu-card filters">
     <ul>
-      @for (filter of filters(); track filter.name) {
+      @for (filterEntry of filters(); track filterEntry.name) {
         <li
-          (mouseover)="toggleFilterMenu(filter)"
-          (click)="toggleFilterMenu(filter, true)"
-          [ngClass]="{ active: selectedFilter === filter && selectedFilterLocked }"
+          (mouseover)="toggleFilterMenu(filterEntry)"
+          (click)="toggleFilterMenu(filterEntry, true)"
+          [ngClass]="{ active: selectedFilter?.name === filterEntry.name && selectedFilterLocked }"
         >
-          {{ filter.name }}
+          {{ filterEntry.name }}
         </li>
       }
     </ul>
@@ -29,14 +29,14 @@
   @if (selectedFilter) {
     <div class="menu-card labels">
       <ul>
-        @for (label of selectedFilter.labels; track label.name) {
+        @for (label of getLabelEntries(selectedFilter.filter); track label.name) {
           <li>
             <ff-checkbox
               class="checkbox-pointer"
               [initFilterToggle]="selectedFilterLabels()"
               [initFilterName]="selectedFilter.name"
               [initLabelName]="label.name"
-              (click)="toggleMenuLabel(selectedFilter.name, label.name)"
+              (click)="toggleMenuLabel(selectedFilter!.name, label.name)"
               >{{ label.name }}</ff-checkbox
             >
           </li>

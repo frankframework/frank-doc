@@ -10,17 +10,16 @@ import { AppService } from '../../app.service';
   styleUrl: './feedback.component.scss',
 })
 export class FeedbackComponent {
-  private appService: AppService = inject(AppService);
-  private router: Router = inject(Router);
+  private readonly appService: AppService = inject(AppService);
+  private readonly router: Router = inject(Router);
 
   onFeedbackClick(): void {
     const currentPage = this.router.url;
-    const frankDocVersion = this.appService.frankDoc()?.metadata.version ?? 'unknown';
     const selectedText = window.getSelection()?.toString().trim() || 'None';
 
     const markdown = `
 **Current Page:** \`${currentPage}\`
-**Frank!Doc Version:** \`${frankDocVersion}\`
+**Frank!Doc Version:** \`${this.appService.ffDocVersion()}\`
 **Selected Text:** \`${selectedText}\`
 `;
 

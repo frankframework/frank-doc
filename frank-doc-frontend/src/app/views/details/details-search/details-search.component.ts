@@ -1,14 +1,13 @@
-import { Component, inject, Input, isDevMode, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, computed, inject, Input, isDevMode, OnChanges, Signal, SimpleChanges } from '@angular/core';
 import { SearchComponent } from '@frankframework/angular-components';
 import { FormsModule } from '@angular/forms';
 import Fuse, { FuseResult } from 'fuse.js';
-import { Element, ElementLabels, FrankDoc } from '../../../frankdoc.types';
-import { AppService } from '../../../app.service';
+import { AppService, FilterGroups } from '../../../app.service';
 import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { environment } from '../../../../environments/environment';
 import { fuseOptions, splitOnPascalCaseRegex } from '../../../app.constants';
 import { NameWbrPipe } from '../../../components/name-wbr.pipe';
+import { ElementDetails, NgFFDoc } from '@frankframework/ff-doc';
 
 @Component({
   selector: 'app-details-search',
@@ -17,29 +16,27 @@ import { NameWbrPipe } from '../../../components/name-wbr.pipe';
   styleUrl: './details-search.component.scss',
 })
 export class DetailsSearchComponent implements OnChanges {
-  @Input({ required: true }) element!: Element | null;
-  @Input({ required: true }) frankDocElements!: FrankDoc['elements'] | null;
+  @Input({ required: true }) element!: ElementDetails | null;
 
   protected searchQuery = '';
   protected relatedSearchQuery = '';
-  protected filteredElements: FuseResult<Element>[] = [];
-  protected relatedElements: FuseResult<Element>[] = [];
-  protected showRelated: boolean = environment.relatedSearchResults;
+  protected filteredElements: FuseResult<ElementDetails>[] = [];
+  protected relatedElements: FuseResult<ElementDetails>[] = [];
 
   private appService: AppService = inject(AppService);
-  protected getFirstFilter = this.appService.getFirstFilter;
-  protected getFirstLabel = this.appService.getFirstLabel;
+  protected readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
+  protected getFirstLabelGroup = this.appService.getFirstLabelGroup;
 
-  private elementsList: Element[] = [];
-  private exclusiveElementsList: Element[] = [];
-  private fuse: Fuse<Element> = new Fuse(this.elementsList, fuseOptions);
-  private fuseRelated: Fuse<Element> = new Fuse(this.elementsList, { ...fuseOptions, shouldSort: false });
+  private elementsList: Signal<ElementDetails[]> = computed(() => {
+    const elementsList = Object.values(this.ffDoc.elements() ?? {});
+    this.fuse.setCollection(elementsList);
+    return elementsList;
+  });
+  private exclusiveElementsList: ElementDetails[] = [];
+  private fuse: Fuse<ElementDetails> = new Fuse([], fuseOptions);
+  private fuseRelated: Fuse<ElementDetails> = new Fuse([], { ...fuseOptions, shouldSort: false });
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['frankDocElements']) {
-      this.elementsList = Object.values(this.frankDocElements ?? {});
-      this.fuse.setCollection(this.elementsList);
-    }
     if (changes['element']) {
       if (this.element) {
         const firstElementNamePart = this.element.name.split(splitOnPascalCaseRegex)[0];
@@ -47,7 +44,7 @@ export class DetailsSearchComponent implements OnChanges {
       } else {
         this.relatedSearchQuery = '';
       }
-      this.fuse.setCollection(this.elementsList);
+      this.fuse.setCollection(this.elementsList());
       this.filterExclusiveElements();
       this.searchQuery = this.appService.previousSearchQuery;
       this.searchFilteredElements();
@@ -58,13 +55,13 @@ export class DetailsSearchComponent implements OnChanges {
     this.searchFilteredElements();
   }
 
-  protected updateSelectedFiltersInSearch(selectedFilters: ElementLabels): void {
-    this.fuse.setCollection(this.appService.filterElementsBySelectedFilters(this.elementsList, selectedFilters));
+  protected updateSelectedFiltersInSearch(selectedFilters: FilterGroups): void {
+    this.fuse.setCollection(this.appService.filterElementsBySelectedFilters(this.elementsList(), selectedFilters));
     if (isDevMode()) console.log('Selected Filters for search', selectedFilters);
     this.searchFilteredElements();
   }
 
-  protected updateSelectedFiltersInRelated(selectedFilters: ElementLabels): void {
+  protected updateSelectedFiltersInRelated(selectedFilters: FilterGroups): void {
     this.fuseRelated.setCollection(
       this.appService.filterElementsBySelectedFilters(this.exclusiveElementsList, selectedFilters),
     );
@@ -88,7 +85,10 @@ export class DetailsSearchComponent implements OnChanges {
   }
 
   private filterExclusiveElements(): void {
-    this.exclusiveElementsList = this.elementsList.filter((element) => element.name !== this.element?.name);
-    this.updateSelectedFiltersInRelated(this.element?.labels ?? {});
+    this.exclusiveElementsList = this.elementsList().filter((element) => element.name !== this.element?.name);
+    const selectedFilterEntries: [string, string[]][] = Object.entries(this.element?.labels ?? {}).map(
+      ([filterGroup, label]) => [filterGroup, [label]],
+    );
+    this.updateSelectedFiltersInRelated(Object.fromEntries(selectedFilterEntries));
   }
 }

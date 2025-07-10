@@ -1,19 +1,9 @@
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { computed, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { Element, ElementLabels, FrankDoc, RawFrankDoc } from './frankdoc.types';
 import { DEFAULT_RETURN_CHARACTER } from './app.constants';
+import { ElementDetails, FilterLabels, NgFFDoc } from '@frankframework/ff-doc';
 
-export type Filter = {
-  name: string;
-  labels: FilterLabels[];
-};
-
-export type FilterLabels = {
-  name: string;
-  elements: string[];
-};
+export type FilterGroups = Record<string, string[]>;
 
 type HSL = {
   hue: number;
@@ -25,17 +15,27 @@ type HSL = {
   providedIn: 'root',
 })
 export class AppService {
-  readonly frankDoc: WritableSignal<FrankDoc | null> = signal(null);
-  readonly rawFrankDoc: WritableSignal<RawFrankDoc | null> = signal(null);
-  readonly filters: WritableSignal<Filter[]> = signal([]);
-  readonly darkmode: WritableSignal<boolean> = signal(false);
   hasLoaded: boolean = false;
   previousSearchQuery: string = '';
+  readonly darkmode: WritableSignal<boolean> = signal(false);
+  readonly ffDocVersion: Signal<string> = computed(() => {
+    const ffDoc = this.ffDoc.ffDoc();
+    if (!this.hasLoaded && ffDoc) this.triggerApplicationLoaded();
+    return ffDoc?.metadata.version ?? 'unknown';
+  });
 
   private readonly applicationLoadedSubject: Subject<void> = new Subject();
   readonly applicationLoaded$: Observable<void> = this.applicationLoadedSubject.asObservable();
 
-  private readonly http: HttpClient = inject(HttpClient);
+  private ffDoc: NgFFDoc = new NgFFDoc();
+
+  getFFDoc(): NgFFDoc {
+    return this.ffDoc;
+  }
+
+  getLabelEntries(filterLabels: FilterLabels): { name: string; labels: string[] }[] {
+    return Object.entries(filterLabels).map(([name, labels]) => ({ name, labels }));
+  }
 
   triggerApplicationLoaded(): void {
     this.hasLoaded = true;
@@ -43,42 +43,25 @@ export class AppService {
     this.applicationLoadedSubject.complete();
   }
 
-  getFrankDoc(): Observable<RawFrankDoc> {
-    return this.http.get<RawFrankDoc>(`${environment.frankDocUrl}?cache=${Date.now()}`);
-  }
-
-  fullNameToSimpleName(fullName: string): string {
-    return fullName.slice(fullName.lastIndexOf('.') + 1);
-  }
-
-  filterElementsBySelectedFilters(elements: Element[], selectedFilters: ElementLabels): Element[] {
+  filterElementsBySelectedFilters(elements: ElementDetails[], selectedFilters: FilterGroups): ElementDetails[] {
     if (this.getSelectedFiltersLength(selectedFilters) === 0) return elements;
     return elements.filter((element) => {
       if (!element.labels) return false;
-      for (const labelKey of Object.keys(element.labels)) {
-        if (!selectedFilters[labelKey]) continue;
-        for (const labelItem of element.labels[labelKey]) {
-          if (selectedFilters[labelKey].includes(labelItem)) {
-            return true;
-          }
-        }
+      for (const labelGroup of Object.keys(element.labels)) {
+        if (!selectedFilters[labelGroup]) continue;
+        const label = element.labels[labelGroup];
+        if (selectedFilters[labelGroup].includes(label)) return true;
       }
       return false;
     });
   }
 
-  getFirstFilter(labels?: Record<string, string[]>): string {
-    if (!labels) return DEFAULT_RETURN_CHARACTER;
-    const labelGroups = Object.keys(labels);
-    if (labelGroups.length === 0) return DEFAULT_RETURN_CHARACTER;
+  getFirstLabelGroup(filters?: Record<string, string>): [string, string] {
+    const defaultLabelGroup: [string, string] = [DEFAULT_RETURN_CHARACTER, DEFAULT_RETURN_CHARACTER];
+    if (!filters) return defaultLabelGroup;
+    const labelGroups = Object.entries(filters);
+    if (labelGroups.length === 0) return defaultLabelGroup;
     return labelGroups[0];
-  }
-
-  getFirstLabel(labels?: Record<string, string[]>): string {
-    if (!labels) return DEFAULT_RETURN_CHARACTER;
-    const labelGroups = Object.keys(labels);
-    if (labelGroups.length === 0) return DEFAULT_RETURN_CHARACTER;
-    return labels[labelGroups[0]][0];
   }
 
   getLabelColor(name: string): string {
@@ -92,9 +75,10 @@ export class AppService {
     }
   }
 
-  private getSelectedFiltersLength(selectedFilters: ElementLabels): number {
-    if (Object.values(selectedFilters).length === 0) return 0;
-    return Object.values(selectedFilters).reduce((acc, val) => acc + val.length, 0);
+  private getSelectedFiltersLength(selectedFilters: FilterGroups): number {
+    const filterLabels = Object.values(selectedFilters);
+    if (filterLabels.length === 0) return 0;
+    return filterLabels.reduce((acc, labels) => acc + labels.length, 0);
   }
 
   private createHSLColorFromString(string: string, lightness: number): HSL {
