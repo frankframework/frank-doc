@@ -2,12 +2,12 @@ import { Component, computed, inject, isDevMode, OnInit, Signal } from '@angular
 import { SearchComponent } from '@frankframework/angular-components';
 import { FormsModule } from '@angular/forms';
 import { HomeComponentListComponent } from './home-component-list/home-component-list.component';
-import { AppService } from '../../app.service';
-import { FrankDoc, Element, ElementLabels } from '../../frankdoc.types';
+import { AppService, FilterGroups } from '../../app.service';
 import Fuse, { FuseResult } from 'fuse.js';
 import { HomeFiltersComponent } from './home-filters/home-filters.component';
 import { fuseOptions } from '../../app.constants';
 import { SearchQueryParamsService } from '../../search-query-params.service';
+import { ElementDetails, Elements, NgFFDoc } from '@frankframework/ff-doc';
 
 @Component({
   selector: 'app-home',
@@ -17,18 +17,17 @@ import { SearchQueryParamsService } from '../../search-query-params.service';
 })
 export class HomeComponent implements OnInit {
   protected searchQuery = '';
-  protected readonly elements: Signal<FrankDoc['elements']> = computed(
-    () => this.appService.frankDoc()?.elements ?? {},
-  );
-  protected filteredElements: FuseResult<Element>[] = [];
-  protected initialFilters: ElementLabels = {};
+  protected readonly elements: Signal<Elements> = computed(() => this.ffDoc.elements() ?? {});
+  protected filteredElements: FuseResult<ElementDetails>[] = [];
+  protected initialFilters: FilterGroups = {};
   protected loading: boolean = true;
 
   private readonly appService: AppService = inject(AppService);
   private readonly searchParamsService: SearchQueryParamsService = inject(SearchQueryParamsService);
-  private readonly elementsList: Signal<Element[]> = computed(() => Object.values(this.elements()));
-  private readonly fuse: Signal<Fuse<Element>> = computed(() => new Fuse(this.elementsList(), fuseOptions));
-  private selectedFilters: ElementLabels = {};
+  private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
+  private readonly elementsList: Signal<ElementDetails[]> = computed(() => Object.values(this.elements()));
+  private readonly fuse: Signal<Fuse<ElementDetails>> = computed(() => new Fuse(this.elementsList(), fuseOptions));
+  private selectedFilters: FilterGroups = {};
 
   ngOnInit(): void {
     this.appService.applicationLoaded$.subscribe(() => {
@@ -54,9 +53,11 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  protected updateSelectedFilters(selectedFilters: ElementLabels): void {
+  protected updateSelectedFilters(selectedFilters: FilterGroups): void {
     this.selectedFilters = selectedFilters;
-    this.fuse().setCollection(this.appService.filterElementsBySelectedFilters(this.elementsList(), selectedFilters));
+    this.fuse().setCollection(
+      this.appService.filterElementsBySelectedFilters(Object.values(this.elements()), selectedFilters),
+    );
     this.search(this.searchQuery);
     if (isDevMode()) console.log('Selected Filters', selectedFilters);
   }

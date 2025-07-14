@@ -16,6 +16,7 @@ class TestComponent {
     FixedResultSender: {
       name: 'FixedResultSender',
       description: 'FixedResultSender, same behaviour as {@link FixedResultPipe}, but now as a ISender.',
+      className: 'org.frankframework.senders.FixedResultSender',
       labels: {},
       parentElements: [],
       attributes: {},

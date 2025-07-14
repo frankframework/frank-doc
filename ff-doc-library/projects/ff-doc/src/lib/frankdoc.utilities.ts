@@ -29,18 +29,21 @@ function filterUsedEnums(attributes: Record<string, Attribute>, enums: FFDocJson
   return filteredEnums;
 }
 
-// eslint-disable-next-line sonarjs/no-commented-code
-/*export function getElementByLabel(
-  labelGroup: string,
-  label: string,
-  name: string,
-  elements: Elements,
-): ElementDetails | null {
-  return (
-    Object.values(elements).find((element) => element.name === name && element.labels?.[labelGroup]?.includes(label)) ??
-    null
+export function groupAttributesByMandatory(attributes: Record<string, Attribute>): {
+  required: Record<string, Attribute>;
+  optional: Record<string, Attribute>;
+} {
+  return Object.entries(attributes).reduce<{
+    required: Record<string, Attribute>;
+    optional: Record<string, Attribute>;
+  }>(
+    (collection, [name, attribute]) => {
+      collection[attribute.mandatory === true ? 'required' : 'optional'][name] = attribute;
+      return collection;
+    },
+    { required: {}, optional: {} },
   );
-}*/
+}
 
 export function getInheritedProperties(
   element: ElementClass,
@@ -63,17 +66,8 @@ export function getInheritedProperties(
 
   if (parentElement.attributes) {
     // ES2024 has the Object.groupBy function which could make this a lot better
-    const { required: attributesRequired, optional: attributesOptional } = Object.entries(
+    const { required: attributesRequired, optional: attributesOptional } = groupAttributesByMandatory(
       parentElement.attributes,
-    ).reduce<{
-      required: Record<string, Attribute>;
-      optional: Record<string, Attribute>;
-    }>(
-      (collection, [name, attribute]) => {
-        collection[attribute.mandatory === true ? 'required' : 'optional'][name] = attribute;
-        return collection;
-      },
-      { required: {}, optional: {} },
     );
     if (Object.values(attributesRequired).length > 0) {
       inheritedProperties.attributesRequired.unshift({

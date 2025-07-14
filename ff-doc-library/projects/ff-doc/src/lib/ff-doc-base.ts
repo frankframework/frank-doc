@@ -4,9 +4,7 @@ import { addInheritedPropertiesToElement, ElementClassWithInheritedProperties } 
 export type Filters = Record<string, FilterLabels>;
 export type FilterLabels = Record<string, string[]>;
 export type Elements = Record<string, ElementDetails>;
-export type ElementDetails = ElementClassWithInheritedProperties & {
-  labels: ElementInfo['labels'];
-};
+export type ElementDetails = ElementClassWithInheritedProperties & ElementInfo;
 
 export abstract class FFDocBase {
   protected getFiltersFromLabels(labels: FFDocJson['labels']): Filters {
@@ -41,7 +39,8 @@ export abstract class FFDocBase {
       const elementClassData = json.elements[elementValue.className];
       elements[elementName] = {
         ...addInheritedPropertiesToElement(elementClassData, json.elements, json.enums),
-        labels: elementValue.labels,
+        ...elementValue,
+        name: elementName,
       };
     }
     return elements;

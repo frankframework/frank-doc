@@ -1,17 +1,13 @@
 import { IFuseOptions } from 'fuse.js';
-import { Element } from './frankdoc.types';
+import { ElementDetails } from '@frankframework/ff-doc';
 
 export const DEFAULT_RETURN_CHARACTER = '-';
 export const DEFAULT_UNKNOWN_PROPERTY_GROUP = '(unnamed)';
 
-export const fuseOptions: IFuseOptions<Element> = {
+export const fuseOptions: IFuseOptions<ElementDetails> = {
   keys: [
     {
       name: 'name',
-      weight: 2,
-    },
-    {
-      name: 'fullName',
       weight: 2,
     },
     {

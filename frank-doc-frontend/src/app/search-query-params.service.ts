@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { FilterGroups } from './app.service';
 
-export type SearchFilters = {
-  query: Record<string, string[]>;
+type SearchFilters = {
+  query: FilterGroups;
   search: string;
 };
 
@@ -55,7 +56,7 @@ export class SearchQueryParamsService {
     return filterMap;
   }
 
-  private convertFiltersToParams(filters: Record<string, string[]>): Record<string, string> {
+  private convertFiltersToParams(filters: FilterGroups): Record<string, string> {
     const filterParams: Record<string, string> = {};
     for (const key in filters) {
       if (filters[key].length > 0) filterParams[`filter[${key}]`] = filters[key].join(',');
@@ -63,10 +64,13 @@ export class SearchQueryParamsService {
     return filterParams;
   }
 
-  private convertParamsToFilters(params: Map<string, string>): Record<string, string[]> {
-    const filters: Record<string, string[]> = {};
+  private convertParamsToFilters(params: Map<string, string>): FilterGroups {
+    const filters: FilterGroups = {};
     for (const [key, value] of params.entries()) {
-      filters[key] = value.split(',');
+      for (const label of value.split(',')) {
+        if (!filters[key]) filters[key] = [];
+        filters[key].push(label);
+      }
     }
     return filters;
   }

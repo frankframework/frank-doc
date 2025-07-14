@@ -2,13 +2,13 @@
   <div class="sidenav fixed-sidenav">
     <span class="title">Servlet Authenticators</span>
     <ul>
-      @for (authenticator of servletAuthenticators(); track authenticator.name) {
+      @for (authenticator of servletAuthenticatorNames(); track authenticator) {
         <li
           class="nav-item"
           (click)="handleSelectedAuthenticator(authenticator)"
-          [ngClass]="{ active: selectedAuthenticator()?.name === authenticator.name }"
+          [ngClass]="{ active: selectedAuthenticator()?.name === authenticator }"
         >
-          {{ authenticator.name }}
+          {{ authenticator }}
         </li>
       }
     </ul>
@@ -31,19 +31,18 @@
     <p class="description">
       For detailed guidance on implementing authentication in your configuration, refer to the Frank!Framework Manual.
     </p>
-    @if (selectedAuthenticator() !== null) {
-      <div class="servlet-group" [id]="selectedAuthenticator()?.name">
-        <h3 class="sub-title" id="{{ selectedAuthenticator()?.name }}">{{ selectedAuthenticator()?.name }}</h3>
-        <p class="fullname">{{ selectedAuthenticator()?.fullName }}</p>
+    @if (selectedAuthenticator()) {
+      @let authenticatorName = selectedAuthenticator()!.name;
+      @let authenticator = selectedAuthenticator()!.authenticator;
+      <div class="servlet-group" [id]="authenticatorName">
+        <h3 class="sub-title" [id]="authenticatorName">{{ authenticatorName }}</h3>
+        <p class="fullname">{{ authenticator.fullName }}</p>
         <p
           class="description javadoc"
-          *javadocTransform="
-            let text of selectedAuthenticator()?.description ?? DEFAULT_RETURN_CHARACTER;
-            elements: frankDocElements()
-          "
+          *fdJavadocTransform="let text of authenticator.description ?? DEFAULT_RETURN_CHARACTER; elements: elements()"
           [innerHTML]="text"
         ></p>
-        @if (selectedAuthenticator()?.methods && (selectedAuthenticator()?.methods?.length ?? 0) > 0) {
+        @if (authenticator.methods && authenticator.methods.length > 0) {
           <table>
             <thead>
               <tr>
@@ -52,14 +51,14 @@
               </tr>
             </thead>
             <tbody>
-              @for (method of selectedAuthenticator()?.methods; track method.name) {
+              @for (method of authenticator.methods; track method.name) {
                 <tr>
                   <td [innerHTML]="method.name | nameWbr"></td>
                   <td
                     class="javadoc"
-                    *javadocTransform="
+                    *fdJavadocTransform="
                       let text of method.description ?? DEFAULT_RETURN_CHARACTER;
-                      elements: frankDocElements()
+                      elements: elements()
                     "
                     [innerHTML]="text"
                   ></td>

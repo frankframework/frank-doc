@@ -2,41 +2,27 @@
     "metadata": {
         "version": "1.2.3-SNAPSHOT"
     },
-    "types": [
-        {
-            "name": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Child",
-            "members": [
-                "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Child"
-            ]
-        },
-        {
-            "name": "Module",
-            "members": [
-                "Module"
-            ]
-        }
-    ],
+    "types": {
+        "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Child": [
+            "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Child"
+        ],
+        "Module": [
+            "Module"
+        ]
+    },
     "elements": {
         "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Child": {
             "name": "Child",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Child",
             "description": "Description of child.\n Description of parent.\n Description of parent of parent.",
             "parent": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Parent",
-            "elementNames": [
-                {
-                    "name": "Child"
-                }
-            ],
-            "attributes": [
-                {
-                    "name": "inheritedAttribute",
+            "attributes": {
+                "inheritedAttribute": {
                     "description": "Documentation of the inherited attribute from the parent.\n\n With a bit of additional text."
                 },
-                {
-                    "name": "hasNoJavaDocAttribute",
+                "hasNoJavaDocAttribute": {
                     "description": "An additional line of text."
                 }
-            ],
+            },
             "children": [
                 {
                     "multiple": true,
@@ -48,66 +34,53 @@
         },
         "Module": {
             "name": "Module",
-            "fullName": "Module",
-            "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
-            "elementNames": [
-                {
-                    "labels": {
-                        "FrankDocGroup": [
-                            "Other"
-                        ]
-                    },
-                    "name": "Module"
-                }
-            ]
+            "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations."
         },
         "java.lang.Object": {
             "name": "Object",
-            "fullName": "java.lang.Object",
-            "elementNames": [],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         },
         "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Parent": {
             "name": "Parent",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Parent",
             "description": "Description of parent.\n Description of parent of parent.",
-            "elementNames": [],
-            "attributes": [
-                {
-                    "name": "inheritedAttribute",
+            "attributes": {
+                "hasNoJavaDocAttribute": {},
+                "inheritedAttribute": {
                     "description": "Documentation of the inherited attribute from the parent."
                 },
-                {
-                    "name": "nonInheritedAttribute",
+                "nonInheritedAttribute": {
                     "description": "Documentation of the non-inherited attribute from the parent."
                 },
-                {
-                    "name": "hasNoJavaDocAttribute"
-                },
-                {
-                    "name": "active",
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         },
         "org.frankframework.frankdoc.testtarget.examples.inheritdoc.ParentOfParent": {
             "name": "ParentOfParent",
-            "fullName": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.ParentOfParent",
             "abstract": true,
             "description": "Description of parent of parent.",
-            "elementNames": [],
-            "attributes": [
-                {
-                    "name": "active",
+            "attributes": {
+                "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            ]
+            }
         }
     },
-    "enums": []
+    "elementNames": {
+        "Child": {
+            "className": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Child"
+        },
+        "Module": {
+            "className": "Module",
+            "labels": {
+                "FrankDocGroup": "Other"
+            }
+        }
+    },
+    "enums": {}
 }

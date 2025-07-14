@@ -47,20 +47,16 @@ import javax.json.JsonBuilderFactory;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FrankDocJsonFactory {
-	private static Logger log = LogUtil.getLogger(FrankDocJsonFactory.class);
+	private static final Logger log = LogUtil.getLogger(FrankDocJsonFactory.class);
 
 	private static final String DESCRIPTION = "description";
 
-	private FrankDocModel model;
-	private JsonBuilderFactory bf;
+	private final FrankDocModel model;
+	private final JsonBuilderFactory bf;
 	List<FrankElement> elementsOutsideChildren;
 	private final String frankFrameworkVersion;
 
@@ -80,6 +76,7 @@ public class FrankDocJsonFactory {
 			}
 			result.add("types", getTypes());
 			result.add("elements", getElements());
+			result.add("elementNames", getElementNames());
 			result.add("enums", getEnums());
 			getLabels().ifPresent(l -> result.add("labels", l));
 			getProperties().ifPresent(p -> result.add("properties", p));
@@ -98,69 +95,62 @@ public class FrankDocJsonFactory {
 		return metadata.build();
 	}
 
-	private JsonArray getTypes() {
-		JsonArrayBuilder result = bf.createArrayBuilder();
-		List<ElementType> sortedTypes = new ArrayList<>(model.getAllTypes().values());
-		Collections.sort(sortedTypes);
-		for(ElementType elementType: sortedTypes) {
-			result.add(getType(elementType));
-		}
-		elementsOutsideChildren.forEach(f -> result.add(getNonChildType(f)));
-		result.add(getTypeReferencedEntityRoot());
+	private JsonObject getTypes() {
+		JsonObjectBuilder result = bf.createObjectBuilder();
+		model
+			.getAllTypes()
+			.entrySet()
+			.stream()
+			.sorted(Map.Entry.comparingByKey())
+			.forEach(type -> addType(type.getValue(), result));
+		elementsOutsideChildren.forEach(element -> addNonChildType(element, result));
+		getTypeReferencedEntityRoot(result);
 		return result.build();
 	}
 
-	private JsonObject getTypeReferencedEntityRoot() {
-		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", Constants.MODULE_ELEMENT_NAME);
+	private void getTypeReferencedEntityRoot(JsonObjectBuilder result) {
 		JsonArrayBuilder members = bf.createArrayBuilder();
 		members.add(Constants.MODULE_ELEMENT_NAME);
-		result.add("members", members);
-		return result.build();
+		result.add(Constants.MODULE_ELEMENT_NAME, members);
 	}
 
-	private JsonObject getType(ElementType elementType) {
-		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", elementType.getFullName());
+	private void addType(ElementType elementType, JsonObjectBuilder result) {
 		final JsonArrayBuilder members = bf.createArrayBuilder();
 		elementType.getSyntax2Members().forEach(f -> members.add(f.getFullName()));
-		result.add("members", members);
-		return result.build();
+		result.add(elementType.getFullName(), members);
 	}
 
-	private JsonObject getNonChildType(FrankElement frankElement) {
-		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", frankElement.getFullName());
+	private void addNonChildType(FrankElement frankElement, JsonObjectBuilder result) {
 		final JsonArrayBuilder members = bf.createArrayBuilder();
 		members.add(frankElement.getFullName());
-		result.add("members", members);
-		return result.build();
+		result.add(frankElement.getFullName(), members);
 	}
 
 	private JsonObject getElements() throws JsonException {
-		Map<String, List<FrankElement>> elementsByName = model.getAllElements().values().stream()
-				.collect(Collectors.groupingBy(this::getElementNameForJson));
-		List<String> sortKeys = new ArrayList<>(elementsByName.keySet());
-		sortKeys.add(Constants.MODULE_ELEMENT_NAME);
-		Collections.sort(sortKeys);
+		final JsonObjectBuilder builder = bf.createObjectBuilder();
 
-		final var builder = bf.createObjectBuilder();
+		Map<String, List<FrankElement>> elementsByName = getAllElements();
+		builder.add(Constants.MODULE_ELEMENT_NAME, getRootElementObject());
 
-		for (String sortKey: sortKeys) {
-			if(sortKey.equals(Constants.MODULE_ELEMENT_NAME)) {
-				JsonObject element = getElementReferencedEntityRoot();
-				builder.add(element.getString("fullName"), element);
-			} else {
-				elementsByName.get(sortKey).stream()
-						.map(this::getElement)
-						.forEach(element -> builder.add(element.getString("fullName"), element));
+		for (List<FrankElement> elementsPerClass : elementsByName.values()) {
+			for (FrankElement element : elementsPerClass) {
+				builder.add(element.getFullName(), getElement(element));
 			}
 		}
+
 		return builder.build();
 	}
 
+	private Map<String, List<FrankElement>> getAllElements() {
+		return model
+			.getAllElements()
+			.values()
+			.stream()
+			.collect(Collectors.groupingBy(this::getElementNameForJson));
+	}
+
 	private String getElementNameForJson(FrankElement f) {
-		boolean useXmlElementName = (! f.isInterfaceBased()) && f.hasOnePossibleXmlElementName();
+		boolean useXmlElementName = (!f.isInterfaceBased()) && f.hasOnePossibleXmlElementName();
 		if(useXmlElementName) {
 			return f.getTheSingleXmlElementName();
 		} else {
@@ -168,16 +158,10 @@ public class FrankDocJsonFactory {
 		}
 	}
 
-	private JsonObject getElementReferencedEntityRoot() {
+	private JsonObject getRootElementObject() {
 		JsonObjectBuilder result = bf.createObjectBuilder();
 		result.add("name", Constants.MODULE_ELEMENT_NAME);
-		result.add("fullName", Constants.MODULE_ELEMENT_NAME);
 		addDescription(result, Constants.MODULE_ELEMENT_DESCRIPTION);
-
-		JsonArrayBuilder xmlElementNames = bf.createArrayBuilder();
-		xmlElementNames.add(getElementName(Constants.MODULE_ELEMENT_NAME, Map.of("FrankDocGroup", List.of(Constants.MODULE_ELEMENT_FRANK_DOC_GROUP))));
-		result.add("elementNames", xmlElementNames.build());
-
 		return result.build();
 	}
 
@@ -194,9 +178,8 @@ public class FrankDocJsonFactory {
 	}
 
 	private JsonObject getElement(FrankElement frankElement) throws JsonException {
-		JsonObjectBuilder result = bf.createObjectBuilder();
+		final JsonObjectBuilder result = bf.createObjectBuilder();
 		result.add("name", getElementNameForJson(frankElement));
-		result.add("fullName", frankElement.getFullName());
 		if (frankElement.isAbstract()) {
 			result.add("abstract", true);
 		}
@@ -209,11 +192,7 @@ public class FrankDocJsonFactory {
 		addDescription(result, frankElement.getDescription());
 		addIfNotNull(result, "parent", getParentOrNull(frankElement));
 
-		JsonArrayBuilder xmlElementNames = bf.createArrayBuilder();
-		frankElement.getXmlElementNames().forEach(elementName -> xmlElementNames.add(getElementName(elementName, frankElement.getLabels())));
-		result.add("elementNames", xmlElementNames);
-
-		JsonArray attributes = getAttributes(frankElement, getParentOrNull(frankElement) == null);
+		JsonObject attributes = getAttributes(frankElement, getParentOrNull(frankElement) == null);
 		if (!attributes.isEmpty()) {
 			result.add("attributes", attributes);
 		}
@@ -231,13 +210,13 @@ public class FrankDocJsonFactory {
 			result.add("parametersDescription", frankElement.getMeaningOfParameters());
 		}
 		if (!frankElement.getSpecificParameters().isEmpty()) {
-			final var builder = bf.createArrayBuilder();
-			frankElement.getSpecificParameters().forEach(sp -> builder.add(getParsedJavaDocTag(sp)));
+			final JsonObjectBuilder builder = bf.createObjectBuilder();
+			frankElement.getSpecificParameters().forEach(parameter -> builder.add(parameter.getName(), getParsedJavaDocTag(parameter)));
 			result.add("parameters", builder.build());
 		}
 		if(!frankElement.getForwards().isEmpty()) {
-			final var builder = bf.createArrayBuilder();
-			frankElement.getForwards().forEach(f -> builder.add(getJsonForForward(f)));
+			final JsonObjectBuilder builder = bf.createObjectBuilder();
+			frankElement.getForwards().forEach(forward -> builder.add(forward.name(), getJsonForForward(forward)));
 			result.add("forwards", builder.build());
 		}
 
@@ -268,36 +247,37 @@ public class FrankDocJsonFactory {
 		return result.build();
 	}
 
-	private JsonObject getElementName(String elementName, Map<String, List<String>> labels) {
+	private JsonObject getElementName(String elementName,String fullName, Map<String, List<String>> labelGroups) {
 		final var result = bf.createObjectBuilder();
+		result.add("className", fullName);
 
-		if (!labels.isEmpty()) {
-			final var builder = bf.createObjectBuilder();
+		if (!labelGroups.isEmpty()) {
+			final JsonObjectBuilder labelsBuilder = bf.createObjectBuilder();
 
-			labels.forEach((category, value) -> {
+			labelGroups.forEach((group, labels) -> {
 				// TODO: This is a bandage fix for validators and pipes. Pipes and validators currently share the same
 				// implementation, but we want the labels to be different. The elementName (automatically generated based
 				// on the interfaces it implements) is compared against a string to manually exclude specific labels.
 				if (elementName.toLowerCase().contains("pipe")) {
-					value = value.stream().filter(label -> !label.toLowerCase().contains("validator")).toList();
+					labels = labels.stream().filter(label -> !label.toLowerCase().contains("validator")).toList();
 				} else if (elementName.toLowerCase().contains("validator")) {
-					value = value.stream().filter(label -> !label.toLowerCase().contains("pipe")).toList();
+					labels = labels.stream().filter(label -> !label.toLowerCase().contains("pipe")).toList();
 				}
 
-				builder.add(category, bf.createArrayBuilder(value));
+				if (!labels.isEmpty()) {
+					// Only get the first label since, most if not all categories have only one label
+					labelsBuilder.add(group, labels.get(0));
+				}
 			});
-			result.add("labels", builder.build());
+
+			result.add("labels", labelsBuilder.build());
 		}
-
-		result.add("name", elementName);
-
 
 		return result.build();
 	}
 
 	private JsonObject getParsedJavaDocTag(ParsedJavaDocTag parsedJavaDocTag) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
-		b.add("name", parsedJavaDocTag.getName());
 		if(parsedJavaDocTag.getDescription() != null) {
 			b.add("description", parsedJavaDocTag.getDescription());
 		}
@@ -306,7 +286,6 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getJsonForForward(Forward forward) {
 		final var builder = bf.createObjectBuilder();
-		builder.add("name", forward.name());
 		if(forward.description() != null) {
 			builder.add("description", forward.description());
 		}
@@ -324,20 +303,19 @@ public class FrankDocJsonFactory {
 		return null;
 	}
 
-	private JsonArray getAttributes(FrankElement frankElement, boolean addAttributeActive) throws JsonException {
-		JsonArrayBuilder result = bf.createArrayBuilder();
-		for(FrankAttribute attribute: frankElement.getAttributes(ElementChild.IN_COMPATIBILITY_XSD)) {
-			result.add(getAttribute(attribute));
+	private JsonObject getAttributes(FrankElement frankElement, boolean addAttributeActive) throws JsonException {
+		JsonObjectBuilder result = bf.createObjectBuilder();
+		for (FrankAttribute attribute: frankElement.getAttributes(ElementChild.IN_COMPATIBILITY_XSD)) {
+			result.add(attribute.getName(), getAttribute(attribute));
 		}
-		if(addAttributeActive) {
-			result.add(getAttributeActive());
+		if (addAttributeActive) {
+			result.add("active", getAttributeActive());
 		}
 		return result.build();
 	}
 
 	private JsonObject getAttribute(FrankAttribute frankAttribute) throws JsonException {
 		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", frankAttribute.getName());
 		DeprecationInfo deprecationInfo = frankAttribute.getDeprecationInfo();
 		if (deprecationInfo != null) {
 			JsonObject deprecationInfoJsonObject = getDeprecated(deprecationInfo);
@@ -365,7 +343,6 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getAttributeActive() {
 		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", "active");
 		result.add("description", "If defined and empty or false, then this element and all its children are ignored");
 		return result.build();
 	}
@@ -422,33 +399,41 @@ public class FrankDocJsonFactory {
 		return result.build();
 	}
 
-	private JsonArray getEnums() {
-		final JsonArrayBuilder result = bf.createArrayBuilder();
+	private JsonObject getElementNames() {
+		final JsonObjectBuilder result = bf.createObjectBuilder();
+		result.add(Constants.MODULE_ELEMENT_NAME, getElementName(Constants.MODULE_ELEMENT_NAME, Constants.MODULE_ELEMENT_NAME, Map.of("FrankDocGroup", List.of(Constants.MODULE_ELEMENT_FRANK_DOC_GROUP))));
+
+		Map<String, List<FrankElement>> elements = getAllElements();
+		for (List<FrankElement> elementsPerClass : elements.values()) {
+			for (FrankElement frankElement : elementsPerClass) {
+				for (String elementName : frankElement.getXmlElementNames()) {
+					result.add(elementName, getElementName(elementName, frankElement.getFullName(), frankElement.getLabels()));
+				}
+			}
+		}
+
+		return result.build();
+	}
+
+	private JsonObject getEnums() {
+		final JsonObjectBuilder result = bf.createObjectBuilder();
 		for(AttributeEnum attributeEnum: model.getAllAttributeEnumInstances()) {
-			result.add(getAttributeEnum(attributeEnum));
+			result.add(attributeEnum.getFullName(), getAttributeEnumValues(attributeEnum));
 		}
 		return result.build();
 	}
 
-	private JsonObject getAttributeEnum(AttributeEnum en) {
-		final JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("name", en.getFullName());
-		result.add("values", getAttributeEnumValues(en));
-		return result.build();
-	}
-
-	private JsonArray getAttributeEnumValues(AttributeEnum en) {
-		JsonArrayBuilder result = bf.createArrayBuilder();
-		for(EnumValue v: en.getValues()) {
+	private JsonObject getAttributeEnumValues(AttributeEnum en) {
+		JsonObjectBuilder result = bf.createObjectBuilder();
+		for(EnumValue enumValue: en.getValues()) {
 			JsonObjectBuilder valueBuilder = bf.createObjectBuilder();
-			valueBuilder.add("label", v.getLabel());
-			if(v.getDescription() != null) {
-				valueBuilder.add("description", v.getDescription());
+			if(enumValue.getDescription() != null) {
+				valueBuilder.add("description", enumValue.getDescription());
 			}
-			if(v.isDeprecated()) {
+			if(enumValue.isDeprecated()) {
 				valueBuilder.add("deprecated", true);
 			}
-			result.add(valueBuilder.build());
+			result.add(enumValue.getLabel(), valueBuilder.build());
 		}
 		return result.build();
 	}
@@ -456,20 +441,15 @@ public class FrankDocJsonFactory {
 	// We omit the "labels" element if there are no labels. This
 	// makes no different in production because the F!F sources
 	// do have labels. This way, we can omit labels from unit tests.
-	private Optional<JsonArray> getLabels() {
+	private Optional<JsonObject> getLabels() {
 		if(model.getAllLabels().isEmpty()) {
 			return Optional.empty();
 		}
-		final JsonArrayBuilder result = bf.createArrayBuilder();
-		for(String label: model.getAllLabels()) {
-			JsonObjectBuilder labelObject = bf.createObjectBuilder();
+		final JsonObjectBuilder result = bf.createObjectBuilder();
+		for(String label : model.getAllLabels()) {
 			JsonArrayBuilder labelValuesObject = bf.createArrayBuilder();
-			for(String value: model.getAllValuesOfLabel(label)) {
-				labelValuesObject.add(value);
-			}
-			labelObject.add("label", label);
-			labelObject.add("values", labelValuesObject.build());
-			result.add(labelObject.build());
+			model.getAllValuesOfLabel(label).forEach(labelValuesObject::add);
+			result.add(label, labelValuesObject.build());
 		}
 		return Optional.of(result.build());
 	}
@@ -522,15 +502,15 @@ public class FrankDocJsonFactory {
 		return b.build();
 	}
 
-	private Optional<JsonArray> getCredentialProviders() {
+	private Optional<JsonObject> getCredentialProviders() {
 		if (model.getCredentialProviders().isEmpty()) {
 			return Optional.empty();
 		}
 
-		final var builder = bf.createArrayBuilder();
-		model.getCredentialProviders().stream()
-			.map(this::credentialProviderToJson)
-			.forEach(builder::add);
+		final JsonObjectBuilder builder = bf.createObjectBuilder();
+		for (CredentialProvider credentialProvider : model.getCredentialProviders()) {
+			builder.add(credentialProvider.simpleName(), credentialProviderToJson(credentialProvider));
+		}
 
 		return Optional.of(builder.build());
 	}
@@ -538,7 +518,6 @@ public class FrankDocJsonFactory {
 	private JsonObject credentialProviderToJson(CredentialProvider credentialProvider) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
 
-		b.add("name", credentialProvider.simpleName());
 		b.add("fullName", credentialProvider.fullName());
 		if (credentialProvider.description() != null) {
 			b.add("description", credentialProvider.description());
@@ -547,15 +526,15 @@ public class FrankDocJsonFactory {
 		return b.build();
 	}
 
-	private Optional<JsonArray> getServletAuthenticators() {
+	private Optional<JsonObject> getServletAuthenticators() {
 		if (model.getServletAuthenticators().isEmpty()) {
 			return Optional.empty();
 		}
 
-		final var builder = bf.createArrayBuilder();
-		model.getServletAuthenticators().stream()
-			.map(this::servletAuthenticatorTojson)
-			.forEach(builder::add);
+		final var builder = bf.createObjectBuilder();
+		for (ServletAuthenticator servletAuthenticator : model.getServletAuthenticators()) {
+			builder.add(servletAuthenticator.simpleName(), servletAuthenticatorTojson(servletAuthenticator));
+		}
 
 		return Optional.of(builder.build());
 	}
@@ -563,7 +542,6 @@ public class FrankDocJsonFactory {
 	private JsonObject servletAuthenticatorTojson(ServletAuthenticator servletAuthenticator) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
 
-		b.add("name", servletAuthenticator.simpleName());
 		b.add("fullName", servletAuthenticator.fullName());
 		if (servletAuthenticator.description() != null) {
 			b.add("description", servletAuthenticator.description());

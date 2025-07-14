@@ -13,19 +13,7 @@ import {
 import { AlertComponent, AlertType, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import {
-  Attribute,
-  Child,
-  DeprecationInfo,
-  Element,
-  FrankDoc,
-  Note,
-  ParsedTag,
-  RawFrankDoc,
-  Value,
-} from '../../../frankdoc.types';
 import { environment } from '../../../../environments/environment';
-import { JavadocTransformDirective } from '../../../components/javadoc-transform.directive';
 import { CollapseDirective } from '../../../components/collapse.directive';
 import { IconCaretComponent } from '../../../icons/icon-caret-down/icon-caret.component';
 import { IconArrowRightUpComponent } from '../../../icons/icon-arrow-right-up/icon-arrow-right-up.component';
@@ -34,19 +22,29 @@ import { DEFAULT_RETURN_CHARACTER } from '../../../app.constants';
 import { HasInheritedProperties } from '../details.component';
 import { Title } from '@angular/platform-browser';
 import { NameWbrPipe } from '../../../components/name-wbr.pipe';
+import {
+  Attribute,
+  DeprecationInfo,
+  ElementClass,
+  ElementDetails,
+  Elements,
+  EnumValue,
+  getInheritedProperties,
+  InheritedProperties,
+  JavadocTransformDirective,
+  NgFFDoc,
+  Note,
+} from '@frankframework/ff-doc';
+import { groupAttributesByMandatory } from '@frankframework/ff-doc';
 
-type InheritedParentElementProperties<T> = {
-  parentElementName: string;
-  properties: T[];
+type EnumValueEntry = {
+  valueName: string;
+  value: EnumValue;
 };
 
-type InheritedProperties = {
-  attributesRequired: InheritedParentElementProperties<Attribute>[];
-  attributesOptional: InheritedParentElementProperties<Attribute>[];
-  parameters: InheritedParentElementProperties<ParsedTag>[];
-  children: InheritedParentElementProperties<Child>[];
-  // forwards: InheritedParentElementProperties<ParsedTag>[];
-  forwards: ParsedTag[];
+type RecordEntry<T> = {
+  name: string;
+  value: T;
 };
 
 @Component({
@@ -56,34 +54,31 @@ type InheritedProperties = {
     KeyValuePipe,
     RouterLink,
     AlertComponent,
-    JavadocTransformDirective,
     CollapseDirective,
     NgTemplateOutlet,
     IconCaretComponent,
     IconArrowRightUpComponent,
     NgClass,
     NameWbrPipe,
+    JavadocTransformDirective,
   ],
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',
 })
 export class DetailsElementComponent implements OnInit, OnChanges {
-  @Input({ required: true }) element!: Element | null;
-  @Input({ required: true }) frankDocElements!: FrankDoc['elements'] | null;
-  @Input({ required: true }) frankDocEnums!: FrankDoc['enums'] | null;
+  @Input({ required: true }) element!: ElementDetails | null;
   @Output() hasInheritedProperties = new EventEmitter<HasInheritedProperties>();
 
-  protected readonly rawElements: Signal<RawFrankDoc['elements'] | null> = computed(
-    () => this.appService.rawFrankDoc()?.elements ?? null,
-  );
-  protected attributesRequired: Attribute[] = [];
-  protected attributesOptional: Attribute[] = [];
+  protected elements: Signal<Elements> = computed(() => this.ffDoc.elements() ?? {});
+  protected attributesRequired: Record<string, Attribute> = {};
+  protected attributesOptional: Record<string, Attribute> = {};
+  protected allRequiredAttributes: Record<string, Attribute> = {};
   protected inheritedProperties: InheritedProperties = {
+    parentElements: [],
     attributesRequired: [],
     attributesOptional: [],
-    parameters: [],
-    children: [],
-    forwards: [],
+    forwards: {},
+    enums: {},
   };
   protected collapsedOptions = {
     attributes: false,
@@ -106,6 +101,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
 
   private readonly titleService: Title = inject(Title);
+  private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
 
   ngOnInit(): void {
     this.appService.applicationLoaded$.subscribe(() => (this.loading = false));
@@ -115,20 +111,20 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['element']) {
       this.resetInheritedProperties();
-      if (this.element?.attributes) {
-        this.attributesRequired = this.element.attributes.filter((attribute) => attribute.mandatory === true) ?? [];
-        this.attributesOptional = this.element.attributes.filter((attribute) => !attribute.mandatory) ?? [];
+      const classElement = this.getClassElement();
+      if (classElement?.attributes) {
+        const { required, optional } = groupAttributesByMandatory(classElement.attributes);
+        this.attributesRequired = required;
+        this.attributesOptional = optional;
       }
-      if (this.element?.parent) {
-        this.inheritedProperties = {
-          attributesRequired: [],
-          attributesOptional: [],
-          parameters: [],
-          children: [],
-          forwards: [],
-        };
-        this.setInheritedProperties(this.element.parent);
+      if (classElement?.parent) {
+        this.inheritedProperties = getInheritedProperties(
+          classElement,
+          this.ffDoc.ffDoc()?.elements ?? {},
+          this.ffDoc.ffDoc()?.enums ?? {},
+        );
       }
+      this.allRequiredAttributes = groupAttributesByMandatory(this.element?.attributes ?? {});
       this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
       this.generateElementSyntax();
 
@@ -202,58 +198,49 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     }
   }
 
-  protected getEnumValues(enumName: string): Value[] | undefined {
-    return this.frankDocEnums?.find((enumItem) => enumItem.name === enumName)?.values;
+  protected getEnumValues(enumName: string): EnumValueEntry[] {
+    const enums = this.ffDoc.enums();
+    return Object.entries(enums[enumName]).map(([enumValueName, enumValue]) => ({
+      valueName: enumValueName,
+      value: enumValue,
+    }));
   }
 
-  protected enumValuesHaveDescriptions(enumValues: Value[]): boolean {
-    return enumValues.some((value) => !!value.description);
+  protected getRecordEntries<T>(Record: Record<string, T>): RecordEntry<T>[] {
+    return Object.entries(Record).map(([name, value]) => ({ name, value }));
+  }
+
+  protected enumValuesHaveDescriptions(enumValuesEntries: EnumValueEntry[]): boolean {
+    return enumValuesEntries.some((entry) => !!entry.value.description);
+  }
+
+  protected isRecordGreaterThanZero(record: Record<string, unknown>): boolean {
+    return Object.keys(record).length > 0;
+  }
+
+  // stupid badly untyped angular templates
+  protected castToAttribute(value: unknown): Attribute {
+    return value as Attribute;
+  }
+
+  private getClassElement(): ElementClass | null {
+    const classElements = this.ffDoc.ffDoc()?.elements;
+    return classElements && this.element ? classElements[this.element?.className] : null;
   }
 
   private resetInheritedProperties(): void {
     this.inheritedProperties = {
+      parentElements: [],
       attributesRequired: [],
       attributesOptional: [],
-      parameters: [],
-      children: [],
-      forwards: [],
+      forwards: {},
+      enums: {},
     };
     this._hasInheritedProperties = {
       required: false,
       optional: false,
       forwards: false,
     };
-  }
-
-  private setInheritedProperties(elementIndex: string): void {
-    const element = this.rawElements()?.[elementIndex];
-    if (!element) return;
-
-    if (element.attributes) {
-      const attributesRequired = element.attributes.filter((attribute) => attribute.mandatory === true);
-      const attributesOptional = element.attributes.filter((attribute) => !attribute.mandatory);
-      if (attributesRequired.length > 0) {
-        this.inheritedProperties.attributesRequired.push({
-          parentElementName: element.name,
-          properties: attributesRequired,
-        });
-        this._hasInheritedProperties.required = true;
-      }
-      if (attributesOptional.length > 0) {
-        this.inheritedProperties.attributesOptional.push({
-          parentElementName: element.name,
-          properties: attributesOptional,
-        });
-        this._hasInheritedProperties.optional = true;
-      }
-    }
-
-    if (element.forwards) {
-      this.inheritedProperties.forwards.push(...element.forwards);
-      this._hasInheritedProperties.forwards = true;
-    }
-
-    if (element.parent) this.setInheritedProperties(element.parent);
   }
 
   private getInheritedCollapseOptions(
@@ -264,17 +251,22 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     return map.get(parentElementName) ?? defaultValue;
   }
 
-  private getAllRequiredAttributes(): Attribute[] {
-    return [
-      ...this.inheritedProperties.attributesRequired.flatMap((item) => item.properties),
+  private getAllRequiredAttributes(): Record<string, Attribute> {
+    return {
+      ...this.inheritedProperties.attributesRequired
+        .map((item) => item.properties)
+        .reduce((mergedAttributes, attributes) => ({ ...mergedAttributes, ...attributes }), {}),
       ...this.attributesRequired,
-    ];
+    };
   }
 
   private generateElementSyntax(): void {
     if (this.element) {
-      const requiredAttributes = this.getAllRequiredAttributes()
-        .map((attribute) => `${attribute.name}="${attribute.default ?? this.getTypeDefaultValue(attribute.type)}"`)
+      const requiredAttributes = Object.entries(this.getAllRequiredAttributes())
+        .map(
+          ([attributeName, attribute]) =>
+            `${attributeName}="${attribute.default ?? this.getTypeDefaultValue(attribute.type)}"`,
+        )
         .join(' ');
       this.elementSyntax = `
 <${this.element.name} ${requiredAttributes}/>
