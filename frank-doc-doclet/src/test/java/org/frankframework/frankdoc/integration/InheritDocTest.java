@@ -31,4 +31,16 @@ public class InheritDocTest extends BaseIntegrationTest {
 
 		assertJsonEqual(actual, "inheritdoc.json");
 	}
+
+	@Test
+	public void testIgnoredJson() throws Exception {
+		var model = createModel(
+			GENERAL_DIGEST_RULES_FILE,
+			null,
+			"org.frankframework.frankdoc.testtarget.examples.inheritdoc.Ignored"
+		);
+		var actual = convertModelToJson(model);
+
+		assertJsonEqual(actual, "inheritdoc.json");
+	}
 }
