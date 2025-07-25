@@ -41,6 +41,6 @@ public class InheritDocTest extends BaseIntegrationTest {
 		);
 		var actual = convertModelToJson(model);
 
-		assertJsonEqual(actual, "inheritdoc.json");
+		assertJsonEqual(actual, "inheritdocIgnored.json");
 	}
 }

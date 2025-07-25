@@ -1,15 +1,25 @@
 package org.frankframework.frankdoc.testtarget.examples.inheritdoc;
 
 /**
- * This class sends messages with JMS.
+ * Description of child with Ignored tags.
  *
- * @ff.parameters All parameters present are set as message-properties.
- * @ff.parameter SoapAction Automatically filled from attribute <code>soapAction</code>
+ * @ff.parameters All parameters
+ * @ff.parameter Param1 This is a parameter
  *
- * {@inheritDoc}
+ * {@inheritClassDoc}
  *
- * @author Gerrit van Brakel
+ * @author Unit Test
  */
 public class Ignored extends Parent {
+
+	/**
+	 * An additional line of text.
+	 * @param attribute
+	 *
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setHasNoJavaDocAttribute(String attribute) {
+	}
 
 }
