@@ -38,6 +38,7 @@ public class Description {
 
 	public String valueOf(FrankMethod method) {
 		String result =  method.getJavaDoc();
+		String comment = method.getComment();
 
 		// Recursively searches for a method with the same signature to use as this method's javadoc.
 		if (result != null && result.contains(INHERIT_DOC_TAG)) {
@@ -55,6 +56,8 @@ public class Description {
 			}
 
 			result = result.replace(INHERIT_DOC_TAG, parentJavadoc == null ? "" : parentJavadoc).strip();
+		} else if (comment != null && comment.contains(INHERIT_DOC_TAG)) {
+			log.error("The comment for method {} of class {} contains the tag {} but is ignored in JavaDoc.", method.getName(), method.getDeclaringClass().getName(), INHERIT_DOC_TAG);
 		}
 		return Utils.substituteJavadocTags(result, method.getDeclaringClass());
 	}
@@ -70,10 +73,13 @@ public class Description {
 
 	public String valueOf(FrankClass clazz) {
 		String result = clazz.getJavaDoc();
+		String comment = clazz.getComment();
 
 		if (result != null && result.contains(INHERIT_CLASS_DOC_TAG)) {
 			FrankClass superClazz = clazz.getSuperclass();
 			result = replaceInheritDocInResult(superClazz, result);
+		} else if (comment != null && comment.contains(INHERIT_CLASS_DOC_TAG)) {
+			log.error("The comment for class {} contains the tag {} but is ignored in JavaDoc.", clazz.getName(), INHERIT_CLASS_DOC_TAG);
 		}
 
 		return Utils.substituteJavadocTags(result, clazz);

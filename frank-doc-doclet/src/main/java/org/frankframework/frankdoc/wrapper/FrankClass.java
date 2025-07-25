@@ -317,6 +317,10 @@ public class FrankClass implements FrankType {
 		return docCommentTree == null ? null : FrankDocletUtils.convertDocTreeListToStr(docCommentTree.getFullBody());
 	}
 
+	public String getComment() {
+		return docCommentTree == null ? null : docCommentTree.toString();
+	}
+
 	boolean isTopLevel() {
 		// Note: the isInner() method does not work for 'public static' inner classes.
 		return !((Symbol.ClassSymbol) clazz).owner.kind.equals(Kinds.Kind.TYP);

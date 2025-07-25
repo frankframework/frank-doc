@@ -84,6 +84,11 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 	}
 
 	@Override
+	public String getComment() {
+		return docCommentTree == null ? null : docCommentTree.toString();
+	}
+
+	@Override
 	public FrankType getReturnType() {
 		TypeMirror docletType = method.getReturnType();
 		return typeOf(docletType);

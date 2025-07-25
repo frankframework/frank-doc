@@ -96,6 +96,11 @@ public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 		return null;
 	}
 
+	@Override
+	public String getComment() {
+		return null;
+	}
+
 	/**
 	 * This is not a declared method, so it has no declared JavaDoc tags. To see an inherited
 	 * JavaDoc tag, use method <code>getJavaDocTagIncludingInherited()</code> which is
