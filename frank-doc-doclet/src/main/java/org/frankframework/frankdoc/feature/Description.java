@@ -56,8 +56,24 @@ public class Description {
 			}
 
 			result = result.replace(INHERIT_DOC_TAG, parentJavadoc == null ? "" : parentJavadoc).strip();
-		} else if (comment != null && comment.contains(INHERIT_DOC_TAG)) {
-			log.error("The comment for method {} of class {} contains the tag {} but is ignored in JavaDoc.", method.getName(), method.getDeclaringClass().getName(), INHERIT_DOC_TAG);
+		} else if (comment != null) {
+			if (comment.contains(INHERIT_DOC_TAG)) {
+				log.error(
+					"The comment for method {} of class {} contains the tag {} but is ignored in JavaDoc.",
+					method.getName(),
+					method.getDeclaringClass().getName(),
+					INHERIT_DOC_TAG
+				);
+			}
+			if (comment.contains(INHERIT_CLASS_DOC_TAG)) {
+				log.error(
+					"The comment for method {} of class {} incorrectly uses {} but should use {} instead!",
+					method.getName(),
+					method.getDeclaringClass().getName(),
+					INHERIT_CLASS_DOC_TAG,
+					INHERIT_DOC_TAG
+				);
+			}
 		}
 		return Utils.substituteJavadocTags(result, method.getDeclaringClass());
 	}
@@ -78,8 +94,22 @@ public class Description {
 		if (result != null && result.contains(INHERIT_CLASS_DOC_TAG)) {
 			FrankClass superClazz = clazz.getSuperclass();
 			result = replaceInheritDocInResult(superClazz, result);
-		} else if (comment != null && comment.contains(INHERIT_CLASS_DOC_TAG)) {
-			log.error("The comment for class {} contains the tag {} but is ignored in JavaDoc.", clazz.getName(), INHERIT_CLASS_DOC_TAG);
+		} else if (comment != null) {
+			if (comment.contains(INHERIT_CLASS_DOC_TAG)) {
+				log.error(
+					"The comment for class {} contains the tag {} but is ignored in JavaDoc.",
+					clazz.getName(),
+					INHERIT_CLASS_DOC_TAG
+				);
+			}
+			if (comment.contains(INHERIT_DOC_TAG)) {
+				log.error(
+					"The comment for class {} incorrectly uses {} but should use {} instead!",
+					clazz.getName(),
+					INHERIT_DOC_TAG,
+					INHERIT_CLASS_DOC_TAG
+				);
+			}
 		}
 
 		return Utils.substituteJavadocTags(result, clazz);
