@@ -16,28 +16,30 @@ limitations under the License.
 
 package org.frankframework.frankdoc.feature;
 
+import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.wrapper.*;
+import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 public class Description {
-	private static Logger log = LogUtil.getLogger(Description.class);
-	private static final Description INSTANCE = new Description();
-
 	public static final String INHERIT_DOC_TAG = "{@inheritDoc}";
 	public static final String INHERIT_CLASS_DOC_TAG = "{@inheritClassDoc }"; // The space is intentional, due to the way tags are parsed.
+	private static final Logger log = LogUtil.getLogger(Description.class);
+	private static final Description INSTANCE = new Description();
+
+	private Description() {
+	}
 
 	public static Description getInstance() {
 		return INSTANCE;
 	}
 
-	private Description() {
-	}
-
 	public String valueOf(FrankMethod method) {
-		String result =  method.getJavaDoc();
+		String result = method.getJavaDoc();
 		String comment = method.getComment();
 
 		// Recursively searches for a method with the same signature to use as this method's javadoc.
@@ -56,25 +58,8 @@ public class Description {
 			}
 
 			result = result.replace(INHERIT_DOC_TAG, parentJavadoc == null ? "" : parentJavadoc).strip();
-		} else if (comment != null) {
-			if (comment.contains(INHERIT_DOC_TAG)) {
-				log.error(
-					"The comment for method {} of class {} contains the tag {} but is ignored in JavaDoc.",
-					method.getName(),
-					method.getDeclaringClass().getName(),
-					INHERIT_DOC_TAG
-				);
-			}
-			if (comment.contains(INHERIT_CLASS_DOC_TAG)) {
-				log.error(
-					"The comment for method {} of class {} incorrectly uses {} but should use {} instead!",
-					method.getName(),
-					method.getDeclaringClass().getName(),
-					INHERIT_CLASS_DOC_TAG,
-					INHERIT_DOC_TAG
-				);
-			}
-		}
+		} else if (comment != null)
+			this.checkCommentForUnparsedJavaDocTags(comment, INHERIT_CLASS_DOC_TAG, INHERIT_DOC_TAG, method.getDeclaringClass().getName(), method.getName());
 		return Utils.substituteJavadocTags(result, method.getDeclaringClass());
 	}
 
@@ -94,23 +79,8 @@ public class Description {
 		if (result != null && result.contains(INHERIT_CLASS_DOC_TAG)) {
 			FrankClass superClazz = clazz.getSuperclass();
 			result = replaceInheritDocInResult(superClazz, result);
-		} else if (comment != null) {
-			if (comment.contains(INHERIT_CLASS_DOC_TAG)) {
-				log.error(
-					"The comment for class {} contains the tag {} but is ignored in JavaDoc.",
-					clazz.getName(),
-					INHERIT_CLASS_DOC_TAG
-				);
-			}
-			if (comment.contains(INHERIT_DOC_TAG)) {
-				log.error(
-					"The comment for class {} incorrectly uses {} but should use {} instead!",
-					clazz.getName(),
-					INHERIT_DOC_TAG,
-					INHERIT_CLASS_DOC_TAG
-				);
-			}
-		}
+		} else if (comment != null)
+			this.checkCommentForUnparsedJavaDocTags(comment, INHERIT_DOC_TAG, INHERIT_CLASS_DOC_TAG, clazz.getName(), null);
 
 		return Utils.substituteJavadocTags(result, clazz);
 	}
@@ -122,6 +92,46 @@ public class Description {
 		}
 
 		return null;
+	}
+
+	private void checkCommentForUnparsedJavaDocTags(@NonNull String comment, @NonNull String wrongTag, @NonNull String correctTag, @NonNull String className, String methodName) {
+		if (comment.contains(correctTag)) this.checkCommentForIgnoredTags(correctTag, className, methodName);
+		if (comment.contains(wrongTag)) this.checkCommentForWrongTags(wrongTag, correctTag, className, methodName);
+	}
+
+	private void checkCommentForIgnoredTags(@NonNull String ignoredTag, @NonNull String className, String methodName) {
+		StringBuilder message = new StringBuilder();
+		message.append("The comment for ");
+		if (methodName != null) {
+			message.append("method ")
+				.append(methodName)
+				.append(" of");
+		}
+		message.append(" class ")
+			.append(className)
+			.append(" contains the tag ")
+			.append(ignoredTag);
+
+		log.error(message.toString());
+	}
+
+	private void checkCommentForWrongTags(@NonNull String wrongTag, @NonNull String correctTag, @NonNull String className, String methodName) {
+		StringBuilder message = new StringBuilder();
+		message.append("The comment for ");
+		if (methodName != null) {
+			message.append("method ")
+				.append(methodName)
+				.append(" of");
+		}
+		message.append(" class ")
+			.append(className)
+			.append(" incorrectly uses ")
+			.append(wrongTag)
+			.append(" but should use ")
+			.append(correctTag)
+			.append(" instead!");
+
+		log.error(message.toString());
 	}
 
 }
