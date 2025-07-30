@@ -101,17 +101,17 @@ public class Description {
 
 	private void checkCommentForIgnoredTags(@NonNull String ignoredTag, @NonNull String className, String methodName) {
 		StringBuilder message = new StringBuilder();
-		message.append("The comment for ");
+		message.append("The comment for");
 		if (methodName != null) {
-			message.append("method ")
+			message.append(" method ")
 				.append(methodName)
 				.append(" of");
 		}
 		message.append(" class ")
 			.append(className)
 			.append(" contains the tag ")
-			.append(ignoredTag);
-
+			.append(ignoredTag)
+			.append(" but it is ignored in the JavaDoc.");
 		log.error(message.toString());
 	}
 
