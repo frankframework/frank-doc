@@ -95,11 +95,11 @@ public class Description {
 	}
 
 	private void checkCommentForUnparsedJavaDocTags(@NonNull String comment, @NonNull String wrongTag, @NonNull String correctTag, @NonNull String className, String methodName) {
-		if (comment.contains(correctTag)) this.checkCommentForIgnoredTags(correctTag, className, methodName);
-		if (comment.contains(wrongTag)) this.checkCommentForWrongTags(wrongTag, correctTag, className, methodName);
+		if (comment.contains(correctTag)) this.logCommentHasIgnoredTag(correctTag, className, methodName);
+		if (comment.contains(wrongTag)) this.logCommentHasWrongTag(wrongTag, correctTag, className, methodName);
 	}
 
-	private void checkCommentForIgnoredTags(@NonNull String ignoredTag, @NonNull String className, String methodName) {
+	private void logCommentHasIgnoredTag(@NonNull String ignoredTag, @NonNull String className, String methodName) {
 		StringBuilder message = new StringBuilder();
 		message.append("The comment for");
 		if (methodName != null) {
@@ -115,7 +115,7 @@ public class Description {
 		log.error(message.toString());
 	}
 
-	private void checkCommentForWrongTags(@NonNull String wrongTag, @NonNull String correctTag, @NonNull String className, String methodName) {
+	private void logCommentHasWrongTag(@NonNull String wrongTag, @NonNull String correctTag, @NonNull String className, String methodName) {
 		StringBuilder message = new StringBuilder();
 		message.append("The comment for ");
 		if (methodName != null) {
