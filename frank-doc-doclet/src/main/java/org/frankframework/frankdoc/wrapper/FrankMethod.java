@@ -34,6 +34,7 @@ public interface FrankMethod extends FrankProgramElement {
 	boolean isProtected();
 	FrankAnnotation getAnnotationIncludingInherited(String name) throws FrankDocException;
 	String getJavaDoc();
+	String getComment();
 	String getJavaDocIncludingInherited() throws FrankDocException;
 	String getJavaDocTag(String tagName);
 	String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException;
