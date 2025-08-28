@@ -1,6 +1,6 @@
 {
   "name": "@frankframework/ff-doc",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A powerful and easy-to-use library designed to extract and process information from the FF! Doc JSON.",
   "main": "",
   "author": "Vivy Booman",
@@ -12,7 +12,7 @@
     "directory": "projects/ff-doc"
   },
   "optionalDependencies": {
-    "@angular/core": "^19.0.0",
+    "@angular/core": "^20.2.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   }
