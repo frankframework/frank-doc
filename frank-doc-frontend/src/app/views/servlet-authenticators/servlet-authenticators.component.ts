@@ -39,7 +39,7 @@ export class ServletAuthenticatorsComponent {
         return null;
       }
 
-      return { name: authenticatorName, authenticator: authenticators[authenticatorName] } || null;
+      return { name: authenticatorName, authenticator: authenticators[authenticatorName] };
     });
 
   protected handleSelectedAuthenticator(authenticator: string): void {

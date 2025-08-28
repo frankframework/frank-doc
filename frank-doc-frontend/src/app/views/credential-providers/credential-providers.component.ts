@@ -27,7 +27,7 @@ export class CredentialProvidersComponent {
       return null;
     }
 
-    return { name: providerName, provider: providers[providerName] } || null;
+    return { name: providerName, provider: providers[providerName] };
   });
 
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
