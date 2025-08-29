@@ -39,8 +39,8 @@ importers:
         specifier: ^1.1.6
         version: 1.2.0(@angular/cdk@20.2.1(@angular/common@20.2.2(@angular/core@20.2.2(@angular/compiler@20.2.2)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.2.2(@angular/compiler@20.2.2)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.2.2(@angular/compiler@20.2.2)(rxjs@7.8.2)(zone.js@0.15.1))
       '@frankframework/ff-doc':
-        specifier: ^1.0.0
-        version: 1.0.0(rxjs@7.8.2)(zone.js@0.15.1)
+        specifier: ^1.1.0
+        version: 1.1.0(@angular/compiler@20.2.2)(rxjs@7.8.2)(zone.js@0.15.1)
       fuse.js:
         specifier: ^7.0.0
         version: 7.1.0
@@ -321,13 +321,6 @@ packages:
   '@angular/compiler@20.2.2':
     resolution: {integrity: sha512-gHZFSAVVzH/rOvZGglf5AGkk6iQgZXqgFzoThSXe+Do4XIkdeaZPVgc/3AmoHk50gAD85C90eXSjlvp/N1djRg==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
-
-  '@angular/core@19.2.14':
-    resolution: {integrity: sha512-EVErpW9tGqJ/wNcAN3G/ErH8pHCJ8mM1E6bsJ8UJIpDTZkpqqYjBMtZS9YWH5n3KwUd1tAkAB2w8FK125AjDUQ==}
-    engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
-    peerDependencies:
-      rxjs: ^6.5.3 || ^7.4.0
-      zone.js: ~0.15.0
 
   '@angular/core@20.2.2':
     resolution: {integrity: sha512-FZFVh2pI4mI7rr8tTVfrC2c1yOjgTrZy3BFaLSTArS4TgNxy30fLKQ9w3JkuxfllDSckPLyft/EaKcW1pxgHAw==}
@@ -679,8 +672,8 @@ packages:
       '@angular/cdk': '>=18.2.0 <20.0.0'
       '@angular/core': '>=18.2.0 <20.0.0'
 
-  '@frankframework/ff-doc@1.0.0':
-    resolution: {integrity: sha512-oXI+7KQW2W+CqxFkSWNz5YnTCq2S1TaNKP/nZn/3KQ6IQOr2DMft2MT0s0iKMMXhO8z9z6IK9IKChTzKHha21A==}
+  '@frankframework/ff-doc@1.1.0':
+    resolution: {integrity: sha512-HW71jrcmStcrX5qzXgmoqNpB8CUPilPZD5cNRkGqltNge7jXzYNBBBGGsf0hCWCUN1pa1pVcY1Xq94z+ONzlAA==}
 
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -4045,13 +4038,6 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@angular/core@19.2.14(rxjs@7.8.2)(zone.js@0.15.1)':
-    dependencies:
-      rxjs: 7.8.2
-      tslib: 2.8.1
-      zone.js: 0.15.1
-    optional: true
-
   '@angular/core@20.2.2(@angular/compiler@20.2.2)(rxjs@7.8.2)(zone.js@0.15.1)':
     dependencies:
       rxjs: 7.8.2
@@ -4388,14 +4374,15 @@ snapshots:
       '@angular/core': 20.2.2(@angular/compiler@20.2.2)(rxjs@7.8.2)(zone.js@0.15.1)
       tslib: 2.8.1
 
-  '@frankframework/ff-doc@1.0.0(rxjs@7.8.2)(zone.js@0.15.1)':
+  '@frankframework/ff-doc@1.1.0(@angular/compiler@20.2.2)(rxjs@7.8.2)(zone.js@0.15.1)':
     dependencies:
       tslib: 2.8.1
     optionalDependencies:
-      '@angular/core': 19.2.14(rxjs@7.8.2)(zone.js@0.15.1)
+      '@angular/core': 20.2.2(@angular/compiler@20.2.2)(rxjs@7.8.2)(zone.js@0.15.1)
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
     transitivePeerDependencies:
+      - '@angular/compiler'
       - rxjs
       - zone.js
 

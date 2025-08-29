@@ -1,7 +1,8 @@
-import { computed, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { DEFAULT_RETURN_CHARACTER } from './app.constants';
 import { ElementDetails, FilterLabels, NgFFDoc } from '@frankframework/ff-doc';
+import { HttpClient } from '@angular/common/http';
 
 export type FilterGroups = Record<string, string[]>;
 
@@ -27,7 +28,8 @@ export class AppService {
   private readonly applicationLoadedSubject: Subject<void> = new Subject();
   readonly applicationLoaded$: Observable<void> = this.applicationLoadedSubject.asObservable();
 
-  private ffDoc: NgFFDoc = new NgFFDoc();
+  private readonly http: HttpClient = inject(HttpClient);
+  private readonly ffDoc: NgFFDoc = new NgFFDoc(this.http);
 
   getFFDoc(): NgFFDoc {
     return this.ffDoc;
