@@ -17,8 +17,12 @@ export class NgFFDoc extends FFDocBase {
   private readonly _ffDoc: WritableSignal<FFDocJson | null> = signal(null);
   private readonly _elements: WritableSignal<Elements | null> = signal(null);
   private readonly _filters: WritableSignal<Filters> = signal({});
+  private readonly http: HttpClient;
 
-  private http: HttpClient = inject(HttpClient);
+  constructor(httpClient: HttpClient) {
+    super();
+    this.http = httpClient;
+  }
 
   get ffDoc(): Signal<FFDocJson | null> {
     return this._ffDoc.asReadonly();
