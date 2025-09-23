@@ -5,5 +5,5 @@ package org.frankframework.credentialprovider;
  *
  * <code>x.y.z=123</code>
  */
-public class TestCredentialFactory implements ICredentialFactory{
+public class TestCredentialFactory implements ISecretProvider {
 }
