@@ -1,4 +1,4 @@
 package org.frankframework.credentialprovider;
 
-public interface ICredentialFactory {
+public interface ISecretProvider {
 }

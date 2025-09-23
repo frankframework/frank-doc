@@ -16,10 +16,31 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import static org.frankframework.frankdoc.model.ElementChild.ALL;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.apache.logging.log4j.Logger;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Default;
 import org.frankframework.frankdoc.feature.Deprecated;
@@ -38,33 +59,13 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.frankframework.frankdoc.model.ElementChild.ALL;
 
 public class FrankDocModel {
 	private static final Logger log = LogUtil.getLogger(FrankDocModel.class);
 	private static final String ENUM = "Enum";
 	private static final List<String> EXPECTED_HTML_TAGS = Arrays.asList("a", "b", "br", "code", "h1", "h2", "h3", "h4", "i", "li", "ol", "p", "pre", "strong", "table", "td", "th", "tr", "ul");
 	private static final String UNSAFE_ANNOTATION_CLASSNAME = "org.frankframework.doc.Unsafe";
-	private static final String CREDENTIALS_FACTORY_INTERFACE = "org.frankframework.credentialprovider.ICredentialFactory";
+	private static final String CREDENTIALS_FACTORY_INTERFACE = "org.frankframework.credentialprovider.ISecretProvider";
 	private static final String AUTHENTICATOR_INTERFACE = "org.frankframework.lifecycle.servlets.IAuthenticator";
 
 	private final FrankClassRepository classRepository;
