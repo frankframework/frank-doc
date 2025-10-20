@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { computed, inject, Signal, signal, WritableSignal } from '@angular/core';
+import { computed, Signal, signal, WritableSignal } from '@angular/core';
 import { Elements, FFDocBase, Filters } from '../ff-doc-base';
 import { FFDocJson } from '../frankdoc.types';
 

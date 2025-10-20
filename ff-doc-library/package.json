@@ -5,7 +5,9 @@
     "ng": "ng",
     "start": "ng build ff-doc && ng serve",
     "serve": "ng serve",
-    "build": "ng build ff-doc",
+    "build": "node scripts/build-multi-vite && ng build ff-doc",
+    "build:angular": "ng build ff-doc",
+    "build:multi": "node scripts/build-multi-vite",
     "watch": "ng build ff-doc --watch",
     "test": "ng test ff-doc",
     "test:playground": "ng test angular-library-playground"
@@ -55,8 +57,9 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "ng-packagr": "^20.2.0",
     "prettier": "^3.2.5",
-    "typescript": "~5.6.x",
-    "vite": "^7.1.7"
+    "typescript": "~5.9.x",
+    "vite": "^7.1.7",
+    "vite-plugin-dts": "^4.5.4"
   },
   "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b"
 }
