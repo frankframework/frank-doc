@@ -58,8 +58,6 @@ function createFesm2022Config(options) {
       dts({
         tsconfigPath,
         rollupTypes: true,
-        // includes: ['projects/ff-doc/src/**/*.ts'],
-        // exclude: ['../projects/ff-doc/src/**/*.spec.ts'],
       }),
     ],
   });
@@ -68,7 +66,7 @@ function createFesm2022Config(options) {
 async function run() {
   for (const spec of entries) {
     console.log(`\nBuilding "${spec.name}" → ${spec.outDir}`);
-    // verify entry exists
+
     const entryPath = path.resolve(process.cwd(), spec.entry);
     if (!fs.existsSync(entryPath)) {
       throw new Error(
@@ -77,7 +75,6 @@ async function run() {
     }
 
     const cfg = createFesm2022Config(spec);
-
     try {
       await build(cfg);
       console.log(`Built "${spec.name}" → ${spec.outDir}/${spec.fileName}`);
