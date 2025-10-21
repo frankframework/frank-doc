@@ -16,17 +16,17 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.EnumSet;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankType;
 
-import java.util.EnumSet;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 public class FrankAttribute extends ElementChild {
 	private static final Logger log = LogUtil.getLogger(FrankAttribute.class);
@@ -34,7 +34,7 @@ public class FrankAttribute extends ElementChild {
 	static final String JAVADOC_ATTRIBUTE_REF = "@ff.ref";
 
 	@EqualsAndHashCode(callSuper = false)
-	static class Key extends AbstractKey {
+	public static class Key implements AbstractKey {
 		private final String name;
 
 		Key(String name) {
@@ -50,7 +50,7 @@ public class FrankAttribute extends ElementChild {
 	private final @Getter String name;
 
 	private @Getter @Setter AttributeType attributeType;
-	private @Getter boolean unsafe;
+	private final @Getter boolean unsafe;
 
 	/**
 	 * Null if there is no restriction to the allowed attribute values. Should only be set if attributeType == {@link AttributeType#STRING}.

@@ -16,15 +16,16 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.function.Predicate;
+
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.FrankDocXsdFactory;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.LogUtil;
 
-import java.util.function.Predicate;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Base class of FrankAttribute and ConfigChild. This class was introduced
@@ -83,30 +84,30 @@ public abstract class ElementChild {
 	private @Getter @Setter String description;
 	private @Getter @Setter String defaultValue;
 
-	public static Predicate<ElementChild> IN_XSD = c ->
+	public static final Predicate<ElementChild> IN_XSD = c ->
 		(! c.isExcluded())
 		&& (! c.isDeprecated())
 		&& (c.isDocumented() || (! c.isTechnicalOverride()));
 
-	public static Predicate<ElementChild> IN_COMPATIBILITY_XSD = c ->
+	public static final Predicate<ElementChild> IN_COMPATIBILITY_XSD = c ->
 		(! c.isExcluded())
 		&& (c.isDocumented() || (! c.isTechnicalOverride()));
 
-	public static Predicate<ElementChild> REJECT_DEPRECATED = c -> c.isExcluded() || c.isDeprecated();
-	static Predicate<ElementChild> ALL = c -> true;
-	public static Predicate<ElementChild> ALL_NOT_EXCLUDED = c -> ! c.isExcluded();
-	public static Predicate<ElementChild> EXCLUDED = ElementChild::isExcluded;
-	public static Predicate<ElementChild> JSON_NOT_INHERITED = c -> c.isExcluded() && (c.getOverriddenFrom() != null);
+	public static final Predicate<ElementChild> REJECT_DEPRECATED = c -> c.isExcluded() || c.isDeprecated();
+	public static final Predicate<ElementChild> ALL = c -> true;
+	public static final Predicate<ElementChild> ALL_NOT_EXCLUDED = c -> ! c.isExcluded();
+	public static final Predicate<ElementChild> EXCLUDED = ElementChild::isExcluded;
+	public static final Predicate<ElementChild> JSON_NOT_INHERITED = c -> c.isExcluded() && (c.getOverriddenFrom() != null);
 	// A config child is also relevant for the JSON if it is excluded. The frontend has to mention it as not inherited.
 	// Technical overrides are not relevant. But isTechnicalOverride() is also true for undocumented
-	// excluded children. Of course we have to include those.
-	public static Predicate<ElementChild> JSON_RELEVANT = IN_COMPATIBILITY_XSD.or(JSON_NOT_INHERITED);
+	// excluded children. Of course, we have to include those.
+	public static final Predicate<ElementChild> JSON_RELEVANT = IN_COMPATIBILITY_XSD.or(JSON_NOT_INHERITED);
 
 	/**
 	 * Base class for keys used to look up {@link FrankAttribute} objects or
 	 * {@link ConfigChild} objects from a map.
 	 */
-	abstract static class AbstractKey {
+	interface AbstractKey {
 	}
 
 	ElementChild(final FrankElement owningElement) {
@@ -155,11 +156,11 @@ public abstract class ElementChild {
 				|| (getMandatoryStatus() != overriddenFrom.getMandatoryStatus())
 				|| (isExcluded() != overriddenFrom.isExcluded())
 				|| (! Utils.equalsNullable(getDescription(), overriddenFrom.getDescription()))
-				|| (! Utils.equalsNullable(getDefaultValue(), overriddenFrom.getDefaultValue()));
-		result = result || specificOverrideIsMeaningful(overriddenFrom);
+				|| (! Utils.equalsNullable(getDefaultValue(), overriddenFrom.getDefaultValue()))
+				|| specificOverrideIsMeaningful(overriddenFrom);
 		if(log.isTraceEnabled() && (! isOverrideMeaningfulLogged) && result) {
 			isOverrideMeaningfulLogged = true;
-			log.trace("ElementChild {} overrides {} and changes something relevant for the Frank!Doc", toString(), overriddenFrom.toString());
+			log.trace("ElementChild {} overrides {} and changes something relevant for the Frank!Doc", this, overriddenFrom);
 		}
 		return result;
 	}
