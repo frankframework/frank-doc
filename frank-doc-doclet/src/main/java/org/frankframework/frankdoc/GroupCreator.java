@@ -1,5 +1,5 @@
 /*
-Copyright 2020, 2021 WeAreFrank!
+Copyright 2020, 2021, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
 import org.frankframework.frankdoc.model.CumulativeChildHandler;
 import org.frankframework.frankdoc.model.ElementChild;
 import org.frankframework.frankdoc.model.FrankElement;
-
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  * Helper class for building attribute groups and config child groups from the model.
@@ -31,7 +31,7 @@ import java.util.function.Predicate;
  *
  */
 class GroupCreator<T extends ElementChild> {
-	static interface Callback<T extends ElementChild> extends CumulativeChildHandler<T> {
+	interface Callback<T extends ElementChild> extends CumulativeChildHandler<T> {
 		void noChildren();
 		void addDeclaredGroup();
 		void addTopLevelDeclaredGroup();
@@ -40,10 +40,10 @@ class GroupCreator<T extends ElementChild> {
 		void addCumulativeGroupRef(FrankElement referee);
 	}
 
-	private FrankElement frankElement;
-	private Predicate<FrankElement> hasRelevantChildren;
-	private Callback<T> callback;
-	private Consumer<Callback<T>> cumulativeGroupTrigger;
+	private final FrankElement frankElement;
+	private final Predicate<FrankElement> hasRelevantChildren;
+	private final Callback<T> callback;
+	private final Consumer<Callback<T>> cumulativeGroupTrigger;
 
 	GroupCreator(FrankElement frankElement, Predicate<FrankElement> hasRelevantChildren, Consumer<Callback<T>> cumulativeGroupTrigger, Callback<T> callback) {
 		this.frankElement = frankElement;

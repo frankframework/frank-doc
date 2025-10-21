@@ -1,5 +1,5 @@
 /*
-Copyright 2020, 2021, 2022 WeAreFrank!
+Copyright 2020, 2021, 2022, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,16 +16,14 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-import lombok.Getter;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import lombok.Getter;
 
 class FrankDocXsdFactoryXmlUtils {
-	private static Logger log = LogUtil.getLogger(FrankDocXsdFactoryXmlUtils.class);
+	private static final Logger log = LogUtil.getLogger(FrankDocXsdFactoryXmlUtils.class);
 
 	static final String XML_SCHEMA_URI = "http://www.w3.org/2001/XMLSchema";
 
@@ -41,23 +39,19 @@ class FrankDocXsdFactoryXmlUtils {
 	}
 
 	static XmlBuilder createElement(String elementName, String elementType) {
-		XmlBuilder element = new XmlBuilder("element", "xs", XML_SCHEMA_URI);
-		element.addAttribute("name", elementName);
+		XmlBuilder element = createElementWithType(elementName);
 		element.addAttribute("type", elementType);
 		return element;
 	}
 
 	static XmlBuilder addElement(XmlBuilder context, String elementName, String elementType) {
-		XmlBuilder element = new XmlBuilder("element", "xs", XML_SCHEMA_URI);
-		element.addAttribute("name", elementName);
-		element.addAttribute("type", elementType);
+		XmlBuilder element = createElement(elementName, elementType);
 		context.addSubElement(element);
 		return element;
 	}
 
 	static XmlBuilder addElement(XmlBuilder context, String elementName, String elementType, String minOccurs, String maxOccurs) {
-		XmlBuilder element = new XmlBuilder("element", "xs", XML_SCHEMA_URI);
-		element.addAttribute("name", elementName);
+		XmlBuilder element = createElementWithType(elementName);
 		element.addAttribute("minOccurs", minOccurs);
 		element.addAttribute("maxOccurs", maxOccurs);
 		element.addAttribute("type", elementType);
@@ -81,8 +75,7 @@ class FrankDocXsdFactoryXmlUtils {
 	}
 
 	static XmlBuilder addElementWithType(XmlBuilder context, String name) {
-		XmlBuilder element = new XmlBuilder("element", "xs", XML_SCHEMA_URI);
-		element.addAttribute("name", name);
+		XmlBuilder element = createElementWithType(name);
 		context.addSubElement(element);
 		return element;
 	}
@@ -121,9 +114,7 @@ class FrankDocXsdFactoryXmlUtils {
 	}
 
 	static XmlBuilder addComplexType(XmlBuilder schema, String name) {
-		XmlBuilder complexType;
-		complexType = new XmlBuilder("complexType", "xs", XML_SCHEMA_URI);
-		complexType.addAttribute("name", name);
+		XmlBuilder complexType = createComplexType(name);
 		schema.addSubElement(complexType);
 		return complexType;
 	}
@@ -135,8 +126,7 @@ class FrankDocXsdFactoryXmlUtils {
 	}
 
 	static XmlBuilder addChoice(XmlBuilder context, String minOccurs, String maxOccurs) {
-		XmlBuilder choice = new XmlBuilder("choice", "xs", XML_SCHEMA_URI);
-		context.addSubElement(choice);
+		XmlBuilder choice = addChoice(context);
 		choice.addAttribute("minOccurs", minOccurs);
 		choice.addAttribute("maxOccurs", maxOccurs);
 		return choice;
@@ -178,13 +168,11 @@ class FrankDocXsdFactoryXmlUtils {
 	}
 
 	private static XmlBuilder startCreatingAttribute(String name) {
-		XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
-		attribute.addAttribute("name", name);
+		XmlBuilder attribute = createAttributeWithType(name);
 		attribute.addAttribute("type", "xs:string");
 		return attribute;
 	}
 
-	@SuppressWarnings("serial")
 	private static class AttributeFormatException extends Exception {
 		AttributeFormatException(String msg) {
 			super(msg);
@@ -216,8 +204,7 @@ class FrankDocXsdFactoryXmlUtils {
 	}
 
 	static XmlBuilder createAttribute(String name, String typeName) {
-		XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
-		attribute.addAttribute("name", name);
+		XmlBuilder attribute = createAttributeWithType(name);
 		attribute.addAttribute("type", typeName);
 		return attribute;
 	}
@@ -332,7 +319,7 @@ class FrankDocXsdFactoryXmlUtils {
 	static XmlBuilder addUnion(XmlBuilder context, String ...combinedTypes) {
 		XmlBuilder union = new XmlBuilder("union", "xs", XML_SCHEMA_URI);
 		context.addSubElement(union);
-		String memberTypes = Arrays.asList(combinedTypes).stream().collect(Collectors.joining(" "));
+		String memberTypes = String.join(" ", combinedTypes);
 		union.addAttribute("memberTypes", memberTypes);
 		return union;
 	}

@@ -15,7 +15,11 @@ limitations under the License.
 */
 package org.frankframework.frankdoc;
 
-import lombok.Getter;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addChoice;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSequence;
+
+import java.util.function.Predicate;
+
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeUse;
 import org.frankframework.frankdoc.model.ConfigChild;
@@ -26,16 +30,13 @@ import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
-import java.util.function.Predicate;
-
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addChoice;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSequence;
+import lombok.Getter;
 
 public enum XsdVersion {
 	STRICT(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED, f -> ! f.isDeprecated(), new DelegateStrict(), "Public FrankDoc XSD, should be used within an IDE to validate a configuration."),
 	COMPATIBILITY(ElementChild.IN_COMPATIBILITY_XSD, ElementChild.EXCLUDED, f -> true, new DelegateCompatibility(), "Compatibility XSD, internal use only!");
 
-	private static Logger log = LogUtil.getLogger(XsdVersion.class);
+	private static final Logger log = LogUtil.getLogger(XsdVersion.class);
 
 	private final @Getter Predicate<ElementChild> childSelector;
 	private final @Getter Predicate<ElementChild> childRejector;
@@ -138,10 +139,12 @@ public enum XsdVersion {
 	private static class DelegateCompatibility extends Delegate {
 		@Override
 		void checkForMissingDescription(FrankAttribute attribute) {
+			// No-op in this implementation
 		}
 
 		@Override
 		void checkForMissingDescription(ConfigChild configChild) {
+			// No-op in this implementation
 		}
 
 		/**

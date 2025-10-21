@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class EntityReferenceTest extends BaseIntegrationTest {
 
-	private final String ENTITY_REFERENCE_CONFIGURATION_CLASS_NAME = "org.frankframework.frankdoc.testtarget.entity.reference.Configuration";
+	private static final String ENTITY_REFERENCE_CONFIGURATION_CLASS_NAME = "org.frankframework.frankdoc.testtarget.entity.reference.Configuration";
 
 	@Test
 	public void testStrictXsd() throws Exception {

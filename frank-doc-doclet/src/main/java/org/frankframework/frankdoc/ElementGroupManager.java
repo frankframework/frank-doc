@@ -1,5 +1,5 @@
 /*
-Copyright 2021 WeAreFrank!
+Copyright 2021, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,12 +15,6 @@ limitations under the License.
 */
 package org.frankframework.frankdoc;
 
-import org.frankframework.frankdoc.model.ConfigChildSet;
-import org.frankframework.frankdoc.model.ElementChild;
-import org.frankframework.frankdoc.model.ElementRole;
-import org.frankframework.frankdoc.model.ElementRole.Key;
-import org.frankframework.frankdoc.util.XmlBuilder;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -28,7 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+
+import org.frankframework.frankdoc.model.ConfigChildSet;
+import org.frankframework.frankdoc.model.ElementChild;
+import org.frankframework.frankdoc.model.ElementRole;
+import org.frankframework.frankdoc.model.ElementRole.Key;
+import org.frankframework.frankdoc.util.XmlBuilder;
 
 class ElementGroupManager {
 	private static final String ELEMENT_GROUP = "ElementGroup";
@@ -55,8 +54,8 @@ class ElementGroupManager {
 		String roleName = getRoleName(key);
 		List<Set<ElementRole.Key>> shared = genericGroupKeyToSeq.keySet().stream()
 				.filter(rs -> getRoleName(rs).equals(roleName))
-				.collect(Collectors.toList());
-		int seq = shared.stream().map(genericGroupKeyToSeq::get).collect(Collectors.maxBy(Integer::compare)).orElse(0) + 1;
+				.toList();
+		int seq = shared.stream().map(genericGroupKeyToSeq::get).max(Integer::compare).orElse(0) + 1;
 		genericGroupKeyToSeq.put(key, seq);
 		return getGroupName(key, roleName);
 	}

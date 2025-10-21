@@ -24,7 +24,7 @@
   </xs:element>
   <xs:complexType name="AdapterType">
     <xs:annotation>
-      <xs:documentation>The Adapter is the central manager in the IBIS Adapterframework, that has knowledge
+      <xs:documentation>The Adapter is the central manager in the Frank!Framework, that has knowledge
  and uses Receiver and a PipeLine.</xs:documentation>
     </xs:annotation>
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.entity.reference.Adapter" use="prohibited" />
