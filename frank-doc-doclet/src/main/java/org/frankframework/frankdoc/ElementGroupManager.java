@@ -52,10 +52,11 @@ class ElementGroupManager {
 
 	String addGroup(Set<ElementRole.Key> key) {
 		String roleName = getRoleName(key);
-		List<Set<ElementRole.Key>> shared = genericGroupKeyToSeq.keySet().stream()
-				.filter(rs -> getRoleName(rs).equals(roleName))
-				.toList();
-		int seq = shared.stream().map(genericGroupKeyToSeq::get).max(Integer::compare).orElse(0) + 1;
+		int seq = genericGroupKeyToSeq.entrySet()
+			.stream()
+			.filter(rs -> getRoleName(rs.getKey()).equals(roleName))
+			.map(Map.Entry::getValue)
+			.max(Integer::compare).orElse(0) + 1;
 		genericGroupKeyToSeq.put(key, seq);
 		return getGroupName(key, roleName);
 	}
