@@ -5,9 +5,9 @@
     "ng": "ng",
     "start": "ng build ff-doc && ng serve",
     "serve": "ng serve",
-    "build": "node scripts/build-multi-vite && ng build ff-doc",
+    "build": "node scripts/build-multi-vite.mjs && ng build ff-doc && node scripts/move-package-files.mjs",
     "build:angular": "ng build ff-doc",
-    "build:multi": "node scripts/build-multi-vite",
+    "build:multi": "node scripts/build-multi-vite.mjs",
     "watch": "ng build ff-doc --watch",
     "test": "ng test ff-doc",
     "test:playground": "ng test angular-library-playground"

@@ -11,6 +11,7 @@ const entries = [
     name: 'es',
     entry: 'projects/ff-doc/src/es-api.ts',
     outDir: 'dist/ff-doc',
+    tsconfigPath: 'scripts/tsconfig.es-lib.json',
     fileName: `${baseFileName}.mjs`,
     target,
   },
@@ -18,16 +19,18 @@ const entries = [
     name: 'react',
     entry: 'projects/ff-doc/src/react-api.ts',
     outDir: 'dist/ff-doc/react',
+    tsconfigPath: 'scripts/tsconfig.react-lib.json',
     fileName: `${baseFileName}.mjs`,
     target,
-    // ensure react is external
     additionalExternal: ['react'],
   },
 ];
 
 function createFesm2022Config(options) {
-  const entry = path.resolve(process.cwd(), options.entry);
-  const outDir = path.resolve(process.cwd(), options.outDir);
+  const entry = pathFromRoot(options.entry);
+  // eslint-disable-next-line unicorn/prevent-abbreviations
+  const outDir = pathFromRoot(options.outDir);
+  const tsconfigPath = pathFromRoot(options.tsconfigPath);
   const fileName = options.fileName;
   const target = options.target ?? 'es2022';
   const additionalExternal = options.additionalExternal ?? [];
@@ -37,9 +40,6 @@ function createFesm2022Config(options) {
       lib: {
         entry,
         formats: ['es'],
-        // Vite's fileName function is sometimes used; we still enforce entryFileNames below
-        // fileName: () => fileName,
-        // name: undefined,
       },
       outDir,
       target,
@@ -48,39 +48,20 @@ function createFesm2022Config(options) {
       minify: false,
       assetsInlineLimit: 0,
       rollupOptions: {
-        // externalize peer deps (via plugin) and any additional externals requested
         external: additionalExternal,
         output: {
-          // enforce .mjs naming for entries and chunks
           entryFileNames: fileName,
-          // chunkFileNames: `chunk-[name]-[hash].mjs`,
-          // assetFileNames: `assets/[name]-[hash][extname]`,
-          // keep default manualChunks to allow code-splitting if your entry uses dynamic imports;
-          // for a strictly flat file you can set preserveModules: false (default) and avoid dynamic imports.
         },
       },
     },
     plugins: [
-      // this plugin marks package.json peerDependencies as external
-      // peerDepsExternal,
-      dts(
-        {
-          entryRoot: entry,
-        },
-        /*{
-          beforeWriteFile: (filePath, content) => ({
-            filePath: filePath.replace('path/to/file.d.ts', 'index.d.ts'),
-            content,
-          }),
-        }*/
-      ),
+      dts({
+        tsconfigPath,
+        rollupTypes: true,
+        // includes: ['projects/ff-doc/src/**/*.ts'],
+        // exclude: ['../projects/ff-doc/src/**/*.spec.ts'],
+      }),
     ],
-    /*resolve: {
-      alias: {
-        '@': path.resolve(process.cwd(), 'src'),
-      },
-    },*/
-    // For React TSX entry, Vite/esbuild will handle JSX automatically if you have correct tsconfig settings.
   });
 }
 
@@ -107,6 +88,10 @@ async function run() {
   }
 
   console.log('\nAll builds completed.');
+}
+
+function pathFromRoot(relativePath) {
+  return path.resolve(process.cwd(), relativePath);
 }
 
 try {
