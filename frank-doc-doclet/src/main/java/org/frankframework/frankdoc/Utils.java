@@ -16,6 +16,37 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
+import javax.json.JsonWriter;
+import javax.json.JsonWriterFactory;
+import javax.json.stream.JsonGenerator;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.Logger;
@@ -31,44 +62,13 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
-import javax.json.JsonWriter;
-import javax.json.JsonWriterFactory;
-import javax.json.stream.JsonGenerator;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Utility methods for the Frank!Doc.
  *
  * @author martijn
  */
 public final class Utils {
-	private static Logger log = LogUtil.getLogger(Utils.class);
+	private static final Logger log = LogUtil.getLogger(Utils.class);
 
 	private static final String JAVA_STRING = "java.lang.String";
 	private static final String JAVA_INTEGER = "java.lang.Integer";
@@ -85,25 +85,32 @@ public final class Utils {
 	public static final String JAVADOC_SUBSTITUTION_PATTERN_START_DELIMITER = "{";
 	public static final String JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER = "}";
 
-	private static Map<String, String> primitiveToBoxed = new HashMap<>();
+	private static final Map<String, String> PRIMITIVE_TO_BOXED;
 
 	static {
+		Map<String, String> primitiveToBoxed = new HashMap<>();
 		primitiveToBoxed.put("int", JAVA_INTEGER);
 		primitiveToBoxed.put("boolean", JAVA_BOOLEAN);
 		primitiveToBoxed.put("long", JAVA_LONG);
 		primitiveToBoxed.put("byte", JAVA_BYTE);
 		primitiveToBoxed.put("short", JAVA_SHORT);
+
+		// Make this an immutable map
+		PRIMITIVE_TO_BOXED = Map.copyOf(primitiveToBoxed);
 	}
 
-	private static final Set<String> JAVA_BOXED = new HashSet<String>(Arrays.asList(new String[]{
-		JAVA_STRING, JAVA_INTEGER, JAVA_BOOLEAN, JAVA_LONG, JAVA_BYTE, JAVA_SHORT}));
+	private static final Set<String> JAVA_BOXED = Set.of(JAVA_STRING, JAVA_INTEGER, JAVA_BOOLEAN, JAVA_LONG, JAVA_BYTE, JAVA_SHORT);
 
 	// All types that are accepted by method isGetterOrSetter()
-	public static final Set<String> ALLOWED_SETTER_TYPES = new HashSet<>();
+	public static final Set<String> ALLOWED_SETTER_TYPES;
 
 	static {
-		ALLOWED_SETTER_TYPES.addAll(primitiveToBoxed.keySet());
-		ALLOWED_SETTER_TYPES.addAll(JAVA_BOXED);
+		Set<String> allowedSetterTypes = new HashSet<>();
+		allowedSetterTypes.addAll(PRIMITIVE_TO_BOXED.keySet());
+		allowedSetterTypes.addAll(JAVA_BOXED);
+
+		// Make this an immutable set
+		ALLOWED_SETTER_TYPES = Set.copyOf(allowedSetterTypes);
 	}
 
 	private static final Pattern HTML_TAGS = Pattern.compile("<\\w+");
@@ -146,11 +153,7 @@ public final class Utils {
 	}
 
 	public static String promoteIfPrimitive(String typeName) {
-		if (primitiveToBoxed.containsKey(typeName)) {
-			return primitiveToBoxed.get(typeName);
-		} else {
-			return typeName;
-		}
+		return PRIMITIVE_TO_BOXED.getOrDefault(typeName, typeName);
 	}
 
 	public static String toUpperCamelCase(String arg) {
@@ -207,8 +210,8 @@ public final class Utils {
 		if (handler instanceof LexicalHandler) {
 			xmlReader.setProperty("http://xml.org/sax/properties/lexical-handler", handler);
 		}
-		if (handler instanceof ErrorHandler) {
-			xmlReader.setErrorHandler((ErrorHandler) handler);
+		if (handler instanceof ErrorHandler errorHandler) {
+			xmlReader.setErrorHandler(errorHandler);
 		}
 		return xmlReader;
 	}
@@ -216,8 +219,7 @@ public final class Utils {
 	public static XMLReader getXMLReader(boolean namespaceAware) throws ParserConfigurationException, SAXException {
 		SAXParserFactory factory = getSAXParserFactory(namespaceAware);
 		factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-		XMLReader xmlReader = factory.newSAXParser().getXMLReader();
-		return xmlReader;
+		return factory.newSAXParser().getXMLReader();
 	}
 
 	public static SAXParserFactory getSAXParserFactory(boolean namespaceAware) {
@@ -228,8 +230,10 @@ public final class Utils {
 
 	public static String jsonPretty(String json) {
 		StringWriter sw = new StringWriter();
-		JsonReader jr = Json.createReader(new StringReader(json));
-		JsonObject jobj = jr.readObject();
+		JsonObject jobj;
+		try (JsonReader jr = Json.createReader(new StringReader(json))) {
+			jobj = jr.readObject();
+		}
 
 		Map<String, Object> properties = new HashMap<>(1);
 		properties.put(JsonGenerator.PRETTY_PRINTING, true);
@@ -243,8 +247,10 @@ public final class Utils {
 	}
 
 	public static String jsonOrder(String json) {
-		JsonReader reader = Json.createReader(new StringReader(json));
-		JsonObject jsonObject = reader.readObject();
+		JsonObject jsonObject;
+		try (JsonReader reader = Json.createReader(new StringReader(json))) {
+			jsonObject = reader.readObject();
+		}
 
 		// Recursively sort the JSON object
 		JsonObject sortedJsonObject = sortJsonObject(jsonObject);
@@ -260,12 +266,12 @@ public final class Utils {
 			.sorted()
 			.forEach(key -> {
 				JsonValue value = jsonObject.get(key);
-				if (value instanceof JsonObject) {
+				if (value instanceof JsonObject object) {
 					// Recursively sort nested objects
-					builder.add(key, sortJsonObject((JsonObject) value));
-				} else if (value instanceof JsonArray) {
+					builder.add(key, sortJsonObject(object));
+				} else if (value instanceof JsonArray array) {
 					// Recursively sort nested arrays
-					builder.add(key, sortJsonArray((JsonArray) value));
+					builder.add(key, sortJsonArray(array));
 				} else {
 					builder.add(key, value);
 				}
@@ -277,10 +283,10 @@ public final class Utils {
 	private static JsonArray sortJsonArray(JsonArray jsonArray) {
 		JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 		jsonArray.forEach(value -> {
-			if (value instanceof JsonObject) {
-				arrayBuilder.add(sortJsonObject((JsonObject) value)); // Sort objects inside arrays
-			} else if (value instanceof JsonArray) {
-				arrayBuilder.add(sortJsonArray((JsonArray) value)); // Sort arrays inside arrays
+			if (value instanceof JsonObject object) {
+				arrayBuilder.add(sortJsonObject(object)); // Sort objects inside arrays
+			} else if (value instanceof JsonArray array) {
+				arrayBuilder.add(sortJsonArray(array)); // Sort arrays inside arrays
 			} else {
 				arrayBuilder.add(value);
 			}

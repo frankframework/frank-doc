@@ -15,7 +15,7 @@
 	<description>Doclet for the Frank!Doc</description>
 
 	<properties>
-		<log4j2.version>2.23.1</log4j2.version>
+		<log4j2.version>2.25.2</log4j2.version>
 		<argLine /> <!-- add empty default argLine so Surefire won't fail when JaCoCo isn't present -->
 	</properties>
 
@@ -166,12 +166,12 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.14.0</version>
+			<version>3.19.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
-			<version>1.12.0</version>
+			<version>1.14.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jdom</groupId>
@@ -192,13 +192,13 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.10.2</version>
+			<version>5.14.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-params</artifactId>
-			<version>5.10.2</version>
+			<version>5.14.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

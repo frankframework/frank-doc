@@ -1,5 +1,5 @@
 /*
-Copyright 2022 WeAreFrank!
+Copyright 2022, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,16 +15,15 @@ limitations under the License.
 */
 package org.frankframework.frankdoc;
 
-import org.frankframework.frankdoc.model.FrankAttribute;
-import org.frankframework.frankdoc.util.XmlBuilder;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import org.frankframework.frankdoc.model.FrankAttribute;
+import org.frankframework.frankdoc.util.XmlBuilder;
 
 class AttributeReuseManager {
 	private static class AttributeReference {
@@ -50,9 +49,9 @@ class AttributeReuseManager {
 		}
 	}
 
-	private List<Object> attributeSequence = new ArrayList<>();
-	private Map<String, ReferencedFrankAttributeNameGroup> groupedAttributeReferences = new HashMap<>();
-	private Set<FrankAttribute> definedReusableAttributes = new HashSet<>();
+	private final List<Object> attributeSequence = new ArrayList<>();
+	private final Map<String, ReferencedFrankAttributeNameGroup> groupedAttributeReferences = new HashMap<>();
+	private final Set<FrankAttribute> definedReusableAttributes = new HashSet<>();
 
 	/**
 	 * Call this method when a FrankAttribute is encountered that should appear in an
@@ -87,7 +86,7 @@ class AttributeReuseManager {
 	}
 
 	private void classifyAttributesToBuild() {
-		groupedAttributeReferences.values().stream().forEach(this::classifyAttributesHavingNameInCommon);
+		groupedAttributeReferences.values().forEach(this::classifyAttributesHavingNameInCommon);
 	}
 
 	private void classifyAttributesHavingNameInCommon(ReferencedFrankAttributeNameGroup nameGroup) {
@@ -100,8 +99,8 @@ class AttributeReuseManager {
 
 	private void buildClassifiedAttributes(AttributeReuseManagerCallback callback) {
 		for(Object item: attributeSequence) {
-			if(item instanceof AttributeReference) {
-				buildAttribute((AttributeReference) item, callback);
+			if (item instanceof AttributeReference attributeReference) {
+				buildAttribute(attributeReference, callback);
 			} else {
 				AttributeToInsert attributeToInsert = (AttributeToInsert) item;
 				attributeToInsert.parentBuilder.addSubElement(attributeToInsert.attributeBuilder);
@@ -122,7 +121,7 @@ class AttributeReuseManager {
 	}
 
 	private static class ReferencedFrankAttribute {
-		private List<AttributeReference> itemsThatShareFrankAttribute = new ArrayList<>();
+		private final List<AttributeReference> itemsThatShareFrankAttribute = new ArrayList<>();
 
 		ReferencedFrankAttribute(AttributeReference first) {
 			itemsThatShareFrankAttribute.add(first);
@@ -144,12 +143,12 @@ class AttributeReuseManager {
 		}
 
 		void setNoAttributeReferenceReuses() {
-			itemsThatShareFrankAttribute.stream().forEach(item -> item.reused = false);
+			itemsThatShareFrankAttribute.forEach(item -> item.reused = false);
 		}
 	}
 
 	private static class ReferencedFrankAttributeNameGroup {
-		private Map<FrankAttribute, ReferencedFrankAttribute> referencedFrankAttributes = new HashMap<>();
+		private final Map<FrankAttribute, ReferencedFrankAttribute> referencedFrankAttributes = new HashMap<>();
 
 		ReferencedFrankAttributeNameGroup(AttributeReference first) {
 			ReferencedFrankAttribute referencedFrankAttribute = new ReferencedFrankAttribute(first);
@@ -175,7 +174,7 @@ class AttributeReuseManager {
 		List<ReferencedFrankAttribute> getAttributesReferencedOnce() {
 			return referencedFrankAttributes.values().stream()
 					.filter(ReferencedFrankAttribute::isFrankAttributeReferencedOnce)
-					.collect(Collectors.toList());
+					.toList();
 		}
 
 		boolean hasMultipleReusedAttributes() {

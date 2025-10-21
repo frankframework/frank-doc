@@ -1,5 +1,5 @@
 /*
-Copyright 2020, 2021 WeAreFrank!
+Copyright 2020, 2021, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,10 +16,6 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
-import org.frankframework.frankdoc.util.LogUtil;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,14 +25,18 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
+import org.frankframework.frankdoc.util.LogUtil;
+
 class AncestorChildNavigation<T extends ElementChild> {
-	private static Logger log = LogUtil.getLogger(AncestorChildNavigation.class);
+	private static final Logger log = LogUtil.getLogger(AncestorChildNavigation.class);
 
 	private final CumulativeChildHandler<T> handler;
 	private final Predicate<ElementChild> childSelector;
 	private final Predicate<ElementChild> childRejector;
 	private final Class<T> kind;
-	private Predicate<FrankElement> noChildren;
+	private final Predicate<FrankElement> noChildren;
 	private FrankElement current;
 	private Set<AbstractKey> selectedChildKeys;
 	private Set<AbstractKey> selectedOrRejectedChildKeys;
@@ -53,19 +53,19 @@ class AncestorChildNavigation<T extends ElementChild> {
 	}
 
 	void run(FrankElement start) {
-		log.trace("Enter for FrankElement [{}] and child kind [{}]", () -> start.toString(), () -> kind.toString());
+		log.trace("Enter for FrankElement [{}] and child kind [{}]", start, kind);
 		enter(start);
 		overridden = new HashMap<>();
 		addDeclaredGroupOrRepeatChildrenInXsd();
 		while(current.getNextAncestorThatHasChildren(noChildren) != null) {
 			enter(current.getNextAncestorThatHasChildren(noChildren));
-			if(! getOverriddenChildren().stream().anyMatch(childSelector)) {
+			if(getOverriddenChildren().stream().noneMatch(childSelector)) {
 				safeAddCumulative();
 				return;
 			}
 			addDeclaredGroupOrRepeatChildrenInXsd();
 		}
-		log.trace("Leave for FrankElement [{}] and child kind [{}]", () -> start.toString(), () -> kind.toString());
+		log.trace("Leave for FrankElement [{}] and child kind [{}]", start, kind);
 	}
 
 	private void enter(FrankElement current) {
@@ -83,9 +83,9 @@ class AncestorChildNavigation<T extends ElementChild> {
 	}
 
 	private void logEnter() {
-		log.trace("current: [{}]", current.toString());
-		log.trace("selectedChildKeys: [{}]", keysToString(selectedChildKeys));
-		log.trace("selectedOrRejectedChildKeys: [{}]", keysToString(selectedOrRejectedChildKeys));
+		log.trace("current: [{}]", current);
+		log.trace("selectedChildKeys: [{}]", () -> keysToString(selectedChildKeys));
+		log.trace("selectedOrRejectedChildKeys: [{}]", () -> keysToString(selectedOrRejectedChildKeys));
 	}
 
 	private static String keysToString(Collection<AbstractKey> keys) {
@@ -114,8 +114,7 @@ class AncestorChildNavigation<T extends ElementChild> {
 		else {
 			List<T> children = current.getChildrenOfKind(childSelector, kind).stream()
 					.filter(c -> ! omit.contains(c.getKey()))
-					.map(c -> (T) c)
-					.collect(Collectors.toList());
+					.toList();
 			handleSelectedChildren(children);
 		}
 		updateOverridden();
@@ -132,7 +131,7 @@ class AncestorChildNavigation<T extends ElementChild> {
 	private void updateOverridden() {
 		for(ElementChild child: current.getChildrenOfKind(ElementChild.ALL, kind)) {
 			boolean isRenewedOverride = selectedOrRejectedChildKeys.contains(child.getKey());
-			boolean isExistingOverride = overridden.keySet().contains(child.getKey());
+			boolean isExistingOverride = overridden.containsKey(child.getKey());
 			if(isRenewedOverride || isExistingOverride) {
 				ElementChild overriddenFrom = getSelectedOrRejectedChildAncestor(child);
 				if(overriddenFrom == null) {
@@ -150,8 +149,10 @@ class AncestorChildNavigation<T extends ElementChild> {
 	private void logOverriddenFrom() {
 		Map<FrankElement, Set<AbstractKey>> overriddenByOwner = getOverriddenByOwner();
 		log.trace("Below follows the contents of overridden, grouped by owning FrankElement");
-		for(FrankElement element: overriddenByOwner.keySet()) {
-			log.trace("  From [{}]: [{}]", element.toString(), keysToString(overriddenByOwner.get(element)));
+		if (log.isTraceEnabled()) {
+			for(Map.Entry<FrankElement, Set<AbstractKey>> entry : overriddenByOwner.entrySet()) {
+				log.trace("  From [{}]: [{}]", entry.getKey(), keysToString(entry.getValue()));
+			}
 		}
 	}
 

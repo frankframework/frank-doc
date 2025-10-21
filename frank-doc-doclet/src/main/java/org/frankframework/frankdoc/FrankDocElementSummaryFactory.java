@@ -1,5 +1,5 @@
 /*
-Copyright 2021 WeAreFrank!
+Copyright 2021, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,10 +16,6 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-import org.apache.commons.lang3.StringUtils;
-import org.frankframework.frankdoc.model.FrankDocModel;
-import org.frankframework.frankdoc.model.FrankElement;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,6 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.frankframework.frankdoc.model.FrankDocModel;
+import org.frankframework.frankdoc.model.FrankElement;
 
 /**
  * Create text file, typically <code>elementSummary.txt</code>, with overview of Java classes with their Frank config XML elements.
@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 public class FrankDocElementSummaryFactory {
 	private static final int MAX_NUM_PACKAGE_COMPONENTS_EXPECTED = 100;
 
-	private FrankDocModel model;
+	private final FrankDocModel model;
 
 	public FrankDocElementSummaryFactory(FrankDocModel model) {
 		this.model = model;
@@ -54,19 +54,23 @@ public class FrankDocElementSummaryFactory {
 		Map<String, Integer> numComponentsMap = new HashMap<>();
 		Map<String, List<FrankElement>> elementsBySimpleName = model.getAllElements().values().stream()
 				.collect(Collectors.groupingBy(FrankElement::getSimpleName));
-		for(String simpleName: elementsBySimpleName.keySet()) {
-			List<String> fullNames = elementsBySimpleName.get(simpleName).stream().map(FrankElement::getFullName).collect(Collectors.toList());
-			numComponentsMap.put(simpleName, getNumComponentsForUnique(fullNames));
+		for (Map.Entry<String, List<FrankElement>> entry : elementsBySimpleName.entrySet()) {
+			List<String> fullNames = entry.getValue().stream().map(FrankElement::getFullName).toList();
+			numComponentsMap.put(entry.getKey(), getNumComponentsForUnique(fullNames));
 		}
 		List<SummaryElement> summaryElements = new ArrayList<>();
 		for(FrankElement frankElement: model.getAllElements().values()) {
 			String simpleName = frankElement.getSimpleName();
 			int numComponents = numComponentsMap.get(simpleName);
 			String label = getAbbreviation(frankElement.getFullName(), numComponents);
-			String xmlElements = frankElement.getXmlElementNames().stream().collect(Collectors.joining(", "));
+			String xmlElements = String.join(", ", frankElement.getXmlElementNames());
 			summaryElements.add(new SummaryElement(label, xmlElements, frankElement.isAbstract()));
 		}
-		int maxLabelWidth = summaryElements.stream().map(se -> se.label).map(String::length).collect(Collectors.maxBy(Comparator.naturalOrder())).get();
+		int maxLabelWidth = summaryElements.stream()
+			.map(se -> se.label)
+			.map(String::length)
+			.max(Comparator.naturalOrder())
+			.orElse(0);
 		Map<String, SummaryElement> summaryElementsByLabel = summaryElements.stream().collect(Collectors.toMap(se -> se.label, se -> se));
 		List<String> sortedLabels = new ArrayList<>(summaryElementsByLabel.keySet());
 		Collections.sort(sortedLabels);
@@ -86,13 +90,13 @@ public class FrankDocElementSummaryFactory {
 		int result = 0;
 		while(result < MAX_NUM_PACKAGE_COMPONENTS_EXPECTED) {
 			final int numComponents = result;
-			int numUnique = (int) fullNames.stream().map(n -> getAbbreviation(n, numComponents)).distinct().collect(Collectors.counting()).longValue();
+			int numUnique = (int) ((Long) fullNames.stream().map(n -> getAbbreviation(n, numComponents)).distinct().count()).longValue();
 			if(numUnique >= fullNames.size()) {
 				return result;
 			}
 			++result;
 		}
-		throw new IllegalArgumentException(String.format("Names are not unique: %s", fullNames.stream().collect(Collectors.joining(", "))));
+		throw new IllegalArgumentException(String.format("Names are not unique: %s", String.join(", ", fullNames)));
 	}
 
 	private String getAbbreviation(String fullName, int numPackageComponents) {
@@ -110,7 +114,7 @@ public class FrankDocElementSummaryFactory {
 		if(remainder.isEmpty()) {
 			return head;
 		} else {
-			return head + String.format(" (from %s)", remainder.stream().collect(Collectors.joining(".")));
+			return head + String.format(" (from %s)", String.join(".", remainder));
 		}
 	}
 

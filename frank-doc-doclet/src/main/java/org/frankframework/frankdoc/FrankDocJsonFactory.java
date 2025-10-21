@@ -1,5 +1,5 @@
 /*
-Copyright 2021, 2022 WeAreFrank!
+Copyright 2021, 2022, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,20 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-import lombok.NonNull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonException;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.AttributeEnum;
@@ -27,6 +40,7 @@ import org.frankframework.frankdoc.model.DeprecationInfo;
 import org.frankframework.frankdoc.model.ElementChild;
 import org.frankframework.frankdoc.model.ElementType;
 import org.frankframework.frankdoc.model.EnumValue;
+import org.frankframework.frankdoc.model.Forward;
 import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.model.FrankElement;
@@ -37,23 +51,15 @@ import org.frankframework.frankdoc.model.ServletAuthenticator;
 import org.frankframework.frankdoc.model.ServletAuthenticatorMethod;
 import org.frankframework.frankdoc.properties.Group;
 import org.frankframework.frankdoc.properties.Property;
-import org.frankframework.frankdoc.model.Forward;
 import org.frankframework.frankdoc.util.LogUtil;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonException;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import java.util.*;
-import java.util.stream.Collectors;
+import lombok.NonNull;
 
 public class FrankDocJsonFactory {
 	private static final Logger log = LogUtil.getLogger(FrankDocJsonFactory.class);
 
 	private static final String DESCRIPTION = "description";
+	public static final String DEPRECATED = "deprecated";
 
 	private final FrankDocModel model;
 	private final JsonBuilderFactory bf;
@@ -172,7 +178,7 @@ public class FrankDocJsonFactory {
 			builder.add("since", deprecationInfo.since());
 		}
 		if (deprecationInfo.description() != null) {
-			builder.add("description", deprecationInfo.description());
+			builder.add(DESCRIPTION, deprecationInfo.description());
 		}
 		return builder.build();
 	}
@@ -186,7 +192,7 @@ public class FrankDocJsonFactory {
 		DeprecationInfo deprecationInfo = frankElement.getDeprecationInfo();
 		if (deprecationInfo != null) {
 			JsonObject deprecationInfoJsonObject = getDeprecated(deprecationInfo);
-			result.add("deprecated", deprecationInfoJsonObject);
+			result.add(DEPRECATED, deprecationInfoJsonObject);
 		}
 
 		addDescription(result, frankElement.getDescription());
@@ -279,7 +285,7 @@ public class FrankDocJsonFactory {
 	private JsonObject getParsedJavaDocTag(ParsedJavaDocTag parsedJavaDocTag) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
 		if(parsedJavaDocTag.getDescription() != null) {
-			b.add("description", parsedJavaDocTag.getDescription());
+			b.add(DESCRIPTION, parsedJavaDocTag.getDescription());
 		}
 		return b.build();
 	}
@@ -287,7 +293,7 @@ public class FrankDocJsonFactory {
 	private JsonObject getJsonForForward(Forward forward) {
 		final var builder = bf.createObjectBuilder();
 		if(forward.description() != null) {
-			builder.add("description", forward.description());
+			builder.add(DESCRIPTION, forward.description());
 		}
 		return builder.build();
 	}
@@ -319,7 +325,7 @@ public class FrankDocJsonFactory {
 		DeprecationInfo deprecationInfo = frankAttribute.getDeprecationInfo();
 		if (deprecationInfo != null) {
 			JsonObject deprecationInfoJsonObject = getDeprecated(deprecationInfo);
-			result.add("deprecated", deprecationInfoJsonObject);
+			result.add(DEPRECATED, deprecationInfoJsonObject);
 		}
 		if (frankAttribute.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
 			result.add("mandatory", true);
@@ -355,7 +361,7 @@ public class FrankDocJsonFactory {
 
 	private void addDescription(JsonObjectBuilder builder, String value) {
 		if(! StringUtils.isBlank(value)) {
-			builder.add(DESCRIPTION, value.replaceAll("\"", "\\\\\\\""));
+			builder.add(DESCRIPTION, value.replace("\"", "\\\""));
 		}
 	}
 
@@ -382,7 +388,7 @@ public class FrankDocJsonFactory {
 	private JsonObject getConfigChild(ConfigChild child) throws JsonException {
 		JsonObjectBuilder result = bf.createObjectBuilder();
 		if(child.isDeprecated()) {
-			result.add("deprecated", child.isDeprecated());
+			result.add(DEPRECATED, child.isDeprecated());
 		}
 		if(child.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
 			result.add("mandatory", true);
@@ -393,8 +399,8 @@ public class FrankDocJsonFactory {
 		result.add("multiple", child.isAllowMultiple());
 		result.add("roleName", child.getRoleName());
 		addIfNotNull(result, "description", child.getDescription());
-		if(child instanceof ObjectConfigChild) {
-			result.add("type", ((ObjectConfigChild) child).getElementType().getFullName());
+		if(child instanceof ObjectConfigChild objectConfigChild) {
+			result.add("type", (objectConfigChild).getElementType().getFullName());
 		}
 		return result.build();
 	}
@@ -431,7 +437,7 @@ public class FrankDocJsonFactory {
 				valueBuilder.add("description", enumValue.getDescription());
 			}
 			if(enumValue.isDeprecated()) {
-				valueBuilder.add("deprecated", true);
+				valueBuilder.add(DEPRECATED, true);
 			}
 			result.add(enumValue.getLabel(), valueBuilder.build());
 		}

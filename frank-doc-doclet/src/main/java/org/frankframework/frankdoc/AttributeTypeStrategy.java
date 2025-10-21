@@ -1,5 +1,5 @@
 /*
-Copyright 2021, 2022 WeAreFrank!
+Copyright 2021, 2022, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,21 +16,6 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.model.AttributeEnum;
-import org.frankframework.frankdoc.model.AttributeType;
-import org.frankframework.frankdoc.model.EnumValue;
-import org.frankframework.frankdoc.model.FrankAttribute;
-import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.util.XmlBuilder;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import static org.frankframework.frankdoc.FrankDocXsdFactory.ATTRIBUTE_VALUES_TYPE;
 import static org.frankframework.frankdoc.FrankDocXsdFactory.VARIABLE_REFERENCE;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.XML_SCHEMA_URI;
@@ -43,6 +28,21 @@ import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addUnion;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAttributeWithType;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createSimpleType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.model.AttributeEnum;
+import org.frankframework.frankdoc.model.AttributeType;
+import org.frankframework.frankdoc.model.EnumValue;
+import org.frankframework.frankdoc.model.FrankAttribute;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.util.XmlBuilder;
+
 public enum AttributeTypeStrategy {
 	// Also excludes deprecated enum values
 	ALLOW_PROPERTY_REF(new DelegateAllowPropertyRefEnumDocumentedCaseSensitive()),
@@ -50,7 +50,7 @@ public enum AttributeTypeStrategy {
 	// Also includes deprecated enum values
 	ALLOW_PROPERTY_REF_ENUM_VALUES_IGNORE_CASE(new DelegateAllowPropertyRefEnumIgnoreCase());
 
-	private static Logger log = LogUtil.getLogger(AttributeTypeStrategy.class);
+	private static final Logger log = LogUtil.getLogger(AttributeTypeStrategy.class);
 
 	static final String ATTRIBUTE_ACTIVE_NAME = "active";
 
@@ -65,7 +65,7 @@ public enum AttributeTypeStrategy {
 
 	private final Delegate delegate;
 
-	private AttributeTypeStrategy(final Delegate delegate) {
+	AttributeTypeStrategy(final Delegate delegate) {
 		this.delegate = delegate;
 	}
 
@@ -98,21 +98,14 @@ public enum AttributeTypeStrategy {
 			return createAttribute(name, modelAttributeType, FRANK_BOOLEAN, FRANK_INT);
 		}
 
-		private final XmlBuilder createAttribute(String name, AttributeType modelAttributeType,
-				String boolType, String intType) {
+		private XmlBuilder createAttribute(String name, AttributeType modelAttributeType,
+			String boolType, String intType) {
 			XmlBuilder attribute = createAttributeWithType(name);
-			String typeName = null;
-			switch(modelAttributeType) {
-			case BOOL:
-				typeName = boolType;
-				break;
-			case INT:
-				typeName = intType;
-				break;
-			case STRING:
-				typeName = "xs:string";
-				break;
-			}
+			String typeName = switch (modelAttributeType) {
+				case BOOL -> boolType;
+				case INT -> intType;
+				case STRING -> "xs:string";
+			};
 			attribute.addAttribute("type", typeName);
 			return attribute;
 		}
