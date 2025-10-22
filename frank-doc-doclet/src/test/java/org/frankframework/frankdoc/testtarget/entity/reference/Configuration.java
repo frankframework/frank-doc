@@ -19,4 +19,7 @@ public class Configuration {
 	 */
 	public void addAdapter(Adapter adapter) {
 	}
+
+	public void addConfigWarning(String message) {
+	}
 }

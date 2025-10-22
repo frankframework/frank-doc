@@ -27,6 +27,9 @@
       <xs:documentation>The Adapter is the central manager in the Frank!Framework, that has knowledge
  and uses Receiver and a PipeLine.</xs:documentation>
     </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ConfigWarning" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
+    </xs:sequence>
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.entity.reference.Adapter" use="prohibited" />
     <xs:attribute ref="active" />
     <xs:attribute name="elementRole" type="xs:string" fixed="adapter" use="prohibited" />
@@ -41,6 +44,7 @@
     <xs:sequence>
       <xs:element ref="Module" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="Adapter" minOccurs="0" maxOccurs="unbounded" type="AdapterType" />
+      <xs:element name="ConfigWarning" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
     </xs:sequence>
   </xs:group>
   <xs:attributeGroup name="ConfigurationDeclaredAttributeGroup">
