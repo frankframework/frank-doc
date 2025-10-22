@@ -1,5 +1,5 @@
 /*
-Copyright 2022 WeAreFrank!
+Copyright 2022, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 public class Mandatory {
@@ -52,13 +51,13 @@ public class Mandatory {
 			} else if(tagValue.equals(IGNORE_COMPATIBILITY_MODE)) {
 				return Value.IGNORE_COMPATIBILITY;
 			} else {
-				log.error("Method [{}] has JavaDoc tag [{}] with invalid value [{}]", method.toString(), TAG_NAME, tagValue);
+				log.error("Method [{}] has JavaDoc tag [{}] with invalid value [{}]", method, TAG_NAME, tagValue);
 				return Value.DONT_IGNORE_COMPATIBILITY;
 			}
 		}
 		FrankAnnotation annotation = method.getAnnotation(ANNOTATION_NAME);
 		if(annotation != null) {
-			boolean annotationValue = false;
+			boolean annotationValue;
 			annotationValue = (Boolean) annotation.getValueOf(IGNORE_COMPATIBILITY_MODE);
 			if(annotationValue) {
 				return Value.IGNORE_COMPATIBILITY;

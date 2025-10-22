@@ -1,5 +1,5 @@
 /*
-Copyright 2023 WeAreFrank!
+Copyright 2023, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,6 +16,12 @@ limitations under the License.
 
 package org.frankframework.frankdoc.feature;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
@@ -23,12 +29,7 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import lombok.NonNull;
 
 public final class ExcludeFromTypeFeature {
 	private static Logger log = LogUtil.getLogger(ExcludeFromTypeFeature.class);
@@ -50,14 +51,12 @@ public final class ExcludeFromTypeFeature {
 		this.repository = repository;
 	}
 
-	public static final ExcludeFromTypeFeature getInstance(FrankClassRepository repository) {
-		if(! INSTANCES.containsKey(repository)) {
-			INSTANCES.put(repository, new ExcludeFromTypeFeature(repository));
-		}
-		return INSTANCES.get(repository);
+	public static ExcludeFromTypeFeature getInstance(FrankClassRepository repository) {
+		return INSTANCES.computeIfAbsent(repository, ExcludeFromTypeFeature::new);
 	}
 
-	public Set<FrankClass> excludedFrom(FrankClass testClass) {
+	@NonNull
+	public Set<FrankClass> excludedFrom(@NonNull FrankClass testClass) {
 		if(checkedClasses.containsKey(testClass)) {
 			return new HashSet<>(checkedClasses.get(testClass));
 		}
@@ -65,21 +64,23 @@ public final class ExcludeFromTypeFeature {
 		if(classNames != null) {
 			return checkClassNamesAndGetClasses(classNames, testClass);
 		} else {
-			return null;
+			return Set.of();
 		}
 	}
 
-	private String[] getReferredClassNames(FrankClass testClass) {
-		String[] classNames = null;
+	private String[] getReferredClassNames(@NonNull FrankClass testClass) {
+		String[] classNames;
 		FrankAnnotation annotation = testClass.getAnnotation(ANNOTATION_NAME);
 		if(annotation != null) {
 			classNames = (String[]) annotation.getValue();
 		} else {
 			String tagValue = testClass.getJavaDocTag(TAG_NAME);
 			if(tagValue != null) {
-				classNames = Arrays.asList(tagValue.split(",")).stream()
+				classNames = Arrays.stream(tagValue.split(","))
 						.map(String::trim)
-						.collect(Collectors.toList()).toArray(new String[] {});
+						.toArray(String[]::new);
+			} else {
+				classNames = null;
 			}
 		}
 		return classNames;

@@ -1,5 +1,5 @@
 /*
-Copyright 2022 WeAreFrank!
+Copyright 2022, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package org.frankframework.frankdoc.feature;
 public class Optional extends AbstractNonValuedFeature {
 	private static final Optional INSTANCE = new Optional();
 
-	public static final Optional getInstance() {
+	public static Optional getInstance() {
 		return INSTANCE;
 	}
 
