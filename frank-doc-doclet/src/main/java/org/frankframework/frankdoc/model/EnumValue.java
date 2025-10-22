@@ -1,5 +1,5 @@
 /*
-Copyright 2021 - 2023 WeAreFrank!
+Copyright 2021 - 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,20 +16,15 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.feature.Description;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 
-public class EnumValue {
-	private static Logger log = LogUtil.getLogger(EnumValue.class);
+import lombok.Getter;
 
+public class EnumValue {
 	private static final String ENUM_LABEL = "org.frankframework.doc.EnumLabel";
 
 	private @Getter boolean explicitLabel = false;

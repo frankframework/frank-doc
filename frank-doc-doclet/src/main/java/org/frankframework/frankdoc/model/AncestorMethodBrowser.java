@@ -16,14 +16,14 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import java.util.function.Consumer;
+
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.feature.Reference;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
-
-import java.util.function.Consumer;
 
 /**
  * Browse ancestor methods taking into account feature {@link org.frankframework.frankdoc.feature.Reference}.
@@ -67,7 +67,7 @@ class AncestorMethodBrowser {
 		try {
 			attributeSetter.browseAncestorsUntilTrue(m -> browseUntilReferenceAndThenBrowseReference(m, handler));
 		} catch(FrankDocException e) {
-			log.error("Error browsing ancestor methods of [{}]", attributeSetter.toString(), e);
+			log.error("Error browsing ancestor methods of [{}]", attributeSetter, e);
 		}
 	}
 
@@ -78,7 +78,7 @@ class AncestorMethodBrowser {
 			return false;
 		} else {
 			if(referenceHandling.equals(References.WITHOUT_REFERENCES)) {
-				log.error("No reference allowed on method [{}]", ancestorMethod.toString());
+				log.error("No reference allowed on method [{}]", ancestorMethod);
 				return false;
 			}
 			browse(referenced, handler);

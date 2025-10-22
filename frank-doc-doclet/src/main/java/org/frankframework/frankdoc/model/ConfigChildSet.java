@@ -1,5 +1,5 @@
 /*
-Copyright 2021 WeAreFrank!
+Copyright 2021, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,10 +15,6 @@ limitations under the License.
 */
 package org.frankframework.frankdoc.model;
 
-import lombok.Getter;
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +23,11 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
+
+import lombok.Getter;
 
 /**
  * Holds the list of all cumulative config children sharing some role name, say R, but
@@ -71,12 +72,12 @@ public class ConfigChildSet {
 				while (c.getOwningElement() != owner) {
 					if (owner == null) {
 						throw new IllegalStateException(String.format("Cumulative config children are not sorted by owning elements and their ancestor hierarchy: [%s] should not be followed by [%s]",
-							previous.toString(), c.toString()));
+							previous.toString(), c));
 					}
 					owner = owner.getParent();
 					sameOwner = false;
 				}
-				if (sameOwner && (!(previous.getOrder() <= c.getOrder()))) {
+				if (sameOwner && previous.getOrder() > c.getOrder()) {
 					throw new IllegalStateException(String.format("Cumulative config children are not sorted by order. Offending config child [%s]",
 						c.getKey().toString()));
 				}
@@ -99,11 +100,11 @@ public class ConfigChildSet {
 
 	public List<ElementRole> getFilteredElementRoles(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
 		List<ConfigChild> filteredConfigChildren = filter(selector, rejector);
-		return ConfigChild.getElementRoleStream(filteredConfigChildren).collect(Collectors.toList());
+		return ConfigChild.getElementRoleStream(filteredConfigChildren).toList();
 	}
 
 	List<ConfigChild> filter(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		Set<ConfigChildKey> keys = configChildren.stream().map(ConfigChild::getKey).distinct().collect(Collectors.toSet());
+		Set<ConfigChildKey> keys = configChildren.stream().map(ConfigChild::getKey).collect(Collectors.toSet());
 		List<ConfigChild> result = new ArrayList<>();
 		for (ConfigChild c : configChildren) {
 			if (rejector.test(c)) {
@@ -129,7 +130,7 @@ public class ConfigChildSet {
 			.flatMap(role -> role.getMembers().stream())
 			.filter(elementFilter)
 			.distinct()
-			.collect(Collectors.toList());
+			.toList();
 		if (log.isTraceEnabled()) {
 			String elementsString = members.stream().map(FrankElement::getSimpleName).collect(Collectors.joining(", "));
 			log.trace("Members of parents are: [{}]", elementsString);
@@ -139,8 +140,9 @@ public class ConfigChildSet {
 			.collect(Collectors.groupingBy(ConfigChild::getRoleName));
 		if (log.isTraceEnabled()) {
 			log.trace("Found the following member children:");
-			for (String roleName : memberChildrenByRoleName.keySet()) {
-				List<ConfigChild> memberChildren = memberChildrenByRoleName.get(roleName);
+			for (var entry : memberChildrenByRoleName.entrySet()) {
+				String roleName = entry.getKey();
+				List<ConfigChild> memberChildren = entry.getValue();
 				String memberChildrenString = memberChildren.stream()
 					.map(ConfigChild::toString)
 					.collect(Collectors.joining(", "));
@@ -161,7 +163,7 @@ public class ConfigChildSet {
 	public Optional<String> getGenericElementOptionDefault(Predicate<FrankElement> elementFilter) {
 		List<String> candidates = ConfigChild.getElementRoleStream(configChildren)
 			.flatMap(ConfigChildSet::getCandidatesForGenericElementOptionDefault)
-			.collect(Collectors.toList());
+			.toList();
 		if (candidates.size() == 1) {
 			return Optional.of(candidates.get(0));
 		} else {
@@ -170,16 +172,16 @@ public class ConfigChildSet {
 					.map(ConfigChild::getRoleName)
 					.anyMatch(roleName -> roleName.equals("child"))) {
 					// We cannot fix this for Frank config element <Child>, so the build should not fail.
-					log.warn("ConfigChildSet [{}] has multiple candidates for the default element: [{}]", toString(),
-						candidates.stream().collect(Collectors.joining(", ")));
+					log.warn("ConfigChildSet [{}] has multiple candidates for the default element: [{}]", this,
+						String.join(", ", candidates));
 				} else {
 					// We are hiding FrankElement-s. For the sake of the argument, say class Pipe implements interface IPipe,
 					// and say we have a config child with role name "pipe".
 					// Then <Pipe className="..."> should work, syntax 1. But <Pipe> without className should
 					// reference class Pipe. We implement this by having a default value for the className attribute.
 					// But that does not work if there are multiple candidates.
-					log.error("ConfigChildSet [{}] has multiple candidates for the default element: [{}]", toString(),
-						candidates.stream().collect(Collectors.joining(", ")));
+					log.error("ConfigChildSet [{}] has multiple candidates for the default element: [{}]", this,
+						String.join(", ", candidates));
 				}
 			}
 			return Optional.empty();
@@ -199,7 +201,6 @@ public class ConfigChildSet {
 
 	@Override
 	public String toString() {
-		return "ConfigChildSet(" + configChildren.stream().map(ConfigChild::toString).collect(Collectors.joining(", "))
-			+ ")";
+		return "ConfigChildSet(" + configChildren.stream().map(ConfigChild::toString).collect(Collectors.joining(", ")) + ")";
 	}
 }

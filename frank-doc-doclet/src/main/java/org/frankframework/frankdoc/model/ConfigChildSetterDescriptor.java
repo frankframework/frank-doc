@@ -1,5 +1,5 @@
 /*
-Copyright 2020, 2021 WeAreFrank!
+Copyright 2020, 2021, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.Getter;
+import java.util.List;
+
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.xml.sax.SAXException;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.Getter;
 
 /**
  * Class {@link org.frankframework.frankdoc.model.ConfigChild} specifies what Frank elements
@@ -109,13 +109,13 @@ abstract class ConfigChildSetterDescriptor {
 	}
 
 	static ConfigChildSetterDescriptor find(FrankElement parent, List<ConfigChildSetterDescriptor> descriptors) {
-		List<ConfigChildSetterDescriptor> matches = descriptors.stream().filter(d -> d.matches(parent)).collect(Collectors.toList());
+		List<ConfigChildSetterDescriptor> matches = descriptors.stream().filter(d -> d.matches(parent)).toList();
 		if(matches.isEmpty()) {
 			return null;
 		}
 		if(log.isTraceEnabled()) {
 			log.trace("The following config child setter descriptors match the element role");
-			matches.forEach(d -> log.trace("  {}", d.toString()));
+			matches.forEach(d -> log.trace("  {}", d));
 		}
 		return matches.get(0);
 	}

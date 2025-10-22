@@ -1,5 +1,5 @@
 /*
-Copyright 2021, 2022 WeAreFrank!
+Copyright 2021, 2022, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,17 +16,16 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.wrapper.FrankClass;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankClass;
 
 class AttributeEnumFactory {
 	private static Logger log = LogUtil.getLogger(AttributeEnumFactory.class);
@@ -35,10 +34,10 @@ class AttributeEnumFactory {
 	private final Map<String, Integer> lastAssignedSeq = new HashMap<>();
 
 	AttributeEnum findOrCreateAttributeEnum(FrankClass clazz) {
-		List<EnumValue> values = Arrays.asList(clazz.getEnumConstants()).stream()
+		List<EnumValue> values = Arrays.stream(clazz.getEnumConstants())
 				.map(EnumValue::new)
-				.collect(Collectors.toList());
-		boolean labelsForgotten = values.stream().map(EnumValue::isExplicitLabel).distinct().collect(Collectors.counting()).longValue() >= 2;
+				.toList();
+		boolean labelsForgotten = values.stream().map(EnumValue::isExplicitLabel).distinct().count() >= 2;
 		if(labelsForgotten) {
 			log.warn("Some enum values of class [{}] have a label, but not all. Did you forget some?", clazz.getName());
 		}

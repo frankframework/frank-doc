@@ -1,5 +1,5 @@
 /*
-Copyright 2020, 2021, 2023 WeAreFrank!
+Copyright 2020, 2021, 2023, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,8 +16,13 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.AccessLevel;
-import lombok.Getter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
@@ -26,12 +31,8 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 /**
  * Models a collection of FrankElement. The collection can be characterized by
@@ -178,7 +179,7 @@ public class ElementType implements Comparable<ElementType> {
 		return members.stream()
 			.filter(frankElement -> !frankElement.getXmlElementNames().isEmpty())
 			.sorted()
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
-Copyright 2020 - 2024 WeAreFrank!
+Copyright 2020 - 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,13 +34,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.apache.logging.log4j.Logger;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Default;
 import org.frankframework.frankdoc.feature.Deprecated;
@@ -59,6 +55,10 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import lombok.Getter;
 
 public class FrankDocModel {
 	private static final Logger log = LogUtil.getLogger(FrankDocModel.class);
@@ -230,31 +230,31 @@ public class FrankDocModel {
 		return findOrCreateFrankElement(fullClassName, new FrankElementCreationStrategyNonRoot());
 	}
 
-	private abstract class FrankElementCreationStrategy {
-		abstract FrankElement createFromClass(FrankClass clazz);
-		abstract FrankElement recursiveFindOrCreate(String fullClassName) throws FrankDocException;
+	private interface FrankElementCreationStrategy {
+		FrankElement createFromClass(FrankClass clazz);
+		FrankElement recursiveFindOrCreate(String fullClassName) throws FrankDocException;
 	}
 
-	private class FrankElementCreationStrategyRoot extends FrankElementCreationStrategy{
+	private class FrankElementCreationStrategyRoot implements FrankElementCreationStrategy{
 		@Override
-		FrankElement createFromClass(FrankClass clazz) {
+		public FrankElement createFromClass(FrankClass clazz) {
 			return new RootFrankElement(clazz, labelValues);
 		}
 
 		@Override
-		FrankElement recursiveFindOrCreate(String fullClassName) throws FrankDocException {
+		public FrankElement recursiveFindOrCreate(String fullClassName) throws FrankDocException {
 			return findOrCreateRootFrankElement(fullClassName);
 		}
 	}
 
-	private class FrankElementCreationStrategyNonRoot extends FrankElementCreationStrategy {
+	private class FrankElementCreationStrategyNonRoot implements FrankElementCreationStrategy {
 		@Override
-		FrankElement createFromClass(FrankClass clazz) {
+		public FrankElement createFromClass(FrankClass clazz) {
 			return new FrankElement(clazz, labelValues);
 		}
 
 		@Override
-		FrankElement recursiveFindOrCreate(String fullClassName) throws FrankDocException {
+		public FrankElement recursiveFindOrCreate(String fullClassName) throws FrankDocException {
 			return findOrCreateFrankElement(fullClassName);
 		}
 	}
@@ -310,7 +310,7 @@ public class FrankDocModel {
 			boolean unsafe = method.getAnnotation(UNSAFE_ANNOTATION_CLASSNAME) != null;
 			FrankAttribute attribute = new FrankAttribute(attributeName, unsafe, attributeOwner);
 			if(method.getParameterTypes()[0].isEnum()) {
-				log.trace("Attribute [{}] has setter that takes enum: [{}]", attribute::getName, () -> method.getParameterTypes()[0].toString());
+				log.trace("Attribute [{}] has setter that takes enum: [{}]", attribute::getName, () -> method.getParameterTypes()[0]);
 				attribute.setAttributeType(AttributeType.STRING);
 				FrankClass enumClass = (FrankClass) method.getParameterTypes()[0];
 				attribute.setAttributeEnum(findOrCreateAttributeEnum(enumClass));
@@ -352,7 +352,7 @@ public class FrankDocModel {
 		log.trace("Default [{}]", attribute::getDefaultValue);
 	}
 
-	private class CreationContext {
+	private static class CreationContext {
 		Mandatory.Value mandatoryValue;
 		boolean optionalValue = false;
 	}
@@ -398,16 +398,17 @@ public class FrankDocModel {
 		List<FrankMethod> cumulativeAttributeSetters = getAttributeMethodList(clazz.getDeclaredAndInheritedMethods(), "set");
 		Map<String, List<FrankMethod>> attributeSettersByAttributeName = cumulativeAttributeSetters.stream()
 				.collect(Collectors.groupingBy(m -> attributeOf(m.getName(), "set")));
-		for(String attributeName: attributeSettersByAttributeName.keySet()) {
-			List<FrankMethod> attributeSetterCandidates = attributeSettersByAttributeName.get(attributeName);
+		for (Map.Entry<String, List<FrankMethod>> entry: attributeSettersByAttributeName.entrySet()) {
+			String attributeName = entry.getKey();
+			List<FrankMethod> attributeSetterCandidates = entry.getValue();
 			List<String> candidateTypes = attributeSetterCandidates.stream()
 					.map(m -> m.getParameterTypes()[0].getName())
 					.distinct()
 					.sorted()
-					.collect(Collectors.toList());
+					.toList();
 			if(candidateTypes.size() >= 2) {
 				log.error("Class [{}] has overloaded declared or inherited attribute setters. Type of attribute [{}] can be any of [{}]",
-						clazz.getName(), attributeName, candidateTypes.stream().collect(Collectors.joining(", ")));
+						clazz.getName(), attributeName, String.join(", ", candidateTypes));
 			}
 		}
 	}
@@ -415,11 +416,12 @@ public class FrankDocModel {
 	private Map<String, FrankMethod> getGetterAndIsserAttributes(FrankMethod[] methods, FrankElement attributeOwner) {
 		Map<String, FrankMethod> getterAttributes = getAttributeToMethodMap(methods, "get");
 		Map<String, FrankMethod> isserAttributes = getAttributeToMethodMap(methods, "is");
-		for(String isserAttributeName : isserAttributes.keySet()) {
+		for (Map.Entry<String, FrankMethod> entry: isserAttributes.entrySet()) {
+			String isserAttributeName =  entry.getKey();
 			if(getterAttributes.containsKey(isserAttributeName)) {
 				log.warn("For FrankElement [{}], attribute [{}] has both a getX and an isX method", attributeOwner::getSimpleName, () -> isserAttributeName);
 			} else {
-				getterAttributes.put(isserAttributeName, isserAttributes.get(isserAttributeName));
+				getterAttributes.put(isserAttributeName, entry.getValue());
 			}
 		}
 		return getterAttributes;
@@ -444,7 +446,7 @@ public class FrankDocModel {
 				.filter(FrankMethod::isPublic)
 				.filter(Utils::isAttributeGetterOrSetter)
 				.filter(m -> m.getName().startsWith(prefix) && (m.getName().length() > prefix.length()))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private static String attributeOf(String methodName, String prefix) {
@@ -454,19 +456,14 @@ public class FrankDocModel {
 
 	static Map<String, FrankMethod> getEnumGettersByAttributeName(FrankClass clazz) {
 		FrankMethod[] rawMethods = clazz.getDeclaredAndInheritedMethods();
-		List<FrankMethod> methods = Arrays.stream(rawMethods)
-				.filter(m -> m.getName().endsWith(ENUM))
-				.filter(m -> m.getReturnType().isEnum())
-				.filter(m -> m.getParameterCount() == 0)
-				// This filter cannot be covered with tests, because getMethods
-				// does not include a non-public method in the test classes.
-				.filter(FrankMethod::isPublic)
-				.collect(Collectors.toList());
-		Map<String, FrankMethod> result = new HashMap<>();
-		for(FrankMethod m: methods) {
-			result.put(enumAttributeOf(m), m);
-		}
-		return result;
+		return Arrays.stream(rawMethods)
+			.filter(m -> m.getName().endsWith(ENUM))
+			.filter(m -> m.getReturnType().isEnum())
+			.filter(m -> m.getParameterCount() == 0)
+			// This filter cannot be covered with tests, because getMethods
+			// does not include a non-public method in the test classes.
+			.filter(FrankMethod::isPublic)
+			.collect(Collectors.toMap(FrankDocModel::enumAttributeOf, m -> m));
 	}
 
 	private static String enumAttributeOf(FrankMethod method) {
@@ -486,12 +483,9 @@ public class FrankDocModel {
 			setterType = Utils.promoteIfPrimitive(setterType);
 			getterType = Utils.promoteIfPrimitive(getterType);
 		}
-		if(! getterType.equals(setterType)) {
-			// Cannot work with lambdas because setterType is not final.
-			if(log.isWarnEnabled()) {
+		if (!getterType.equals(setterType) && log.isErrorEnabled()) {
 				log.error("In Frank element [{}]: setter [{}] has type [{}] while the getter has type [{}]",
 						attributeOwner.getSimpleName(), setter.getName(), setterType, getterType);
-			}
 		}
 	}
 
@@ -509,7 +503,7 @@ public class FrankDocModel {
 
 			// This can be either ForObject or ForText. This changes the creation method of the ConfigChild it selves.
 			ConfigChildSetterDescriptor configChildDescriptor = ConfigChildSetterDescriptor.find(parent, descriptorCandidates);
-			if(configChildDescriptor == null) {
+			if (configChildDescriptor == null) {
 				log.trace("Not a config child, next");
 				continue;
 			}
@@ -526,9 +520,8 @@ public class FrankDocModel {
 			configChild.setMandatoryStatus(MandatoryStatus.of(context.mandatoryValue, context.optionalValue));
 			log.trace("Mandatory status [{}]", configChild.getMandatoryStatus());
 
-			if(configChildDescriptor.isForObject() && frankMethod.getParameterTypes()[0] instanceof FrankClass) {
+			if (configChildDescriptor.isForObject() && frankMethod.getParameterTypes()[0] instanceof FrankClass elementTypeClass) {
 				log.trace("For FrankElement [{}] method [{}], going to search element role", parent::getFullName, frankMethod::getName);
-				FrankClass elementTypeClass = (FrankClass) frankMethod.getParameterTypes()[0];
 
 				// Creates a ElementType and ElementRole.
 				((ObjectConfigChild) configChild).setElementRole(findOrCreateElementRole(elementTypeClass, configChildDescriptor.getRoleName()));
@@ -577,7 +570,7 @@ public class FrankDocModel {
 		log.trace("Removing duplicate config children of FrankElement [{}]", parent::getFullName);
 		List<ConfigChild> result = ConfigChild.removeDuplicates(parent.getConfigChildrenUnderConstruction());
 		// We have to sort the config children because they are not created in the same order as the order of the config child setters.
-		Collections.sort(result, Comparator.comparingInt(ConfigChild::getOrder));
+		result.sort(Comparator.comparingInt(ConfigChild::getOrder));
 		parent.setConfigChildren(result);
 		log.trace("The config children are (sequence follows sequence of Java methods):");
 		if(log.isTraceEnabled()) {
@@ -627,10 +620,11 @@ public class FrankDocModel {
 		if (result.isFromJavaInterface()) {
 			log.trace("Class [{}] is a Java interface, going to create all member FrankElement", clazz::getName);
 			List<FrankClass> memberClasses = clazz.getInterfaceImplementations().stream()
-					.filter(m -> ! excludedByExcludeFromTypeFeature(m, clazz)).collect(Collectors.toList());
-			// We sort here to make the order deterministic.
-			Collections.sort(memberClasses, Comparator.comparing(FrankClass::getName));
-			for(FrankClass memberClass: memberClasses) {
+				.filter(m -> ! excludedByExcludeFromTypeFeature(m, clazz))
+				// We sort here to make the order deterministic.
+				.sorted(Comparator.comparing(FrankClass::getName))
+				.toList();
+			for (FrankClass memberClass: memberClasses) {
 				// Creates the frank element, but also checks if it is not protected.
 				addElementIfNotProtected(memberClass, result);
 			}
@@ -749,8 +743,9 @@ public class FrankDocModel {
 		log.trace("Handling FrankElement [{}]", frankElement::getFullName);
 		Map<String, List<ConfigChild>> cumChildrenByRoleName = frankElement.getCumulativeConfigChildren(ElementChild.ALL_NOT_EXCLUDED, ElementChild.EXCLUDED).stream()
 				.collect(Collectors.groupingBy(ConfigChild::getRoleName));
-		for(String roleName: cumChildrenByRoleName.keySet()) {
-			List<ConfigChild> configChildren = cumChildrenByRoleName.get(roleName);
+		for (Entry<String, List<ConfigChild>> entry : cumChildrenByRoleName.entrySet()) {
+			String roleName = entry.getKey();
+			List<ConfigChild> configChildren = entry.getValue();
 			if(configChildren.stream().map(ConfigChild::getOwningElement).anyMatch(childOwner -> (childOwner == frankElement))) {
 				log.trace("Found ConfigChildSet for role name [{}]", roleName);
 				ConfigChildSet configChildSet = new ConfigChildSet(configChildren);
@@ -783,11 +778,11 @@ public class FrankDocModel {
 		Set<ElementRole.Key> key = roles.stream()
 				.map(ElementRole::getKey)
 				.collect(Collectors.toSet());
-		if(! allElementRoleSets.containsKey(key)) {
-			log.trace("New ElementRoleSet for roles [{}]", () -> ElementRole.describeCollection(roles));
-			allElementRoleSets.put(key, new ElementRoleSet(roles));
-		}
-		ElementRoleSet elementRoleSet = allElementRoleSets.get(key);
+		ElementRoleSet elementRoleSet = allElementRoleSets.computeIfAbsent(key, k -> {
+				log.trace("New ElementRoleSet for roles [{}]", () -> ElementRole.describeCollection(roles));
+				return new ElementRoleSet(roles);
+			}
+		);
 		log.trace("[{}] has ElementRoleSet [{}]", configChildSet::toString, elementRoleSet::toString);
 	}
 
@@ -798,16 +793,14 @@ public class FrankDocModel {
 	 */
 	private void recursivelyCreateElementRoleSets(List<ElementRole> roleGroup, int recursionDepth) {
 		log.trace("Enter with roles [{}] and recursion depth [{}]", () -> ElementRole.describeCollection(roleGroup), () -> recursionDepth);
-		List<FrankElement> rawMembers = roleGroup.stream()
-				.flatMap(role -> role.getRawMembers().stream())
-				.distinct()
-				.collect(Collectors.toList());
-		Map<String, List<ConfigChild>> configChildrenByRoleName = rawMembers.stream()
-				.flatMap(element -> element.getConfigChildren(ElementChild.ALL_NOT_EXCLUDED).stream())
-				.collect(Collectors.groupingBy(ConfigChild::getRoleName));
+		Map<String, List<ConfigChild>> configChildrenByRoleName = roleGroup.stream()
+			.flatMap(role -> role.getRawMembers().stream())
+			.distinct()
+			.flatMap(element -> element.getConfigChildren(ElementChild.ALL_NOT_EXCLUDED).stream())
+			.collect(Collectors.groupingBy(ConfigChild::getRoleName));
 		List<String> names = new ArrayList<>(configChildrenByRoleName.keySet());
-		Collections.sort(names);
-		for(String name: names) {
+		names.sort(String::compareTo);
+		for (String name: names) {
 			List<ConfigChild> configChildren = configChildrenByRoleName.get(name);
 			handleMemberChildrenWithCommonRoleName(configChildren, recursionDepth);
 		}
@@ -834,11 +827,10 @@ public class FrankDocModel {
 	void findOrCreateElementRoleSetForMemberChildren(List<ConfigChild> configChildren, int recursionDepth) {
 		Set<ElementRole> roles = ConfigChild.getElementRoleStream(configChildren).collect(Collectors.toSet());
 		Set<ElementRole.Key> key = roles.stream().map(ElementRole::getKey).collect(Collectors.toSet());
-		if(! allElementRoleSets.containsKey(key)) {
+		if (!allElementRoleSets.containsKey(key)) {
 			allElementRoleSets.put(key, new ElementRoleSet(roles));
 			log.trace("Added new ElementRoleSet [{}]", () -> allElementRoleSets.get(key).toString());
 			List<ElementRole> recursionParents = new ArrayList<>(roles);
-			recursionParents = new ArrayList<>(recursionParents);
 			Collections.sort(recursionParents);
 			recursivelyCreateElementRoleSets(recursionParents, recursionDepth + 1);
 		}
@@ -901,8 +893,7 @@ public class FrankDocModel {
 	void calculateTypeNameSeq() {
 		Map<String, List<FrankElement>> elementsBySimpleName = allElements.values().stream()
 				.collect(Collectors.groupingBy(FrankElement::getSimpleName));
-		for(String name: elementsBySimpleName.keySet()) {
-			List<FrankElement> nameGroup = new ArrayList<>(elementsBySimpleName.get(name));
+		for (List<FrankElement> nameGroup: elementsBySimpleName.values()) {
 			Collections.sort(nameGroup);
 			for(int seq = 0; seq < nameGroup.size(); ++seq) {
 				// When we make names unique, we omit the first sequence number. We want names like
@@ -926,7 +917,7 @@ public class FrankDocModel {
 				.filter(f -> ! f.isAbstract())
 				.filter(f -> ! f.getXmlElementNames().isEmpty())
 				.sorted()
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public void parsePropertyGroups(URL url) {

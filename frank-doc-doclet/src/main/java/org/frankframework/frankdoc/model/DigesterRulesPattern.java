@@ -1,5 +1,5 @@
 /*
-Copyright 2021 WeAreFrank!
+Copyright 2021, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,16 +16,16 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
-import org.xml.sax.SAXException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.xml.sax.SAXException;
+
+import lombok.Getter;
+import lombok.Setter;
 
 class DigesterRulesPattern {
 	private final String originalPattern;
@@ -36,7 +36,7 @@ class DigesterRulesPattern {
 		this.originalPattern = pattern;
 		boolean matchesOnlyRoot = false;
 		if(StringUtils.isBlank(pattern)) {
-			throw new SAXException(String.format("digester-rules.xml: Pattern cannot be null and cannot be blank"));
+			throw new SAXException("digester-rules.xml: Pattern cannot be null and cannot be blank");
 		}
 		components = Arrays.asList(pattern.split("/"));
 		if(components.isEmpty()) {
@@ -80,17 +80,17 @@ class DigesterRulesPattern {
 		}
 
 		boolean matches(FrankElement frankElement) {
-			return checkOwners(Arrays.asList(frankElement), backtrackRoleNames);
+			return checkOwners(Collections.singletonList(frankElement), backtrackRoleNames);
 		}
 
 		boolean checkChildren(List<ConfigChild> configChildren, List<String> remainingBacktrackRoleNames) {
-			List<FrankElement> owners = configChildren.stream().map(ConfigChild::getOwningElement).collect(Collectors.toList());
+			List<FrankElement> owners = configChildren.stream().map(ConfigChild::getOwningElement).toList();
 			return checkOwners(owners, remainingBacktrackRoleNames);
 		}
 
 		boolean checkOwners(List<FrankElement> owners, List<String> remainingBacktrackRoleNames) {
 			boolean haveMatchForRoot = owners.stream()
-					.filter(f -> f instanceof RootFrankElement)
+					.filter(RootFrankElement.class::isInstance)
 					.map(f -> (RootFrankElement) f)
 					.anyMatch(f -> f.getRoleName().equals(remainingBacktrackRoleNames.get(0)));
 			if(remainingBacktrackRoleNames.size() == 1) {
@@ -103,7 +103,7 @@ class DigesterRulesPattern {
 			List<ConfigChild> parents = owners.stream()
 					.flatMap(f -> f.getConfigParents().stream())
 					.filter(c -> c.getRoleName().equals(remainingBacktrackRoleNames.get(0)))
-					.collect(Collectors.toList());
+					.toList();
 			if(parents.isEmpty()) {
 				return false;
 			} else if(remainingBacktrackRoleNames.size() == 1) {
@@ -115,7 +115,7 @@ class DigesterRulesPattern {
 
 		@Override
 		public String toString() {
-			String result = "Matcher backtracking(" + backtrackRoleNames.stream().collect(Collectors.joining(", ")) + ")";
+			String result = "Matcher backtracking(" + String.join(", ", backtrackRoleNames) + ")";
 			if(patternOnlyMatchesRoot) {
 				result += " at root";
 			}
