@@ -1,6 +1,6 @@
 {
   "name": "@frankframework/ff-doc",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A powerful and easy-to-use library designed to extract and process information from the FF! Doc JSON.",
   "main": "",
   "author": "Vivy Booman",
@@ -15,5 +15,24 @@
     "@angular/core": "^20.2.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
+  },
+  "module": "frankframework-ff-doc.mjs",
+  "typings": "index.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./frankframework-ff-doc.mjs"
+    },
+    "./angular": {
+      "types": "./angular/index.d.ts",
+      "default": "./angular/fesm2022/frankframework-ff-doc.mjs"
+    },
+    "./react": {
+      "types": "./react/index.d.ts",
+      "default": "./react/frankframework-ff-doc.mjs"
+    }
   }
 }
