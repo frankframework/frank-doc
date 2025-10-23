@@ -207,16 +207,16 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	/**
-	* Starts the recursion to generate all XML element definitions.
-	* We decide here whether the root element is introduced as an
-	* XML type declaration (strict XSD) or as an XML element declaration
-	* (compatibility XSD). We need a type for the strict XSD because we
-	* reuse XSD code to define {@code <Configuration>} and to define {@code <Module>}.
-	* <br/>
-	* In strict XSD, the {@code <Module>} element has to appear as a child of
-	* {@code <Configuration>}. This is done elsewhere by method
-	* {@link #addReferencedEntityRootChildIfApplicable(XmlBuilder, FrankElement)}.
-	*/
+	 * Starts the recursion to generate all XML element definitions.
+	 * We decide here whether the root element is introduced as an
+	 * XML type declaration (strict XSD) or as an XML element declaration
+	 * (compatibility XSD). We need a type for the strict XSD because we
+	 * reuse XSD code to define {@code <Configuration>} and to define {@code <Module>}.
+	 * <br/>
+	 * In strict XSD, the {@code <Module>} element has to appear as a child of
+	 * {@code <Configuration>}. This is done elsewhere by method
+	 * {@link #addReferencedEntityRootChildIfApplicable(XmlBuilder, FrankElement)}.
+	 */
 	private void defineElements(FrankElement startElement) {
 		switch(version) {
 		case STRICT:
