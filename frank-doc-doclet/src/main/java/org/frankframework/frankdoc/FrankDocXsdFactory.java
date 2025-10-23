@@ -597,9 +597,9 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void addConfigChild(XmlBuilder context, ConfigChild child) {
 		log.trace("Adding config child [{}]", child::toString);
 		version.checkForMissingDescription(child);
-		if(child instanceof ObjectConfigChild objectConfigChild) {
+		if (child instanceof ObjectConfigChild objectConfigChild) {
 			addObjectConfigChild(context, objectConfigChild);
-		} else if(child instanceof TextConfigChild textConfigChild) {
+		} else if (child instanceof TextConfigChild textConfigChild) {
 			addTextConfigChild(context, textConfigChild);
 		} else {
 			throw new IllegalArgumentException("Cannot happen, there are no other ConfigChild subclasses than ObjectConfigChild or TextConfigChild");
@@ -931,6 +931,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void addTextConfigChild(XmlBuilder context, TextConfigChild child) {
+		// TODO: Add here code to switch with/without 'active' attribute
 		addElement(context, Utils.toUpperCamelCase(child.getRoleName()), ELEMENT_TYPE_STRING, getMinOccurs(child), getMaxOccurs(child));
 	}
 
@@ -1020,10 +1021,12 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		}
 	}
 
-	// It does not make sense to set minOccurs="1" for mandatory config children.
-	// Plural config children are wrapped inside <xs:sequence minOccurs="0" maxOccurs="unbounded"><xs:choice>.
-	// Setting <xs:element minOccurs="1"...> has no effect.
-	// See also the comment in recursivelyDefineXsdElementUnchecked().
+	/**
+	 * It does not make sense to set minOccurs="1" for mandatory config children.
+	 * Plural config children are wrapped inside <xs:sequence minOccurs="0" maxOccurs="unbounded"><xs:choice>.
+	 * Setting <xs:element minOccurs="1"...> has no effect.
+	 * See also the comment in {@link #recursivelyDefineXsdElementUnchecked()}.
+	 */
 	private void addPluralTextConfigChild(XmlBuilder choice, ConfigChildSet configChildSet) {
 		addElement(choice, Utils.toUpperCamelCase(configChildSet.getRoleName()), ELEMENT_TYPE_STRING, "0", UNBOUNDED);
 	}

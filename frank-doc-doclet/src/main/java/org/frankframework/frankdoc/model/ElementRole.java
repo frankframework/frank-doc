@@ -35,7 +35,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class ElementRole implements Comparable<ElementRole> {
-	private static Logger log = LogUtil.getLogger(ElementRole.class);
+	private static final Logger log = LogUtil.getLogger(ElementRole.class);
 
 	private static final Comparator<ElementRole> COMPARATOR =
 		Comparator.comparing(ElementRole::getRoleName).thenComparing(role -> role.getElementType().getFullName());
@@ -44,19 +44,25 @@ public class ElementRole implements Comparable<ElementRole> {
 	private final @Getter String roleName;
 	private final int roleNameSeq;
 
-	// Used to solve conflicts between members and the element name of the
-	// generic element option, see package-info of this package.
+	/**
+	 * Used to solve conflicts between members and the element name of the
+	 * generic element option, see package-info of this package.
+	 */
 	private FrankElement defaultElementOptionConflict;
 
-	// Used to solve element role member conflicts as described in
-	// the package-info of this package.
+	/**
+	 * Used to solve element role member conflicts as described in
+	 * the package-info of this package.
+	 */
 	private Set<FrankElement> nameConflicts;
 
-	// Used to resolve member conflicts in shared generic element options as
-	// explained in the package-info of this package.
-	private Set<ElementRoleSet> participatesInRoleSets = new HashSet<>();
+	/**
+	 * Used to resolve member conflicts in shared generic element options as
+	 * explained in the package-info of this package.
+	 */
+	private final Set<ElementRoleSet> participatesInRoleSets = new HashSet<>();
 
-	// Used to solve conflict caused by ElementType interface inheritance.
+	/** Used to solve conflict caused by ElementType interface inheritance. */
 	private @Setter(AccessLevel.PACKAGE) ElementRole highestCommonInterface;
 
 	private ElementRole(ElementType elementType, String roleName, int roleNameSeq) {
@@ -66,9 +72,9 @@ public class ElementRole implements Comparable<ElementRole> {
 		defaultElementOptionConflict = null;
 	}
 
-	// TODO: A Lombok getter would look better, but it does not work properly with Javadoc.
-	// A {@link} JavaDoc annotation pointing to a Lombok getter causes the method name to appear
-	// in the text but not as a link.
+	// NOTE: A Lombok getter would look better, but it does not work properly with Javadoc.
+	//  A {@link} JavaDoc annotation pointing to a Lombok getter causes the method name to appear
+	//  in the text but not as a link.
 	/**
 	 * Used to resolve conflicts by {@link org.frankframework.frankdoc.model.ElementType} interface
 	 * inheritance, see {@link org.frankframework.frankdoc.model}.
@@ -77,7 +83,7 @@ public class ElementRole implements Comparable<ElementRole> {
 		return highestCommonInterface;
 	}
 
-	// TODO: Same problem with Lombok
+	// NOTE: Same problem with Lombok
 	/**
 	 * Used to resolve conflicts between {@link org.frankframework.frankdoc.model.ElementRole} members
 	 * and the element name of the generic element option, see {@link org.frankframework.frankdoc.model}.

@@ -23,6 +23,7 @@ import lombok.Setter;
 
 public class ObjectConfigChild extends ConfigChild {
 	private @Getter @Setter ElementRole elementRole;
+	private ConfigChildKey key;
 
 	ObjectConfigChild(FrankElement owningElement, FrankMethod method) {
 		super(owningElement, method);
@@ -30,7 +31,10 @@ public class ObjectConfigChild extends ConfigChild {
 
 	@Override
 	public ConfigChildKey getKey() {
-		return new ConfigChildKey(getRoleName(), elementRole.getElementType());
+		if (key == null) {
+			key = new ConfigChildKey(getRoleName(), elementRole == null ? null : elementRole.getElementType());
+		}
+		return key;
 	}
 
 	@Override
@@ -41,6 +45,8 @@ public class ObjectConfigChild extends ConfigChild {
 	}
 
 	public ElementType getElementType() {
+		if (elementRole == null)
+			return null;
 		return elementRole.getElementType();
 	}
 
