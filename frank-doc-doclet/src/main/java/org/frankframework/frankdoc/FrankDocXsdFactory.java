@@ -40,7 +40,7 @@ import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.getXmlSchem
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -139,7 +139,7 @@ import org.frankframework.frankdoc.util.XmlBuilder;
 public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private static final Logger log = LogUtil.getLogger(FrankDocXsdFactory.class);
 
-	private static final Map<XsdVersion, String> outputFileNames = new HashMap<>();
+	private static final Map<XsdVersion, String> outputFileNames = new EnumMap<>(XsdVersion.class);
 	public static final String UNBOUNDED = "unbounded";
 	public static final String ELEMENT_TYPE_STRING = "xs:string";
 
@@ -206,15 +206,17 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 			xsdRoot.toXML(false);
 	}
 
-	// Starts the recursion to generate all XML element definitions.
-	// We decide here whether the root element is introduced as an
-	// XML type declaration (strict XSD) or as an XML element declaration
-	// (compatibility XSD). We need a type for the strict XSD because we
-	// reuse XSD code to define <Configuration> and to define <Module>.
-	//
-	// In strict XSD, the <Module> element has to appear as a child of
-	// <Configuration>. This is done elsewhere by method
-	// addReferencedEntityRootChildIfApplicable().
+	/**
+	 * Starts the recursion to generate all XML element definitions.
+	 * We decide here whether the root element is introduced as an
+	 * XML type declaration (strict XSD) or as an XML element declaration
+	 * (compatibility XSD). We need a type for the strict XSD because we
+	 * reuse XSD code to define {@code <Configuration>} and to define {@code <Module>}.
+	 * <br/>
+	 * In strict XSD, the {@code <Module>} element has to appear as a child of
+	 * {@code <Configuration>}. This is done elsewhere by method
+	 * {@link #addReferencedEntityRootChildIfApplicable(XmlBuilder, FrankElement)}.
+	 */
 	private void defineElements(FrankElement startElement) {
 		switch(version) {
 		case STRICT:
@@ -230,7 +232,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		}
 	}
 
-	// Defines XML element <Configuration>
+	/** Defines XML element {@code <Configuration>} */
 	private void addStartElementAsTypeReference(FrankElement startElement) {
 		log.trace("Adding element [{}] as type reference", startElement::getSimpleName);
 		XmlBuilder startElementBuilder = createElementWithType(startElement.getSimpleName());
@@ -241,7 +243,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		addExtension(complexContent, xsdElementType(startElement));
 	}
 
-	// Defines XML element <Module>
+	/** Defines XML element {@code <Module>} */
 	private void addReferencedEntityRoot(FrankElement startElement) {
 		log.trace("Adding element [{}] using type [{}]", () -> Constants.MODULE_ELEMENT_NAME, () -> xsdElementType(startElement));
 		XmlBuilder startElementBuilder = createElementWithType(Constants.MODULE_ELEMENT_NAME);
@@ -249,7 +251,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		addDocumentation(startElementBuilder, Constants.MODULE_ELEMENT_DESCRIPTION);
 		XmlBuilder complexType = addComplexType(startElementBuilder);
 		String declaredChildGroup = getConfigChildGroupOf(startElement);
-		if(declaredChildGroup != null) {
+		if (declaredChildGroup != null) {
 			FrankDocXsdFactoryXmlUtils.addGroupRef(complexType, declaredChildGroup);
 		}
 		log.trace("Adding attribute active explicitly to [{}] and also any attribute in another namespace", () -> Constants.MODULE_ELEMENT_NAME);
@@ -261,14 +263,14 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 
 	private String getConfigChildGroupOf(FrankElement frankElement) {
 		// TODO: Add cumulative group if the start element (typically <Configuration>) has
-		// ancestors with config children. Or even take a declared/cumulative group of an ancestor
-		// if <Configuration> itself has no config children. These do not apply in practice, so
-		// implementing this has not a high priority.
+		//  ancestors with config children. Or even take a declared/cumulative group of an ancestor
+		//  if <Configuration> itself has no config children. These do not apply in practice, so
+		//  implementing this has not a high priority.
 		if(frankElement.getCumulativeConfigChildren(version.getChildSelector(), version.getChildRejector()).isEmpty()) {
 			// This will not happen in production, but we have integration tests in which config children are not relevant.
 			return null;
 		}
-		if(frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
+		if (frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
 			return xsdPluralGroupNameForChildren(frankElement);
 		} else {
 			return xsdDeclaredGroupNameForChildren(frankElement);
@@ -301,7 +303,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		xsdElements.add(complexType);
 		addDocumentationFrom(complexType, frankElement);
 		log.trace("Adding cumulative config chidren of FrankElement [{}] to XSD type [{}]", frankElement::getFullName, () -> xsdElementTypeName);
-		if(frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
+		if (frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
 			log.trace("FrankElement [{}] has plural config children", frankElement::getFullName);
 			// Within <xs:sequence><xs:choice> group, we cannot enforce that mandatory config children are
 			// included. We also do not check there that non-plural config children occur at most once.
@@ -338,22 +340,22 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void recursivelyDefineReusableFrankElementType(FrankElement frankElement) {
-		if(log.isTraceEnabled()) {
+		if (log.isTraceEnabled()) {
 			log.trace("XML Schema needs reusable type definition (or only groups for config children or attributes) for FrankElement [{}]",
 					() -> frankElement == null ? "null" : frankElement.getFullName());
 		}
-		if(checkNotDefined(frankElement)) {
+		if (checkNotDefined(frankElement)) {
 			ElementBuildingStrategy elementBuildingStrategy = getElementBuildingStrategy(frankElement);
 			log.trace("Visiting config children for FrankElement [{}]", frankElement::getFullName);
 			addConfigChildren(elementBuildingStrategy, frankElement);
 			log.trace("Visiting attributes for FrankElement [{}]", frankElement::getFullName);
 			addAttributes(elementBuildingStrategy, frankElement);
-			if(! frankElement.isAbstract()) {
+			if (!frankElement.isAbstract()) {
 				log.trace("Adding attribute className to the element type of [{}]", frankElement::getFullName);
 				XmlBuilder classNameAttribute = FrankDocXsdFactoryXmlUtils.createAttribute(CLASS_NAME, FIXED, frankElement.getFullName(), version.getClassNameAttributeUse(frankElement));
 				attributeReuseManager.addAttribute(classNameAttribute, elementBuildingStrategy.getElementTypeBuilder());
 			}
-			if(elementBuildingStrategy.needsSpecialAttributesInElementType()) {
+			if (elementBuildingStrategy.needsSpecialAttributesInElementType()) {
 				log.trace("Adding attribute active and anyAttribute in another namespace to the element type of [{}], because there are no attribute groups to put this in", frankElement);
 				XmlBuilder attributeActive = AttributeTypeStrategy.createAttributeActive();
 				attributeReuseManager.addAttribute(attributeActive, elementBuildingStrategy.getElementTypeBuilder());
@@ -374,10 +376,10 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	 * @return true if the input is not null and if the element is not yet created.
 	 */
 	private boolean checkNotDefined(FrankElement frankElement) {
-		if(frankElement == null) {
+		if (frankElement == null) {
 			return false;
 		}
-		if(namesCreatedFrankElements.contains(frankElement.getFullName())) {
+		if (namesCreatedFrankElements.contains(frankElement.getFullName())) {
 			return false;
 		} else {
 			namesCreatedFrankElements.add(frankElement.getFullName());
@@ -385,30 +387,33 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		}
 	}
 
-	/*
+	/**
 	 * This class is responsible for adding an xs:element in the XML schema if required.
 	 * If a FrankElement corresponds to an abstract class, then no XML element
 	 * should be added. This is achieved using the derived class ElementOmitter.
-	 *
+	 * <br/>
 	 * For an abstract FrankElement, the config child declared/cumulative groups
 	 * and the attribute declared/cumulative groups are still needed. Adding them is
 	 * outside the scope of this class.
 	 */
-	private abstract static class ElementBuildingStrategy {
-		abstract void onNoAttributes();
-		abstract boolean needsSpecialAttributesInElementType();
-		abstract XmlBuilder getElementTypeBuilder();
-		abstract void addGroupRef(String referencedGroupName);
-		abstract void addAttributeGroupRef(String referencedGroupName);
-		// When there are config children that share a role name (plural config children),
-		// then the element type under construction references only one config child group.
-		// The config child group does not check the sequence of the included elements.
-		// There is no need to also wrap the singleton config child group reference into
-		// <sequence><choice> if the order is not important.
-		//
-		// This method is added to ElementBuildingStrategy because we know here
-		// to which XmlBuilder we want to add the group reference.
-		abstract void addThePluralConfigChildGroup(String referencedGroupName);
+	private interface ElementBuildingStrategy {
+		void onNoAttributes();
+		boolean needsSpecialAttributesInElementType();
+		XmlBuilder getElementTypeBuilder();
+		void addGroupRef(String referencedGroupName);
+		void addAttributeGroupRef(String referencedGroupName);
+
+		/**
+		 * When there are config children that share a role name (plural config children),
+		 * then the element type under construction references only one config child group.
+		 * The config child group does not check the sequence of the included elements.
+		 * There is no need to also wrap the singleton config child group reference into
+		 * {@code <sequence><choice>} if the order is not important.
+		 * <br/>
+		 * This method is added to ElementBuildingStrategy because we know here
+		 * to which XmlBuilder we want to add the group reference.
+		 */
+		void addThePluralConfigChildGroup(String referencedGroupName);
 	}
 
 	private ElementBuildingStrategy getElementBuildingStrategy(FrankElement element) {
@@ -421,7 +426,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		}
 	}
 
-	private class ElementAdder extends ElementBuildingStrategy {
+	private class ElementAdder implements ElementBuildingStrategy {
 		private final XmlBuilder elementTypeBuilder;
 		private XmlBuilder configChildBuilder;
 		private final FrankElement addingTo;
@@ -434,27 +439,27 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		}
 
 		@Override
-		void onNoAttributes() {
+		public void onNoAttributes() {
 			noAttributes = true;
 		}
 
 		@Override
-		boolean needsSpecialAttributesInElementType() {
+		public boolean needsSpecialAttributesInElementType() {
 			return noAttributes;
 		}
 
 		@Override
-		XmlBuilder getElementTypeBuilder() {
+		public XmlBuilder getElementTypeBuilder() {
 			return elementTypeBuilder;
 		}
 
 		@Override
-		void addGroupRef(String referencedGroupName) {
+		public void addGroupRef(String referencedGroupName) {
 			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}]", addingTo::getFullName, () -> referencedGroupName);
 			// We do not create configChildBuilder during construction, because
 			// that would produce an empty <seqneuce><choice> when there are no
 			// config children.
-			if(configChildBuilder == null) {
+			if (configChildBuilder == null) {
 				log.trace("Create <sequence><choice> to wrap the config children in");
 				configChildBuilder = version.configChildBuilder(elementTypeBuilder);
 			} else {
@@ -464,43 +469,43 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		}
 
 		@Override
-		void addAttributeGroupRef(String referencedGroupName) {
+		public void addAttributeGroupRef(String referencedGroupName) {
 			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}]", addingTo::getFullName, () -> referencedGroupName);
 			XmlBuilder builder = FrankDocXsdFactoryXmlUtils.createAttributeGroupRef(referencedGroupName);
 			attributeReuseManager.addAttribute(builder, elementTypeBuilder);
 		}
 
 		@Override
-		void addThePluralConfigChildGroup(String referencedGroupName) {
+		public void addThePluralConfigChildGroup(String referencedGroupName) {
 			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}], without adding <sequence><choice>",
 				addingTo::getFullName, () -> referencedGroupName);
 			FrankDocXsdFactoryXmlUtils.addGroupRef(elementTypeBuilder, referencedGroupName);
 		}
 	}
 
-	private static class ElementOmitter extends ElementBuildingStrategy {
+	private static class ElementOmitter implements ElementBuildingStrategy {
 		@Override
-		void onNoAttributes() {
+		public void onNoAttributes() {
 			// No-op in this implementation
 		}
 		@Override
-		boolean needsSpecialAttributesInElementType() {
+		public boolean needsSpecialAttributesInElementType() {
 			return false;
 		}
 		@Override
-		XmlBuilder getElementTypeBuilder() {
+		public XmlBuilder getElementTypeBuilder() {
 			return null;
 		}
 		@Override
-		void addGroupRef(String referencedGroupName) {
+		public void addGroupRef(String referencedGroupName) {
 			// No-op in this implementation
 		}
 		@Override
-		void addAttributeGroupRef(String referencedGroupName) {
+		public void addAttributeGroupRef(String referencedGroupName) {
 			// No-op in this implementation
 		}
 		@Override
-		void addThePluralConfigChildGroup(String referencedGroupName) {
+		public void addThePluralConfigChildGroup(String referencedGroupName) {
 			// No-op in this implementation
 		}
 	}

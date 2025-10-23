@@ -1,5 +1,5 @@
 /*
-Copyright 2020, 2021, 2022 WeAreFrank!
+Copyright 2020, 2021, 2022, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -83,11 +83,11 @@ public class FrankAttribute extends ElementChild {
 			return;
 		}
 		if(EnumSet.of(MandatoryStatus.MANDATORY, MandatoryStatus.BECOMES_MANDATORY).contains(getMandatoryStatus())) {
-			log.warn("Attribute [{}] is [{}], but it also has a default value: [{}]", toString(), getMandatoryStatus(), getDefaultValue());
+			log.warn("Attribute [{}] is [{}], but it also has a default value: [{}]", this, getMandatoryStatus(), getDefaultValue());
 		}
 		boolean isExplicitNull = (StringUtils.isBlank(getDefaultValue()) || getDefaultValue().equals("null"));
 		if(isExplicitNull && parameterType.isPrimitive()) {
-			log.error("Attribute [{}] is of primitive type [{}] but has default value null", toString(), parameterType.toString());
+			log.error("Attribute [{}] is of primitive type [{}] but has default value null", this, parameterType);
 			return;
 		}
 		if(isExplicitNull) {

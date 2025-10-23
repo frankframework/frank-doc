@@ -1,5 +1,5 @@
 /*
-Copyright 2022, 2024 WeAreFrank!
+Copyright 2022, 2024, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,15 +16,14 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
 
 public class LabelValues {
 	private static final Logger log = LogUtil.getLogger(LabelValues.class);
@@ -50,6 +49,6 @@ public class LabelValues {
 	List<String> getAllValuesOfLabel(String label) {
 		return data.get(label).stream()
 				.distinct()
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

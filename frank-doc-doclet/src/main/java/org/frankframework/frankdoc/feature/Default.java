@@ -1,5 +1,5 @@
 /*
-Copyright 2022, 2023 WeAreFrank!
+Copyright 2022, 2023, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,18 +16,14 @@ limitations under the License.
 
 package org.frankframework.frankdoc.feature;
 
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 public class Default {
 	private static final String ANNOTATION_DEFAULT = "org.frankframework.doc.Default";
 	private static final String TAG_DEFAULT = "@ff.default";
 
-	private static Logger log = LogUtil.getLogger(Default.class);
 	private static final Default INSTANCE = new Default();
 
 	public static Default getInstance() {

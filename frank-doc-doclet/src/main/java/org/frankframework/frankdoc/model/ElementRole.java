@@ -1,5 +1,5 @@
 /*
-Copyright 2020, 2021 WeAreFrank!
+Copyright 2020, 2021, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,14 +16,6 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.util.LogUtil;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -32,6 +24,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.util.LogUtil;
+
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ElementRole implements Comparable<ElementRole> {
 	private static Logger log = LogUtil.getLogger(ElementRole.class);
@@ -129,19 +130,15 @@ public class ElementRole implements Comparable<ElementRole> {
 	}
 
 	List<FrankElement> getRawMembers() {
-		try {
-			return elementType.getMembers().stream()
-				.filter(el -> !nameConflicts.contains(el))
-				.collect(Collectors.toList());
-		} catch (Exception e) {
-			throw (e);
-		}
+		return elementType.getMembers().stream()
+			.filter(el -> !nameConflicts.contains(el))
+			.toList();
 	}
 
 	public List<FrankElement> getMembers() {
 		return getRawMembers().stream()
 			.filter(this::noConflictingRoleSet)
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 	private boolean noConflictingRoleSet(FrankElement frankElement) {
@@ -181,7 +178,7 @@ public class ElementRole implements Comparable<ElementRole> {
 		if (roles.size() == 1) {
 			return roles;
 		} else {
-			return roles.stream().map(ElementRole::getHighestCommonInterface).distinct().collect(Collectors.toList());
+			return roles.stream().map(ElementRole::getHighestCommonInterface).distinct().toList();
 		}
 	}
 

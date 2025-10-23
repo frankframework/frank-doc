@@ -1,5 +1,5 @@
 /*
-   Copyright 2020, 2021 WeAreFrank!
+   Copyright 2020, 2021, 2025 WeAreFrank!
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@
 */
 package org.frankframework.frankdoc.model;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Parses file digester-rules.xml.
@@ -49,8 +49,7 @@ public abstract class DigesterRulesHandler extends DefaultHandler {
 				try {
 					invokeSetter(rule, method, value);
 				} catch (IllegalAccessException | InvocationTargetException e) {
-					log.error("unable to set method ["+method+"] with value ["+value+"]");
-					e.printStackTrace();
+					log.error("unable to set method [{}] with value [{}]", method, value, e);
 				}
 			}
 

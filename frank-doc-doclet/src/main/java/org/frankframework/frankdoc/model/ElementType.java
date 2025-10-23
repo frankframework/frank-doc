@@ -1,5 +1,5 @@
 /*
-Copyright 2020, 2021, 2023 WeAreFrank!
+Copyright 2020, 2021, 2023, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,8 +16,13 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.AccessLevel;
-import lombok.Getter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
@@ -26,12 +31,8 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 /**
  * Models a collection of FrankElement. The collection can be characterized by
@@ -52,6 +53,9 @@ public class ElementType implements Comparable<ElementType> {
 
 	private final @Getter(AccessLevel.PACKAGE) List<FrankElement> members;
 	private final @Getter boolean fromJavaInterface;
+	private final InterfaceHierarchyItem interfaceHierarchy;
+	private @Getter List<ElementType> commonInterfaceHierarchy;
+	private final @Getter String defaultElement;
 
 	private static class InterfaceHierarchyItem {
 		private final @Getter String fullName;
@@ -74,17 +78,12 @@ public class ElementType implements Comparable<ElementType> {
 			if (currentMatch != null) {
 				return List.of(currentMatch);
 			}
-			List<ElementType> result = new ArrayList<>();
-			for (String parentKey : parentInterfaces.keySet()) {
-				result.addAll(parentInterfaces.get(parentKey).findMatchingElementTypes(model));
-			}
-			return result;
+			return parentInterfaces.values().stream()
+				.map(parentInterface -> parentInterface.findMatchingElementTypes(model))
+				.flatMap(List::stream)
+				.toList();
 		}
 	}
-
-	private final InterfaceHierarchyItem interfaceHierarchy;
-	private @Getter List<ElementType> commonInterfaceHierarchy;
-	private final @Getter String defaultElement;
 
 	ElementType(FrankClass clazz, FrankClassRepository repository) {
 		interfaceHierarchy = new InterfaceHierarchyItem(clazz);
@@ -102,14 +101,13 @@ public class ElementType implements Comparable<ElementType> {
 			}
 			return null;
 		}
-		String result = null;
 		try {
 			FrankClass defaultClass = repository.findClass(value);
-			result = defaultClass.getName();
+			return defaultClass.getName();
 		} catch (FrankDocException e) {
 			log.error("JavaDoc tag {} on interface [{}] does not point to a valid class: [{}]", JAVADOC_DEFAULT_CLASSNAME, clazz.getName(), value, e);
+			return null;
 		}
-		return result;
 	}
 
 	public String getFullName() {
@@ -136,10 +134,10 @@ public class ElementType implements Comparable<ElementType> {
 	void calculateCommonInterfaceHierarchy(FrankDocModel model) {
 		commonInterfaceHierarchy = new ArrayList<>();
 		commonInterfaceHierarchy.add(this);
-		ElementType nextCandidate = commonInterfaceHierarchy.get(commonInterfaceHierarchy.size() - 1).getNextCommonInterface(model);
+		ElementType nextCandidate = this.getNextCommonInterface(model);
 		while (nextCandidate != null) {
 			commonInterfaceHierarchy.add(nextCandidate);
-			nextCandidate = commonInterfaceHierarchy.get(commonInterfaceHierarchy.size() - 1).getNextCommonInterface(model);
+			nextCandidate = nextCandidate.getNextCommonInterface(model);
 		}
 		if (log.isTraceEnabled()) {
 			String commonInterfaceHierarchyStr = commonInterfaceHierarchy.stream().map(ElementType::getFullName).collect(Collectors.joining(", "));
@@ -155,10 +153,10 @@ public class ElementType implements Comparable<ElementType> {
 		if (!fromJavaInterface) {
 			return null;
 		}
-		List<ElementType> candidates = new ArrayList<>();
-		for (String key : interfaceHierarchy.getParentInterfaces().keySet()) {
-			candidates.addAll(interfaceHierarchy.getParentInterfaces().get(key).findMatchingElementTypes(model));
-		}
+		List<ElementType> candidates = interfaceHierarchy.getParentInterfaces().values().stream()
+			.map(parentInterface -> parentInterface.findMatchingElementTypes(model))
+			.flatMap(List::stream)
+			.toList();
 		if (candidates.isEmpty()) {
 			return null;
 		} else {
@@ -178,7 +176,7 @@ public class ElementType implements Comparable<ElementType> {
 		return members.stream()
 			.filter(frankElement -> !frankElement.getXmlElementNames().isEmpty())
 			.sorted()
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 	@Override

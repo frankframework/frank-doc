@@ -1,5 +1,5 @@
 /*
-Copyright 2020 WeAreFrank!
+Copyright 2020, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,16 +16,15 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.Getter;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import static org.frankframework.frankdoc.model.ElementChild.ALL_NOT_EXCLUDED;
 
+import java.util.Arrays;
+
+import lombok.Getter;
+
 public class FrankElementStatistics {
-	private @Getter FrankElement subject;
-	private @Getter int numAncestors;
+	private final @Getter FrankElement subject;
+	private final @Getter int numAncestors;
 	private @Getter int numChildren;
 	private @Getter int numDescendants;
 	private @Getter int numConfigChildren;
@@ -49,22 +48,21 @@ public class FrankElementStatistics {
 	}
 
 	public static String header() {
-		return Arrays.asList(
-				"FullName",
-				"numAncestors",
-				"numChildren",
-				"numDescendants",
-				"numConfigChildren",
-				"numAttributes",
-				"numOverriddenConfigChildren",
-				"numOverriddenAttributes",
-				"numConfigChildOverriders",
-				"numAttributeOverriders",
-				"minConfigChildOverriderDepth",
-				"maxConfigChildOverriderDepth",
-				"minAttributeOverriderDepth",
-				"maxAttributeOverriderDepth")
-			.stream().collect(Collectors.joining(", "));
+		return String.join(", ", Arrays.asList(
+			"FullName",
+			"numAncestors",
+			"numChildren",
+			"numDescendants",
+			"numConfigChildren",
+			"numAttributes",
+			"numOverriddenConfigChildren",
+			"numOverriddenAttributes",
+			"numConfigChildOverriders",
+			"numAttributeOverriders",
+			"minConfigChildOverriderDepth",
+			"maxConfigChildOverriderDepth",
+			"minAttributeOverriderDepth",
+			"maxAttributeOverriderDepth"));
 	}
 
 	@Override

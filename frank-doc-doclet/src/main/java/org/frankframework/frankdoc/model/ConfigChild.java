@@ -1,5 +1,5 @@
 /*
-Copyright 2020, 2021, 2022 WeAreFrank!
+Copyright 2020, 2021, 2022, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,9 +16,14 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.XsdVersion;
 import org.frankframework.frankdoc.feature.Deprecated;
@@ -27,14 +32,9 @@ import org.frankframework.frankdoc.feature.Reintroduce;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A method on a class, which indicates which child elements can be used.
@@ -62,7 +62,7 @@ public abstract class ConfigChild extends ElementChild {
 		setDocumented(Description.getInstance().valueOf(method) != null);
 		setDeprecationInfo(Deprecated.getInstance().getInfo(method));
 		setReintroduced(Reintroduce.getInstance().isSetOn(method));
-		log.trace("ConfigChild of method {} has documented={}, deprecated={}, reintroduced={}", () -> method.toString(), () -> isDocumented(), () -> isDeprecated(), () -> isReintroduced());
+		log.trace("ConfigChild of method {} has documented={}, deprecated={}, reintroduced={}", () -> method, this::isDocumented, this::isDeprecated, this::isReintroduced);
 		this.methodName = method.getName();
 	}
 
@@ -96,22 +96,23 @@ public abstract class ConfigChild extends ElementChild {
 	static List<ConfigChild> removeDuplicates(List<ConfigChild> orig) {
 		Map<ConfigChildKey, List<ConfigChild>> byKey = orig.stream().collect(Collectors.groupingBy(ConfigChild::getKey));
 		List<ConfigChild> result = new ArrayList<>();
-		for(ConfigChildKey key: byKey.keySet()) {
-			List<ConfigChild> bucket = new ArrayList<>(byKey.get(key));
-			Collections.sort(bucket, REMOVE_DUPLICATES_COMPARATOR);
+		for (var entry: byKey.entrySet()) {
+			ConfigChildKey key = entry.getKey();
+			List<ConfigChild> bucket = new ArrayList<>(entry.getValue());
+			bucket.sort(REMOVE_DUPLICATES_COMPARATOR);
 			ConfigChild selected = bucket.get(0);
 			result.add(selected);
-			if(selected.isDeprecated()) {
-				if(bucket.stream().allMatch(ElementChild::isDeprecated)) {
-					log.trace("All config children with key [{}] are deprecated", () -> key.toString());
+			if (selected.isDeprecated()) {
+				if (bucket.stream().allMatch(ElementChild::isDeprecated)) {
+					log.trace("All config children with key [{}] are deprecated", key);
 				} else {
 					log.error("From duplicate config children, only a deprecated one is selected. In mode {}, {} will not have a config child for {}",
-							() -> XsdVersion.STRICT, () -> selected.getOwningElement().getFullName(), () -> selected.toString());
+							() -> XsdVersion.STRICT, () -> selected.getOwningElement().getFullName(), () -> selected);
 				}
 			}
-			if(log.isTraceEnabled() && (bucket.size() >= 2)) {
-				for(ConfigChild omitted: bucket.subList(1, bucket.size())) {
-					log.trace("Omitting config child {} because it is a duplicate of {}", omitted.toString(), selected.toString());
+			if (log.isTraceEnabled() && (bucket.size() >= 2)) {
+				for (ConfigChild omitted: bucket.subList(1, bucket.size())) {
+					log.trace("Omitting config child {} because it is a duplicate of {}", omitted, selected);
 				}
 			}
 		}
@@ -126,13 +127,15 @@ public abstract class ConfigChild extends ElementChild {
 
 	public static Stream<ElementRole> getElementRoleStream(Collection<ConfigChild> configChildren) {
 		return configChildren.stream()
-				.filter(c -> c instanceof ObjectConfigChild)
+				.filter(ObjectConfigChild.class::isInstance)
 				.map(c -> (ObjectConfigChild) c)
 				.map(ObjectConfigChild::getElementRole)
 				.distinct();
 	}
 
 	public static String toString(Collection<ConfigChild> configChildren) {
-		return configChildren.stream().map(ConfigChild::toString).collect(Collectors.joining(", "));
+		return configChildren.stream()
+			.map(ConfigChild::toString)
+			.collect(Collectors.joining(", "));
 	}
 }

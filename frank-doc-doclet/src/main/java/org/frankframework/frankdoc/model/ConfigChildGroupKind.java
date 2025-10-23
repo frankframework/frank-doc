@@ -1,17 +1,17 @@
-/* 
-Copyright 2021 WeAreFrank! 
+/*
+Copyright 2021, 2025 WeAreFrank!
 
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0 
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License. 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package org.frankframework.frankdoc.model;
@@ -34,14 +34,14 @@ public enum ConfigChildGroupKind {
 		if(roleNames.size() >= 2) {
 			throw new IllegalArgumentException(String.format("Expected config children [%s] to have the same role name, but got role names [%s]",
 					configChildren.stream().map(ConfigChild::toString).collect(Collectors.joining(", ")),
-					roleNames.stream().collect(Collectors.joining(", "))));
+				String.join(", ", roleNames)));
 		}
-		boolean allObject = configChildren.stream().allMatch(c -> c instanceof ObjectConfigChild);
+		boolean allObject = configChildren.stream().allMatch(ObjectConfigChild.class::isInstance);
 		// We also apply this method on config child collections where the config children
 		// can have different owning elements. This applies when the generic element option
 		// is being analysed. Therefore we allow multiple config children that are all
 		// instance of TextConfigChild.
-		boolean allSingleText = configChildren.stream().allMatch(c -> c instanceof TextConfigChild);
+		boolean allSingleText = configChildren.stream().allMatch(TextConfigChild.class::isInstance);
 		if(allObject) {
 			return ConfigChildGroupKind.OBJECT;
 		} else if(allSingleText) {

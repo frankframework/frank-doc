@@ -1,5 +1,5 @@
 /*
-Copyright 2020 - 2024 WeAreFrank!
+Copyright 2020 - 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,23 +16,7 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.feature.Deprecated;
-import org.frankframework.frankdoc.feature.Description;
-import org.frankframework.frankdoc.feature.Notes;
-import org.frankframework.frankdoc.feature.Protected;
-import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
-import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.wrapper.FrankAnnotation;
-import org.frankframework.frankdoc.wrapper.FrankClass;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.frankframework.frankdoc.wrapper.FrankType;
+import static java.util.stream.Collectors.groupingBy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +35,24 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.groupingBy;
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.feature.Deprecated;
+import org.frankframework.frankdoc.feature.Description;
+import org.frankframework.frankdoc.feature.Notes;
+import org.frankframework.frankdoc.feature.Protected;
+import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
+import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.FrankAnnotation;
+import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
+import org.frankframework.frankdoc.wrapper.FrankType;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Models a Java class that can be referred to in a Frank configuration.
@@ -70,7 +71,7 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private static final Pattern JAVADOC_SEE_PATTERN = Pattern.compile("<a href=[\"'](.*?)[\"']>(.*?)<\\/a>(.*)");
 
-	private static Logger log = LogUtil.getLogger(FrankElement.class);
+	private static final Logger log = LogUtil.getLogger(FrankElement.class);
 
 	private static final Comparator<FrankElement> COMPARATOR =
 		Comparator.comparing(FrankElement::getSimpleName).thenComparing(FrankElement::getFullName);
@@ -103,9 +104,9 @@ public class FrankElement implements Comparable<FrankElement> {
 	// created when there is a matching rule in digester-rules. These
 	// rules have to match config children for which this FrankElement
 	// is member of the config child's ElementType.
-	private List<ConfigChild> configParents = new ArrayList<>();
+	private final List<ConfigChild> configParents = new ArrayList<>();
 
-	private Map<Class<? extends ElementChild>, LinkedHashMap<? extends AbstractKey, ? extends ElementChild>> allChildren;
+	private final Map<Class<? extends ElementChild>, LinkedHashMap<? extends AbstractKey, ? extends ElementChild>> allChildren;
 	private @Getter List<String> xmlElementNames;
 	private @Getter FrankElementStatistics statistics;
 	private LinkedHashMap<String, ConfigChildSet> configChildSets;
@@ -154,10 +155,10 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	private void handleConfigChildSetterCandidates(FrankClass clazz) {
-		List<FrankMethod> methods = Arrays.asList(clazz.getDeclaredMethodsAndMultiplyInheritedPlaceholders()).stream()
+		List<FrankMethod> methods = Arrays.stream(clazz.getDeclaredMethodsAndMultiplyInheritedPlaceholders())
 			.filter(FrankMethod::isPublic)
 			.filter(Utils::isConfigChildSetter)
-			.collect(Collectors.toList());
+			.toList();
 		for (int i = 0; i < methods.size(); ++i) {
 			if (!configChildCandidateHasProtectedArgument(methods.get(i))) {
 				unusedConfigChildSetterCandidates.put(methods.get(i), i);
@@ -168,11 +169,10 @@ public class FrankElement implements Comparable<FrankElement> {
 	private boolean configChildCandidateHasProtectedArgument(FrankMethod frankMethod) {
 		log.trace("Checking method [{}]", frankMethod::toString);
 		FrankType argumentType = frankMethod.getParameterTypes()[0];
-		if (!(argumentType instanceof FrankClass)) {
+		if (!(argumentType instanceof FrankClass argument)) {
 			// Text config child, wont have feature PROTECTED
 			return false;
 		}
-		FrankClass argument = (FrankClass) argumentType;
 		if (argument.isInterface()) {
 			return false;
 		}
@@ -297,11 +297,10 @@ public class FrankElement implements Comparable<FrankElement> {
 		// Check if annotation contains a list of label annotations.
 		Object value = annotation.getValue();
 
-		if (value instanceof FrankAnnotation[] valueAnnotations) {
-			if (valueAnnotations.length > 0) {
-				return valueAnnotations[0].getAnnotation(JAVADOC_LABEL_ANNOTATION_CLASSNAME) != null;
-			}
+		if (value instanceof FrankAnnotation[] valueAnnotations && valueAnnotations.length > 0) {
+			return valueAnnotations[0].getAnnotation(JAVADOC_LABEL_ANNOTATION_CLASSNAME) != null;
 		}
+
 
 		return false;
 	}
@@ -339,10 +338,8 @@ public class FrankElement implements Comparable<FrankElement> {
 	private Map<String, List<String>> mergeLabels(Map<String, List<String>> map1, Map<String, List<String>> map2) {
 		HashMap<String, List<String>> result = new HashMap<>(map1);
 
-		for (String key : map2.keySet()) {
-			if (!result.containsKey(key)) {
-				result.put(key, map2.get(key));
-			}
+		for (var entry : map2.entrySet()) {
+			result.computeIfAbsent(entry.getKey(), k -> entry.getValue());
 		}
 
 		return result;
@@ -406,14 +403,12 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	void addConfigParent(ConfigChild parent) {
-		log.trace("To [{}] [{}] added config parent [{}]", this.getClass().getSimpleName(), fullName, parent.toString());
+		log.trace("To [{}] [{}] added config parent [{}]", this.getClass().getSimpleName(), fullName, parent);
 		configParents.add(parent);
 	}
 
 	public List<ConfigChild> getConfigParents() {
-		List<ConfigChild> result = new ArrayList<>();
-		result.addAll(configParents);
-		return result;
+		return new ArrayList<>(configParents);
 	}
 
 	public void addXmlElementName(String elementName) {
@@ -427,7 +422,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	public String getTheSingleXmlElementName() {
 		if (!hasOnePossibleXmlElementName()) {
 			throw new IllegalStateException(String.format("FrankElement [%s] has more then one possible XML element name: [%s]",
-				fullName, xmlElementNames.stream().collect(Collectors.joining(", "))));
+				fullName, String.join(", ", xmlElementNames)));
 		}
 		return xmlElementNames.get(0);
 	}
@@ -456,7 +451,10 @@ public class FrankElement implements Comparable<FrankElement> {
 	@SuppressWarnings("unchecked")
 	public <T extends ElementChild> List<T> getChildrenOfKind(Predicate<ElementChild> selector, Class<T> kind) {
 		Map<? extends AbstractKey, ? extends ElementChild> lookup = allChildren.get(kind);
-		return lookup.values().stream().filter(selector).map(c -> (T) c).collect(Collectors.toList());
+		return lookup.values().stream()
+			.filter(selector)
+			.map(c -> (T) c)
+			.toList();
 	}
 
 	public void setConfigChildren(List<ConfigChild> children) {
@@ -567,16 +565,13 @@ public class FrankElement implements Comparable<FrankElement> {
 		// here so there is no need to promote (IWrapperPipe, outputWrapper). This way, the outputWrapper config child
 		// only allows elements that implement IWrapperPipe, not all implementations of IPipe.
 		//
-		List<String> removablePostfixes = elementType.getCommonInterfaceHierarchy().stream().map(ElementType::getGroupName).collect(Collectors.toList());
-		String result = simpleName;
-		for (String removablePostfix : removablePostfixes) {
-			if (result.endsWith(removablePostfix)) {
-				result = result.substring(0, result.lastIndexOf(removablePostfix));
-				break;
-			}
-		}
-		result = result + Utils.toUpperCamelCase(roleName);
-		return result;
+		String nameWithoutRemovablePostfix = elementType.getCommonInterfaceHierarchy().stream()
+			.map(ElementType::getGroupName)
+			.filter(simpleName::endsWith)
+			.findFirst()
+			.map(removablePostfix -> simpleName.substring(0, simpleName.lastIndexOf(removablePostfix)))
+			.orElse(simpleName);
+		return nameWithoutRemovablePostfix + Utils.toUpperCamelCase(roleName);
 	}
 
 	void addConfigChildSet(ConfigChildSet configChildSet) {
@@ -589,8 +584,9 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	public List<ConfigChildSet> getCumulativeConfigChildSets() {
 		Map<String, ConfigChildSet> resultAsMap = new HashMap<>();
-		for (String roleName : configChildSets.keySet()) {
-			resultAsMap.put(roleName, configChildSets.get(roleName));
+		for (var entry : configChildSets.entrySet()) {
+			String roleName = entry.getKey();
+			resultAsMap.put(roleName, entry.getValue());
 		}
 		if (parent != null) {
 			List<ConfigChildSet> inheritedConfigChildSets = getParent().getCumulativeConfigChildSets();
@@ -612,7 +608,7 @@ public class FrankElement implements Comparable<FrankElement> {
 			return false;
 		}
 		return configChildSets.values().stream()
-			.anyMatch(cs -> cs.getConfigChildren().stream().filter(selector.or(rejector)).count() >= 1);
+			.anyMatch(cs -> cs.getConfigChildren().stream().anyMatch(selector.or(rejector)));
 	}
 
 	public FrankElement getNextPluralConfigChildrenAncestor(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
