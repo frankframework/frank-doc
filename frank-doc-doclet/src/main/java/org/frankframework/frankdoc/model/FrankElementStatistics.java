@@ -23,8 +23,8 @@ import java.util.Arrays;
 import lombok.Getter;
 
 public class FrankElementStatistics {
-	private @Getter FrankElement subject;
-	private @Getter int numAncestors;
+	private final @Getter FrankElement subject;
+	private final @Getter int numAncestors;
 	private @Getter int numChildren;
 	private @Getter int numDescendants;
 	private @Getter int numConfigChildren;

@@ -40,7 +40,7 @@ import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.getXmlSchem
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -139,7 +139,7 @@ import org.frankframework.frankdoc.util.XmlBuilder;
 public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private static final Logger log = LogUtil.getLogger(FrankDocXsdFactory.class);
 
-	private static final Map<XsdVersion, String> outputFileNames = new HashMap<>();
+	private static final Map<XsdVersion, String> outputFileNames = new EnumMap<>(XsdVersion.class);
 	public static final String UNBOUNDED = "unbounded";
 	public static final String ELEMENT_TYPE_STRING = "xs:string";
 
@@ -263,9 +263,9 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 
 	private String getConfigChildGroupOf(FrankElement frankElement) {
 		// TODO: Add cumulative group if the start element (typically <Configuration>) has
-		// ancestors with config children. Or even take a declared/cumulative group of an ancestor
-		// if <Configuration> itself has no config children. These do not apply in practice, so
-		// implementing this has not a high priority.
+		//  ancestors with config children. Or even take a declared/cumulative group of an ancestor
+		//  if <Configuration> itself has no config children. These do not apply in practice, so
+		//  implementing this has not a high priority.
 		if(frankElement.getCumulativeConfigChildren(version.getChildSelector(), version.getChildRejector()).isEmpty()) {
 			// This will not happen in production, but we have integration tests in which config children are not relevant.
 			return null;

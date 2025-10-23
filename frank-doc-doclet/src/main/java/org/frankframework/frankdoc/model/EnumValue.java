@@ -28,9 +28,9 @@ public class EnumValue {
 	private static final String ENUM_LABEL = "org.frankframework.doc.EnumLabel";
 
 	private @Getter boolean explicitLabel = false;
-	private @Getter String javaTag;
+	private final @Getter String javaTag;
 	private @Getter String label;
-	private @Getter String description;
+	private final @Getter String description;
 	private @Getter boolean deprecated = false;
 
 	public EnumValue(FrankEnumConstant c) {
@@ -38,15 +38,15 @@ public class EnumValue {
 		this.label = this.javaTag;
 		FrankAnnotation annotation = c.getAnnotation(ENUM_LABEL);
 		String annotationValue = null;
-		if(annotation != null) {
-			annotationValue = (String) annotation.getValue();
+		if (annotation != null) {
+			annotationValue = (String)annotation.getValue();
 		}
-		if(! StringUtils.isBlank(annotationValue)) {
+		if (!StringUtils.isBlank(annotationValue)) {
 			this.explicitLabel = true;
 			this.label = annotationValue;
 		}
 		this.description = Description.getInstance().valueOf(c);
-		if(Deprecated.getInstance().isSetOn(c)) {
+		if (Deprecated.getInstance().isSetOn(c)) {
 			this.deprecated = true;
 		}
 	}

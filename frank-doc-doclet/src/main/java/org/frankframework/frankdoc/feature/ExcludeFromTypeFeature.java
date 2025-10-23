@@ -32,7 +32,7 @@ import org.frankframework.frankdoc.wrapper.FrankDocException;
 import lombok.NonNull;
 
 public final class ExcludeFromTypeFeature {
-	private static Logger log = LogUtil.getLogger(ExcludeFromTypeFeature.class);
+	private static final Logger log = LogUtil.getLogger(ExcludeFromTypeFeature.class);
 	private static final String ANNOTATION_NAME = "org.frankframework.doc.ExcludeFromType";
 	private static final String TAG_NAME = "@ff.excludeFromType";
 
@@ -45,7 +45,7 @@ public final class ExcludeFromTypeFeature {
 
 	// We cache results of method excludeFrom to ensure that each result is calculated only once.
 	// If errors or warnings occur, they are not duplicated in the log.
-	private Map<FrankClass, Set<FrankClass>> checkedClasses = new HashMap<>();
+	private final Map<FrankClass, Set<FrankClass>> checkedClasses = new HashMap<>();
 
 	private ExcludeFromTypeFeature(FrankClassRepository repository) {
 		this.repository = repository;
