@@ -297,7 +297,7 @@ public class FrankDocModel {
 		LinkedHashMap<String, FrankMethod> setterAttributes = getAttributeToMethodMap(methods, "set");
 		Map<String, FrankMethod> getterAttributes = getGetterAndIsserAttributes(methods, attributeOwner);
 		List<FrankAttribute> result = new ArrayList<>();
-		for(Entry<String, FrankMethod> entry: setterAttributes.entrySet()) {
+		for (Entry<String, FrankMethod> entry: setterAttributes.entrySet()) {
 			String attributeName = entry.getKey();
 			log.trace("Attribute [{}]", () -> attributeName);
 			FrankMethod method = entry.getValue();
@@ -309,7 +309,7 @@ public class FrankDocModel {
 			}
 			boolean unsafe = method.getAnnotation(UNSAFE_ANNOTATION_CLASSNAME) != null;
 			FrankAttribute attribute = new FrankAttribute(attributeName, unsafe, attributeOwner);
-			if(method.getParameterTypes()[0].isEnum()) {
+			if (method.getParameterTypes()[0].isEnum()) {
 				log.trace("Attribute [{}] has setter that takes enum: [{}]", attribute::getName, () -> method.getParameterTypes()[0]);
 				attribute.setAttributeType(AttributeType.STRING);
 				FrankClass enumClass = (FrankClass) method.getParameterTypes()[0];
