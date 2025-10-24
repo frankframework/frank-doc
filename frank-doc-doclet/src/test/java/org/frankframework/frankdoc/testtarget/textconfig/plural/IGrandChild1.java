@@ -1,4 +1,4 @@
 package org.frankframework.frankdoc.testtarget.textconfig.plural;
 
-public interface IGrandChild1 {
+public interface IGrandChild1 extends FrankElement {
 }

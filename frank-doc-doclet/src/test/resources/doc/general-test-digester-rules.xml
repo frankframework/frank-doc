@@ -14,6 +14,8 @@
   <rule pattern="*/r" registerTextMethod="addR"/>
   <rule pattern="*/s" registerTextMethod="addS"/>
 
+  <rule pattern="*/configWarning" registerTextMethod="addConfigWarning"/>
+
   <rule pattern="*/sender" registerMethod="setSender" beanClass="org.frankframework.frankdoc.testtarget.featurepackage.ISender" />
   <rule pattern="*/listener" registerMethod="setListener"/>
 </digester-rules>
