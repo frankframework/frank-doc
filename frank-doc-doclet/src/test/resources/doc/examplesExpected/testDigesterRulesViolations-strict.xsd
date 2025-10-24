@@ -71,4 +71,14 @@
       <xs:pattern value="$\{[^\}]+\}" />
     </xs:restriction>
   </xs:simpleType>
+  <xs:complexType name="WarningType">
+    <xs:simpleContent>
+      <xs:annotation>
+        <xs:documentation>The warning will be shown in the Frank!Framework Console when the 'active' attribute evaluates to 'true'</xs:documentation>
+      </xs:annotation>
+      <xs:extension base="xs:string">
+        <xs:attribute ref="active" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
 </xs:schema>

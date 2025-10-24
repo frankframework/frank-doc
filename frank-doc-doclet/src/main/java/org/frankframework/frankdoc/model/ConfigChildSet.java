@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.FrankDocXsdFactory;
 import org.frankframework.frankdoc.util.LogUtil;
 
 import lombok.Getter;
@@ -96,6 +97,14 @@ public class ConfigChildSet {
 
 	public String getRoleName() {
 		return configChildren.get(0).getRoleName();
+	}
+
+	public String getElementTypeName() {
+		ConfigChild configChild = configChildren.get(0);
+		if (configChild instanceof TextConfigChild textConfigChild) {
+			return textConfigChild.getElementTypeName();
+		}
+		return FrankDocXsdFactory.ELEMENT_TYPE_STRING;
 	}
 
 	public List<ElementRole> getFilteredElementRoles(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {

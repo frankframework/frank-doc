@@ -5,4 +5,6 @@ package org.frankframework.frankdoc.testtarget.entity.reference;
  * and uses Receiver and a PipeLine.
  */
 public class Adapter {
+	public void addConfigWarning(String message) {
+	}
 }

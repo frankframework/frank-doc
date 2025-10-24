@@ -1,5 +1,5 @@
 package org.frankframework.frankdoc.testtarget.textconfig;
 
-public interface IChild {
+public interface IChild extends FrankElement {
 
 }

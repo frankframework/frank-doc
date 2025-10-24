@@ -597,9 +597,9 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void addConfigChild(XmlBuilder context, ConfigChild child) {
 		log.trace("Adding config child [{}]", child::toString);
 		version.checkForMissingDescription(child);
-		if(child instanceof ObjectConfigChild objectConfigChild) {
+		if (child instanceof ObjectConfigChild objectConfigChild) {
 			addObjectConfigChild(context, objectConfigChild);
-		} else if(child instanceof TextConfigChild textConfigChild) {
+		} else if (child instanceof TextConfigChild textConfigChild) {
 			addTextConfigChild(context, textConfigChild);
 		} else {
 			throw new IllegalArgumentException("Cannot happen, there are no other ConfigChild subclasses than ObjectConfigChild or TextConfigChild");
@@ -685,7 +685,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void requestElementGroupForConfigChildSet(ConfigChildSet configChildSet, List<ElementRole> roles) {
 		requestElementGroup(roles);
 		log.trace("Checking whether generic element option has its attributes");
-		if(elementGroupManager.hasGenericOptionAttributeTask(configChildSet)) {
+		if (elementGroupManager.hasGenericOptionAttributeTask(configChildSet)) {
 			log.trace("Finishing generic element option with its attributes");
 			XmlBuilder builder = elementGroupManager.doGenericOptionAttributeTask(configChildSet);
 			addGenericElementOptionAttributes(builder, configChildSet);
@@ -699,7 +699,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		log.trace("Doing requestElementGroup");
 		Set<ElementRole.Key> key = ConfigChildSet.getKey(roles);
 		log.trace("Element group needed for ElementRole-s [{}]", () -> ElementRole.Key.describeCollection(key));
-		if(! elementGroupManager.groupExists(key)) {
+		if (!elementGroupManager.groupExists(key)) {
 			log.trace("Element group does not exist, creating it");
 			String groupName = elementGroupManager.addGroup(key);
 			XmlBuilder group = FrankDocXsdFactoryXmlUtils.createGroup(groupName);
@@ -722,7 +722,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 			String groupName = role.createXsdElementName(ELEMENT_GROUP_BASE);
 			log.trace("Adding group [{}] of role [{}] to element group", () -> groupName, role::toString);
 			FrankDocXsdFactoryXmlUtils.addGroupRef(context, groupName);
-			if(! idsCreatedElementGroups.contains(role.getKey())) {
+			if (!idsCreatedElementGroups.contains(role.getKey())) {
 				idsCreatedElementGroups.add(role.getKey());
 				log.trace("Creating group [{}] for role [{}]", () -> groupName, role::toString);
 				defineElementGroupBaseUnchecked(role);
@@ -834,7 +834,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		XmlBuilder attributeElementRole = FrankDocXsdFactoryXmlUtils.createAttribute(ELEMENT_ROLE, FIXED, configChildSet.getRoleName(), version.getRoleNameAttributeUse());
 		attributeReuseManager.addAttribute(attributeElementRole, complexType);
 		Optional<String> defaultFrankElementName = configChildSet.getGenericElementOptionDefault(version.getElementFilter());
-		XmlBuilder attributeClassName = null;
+		XmlBuilder attributeClassName;
 		if(defaultFrankElementName.isPresent()) {
 			log.trace("Adding attribute [{}] with default [{}]", () -> CLASS_NAME, defaultFrankElementName::get);
 			attributeClassName = FrankDocXsdFactoryXmlUtils.createAttribute(CLASS_NAME, DEFAULT, defaultFrankElementName.get(), OPTIONAL);
@@ -931,7 +931,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void addTextConfigChild(XmlBuilder context, TextConfigChild child) {
-		addElement(context, Utils.toUpperCamelCase(child.getRoleName()), ELEMENT_TYPE_STRING, getMinOccurs(child), getMaxOccurs(child));
+		addElement(context, Utils.toUpperCamelCase(child.getRoleName()), child.getElementTypeName(), getMinOccurs(child), getMaxOccurs(child));
 	}
 
 	/*
@@ -1020,18 +1020,20 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		}
 	}
 
-	// It does not make sense to set minOccurs="1" for mandatory config children.
-	// Plural config children are wrapped inside <xs:sequence minOccurs="0" maxOccurs="unbounded"><xs:choice>.
-	// Setting <xs:element minOccurs="1"...> has no effect.
-	// See also the comment in recursivelyDefineXsdElementUnchecked().
+	/**
+	 * It does not make sense to set minOccurs="1" for mandatory config children.
+	 * Plural config children are wrapped inside <xs:sequence minOccurs="0" maxOccurs="unbounded"><xs:choice>.
+	 * Setting <xs:element minOccurs="1"...> has no effect.
+	 * See also the comment in {@link #recursivelyDefineXsdElementUnchecked()}.
+	 */
 	private void addPluralTextConfigChild(XmlBuilder choice, ConfigChildSet configChildSet) {
-		addElement(choice, Utils.toUpperCamelCase(configChildSet.getRoleName()), ELEMENT_TYPE_STRING, "0", UNBOUNDED);
+		addElement(choice, Utils.toUpperCamelCase(configChildSet.getRoleName()), configChildSet.getElementTypeName(), "0", UNBOUNDED);
 	}
 
 	private void addAttributes(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
 		Consumer<GroupCreator.Callback<FrankAttribute>> cumulativeGroupTrigger =
 				ca -> frankElement.walkCumulativeAttributes(ca, version.getChildSelector(), version.getChildRejector());
-		new GroupCreator<FrankAttribute>(frankElement, version.getHasRelevantChildrenPredicate(FrankAttribute.class), cumulativeGroupTrigger, new GroupCreator.Callback<FrankAttribute>() {
+		new GroupCreator<>(frankElement, version.getHasRelevantChildrenPredicate(FrankAttribute.class), cumulativeGroupTrigger, new GroupCreator.Callback<>() {
 			private XmlBuilder cumulativeBuilder;
 			private String cumulativeGroupName;
 

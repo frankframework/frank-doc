@@ -46,7 +46,7 @@ import lombok.Setter;
  * </p>
  */
 public abstract class ConfigChild extends ElementChild {
-	private static Logger log = LogUtil.getLogger(ConfigChild.class);
+	private static final Logger log = LogUtil.getLogger(ConfigChild.class);
 
 	private static final Comparator<ConfigChild> SINGLE_ELEMENT_ONLY =
 			Comparator.comparing(c -> ! c.isAllowMultiple());
@@ -55,7 +55,7 @@ public abstract class ConfigChild extends ElementChild {
 			SINGLE_ELEMENT_ONLY.thenComparing(ElementChild::getMandatoryStatus);
 
 	private @Getter @Setter boolean allowMultiple;
-	private @Getter(AccessLevel.PACKAGE) String methodName;
+	private final @Getter(AccessLevel.PACKAGE) String methodName;
 
 	ConfigChild(FrankElement owningElement, FrankMethod method) {
 		super(owningElement);

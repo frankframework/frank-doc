@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class TextConfigTest extends BaseIntegrationTest {
 
-	private final String START_CLASS_NAME = "org.frankframework.frankdoc.testtarget.textconfig.Start";
+	private static final String START_CLASS_NAME = "org.frankframework.frankdoc.testtarget.textconfig.Start";
 
 	@Test
 	public void testStrictXsd() throws Exception {
