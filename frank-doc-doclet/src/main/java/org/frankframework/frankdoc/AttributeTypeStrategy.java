@@ -26,14 +26,15 @@ import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addRestrict
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSimpleType;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addUnion;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAttributeWithType;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createComplexType;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createSimpleType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.AttributeEnum;
@@ -89,7 +90,7 @@ public enum AttributeTypeStrategy {
 		return delegate.createAttributeEnumType(attributeEnum);
 	}
 
-	private static abstract class Delegate {
+	private abstract static class Delegate {
 		// This method ensures that references are still allowed for integer and boolean attributes.
 		// For example, an integer attribute can still be set like "${someIdentifier}".
 		// This method expects that methods FrankDocXsdFactoryXmlUtils.createTypeFrankBoolean() and
@@ -98,13 +99,12 @@ public enum AttributeTypeStrategy {
 			return createAttribute(name, modelAttributeType, FRANK_BOOLEAN, FRANK_INT);
 		}
 
-		private XmlBuilder createAttribute(String name, AttributeType modelAttributeType,
-			String boolType, String intType) {
+		private XmlBuilder createAttribute(String name, AttributeType modelAttributeType, String boolType, String intType) {
 			XmlBuilder attribute = createAttributeWithType(name);
 			String typeName = switch (modelAttributeType) {
 				case BOOL -> boolType;
 				case INT -> intType;
-				case STRING -> "xs:string";
+				case STRING -> FrankDocXsdFactory.ELEMENT_TYPE_STRING;
 			};
 			attribute.addAttribute("type", typeName);
 			return attribute;
@@ -121,7 +121,7 @@ public enum AttributeTypeStrategy {
 
 		final XmlBuilder createAttributeEnumType(AttributeEnum attributeEnum) {
 			XmlBuilder simpleType = createSimpleType(attributeEnum.getUniqueName(ATTRIBUTE_VALUES_TYPE));
-			final XmlBuilder restriction = addRestriction(simpleType, "xs:string");
+			final XmlBuilder restriction = addRestriction(simpleType, FrankDocXsdFactory.ELEMENT_TYPE_STRING);
 			attributeEnum.getValues().forEach(v -> addEnumValue(restriction, v));
 			return simpleType;
 		}
@@ -136,7 +136,29 @@ public enum AttributeTypeStrategy {
 			result.add(createAttributeForAttributeActive());
 			// Helper type for allowing a variable reference instead of an enum value
 			result.add(createTypeVariableReference(VARIABLE_REFERENCE));
+			result.add(createTypeWarning());
 			return result;
+		}
+
+		private static XmlBuilder createTypeWarning() {
+
+			XmlBuilder documentation = new XmlBuilder("documentation", "xs", XML_SCHEMA_URI);
+			documentation.setValue("The warning will be shown in the Frank!Framework Console when the 'active' attribute evaluates to 'true'");
+			XmlBuilder annotation = new XmlBuilder("annotation", "xs", XML_SCHEMA_URI);
+			annotation.addSubElement(documentation);
+
+			XmlBuilder attributeRef = FrankDocXsdFactoryXmlUtils.createAttributeRef(ATTRIBUTE_ACTIVE_NAME);
+
+			XmlBuilder extension = new XmlBuilder("extension", "xs", XML_SCHEMA_URI);
+			extension.addAttribute("base", FrankDocXsdFactory.ELEMENT_TYPE_STRING);
+			extension.addSubElement(attributeRef);
+
+			XmlBuilder simpleContent = new XmlBuilder("simpleContent", "xs", XML_SCHEMA_URI);
+			simpleContent.addSubElement(annotation);
+			simpleContent.addSubElement(extension);
+			XmlBuilder complexType = createComplexType(Constants.WARNING_ELEMENT_TYPE_NAME);
+			complexType.addSubElement(simpleContent);
+			return complexType;
 		}
 
 		private static XmlBuilder createTypeFrankBoolean() {
@@ -152,18 +174,16 @@ public enum AttributeTypeStrategy {
 		}
 
 		private static XmlBuilder createStringRestriction(String name, String pattern) {
-			XmlBuilder simpleType = new XmlBuilder("simpleType", "xs", XML_SCHEMA_URI);
-			simpleType.addAttribute("name", name);
+			XmlBuilder simpleType = createSimpleType(name);
 			XmlBuilder restriction = new XmlBuilder("restriction", "xs", XML_SCHEMA_URI);
 			simpleType.addSubElement(restriction);
-			restriction.addAttribute("base", "xs:string");
+			restriction.addAttribute("base", FrankDocXsdFactory.ELEMENT_TYPE_STRING);
 			addPattern(restriction, pattern);
 			return simpleType;
 		}
 
 		private XmlBuilder createAttributeForAttributeActive() {
-			XmlBuilder attribute = new XmlBuilder("attribute", "xs", XML_SCHEMA_URI);
-			attribute.addAttribute("name", ATTRIBUTE_ACTIVE_NAME);
+			XmlBuilder attribute = createAttributeWithType(ATTRIBUTE_ACTIVE_NAME);
 			FrankDocXsdFactoryXmlUtils.addDocumentation(attribute, "If defined and empty or false, then this element and all its children are ignored");
 			XmlBuilder simpleType = FrankDocXsdFactoryXmlUtils.addSimpleType(attribute);
 			XmlBuilder restriction = FrankDocXsdFactoryXmlUtils.addRestriction(simpleType, "xs:string");
@@ -176,15 +196,15 @@ public enum AttributeTypeStrategy {
 		}
 
 		private String getPatternThatMightBeNegated() {
-			String patternTrue = getCaseInsensitivePattern(Boolean.valueOf(true).toString());
-			String patternFalse = getCaseInsensitivePattern(Boolean.valueOf(false).toString());
-			return Arrays.asList(PATTERN_REF, patternTrue, patternFalse).stream()
+			String patternTrue = getCaseInsensitivePattern(Boolean.toString(true));
+			String patternFalse = getCaseInsensitivePattern(Boolean.toString(false));
+			return Stream.of(PATTERN_REF, patternTrue, patternFalse)
 					.map(s -> "(" + s + ")")
 					.collect(Collectors.joining("|"));
 		}
 
 		final String getCaseInsensitivePattern(final String word) {
-			return IntStream.range(0, word.length()).mapToObj(i -> Character.valueOf(word.charAt(i)))
+			return IntStream.range(0, word.length()).mapToObj(word::charAt)
 				.map(c -> "[" + Character.toLowerCase(c) + Character.toUpperCase(c) + "]")
 				.collect(Collectors.joining(""));
 		}

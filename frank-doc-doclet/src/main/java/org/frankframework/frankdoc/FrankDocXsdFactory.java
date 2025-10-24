@@ -931,8 +931,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void addTextConfigChild(XmlBuilder context, TextConfigChild child) {
-		// TODO: Add here code to switch with/without 'active' attribute
-		addElement(context, Utils.toUpperCamelCase(child.getRoleName()), ELEMENT_TYPE_STRING, getMinOccurs(child), getMaxOccurs(child));
+		addElement(context, Utils.toUpperCamelCase(child.getRoleName()), child.getElementTypeName(), getMinOccurs(child), getMaxOccurs(child));
 	}
 
 	/*

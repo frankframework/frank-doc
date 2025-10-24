@@ -16,9 +16,17 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import java.util.Map;
+
+import org.frankframework.frankdoc.Constants;
+import org.frankframework.frankdoc.FrankDocXsdFactory;
+import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 public class TextConfigChild extends ConfigChild {
+	private static final Map<String, String> TEXT_ELEMENTS_WITH_SPECIAL_TYPES = Map.ofEntries(Map.entry(Constants.CONFIG_WARNING_ELEMENT_NAME, Constants.WARNING_ELEMENT_TYPE_NAME));
+	private static final String TEXT_ELEMENT_DEFAULT_TYPE = FrankDocXsdFactory.ELEMENT_TYPE_STRING;
+
 	private final String roleName;
 	private final ConfigChildKey key;
 
@@ -38,6 +46,14 @@ public class TextConfigChild extends ConfigChild {
 	@Override
 	public String getRoleName() {
 		return roleName;
+	}
+
+	public String getElementTypeName() {
+		String elementName = Utils.toUpperCamelCase(roleName);
+		if (TEXT_ELEMENTS_WITH_SPECIAL_TYPES.containsKey(elementName)) {
+			return TEXT_ELEMENTS_WITH_SPECIAL_TYPES.get(elementName);
+		}
+		return TEXT_ELEMENT_DEFAULT_TYPE;
 	}
 
 	@Override
