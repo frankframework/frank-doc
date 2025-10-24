@@ -685,7 +685,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void requestElementGroupForConfigChildSet(ConfigChildSet configChildSet, List<ElementRole> roles) {
 		requestElementGroup(roles);
 		log.trace("Checking whether generic element option has its attributes");
-		if(elementGroupManager.hasGenericOptionAttributeTask(configChildSet)) {
+		if (elementGroupManager.hasGenericOptionAttributeTask(configChildSet)) {
 			log.trace("Finishing generic element option with its attributes");
 			XmlBuilder builder = elementGroupManager.doGenericOptionAttributeTask(configChildSet);
 			addGenericElementOptionAttributes(builder, configChildSet);
@@ -699,7 +699,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		log.trace("Doing requestElementGroup");
 		Set<ElementRole.Key> key = ConfigChildSet.getKey(roles);
 		log.trace("Element group needed for ElementRole-s [{}]", () -> ElementRole.Key.describeCollection(key));
-		if(! elementGroupManager.groupExists(key)) {
+		if (!elementGroupManager.groupExists(key)) {
 			log.trace("Element group does not exist, creating it");
 			String groupName = elementGroupManager.addGroup(key);
 			XmlBuilder group = FrankDocXsdFactoryXmlUtils.createGroup(groupName);
@@ -722,7 +722,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 			String groupName = role.createXsdElementName(ELEMENT_GROUP_BASE);
 			log.trace("Adding group [{}] of role [{}] to element group", () -> groupName, role::toString);
 			FrankDocXsdFactoryXmlUtils.addGroupRef(context, groupName);
-			if(! idsCreatedElementGroups.contains(role.getKey())) {
+			if (!idsCreatedElementGroups.contains(role.getKey())) {
 				idsCreatedElementGroups.add(role.getKey());
 				log.trace("Creating group [{}] for role [{}]", () -> groupName, role::toString);
 				defineElementGroupBaseUnchecked(role);
@@ -834,7 +834,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		XmlBuilder attributeElementRole = FrankDocXsdFactoryXmlUtils.createAttribute(ELEMENT_ROLE, FIXED, configChildSet.getRoleName(), version.getRoleNameAttributeUse());
 		attributeReuseManager.addAttribute(attributeElementRole, complexType);
 		Optional<String> defaultFrankElementName = configChildSet.getGenericElementOptionDefault(version.getElementFilter());
-		XmlBuilder attributeClassName = null;
+		XmlBuilder attributeClassName;
 		if(defaultFrankElementName.isPresent()) {
 			log.trace("Adding attribute [{}] with default [{}]", () -> CLASS_NAME, defaultFrankElementName::get);
 			attributeClassName = FrankDocXsdFactoryXmlUtils.createAttribute(CLASS_NAME, DEFAULT, defaultFrankElementName.get(), OPTIONAL);
@@ -1027,13 +1027,13 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	 * See also the comment in {@link #recursivelyDefineXsdElementUnchecked()}.
 	 */
 	private void addPluralTextConfigChild(XmlBuilder choice, ConfigChildSet configChildSet) {
-		addElement(choice, Utils.toUpperCamelCase(configChildSet.getRoleName()), ELEMENT_TYPE_STRING, "0", UNBOUNDED);
+		addElement(choice, Utils.toUpperCamelCase(configChildSet.getRoleName()), configChildSet.getElementTypeName(), "0", UNBOUNDED);
 	}
 
 	private void addAttributes(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
 		Consumer<GroupCreator.Callback<FrankAttribute>> cumulativeGroupTrigger =
 				ca -> frankElement.walkCumulativeAttributes(ca, version.getChildSelector(), version.getChildRejector());
-		new GroupCreator<FrankAttribute>(frankElement, version.getHasRelevantChildrenPredicate(FrankAttribute.class), cumulativeGroupTrigger, new GroupCreator.Callback<FrankAttribute>() {
+		new GroupCreator<>(frankElement, version.getHasRelevantChildrenPredicate(FrankAttribute.class), cumulativeGroupTrigger, new GroupCreator.Callback<>() {
 			private XmlBuilder cumulativeBuilder;
 			private String cumulativeGroupName;
 
