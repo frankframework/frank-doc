@@ -41,16 +41,16 @@
             "children": [
                 {
                     "multiple": true,
+                    "roleName": "configWarning"
+                },
+                {
+                    "multiple": true,
                     "roleName": "q"
                 },
                 {
                     "multiple": true,
                     "roleName": "c",
                     "type": "org.frankframework.frankdoc.testtarget.textconfig.GrandChild"
-                },
-                {
-                    "multiple": true,
-                    "roleName": "configWarning"
                 }
             ],
             "name": "ChildImpl"
