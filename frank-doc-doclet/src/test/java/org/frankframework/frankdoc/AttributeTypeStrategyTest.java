@@ -1,5 +1,23 @@
 package org.frankframework.frankdoc;
 
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addComplexType;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addElementWithName;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.getXmlSchema;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Arrays;
+import java.util.Collection;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.AttributeType;
 import org.frankframework.frankdoc.model.ElementChild;
@@ -13,23 +31,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import javax.xml.XMLConstants;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Arrays;
-import java.util.Collection;
-
-import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addComplexType;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addElementWithType;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.getXmlSchema;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class AttributeTypeStrategyTest {
 	private String schemaStringAllowAttributeRef;
@@ -102,7 +103,7 @@ public class AttributeTypeStrategyTest {
 
 	private static String getXsd(AttributeTypeStrategy attributeTypeStrategy, AttributeEnum attributeEnum, FrankAttribute enumTypedAttribute) {
 		XmlBuilder schema = getXmlSchema("1.2.3-SNAPSHOT");
-		XmlBuilder element = addElementWithType(schema, "myElement");
+		XmlBuilder element = addElementWithName(schema, "myElement");
 		XmlBuilder complexType = addComplexType(element);
 		// We do not test mandatory attributes here. Therefore the fourth argument is "false".
 		complexType.addSubElement(attributeTypeStrategy.createAttribute("boolAttr", AttributeType.BOOL));
