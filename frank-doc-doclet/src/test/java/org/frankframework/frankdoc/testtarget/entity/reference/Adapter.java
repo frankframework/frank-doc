@@ -4,7 +4,8 @@ package org.frankframework.frankdoc.testtarget.entity.reference;
  * The Adapter is the central manager in the Frank!Framework, that has knowledge
  * and uses Receiver and a PipeLine.
  */
-public class Adapter {
-	public void addConfigWarning(String message) {
+public class Adapter implements FrankElement {
+	public void addReceiver(Receiver receiver)
+	{
 	}
 }
