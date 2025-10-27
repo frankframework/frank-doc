@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.Constants;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Default;
 import org.frankframework.frankdoc.feature.Deprecated;
@@ -535,8 +536,12 @@ public class FrankDocModel {
 			createdNewConfigChildren = true;
 
 			// Add the ConfigChild to the parent element as under construction.
-			if (configChild.getRoleName() != null)
+			if (configChild.getRoleName() != null) {
+				if (Constants.CONFIG_WARNING_ELEMENT_NAME.equalsIgnoreCase(configChild.getRoleName())) {
+					configChild.setOrder(Integer.MIN_VALUE);
+				}
 				parent.getConfigChildrenUnderConstruction().add(configChild);
+			}
 			parent.getUnusedConfigChildSetterCandidates().remove(frankMethod);
 			if(log.isTraceEnabled() && frankMethod.isMultiplyInheritedPlaceholder()) {
 				log.trace("Config child [{}] is not based on a declared method, but was added because of possible multiple inheritance", configChild);

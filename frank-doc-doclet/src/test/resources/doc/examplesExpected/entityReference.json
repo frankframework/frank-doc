@@ -28,12 +28,12 @@
             "children": [
                 {
                     "multiple": true,
-                    "roleName": "receiver",
-                    "type": "org.frankframework.frankdoc.testtarget.entity.reference.Receiver"
+                    "roleName": "configWarning"
                 },
                 {
                     "multiple": true,
-                    "roleName": "configWarning"
+                    "roleName": "receiver",
+                    "type": "org.frankframework.frankdoc.testtarget.entity.reference.Receiver"
                 }
             ]
         },
@@ -57,13 +57,13 @@
                 },
                 {
                     "multiple": true,
-                    "roleName": "adapter",
-                    "description": "Register an adapter with the configuration.",
-                    "type": "org.frankframework.frankdoc.testtarget.entity.reference.Adapter"
+                    "roleName": "configWarning"
                 },
                 {
                     "multiple": true,
-                    "roleName": "configWarning"
+                    "roleName": "adapter",
+                    "description": "Register an adapter with the configuration.",
+                    "type": "org.frankframework.frankdoc.testtarget.entity.reference.Adapter"
                 }
             ]
         },
