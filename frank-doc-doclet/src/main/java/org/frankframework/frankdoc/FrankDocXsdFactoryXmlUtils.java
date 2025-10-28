@@ -39,7 +39,7 @@ class FrankDocXsdFactoryXmlUtils {
 	}
 
 	static XmlBuilder createElement(String elementName, String elementType) {
-		XmlBuilder element = createElementWithType(elementName);
+		XmlBuilder element = createElementWithName(elementName);
 		element.addAttribute("type", elementType);
 		return element;
 	}
@@ -51,7 +51,7 @@ class FrankDocXsdFactoryXmlUtils {
 	}
 
 	static XmlBuilder addElement(XmlBuilder context, String elementName, String elementType, String minOccurs, String maxOccurs) {
-		XmlBuilder element = createElementWithType(elementName);
+		XmlBuilder element = createElementWithName(elementName);
 		element.addAttribute("minOccurs", minOccurs);
 		element.addAttribute("maxOccurs", maxOccurs);
 		element.addAttribute("type", elementType);
@@ -74,13 +74,13 @@ class FrankDocXsdFactoryXmlUtils {
 		context.addSubElement(element);
 	}
 
-	static XmlBuilder addElementWithType(XmlBuilder context, String name) {
-		XmlBuilder element = createElementWithType(name);
+	static XmlBuilder addElementWithName(XmlBuilder context, String name) {
+		XmlBuilder element = createElementWithName(name);
 		context.addSubElement(element);
 		return element;
 	}
 
-	static XmlBuilder createElementWithType(String name) {
+	static XmlBuilder createElementWithName(String name) {
 		XmlBuilder element = new XmlBuilder("element", "xs", XML_SCHEMA_URI);
 		element.addAttribute("name", name);
 		return element;

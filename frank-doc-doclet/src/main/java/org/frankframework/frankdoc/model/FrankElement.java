@@ -170,7 +170,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		log.trace("Checking method [{}]", frankMethod::toString);
 		FrankType argumentType = frankMethod.getParameterTypes()[0];
 		if (!(argumentType instanceof FrankClass argument)) {
-			// Text config child, wont have feature PROTECTED
+			// Text config child, won't have feature PROTECTED
 			return false;
 		}
 		if (argument.isInterface()) {

@@ -28,6 +28,7 @@
           <xs:sequence>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
               <xs:element name="C" type="CType" />
+              <xs:element name="ConfigWarning" minOccurs="0" maxOccurs="unbounded" type="WarningType" />
               <xs:element name="Q" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
             </xs:choice>
           </xs:sequence>
@@ -65,6 +66,7 @@
   </xs:complexType>
   <xs:group name="ChildImplDeclaredChildGroup">
     <xs:sequence>
+      <xs:element name="ConfigWarning" minOccurs="0" maxOccurs="unbounded" type="WarningType" />
       <xs:element name="Q" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
       <xs:element name="C" minOccurs="0" maxOccurs="unbounded" type="CType" />
     </xs:sequence>
@@ -76,6 +78,7 @@
           <xs:sequence>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
               <xs:element name="C" type="CType" />
+              <xs:element name="ConfigWarning" minOccurs="0" maxOccurs="unbounded" type="WarningType" />
               <xs:element name="Q" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
             </xs:choice>
           </xs:sequence>
@@ -126,4 +129,14 @@
       <xs:pattern value="$\{[^\}]+\}" />
     </xs:restriction>
   </xs:simpleType>
+  <xs:complexType name="WarningType">
+    <xs:simpleContent>
+      <xs:annotation>
+        <xs:documentation>The warning will be shown in the Frank!Framework Console when the 'active' attribute evaluates to 'true'</xs:documentation>
+      </xs:annotation>
+      <xs:extension base="xs:string">
+        <xs:attribute ref="active" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
 </xs:schema>

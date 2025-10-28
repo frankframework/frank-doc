@@ -1,5 +1,6 @@
 <Configuration>
   <Adapter>
+    <ConfigWarning active="true">This Is My First Warning</ConfigWarning>
     <Receiver>
       <JavaListener name="myListener"/>
     </Receiver>

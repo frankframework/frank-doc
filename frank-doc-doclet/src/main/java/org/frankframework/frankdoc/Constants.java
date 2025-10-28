@@ -1,5 +1,5 @@
 /*
-Copyright 2021, 2022, 2024 WeAreFrank!
+Copyright 2021, 2022, 2024, 2025 WeAreFrank!
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,4 +21,11 @@ public class Constants {
 	static final String MODULE_ELEMENT_DESCRIPTION = "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.";
 	static final String MODULE_ELEMENT_FRANK_DOC_GROUP = "Other";
 	public static final String FRANK_DOC_GROUP_VALUES_PACKAGE = "org.frankframework.doc.";
+
+	public static final String CONFIG_WARNING_ELEMENT_NAME = "ConfigWarning";
+	public static final String WARNING_ELEMENT_TYPE_NAME = "WarningType";
+
+	private Constants() {
+		// Private constructor to prevent instance creation
+	}
 }

@@ -2,4 +2,6 @@
 <digester-rules>
 	<rule pattern="configuration" factory="null"/>
 	<rule pattern="*/adapter" registerMethod="addAdapter" />
+	<rule pattern="*/receiver" registerMethod="addReceiver" />
+  <rule pattern="*/configWarning" registerTextMethod="addConfigWarning"/>
 </digester-rules>

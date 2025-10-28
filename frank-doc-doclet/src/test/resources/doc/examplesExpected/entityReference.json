@@ -11,6 +11,9 @@
         ],
         "Module": [
             "Module"
+        ],
+        "org.frankframework.frankdoc.testtarget.entity.reference.Receiver": [
+            "org.frankframework.frankdoc.testtarget.entity.reference.Receiver"
         ]
     },
     "elements": {
@@ -21,7 +24,18 @@
                 "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
-            }
+            },
+            "children": [
+                {
+                    "multiple": true,
+                    "roleName": "configWarning"
+                },
+                {
+                    "multiple": true,
+                    "roleName": "receiver",
+                    "type": "org.frankframework.frankdoc.testtarget.entity.reference.Receiver"
+                }
+            ]
         },
         "org.frankframework.frankdoc.testtarget.entity.reference.Configuration": {
             "name": "Configuration",
@@ -43,11 +57,30 @@
                 },
                 {
                     "multiple": true,
+                    "roleName": "configWarning"
+                },
+                {
+                    "multiple": true,
                     "roleName": "adapter",
                     "description": "Register an adapter with the configuration.",
                     "type": "org.frankframework.frankdoc.testtarget.entity.reference.Adapter"
                 }
             ]
+        },
+        "org.frankframework.frankdoc.testtarget.entity.reference.Receiver": {
+            "attributes": {
+                "active": {
+                    "description": "If defined and empty or false, then this element and all its children are ignored"
+                }
+            },
+            "children": [
+                {
+                    "multiple": true,
+                    "roleName": "configWarning"
+                }
+            ],
+            "description": "Receiver controls the Listeners",
+            "name": "Receiver"
         },
         "Module": {
             "name": "Module",
@@ -74,6 +107,9 @@
             "labels": {
                 "FrankDocGroup": "Other"
             }
+        },
+        "Receiver": {
+            "className": "org.frankframework.frankdoc.testtarget.entity.reference.Receiver"
         }
     },
     "enums": {}

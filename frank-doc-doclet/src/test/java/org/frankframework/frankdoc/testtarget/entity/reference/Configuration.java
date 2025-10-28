@@ -5,7 +5,7 @@ package org.frankframework.frankdoc.testtarget.entity.reference;
  * functions for starting and stopping adapters as a facade.
  * @author martijn
  */
-public class Configuration {
+public class Configuration implements FrankElement {
     // TODO: Fix writing XML tags in JavaDoc comments, issue https://github.com/ibissource/frank-doc/issues/118
 	/**
 	 * This attribute should be allowed in element Configuration, but not in element Module.

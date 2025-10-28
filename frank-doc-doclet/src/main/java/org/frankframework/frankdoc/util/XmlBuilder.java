@@ -15,6 +15,8 @@
  */
 package org.frankframework.frankdoc.util;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Attribute;
@@ -24,8 +26,6 @@ import org.jdom2.Element;
 import org.jdom2.Namespace;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-
-import java.util.List;
 
 /**
  * Builds a XML-element with attributes and sub-elements. Attributes can be
@@ -40,11 +40,11 @@ import java.util.List;
  * @author Peter Leeuwenburgh
  **/
 public class XmlBuilder {
-	static Logger log = LogUtil.getLogger(XmlBuilder.class);
+	private static final Logger log = LogUtil.getLogger(XmlBuilder.class);
 
-	private final String CDATA_END="]]>";
+	private static final String CDATA_END="]]>";
 
-	private Element element;
+	private final Element element;
 
 	public XmlBuilder(String tagName) {
 		element = new Element(tagName);
@@ -112,10 +112,10 @@ public class XmlBuilder {
 	public void setCdataValue(String value) {
 		if (value != null) {
 			if (value.contains(CDATA_END)) {
-				int cdata_end_pos;
-				while ((cdata_end_pos=value.indexOf(CDATA_END))>=0) {
-					element.addContent(new CDATA(value.substring(0, cdata_end_pos+1)));
-					value = value.substring(cdata_end_pos+1);
+				int cdataEndPos;
+				while ((cdataEndPos=value.indexOf(CDATA_END))>=0) {
+					element.addContent(new CDATA(value.substring(0, cdataEndPos+1)));
+					value = value.substring(cdataEndPos+1);
 				}
 				element.addContent(new CDATA(value));
 			} else {
