@@ -55,8 +55,8 @@
   </xs:complexType>
   <xs:group name="ConfigurationDeclaredChildGroup">
     <xs:sequence>
-      <xs:element name="ConfigWarning" minOccurs="0" maxOccurs="unbounded" type="WarningType" />
       <xs:element ref="Module" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="ConfigWarning" minOccurs="0" maxOccurs="unbounded" type="WarningType" />
       <xs:element name="Adapter" minOccurs="0" maxOccurs="unbounded" type="AdapterType" />
     </xs:sequence>
   </xs:group>
