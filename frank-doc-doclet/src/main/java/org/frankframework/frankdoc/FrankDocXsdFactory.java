@@ -168,6 +168,8 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private final AttributeTypeStrategy attributeTypeStrategy;
 	private final String frankFrameworkVersion;
 
+	private boolean hasPipeElementsGroup = false;
+
 	public FrankDocXsdFactory(FrankDocModel model, AttributeTypeStrategy attributeTypeStrategy, String frankFrameworkVersion, String startClassName, XsdVersion version) {
 		this.model = model;
 		this.attributeTypeStrategy = attributeTypeStrategy;
@@ -230,6 +232,10 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		default:
 			throw new IllegalArgumentException("Cannot happen - all case labels should be in switch");
 		}
+		if (hasPipeElementsGroup) {
+			// This will always be true in production but not always in unit tests
+			createPipelinePartElement();
+		}
 	}
 
 	/** Defines XML element {@code <Configuration>} */
@@ -254,6 +260,23 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		if (declaredChildGroup != null) {
 			FrankDocXsdFactoryXmlUtils.addGroupRef(complexType, declaredChildGroup);
 		}
+		log.trace("Adding attribute active explicitly to [{}] and also any attribute in another namespace", () -> Constants.MODULE_ELEMENT_NAME);
+		XmlBuilder attributeActive = AttributeTypeStrategy.createAttributeActive();
+		attributeReuseManager.addAttribute(attributeActive, complexType);
+		XmlBuilder anyOther = createAnyOtherNamespaceAttribute();
+		attributeReuseManager.addAttribute(anyOther, complexType);
+	}
+
+	/**
+	 * Defines XML element {@code <PipelinePart/>}
+	 */
+	private void createPipelinePartElement() {
+		log.trace("Creating element [{}]", Constants.PIPELINE_PART_ELEMENT_NAME);
+		XmlBuilder startElementBuilder = createElementWithName(Constants.PIPELINE_PART_ELEMENT_NAME);
+		xsdElements.add(startElementBuilder);
+		addDocumentation(startElementBuilder, Constants.PIPELINE_PART_ELEMENT_DESCRIPTION);
+		XmlBuilder complexType = addComplexType(startElementBuilder);
+		FrankDocXsdFactoryXmlUtils.addGroupRef(complexType, Constants.PIPE_ELEMENT_GROUP_BASE);
 		log.trace("Adding attribute active explicitly to [{}] and also any attribute in another namespace", () -> Constants.MODULE_ELEMENT_NAME);
 		XmlBuilder attributeActive = AttributeTypeStrategy.createAttributeActive();
 		attributeReuseManager.addAttribute(attributeActive, complexType);
@@ -521,7 +544,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void addConfigChildrenNoPluralConfigChildSets(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
 		Consumer<GroupCreator.Callback<ConfigChild>> cumulativeGroupTrigger =
 				ca -> frankElement.walkCumulativeConfigChildren(ca, version.getChildSelector(), version.getChildRejector());
-		new GroupCreator<ConfigChild>(frankElement, version.getHasRelevantChildrenPredicate(ConfigChild.class), cumulativeGroupTrigger, new GroupCreator.Callback<ConfigChild>() {
+		new GroupCreator<>(frankElement, version.getHasRelevantChildrenPredicate(ConfigChild.class), cumulativeGroupTrigger, new GroupCreator.Callback<>() {
 			private XmlBuilder cumulativeBuilder;
 			private String cumulativeGroupName;
 
@@ -549,6 +572,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 			public void addDeclaredGroup() {
 				String groupName = xsdDeclaredGroupNameForChildren(frankElement);
 				log.trace("Creating XSD group [{}]", groupName);
+				checkForPipeElementGroupBase(groupName);
 				XmlBuilder group = createGroup(groupName);
 				xsdComplexItems.add(group);
 				XmlBuilder sequence = addSequence(group);
@@ -562,6 +586,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 			public void addCumulativeGroup() {
 				cumulativeGroupName = xsdCumulativeGroupNameForChildren(frankElement);
 				log.trace("Start creating XSD group [{}]", cumulativeGroupName);
+				checkForPipeElementGroupBase(cumulativeGroupName);
 				XmlBuilder group = createGroup(cumulativeGroupName);
 				xsdComplexItems.add(group);
 				cumulativeBuilder = addSequence(group);
@@ -592,6 +617,10 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 				FrankDocXsdFactoryXmlUtils.addGroupRef(cumulativeBuilder, referencedGroupName);
 			}
 		}).run();
+	}
+
+	private void checkForPipeElementGroupBase(String groupName) {
+		if (!hasPipeElementsGroup && groupName.equals(Constants.PIPE_ELEMENT_GROUP_BASE)) hasPipeElementsGroup = true;
 	}
 
 	private void addConfigChild(XmlBuilder context, ConfigChild child) {
@@ -702,6 +731,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		if (!elementGroupManager.groupExists(key)) {
 			log.trace("Element group does not exist, creating it");
 			String groupName = elementGroupManager.addGroup(key);
+			checkForPipeElementGroupBase(groupName);
 			XmlBuilder group = FrankDocXsdFactoryXmlUtils.createGroup(groupName);
 			xsdComplexItems.add(group);
 			XmlBuilder choice = addChoice(group);
@@ -734,7 +764,9 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void defineElementGroupBaseUnchecked(ElementRole role) {
-		XmlBuilder group = createGroup(role.createXsdElementName(ELEMENT_GROUP_BASE));
+		String groupName = role.createXsdElementName(ELEMENT_GROUP_BASE);
+		checkForPipeElementGroupBase(groupName);
+		XmlBuilder group = createGroup(groupName);
 		xsdComplexItems.add(group);
 		XmlBuilder choice = addChoice(group);
 		List<FrankElement> frankElementOptions = role.getMembers().stream()
@@ -971,6 +1003,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void addConfigChildrenWithPluralConfigChildSetsUnchecked(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
 		String groupName = xsdPluralGroupNameForChildren(frankElement);
 		elementBuildingStrategy.addThePluralConfigChildGroup(groupName);
+		checkForPipeElementGroupBase(groupName);
 		XmlBuilder builder = createGroup(groupName);
 		xsdComplexItems.add(builder);
 		// Within <xs:sequence><xs:choice> group, we cannot enforce that mandatory config children are
