@@ -18,12 +18,28 @@
       <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
   </xs:element>
+  <xs:complexType name="IncludeType">
+    <xs:annotation>
+      <xs:documentation>Dummy element to trigger Frank!Doc to allow including other files in the right places</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="ref" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>reference to a configuration to be included in the current.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.hierarchy.Include" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:attribute name="elementRole" type="xs:string" fixed="include" use="prohibited" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
   <xs:element name="PipelinePart">
     <xs:annotation>
       <xs:documentation>Wrapper element to help create reusable parts of a pipeline</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:group ref="PipeElementGroupBase" />
+      <xs:sequence>
+        <xs:group ref="PipeElementGroup" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
       <xs:attribute ref="active" />
       <xs:anyAttribute namespace="##other" processContents="skip" />
     </xs:complexType>
@@ -39,6 +55,7 @@
       <xs:element ref="Module" minOccurs="0" maxOccurs="unbounded" />
       <xs:group ref="ParamElementGroup" minOccurs="0" maxOccurs="unbounded" />
       <xs:group ref="PipeElementGroup" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Include" minOccurs="0" maxOccurs="unbounded" type="IncludeType" />
     </xs:sequence>
   </xs:group>
   <xs:group name="ParamElementGroup">
@@ -107,6 +124,7 @@
         </xs:complexType>
       </xs:element>
       <xs:group ref="PipeElementGroupBase" />
+      <xs:element name="Include" minOccurs="0" maxOccurs="unbounded" type="IncludeType" />
     </xs:choice>
   </xs:group>
   <xs:group name="PipeElementGroupBase">

@@ -10,4 +10,6 @@ public class Start {
 
 	}
 
+	public void addInclude(Include include) {}
+
 }

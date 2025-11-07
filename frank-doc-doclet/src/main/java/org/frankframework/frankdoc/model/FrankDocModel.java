@@ -52,6 +52,7 @@ import org.frankframework.frankdoc.model.AncestorMethodBrowser.References;
 import org.frankframework.frankdoc.properties.Group;
 import org.frankframework.frankdoc.properties.PropertyParser;
 import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
@@ -202,6 +203,14 @@ public class FrankDocModel {
 
 	public boolean hasType(String typeName) {
 		return allTypes.containsKey(typeName);
+	}
+
+	public boolean shouldGetIncludeElement(String classSimpleName) {
+		return classRepository.isIncludeTypePresent() && classRepository.getAdditionalRootElements().containsKey(classSimpleName);
+	}
+
+	public AdditionalRootElement getAdditionalRootElement(String classSimpleName) {
+		return classRepository.getAdditionalRootElements().get(classSimpleName);
 	}
 
 	void buildDescendants() throws Exception {

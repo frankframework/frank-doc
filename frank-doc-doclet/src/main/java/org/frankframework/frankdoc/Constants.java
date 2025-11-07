@@ -21,10 +21,6 @@ public class Constants {
 	static final String MODULE_ELEMENT_DESCRIPTION = "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.";
 	static final String MODULE_ELEMENT_FRANK_DOC_GROUP = "Other";
 
-	static final String PIPELINE_PART_ELEMENT_NAME = "PipelinePart";
-	static final String PIPELINE_PART_ELEMENT_DESCRIPTION = "Wrapper element to help create reusable parts of a pipeline";
-	static final String PIPE_ELEMENT_GROUP_BASE = "PipeElementGroupBase";
-
 	public static final String FRANK_DOC_GROUP_VALUES_PACKAGE = "org.frankframework.doc.";
 
 	public static final String CONFIG_WARNING_ELEMENT_NAME = "ConfigWarning";

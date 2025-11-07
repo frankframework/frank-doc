@@ -16,16 +16,6 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
-import com.sun.source.util.DocTrees;
-import lombok.AccessLevel;
-import lombok.Getter;
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.feature.Description;
-import org.frankframework.frankdoc.model.CredentialProvider;
-import org.frankframework.frankdoc.util.LogUtil;
-
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +25,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
+
+import com.sun.source.util.DocTrees;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+
 public class FrankClassRepository {
 	private static final Logger log = LogUtil.getLogger(FrankClassRepository.class);
 
@@ -43,15 +44,33 @@ public class FrankClassRepository {
 	private final Map<String, FrankClass> classesByName = new LinkedHashMap<>();
 	private final Map<String, FrankNonCompiledClassDoclet> nonFrankClassesByName = new HashMap<>();
 	private final Set<FrankClass> filteredClassesForInterfaceImplementations;
+	private final @Getter boolean includeTypePresent;
+	private final @Getter Map<String, AdditionalRootElement> additionalRootElements;
 
 	public FrankClassRepository(DocTrees docTrees, Set<? extends Element> classElements, Set<String> includeFilters, Set<String> excludeFilters, Set<String> excludeFiltersForSuperclass) {
 		this.excludeFiltersForSuperclass = new HashSet<>(excludeFiltersForSuperclass);
+
+		// This populates the map classesByName
 		classElements.stream()
 			.filter(TypeElement.class::isInstance)
 			.map(TypeElement.class::cast)
 			.forEach(typeElement -> findOrCreateClass(typeElement, docTrees));
 
-		final Set<String> correctedIncludeFilters = includeFilters.stream().map(FrankClassRepository::removeTrailingDot).collect(Collectors.toSet());
+		includeTypePresent = classesByName
+			.keySet()
+			.stream()
+			.anyMatch(name -> name.endsWith("Include"));
+
+		additionalRootElements = classesByName.values()
+			.stream()
+			.map(FrankClass::getSimpleName)
+			.filter(AdditionalRootElement.VALUE_BY_TYPE::containsKey)
+			.map(AdditionalRootElement.VALUE_BY_TYPE::get)
+			.collect(Collectors.toMap(AdditionalRootElement::getTypeName, element -> element));
+
+		final Set<String> correctedIncludeFilters = includeFilters.stream()
+			.map(FrankClassRepository::removeTrailingDot)
+			.collect(Collectors.toSet());
 		filteredClassesForInterfaceImplementations = classesByName.values().stream()
 			.filter(c -> correctedIncludeFilters.stream().anyMatch(i -> c.getPackageName().startsWith(i)))
 			.filter(c -> !excludeFilters.contains(c.getName()))
