@@ -168,6 +168,10 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private final Set<String> definedAttributeEnumInstances = new HashSet<>();
 	private final AttributeTypeStrategy attributeTypeStrategy;
 	private final String frankFrameworkVersion;
+	/**
+	 * Map {@link AdditionalRootElement} enum values for Frank!Framework Java types that have been encountered to the XSD types
+	 * that they map to.
+	 */
 	private final Map<AdditionalRootElement, String> additionalRootElements = new EnumMap<>(AdditionalRootElement.class);
 
 	public FrankDocXsdFactory(FrankDocModel model, AttributeTypeStrategy attributeTypeStrategy, String frankFrameworkVersion, String startClassName, XsdVersion version) {
@@ -265,7 +269,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	/**
-	 * Defines XML element {@code <PipelinePart/>}
+	 * Defines XML element {@code <PipelinePart/>} or other additional root elements
 	 */
 	private void createAdditionalRootElement(AdditionalRootElement additionalRootElement, String referencedElementGroupName) {
 		String elementName = additionalRootElement.getElementName();
@@ -731,6 +735,10 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 			addElementGroupGenericOption(choice, roles);
 			addElementGroupOptions(choice, roles);
 			String elementTypeSimpleName = key.iterator().next().getElementTypeSimpleName();
+
+			// The "Include" element should be manually added to the XSD as part of the "xs:choice" for this element-group.
+			// We cannot have it added in a simpler way from the Frank!Framework code, as it will then not be valid as
+			// part of the choice of elements in this element-group, but as a separate group of elements.
 			if (model.shouldGetIncludeElement(elementTypeSimpleName)) {
 				addElement(choice, "Include", "IncludeType", "0", "unbounded");
 				additionalRootElements.put(model.getAdditionalRootElement(elementTypeSimpleName), groupName);

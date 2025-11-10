@@ -44,8 +44,13 @@ public class FrankClassRepository {
 	private final Map<String, FrankClass> classesByName = new LinkedHashMap<>();
 	private final Map<String, FrankNonCompiledClassDoclet> nonFrankClassesByName = new HashMap<>();
 	private final Set<FrankClass> filteredClassesForInterfaceImplementations;
+	/**
+	 * Set to {@literal true} if a Java Class by the name {@literal Include} was present in the loaded Frank!Framework classes.
+	 * This will be true in all production but not in all unit test situations.
+	 * If {@literal true} then generate additional root elements and add the {@literal Include} type to the XSD for all types that
+	 * can be extended by includes.
+	 */
 	private final @Getter boolean includeTypePresent;
-	private final @Getter Map<String, AdditionalRootElement> additionalRootElements;
 
 	public FrankClassRepository(DocTrees docTrees, Set<? extends Element> classElements, Set<String> includeFilters, Set<String> excludeFilters, Set<String> excludeFiltersForSuperclass) {
 		this.excludeFiltersForSuperclass = new HashSet<>(excludeFiltersForSuperclass);
@@ -60,13 +65,6 @@ public class FrankClassRepository {
 			.keySet()
 			.stream()
 			.anyMatch(name -> name.endsWith("Include"));
-
-		additionalRootElements = classesByName.values()
-			.stream()
-			.map(FrankClass::getSimpleName)
-			.filter(AdditionalRootElement.VALUE_BY_TYPE::containsKey)
-			.map(AdditionalRootElement.VALUE_BY_TYPE::get)
-			.collect(Collectors.toMap(AdditionalRootElement::getTypeName, element -> element));
 
 		final Set<String> correctedIncludeFilters = includeFilters.stream()
 			.map(FrankClassRepository::removeTrailingDot)

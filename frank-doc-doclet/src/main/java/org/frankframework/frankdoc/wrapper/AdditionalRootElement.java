@@ -21,14 +21,28 @@ import java.util.stream.Collectors;
 
 import lombok.Getter;
 
+/**
+ * This enum class allows for an extensible way to add multiple additional root elements in the XML that can be included in
+ * a configuration.
+ */
 public enum AdditionalRootElement {
 	PIPELINE_PART("PipelinePart", "IPipe", "Wrapper element to help create reusable parts of a pipeline");
 
 	public static final Map<String, AdditionalRootElement> VALUE_BY_TYPE = Arrays.stream(values())
 		.collect(Collectors.toMap(AdditionalRootElement::getTypeName, r -> r));
 
+	/**
+	 * Name of the element that should be added as root-level element in the XSD or JSON.
+	 */
 	private final @Getter String elementName;
+	/**
+	 * Name of the type that, if present, should trigger the generation of the corresponding root element.
+	 * The XSD typename is dynamically generated for the type and not part of the enum definition.
+	 */
 	private final @Getter String typeName;
+	/**
+	 * Doc string that should be added to the XSD or JSON for this top-level element.
+	 */
 	private final @Getter String docString;
 
 	AdditionalRootElement(String elementName, String typeName, String docString) {

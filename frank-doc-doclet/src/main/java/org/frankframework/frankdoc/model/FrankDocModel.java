@@ -206,11 +206,11 @@ public class FrankDocModel {
 	}
 
 	public boolean shouldGetIncludeElement(String classSimpleName) {
-		return classRepository.isIncludeTypePresent() && classRepository.getAdditionalRootElements().containsKey(classSimpleName);
+		return classRepository.isIncludeTypePresent() && AdditionalRootElement.VALUE_BY_TYPE.containsKey(classSimpleName);
 	}
 
 	public AdditionalRootElement getAdditionalRootElement(String classSimpleName) {
-		return classRepository.getAdditionalRootElements().get(classSimpleName);
+		return AdditionalRootElement.VALUE_BY_TYPE.get(classSimpleName);
 	}
 
 	void buildDescendants() throws Exception {
