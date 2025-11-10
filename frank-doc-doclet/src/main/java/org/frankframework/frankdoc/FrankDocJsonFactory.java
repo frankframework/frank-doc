@@ -17,6 +17,7 @@ limitations under the License.
 package org.frankframework.frankdoc;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -52,6 +53,7 @@ import org.frankframework.frankdoc.model.ServletAuthenticatorMethod;
 import org.frankframework.frankdoc.properties.Group;
 import org.frankframework.frankdoc.properties.Property;
 import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
 
 import lombok.NonNull;
 
@@ -66,11 +68,25 @@ public class FrankDocJsonFactory {
 	List<FrankElement> elementsOutsideChildren;
 	private final String frankFrameworkVersion;
 
+	private final List<AdditionalRootElement> additionalRootElements;
+
 	public FrankDocJsonFactory(FrankDocModel model, String frankFrameworkVersion) {
 		this.model = model;
 		elementsOutsideChildren = new ArrayList<>(model.getElementsOutsideConfigChildren());
 		bf = Json.createBuilderFactory(null);
 		this.frankFrameworkVersion = frankFrameworkVersion;
+		this.additionalRootElements = findAdditionalRootElements();
+	}
+
+	private List<AdditionalRootElement> findAdditionalRootElements() {
+		return model.getAllTypes()
+			.values()
+			.stream()
+			.map(ElementType::getSimpleName)
+			.filter(AdditionalRootElement.VALUE_BY_TYPE::containsKey)
+			.map(AdditionalRootElement.VALUE_BY_TYPE::get)
+			.sorted(Comparator.comparing(AdditionalRootElement::getElementName))
+			.toList();
 	}
 
 	public JsonObject getJson() {
@@ -111,7 +127,14 @@ public class FrankDocJsonFactory {
 			.forEach(type -> addType(type.getValue(), result));
 		elementsOutsideChildren.forEach(element -> addNonChildType(element, result));
 		getTypeReferencedEntityRoot(result);
+		additionalRootElements.forEach(element -> addAdditionalRootElementType(result, element));
 		return result.build();
+	}
+
+	private void addAdditionalRootElementType(JsonObjectBuilder result, AdditionalRootElement additionalRootElement) {
+		JsonArrayBuilder members = bf.createArrayBuilder();
+		members.add(additionalRootElement.getElementName());
+		result.add(additionalRootElement.getElementName(), members);
 	}
 
 	private void getTypeReferencedEntityRoot(JsonObjectBuilder result) {
@@ -138,6 +161,8 @@ public class FrankDocJsonFactory {
 		Map<String, List<FrankElement>> elementsByName = getAllElements();
 		builder.add(Constants.MODULE_ELEMENT_NAME, getRootElementObject());
 
+		additionalRootElements.forEach(element -> builder.add(element.getElementName(), getObjectForElement(element)));
+
 		for (List<FrankElement> elementsPerClass : elementsByName.values()) {
 			for (FrankElement element : elementsPerClass) {
 				builder.add(element.getFullName(), getElement(element));
@@ -145,6 +170,13 @@ public class FrankDocJsonFactory {
 		}
 
 		return builder.build();
+	}
+
+	private JsonObject getObjectForElement(AdditionalRootElement element) {
+		JsonObjectBuilder result = bf.createObjectBuilder();
+		result.add("name", element.getElementName());
+		addDescription(result, element.getDocString());
+		return result.build();
 	}
 
 	private Map<String, List<FrankElement>> getAllElements() {
@@ -408,6 +440,8 @@ public class FrankDocJsonFactory {
 	private JsonObject getElementNames() {
 		final JsonObjectBuilder result = bf.createObjectBuilder();
 		result.add(Constants.MODULE_ELEMENT_NAME, getElementName(Constants.MODULE_ELEMENT_NAME, Constants.MODULE_ELEMENT_NAME, Map.of("FrankDocGroup", List.of(Constants.MODULE_ELEMENT_FRANK_DOC_GROUP))));
+
+		additionalRootElements.forEach(element -> result.add(element.getElementName(), getElementName(element.getElementName(), element.getElementName(), Map.of("FrankDocGroup", List.of(Constants.MODULE_ELEMENT_FRANK_DOC_GROUP)))));
 
 		Map<String, List<FrankElement>> elements = getAllElements();
 		for (List<FrankElement> elementsPerClass : elements.values()) {
