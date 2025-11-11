@@ -16,7 +16,6 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +71,7 @@ public class FrankDocJsonFactory {
 
 	public FrankDocJsonFactory(FrankDocModel model, String frankFrameworkVersion) {
 		this.model = model;
-		elementsOutsideChildren = new ArrayList<>(model.getElementsOutsideConfigChildren());
+		elementsOutsideChildren = model.getElementsOutsideConfigChildren();
 		bf = Json.createBuilderFactory(null);
 		this.frankFrameworkVersion = frankFrameworkVersion;
 		this.additionalRootElements = findAdditionalRootElements();
