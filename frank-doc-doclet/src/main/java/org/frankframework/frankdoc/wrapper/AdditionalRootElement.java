@@ -28,6 +28,9 @@ import lombok.Getter;
 public enum AdditionalRootElement {
 	PIPELINE_PART("PipelinePart", "IPipe", "Wrapper element to help create reusable parts of a pipeline");
 
+	/**
+	 * Lookup-map to find the Enum value by the (simple) classname of a type being processed.
+	 */
 	public static final Map<String, AdditionalRootElement> VALUE_BY_TYPE = Arrays.stream(values())
 		.collect(Collectors.toMap(AdditionalRootElement::getTypeName, r -> r));
 
