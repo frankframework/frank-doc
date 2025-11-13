@@ -16,44 +16,20 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
+import lombok.NonNull;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.model.*;
+import org.frankframework.frankdoc.properties.Group;
+import org.frankframework.frankdoc.properties.Property;
+import org.frankframework.frankdoc.util.LogUtil;
+
+import javax.json.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonException;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.model.AttributeEnum;
-import org.frankframework.frankdoc.model.AttributeType;
-import org.frankframework.frankdoc.model.ConfigChild;
-import org.frankframework.frankdoc.model.CredentialProvider;
-import org.frankframework.frankdoc.model.DeprecationInfo;
-import org.frankframework.frankdoc.model.ElementChild;
-import org.frankframework.frankdoc.model.ElementType;
-import org.frankframework.frankdoc.model.EnumValue;
-import org.frankframework.frankdoc.model.Forward;
-import org.frankframework.frankdoc.model.FrankAttribute;
-import org.frankframework.frankdoc.model.FrankDocModel;
-import org.frankframework.frankdoc.model.FrankElement;
-import org.frankframework.frankdoc.model.MandatoryStatus;
-import org.frankframework.frankdoc.model.ObjectConfigChild;
-import org.frankframework.frankdoc.model.ParsedJavaDocTag;
-import org.frankframework.frankdoc.model.ServletAuthenticator;
-import org.frankframework.frankdoc.model.ServletAuthenticatorMethod;
-import org.frankframework.frankdoc.properties.Group;
-import org.frankframework.frankdoc.properties.Property;
-import org.frankframework.frankdoc.util.LogUtil;
-
-import lombok.NonNull;
 
 public class FrankDocJsonFactory {
 	private static final Logger log = LogUtil.getLogger(FrankDocJsonFactory.class);
@@ -238,18 +214,9 @@ public class FrankDocJsonFactory {
 			});
 			result.add("links", builder.build());
 		}
-		if (!frankElement.getNotes().isEmpty()) {
-			final var builder = bf.createArrayBuilder();
-			frankElement.getNotes().forEach(note -> {
-				final var noteBuilder = bf.createObjectBuilder();
 
-				noteBuilder.add("type", note.type().name());
-				noteBuilder.add("value", note.value());
+		addNotesToBuilder(frankElement.getNotes(), result);
 
-				builder.add(noteBuilder);
-			});
-			result.add("notes", builder.build());
-		}
 		return result.build();
 	}
 
@@ -527,9 +494,28 @@ public class FrankDocJsonFactory {
 		b.add("fullName", credentialProvider.fullName());
 		if (credentialProvider.description() != null) {
 			b.add("description", credentialProvider.description());
+
+			addNotesToBuilder(credentialProvider.notes(), b);
 		}
 
 		return b.build();
+	}
+
+	private void addNotesToBuilder(List<Note> notes, JsonObjectBuilder parent) {
+		if (!notes.isEmpty()) {
+			final var builder = bf.createArrayBuilder();
+
+			notes.forEach(note -> {
+				final var noteBuilder = bf.createObjectBuilder();
+
+				noteBuilder.add("type", note.type().name());
+				noteBuilder.add("value", note.value());
+
+				builder.add(noteBuilder);
+			});
+
+			parent.add("notes", builder.build());
+		}
 	}
 
 	private Optional<JsonObject> getServletAuthenticators() {
@@ -556,6 +542,8 @@ public class FrankDocJsonFactory {
 		if (!servletAuthenticator.methods().isEmpty()) {
 			b.add("methods", getServletAuthenticatorMethods(servletAuthenticator.methods()));
 		}
+
+		addNotesToBuilder(servletAuthenticator.notes(), b);
 
 		return b.build();
 	}

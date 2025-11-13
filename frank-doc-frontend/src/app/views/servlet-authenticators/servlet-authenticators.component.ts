@@ -7,10 +7,11 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { NgClass } from '@angular/common';
 import { Elements, JavadocTransformDirective, NgFFDoc, ServletAuthenticator } from '@frankframework/ff-doc';
+import { AlertComponent } from '@frankframework/angular-components';
 
 @Component({
   selector: 'app-servlet-authenticators',
-  imports: [NameWbrPipe, NgClass, JavadocTransformDirective],
+  imports: [NameWbrPipe, NgClass, JavadocTransformDirective, AlertComponent],
   templateUrl: './servlet-authenticators.component.html',
   styleUrl: './servlet-authenticators.component.scss',
 })

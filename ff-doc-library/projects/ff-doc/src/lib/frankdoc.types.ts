@@ -93,6 +93,7 @@ export type Property = {
 export type CredentialProvider = {
   fullName: string;
   description?: string;
+  notes?: Note[];
 };
 
 export type ServletAuthenticator = {
@@ -102,4 +103,5 @@ export type ServletAuthenticator = {
     name: string;
     description?: string;
   }[];
+  notes?: Note[];
 };

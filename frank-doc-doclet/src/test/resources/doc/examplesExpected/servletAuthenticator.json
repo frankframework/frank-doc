@@ -68,6 +68,16 @@
                 {
                     "name": "doSomethingCool"
                 }
+            ],
+            "notes": [
+                {
+                    "type": "INFO",
+                    "value": "Please note that recursive group membership is not supported."
+                },
+                {
+                    "type": "INFO",
+                    "value": "Please note that this authenticator is not compatible with ApacheDS."
+                }
             ]
         }
     }

@@ -6,10 +6,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CredentialProvider, Elements, JavadocTransformDirective, NgFFDoc } from '@frankframework/ff-doc';
+import { AlertComponent } from '@frankframework/angular-components';
 
 @Component({
   selector: 'app-credential-providers',
-  imports: [NgClass, JavadocTransformDirective],
+  imports: [NgClass, JavadocTransformDirective, AlertComponent],
   templateUrl: './credential-providers.component.html',
   styleUrl: './credential-providers.component.scss',
 })

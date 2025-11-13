@@ -67,6 +67,15 @@
             </tbody>
           </table>
         }
+        @if (authenticator.notes) {
+          <div class="section notes">
+            @for (note of authenticator.notes; track note) {
+              <ff-alert type="info">
+                <p *fdJavadocTransform="let text of note.value; elements: elements()" [innerHTML]="text"></p>
+              </ff-alert>
+            }
+          </div>
+        }
       </div>
     } @else {
       @if (selectedAuthenticatorName() !== null) {
