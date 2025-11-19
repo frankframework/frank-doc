@@ -1,5 +1,5 @@
 import { IFuseOptions } from 'fuse.js';
-import { ElementDetails } from '@frankframework/ff-doc';
+import { ElementDetails } from '@frankframework/doc-library-core';
 
 export const DEFAULT_RETURN_CHARACTER = '-';
 export const DEFAULT_UNKNOWN_PROPERTY_GROUP = '(unnamed)';

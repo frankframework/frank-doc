@@ -6,7 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { NgClass } from '@angular/common';
-import { Elements, JavadocTransformDirective, NgFFDoc, ServletAuthenticator } from '@frankframework/ff-doc';
+import { Elements, ServletAuthenticator } from '@frankframework/doc-library-core';
+import { JavadocTransformDirective, NgFFDoc } from '@frankframework/doc-library-ng';
 import { AlertComponent } from '@frankframework/angular-components';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, Signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NgFFDoc } from '@frankframework/ff-doc';
+import { NgFFDoc } from '@frankframework/doc-library-ng';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AlertComponent } from '@frankframework/angular-components';

@@ -5,7 +5,8 @@ import { DetailsElementComponent } from './details-element/details-element.compo
 import { DetailsSearchComponent } from './details-search/details-search.component';
 import { NgClass } from '@angular/common';
 import { fromEvent, Subscription, throttleTime } from 'rxjs';
-import { ElementDetails, Elements, NgFFDoc } from '@frankframework/ff-doc';
+import { ElementDetails, Elements } from '@frankframework/doc-library-core';
+import { NgFFDoc } from '@frankframework/doc-library-ng';
 
 type ElementFilterProperties = {
   filterName?: string;

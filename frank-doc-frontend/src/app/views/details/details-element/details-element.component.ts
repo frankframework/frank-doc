@@ -22,6 +22,7 @@ import { DEFAULT_RETURN_CHARACTER } from '../../../app.constants';
 import { HasInheritedProperties } from '../details.component';
 import { Title } from '@angular/platform-browser';
 import { NameWbrPipe } from '../../../components/name-wbr.pipe';
+import { JavadocTransformDirective, NgFFDoc } from '@frankframework/doc-library-ng';
 import {
   Attribute,
   DeprecationInfo,
@@ -30,12 +31,10 @@ import {
   Elements,
   EnumValue,
   getInheritedProperties,
+  groupAttributesByMandatory,
   InheritedProperties,
-  JavadocTransformDirective,
-  NgFFDoc,
   Note,
-} from '@frankframework/ff-doc';
-import { groupAttributesByMandatory } from '@frankframework/ff-doc';
+} from '@frankframework/doc-library-core';
 
 type EnumValueEntry = {
   valueName: string;

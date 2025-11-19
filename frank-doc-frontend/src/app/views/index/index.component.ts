@@ -6,7 +6,8 @@ import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.compo
 import { CollapseDirective } from '../../components/collapse.directive';
 import { KeyValuePipe, NgClass } from '@angular/common';
 import { NameWbrPipe } from '../../components/name-wbr.pipe';
-import { FilterLabels, NgFFDoc } from '@frankframework/ff-doc';
+import { FilterLabels } from '@frankframework/doc-library-core';
+import { NgFFDoc } from '@frankframework/doc-library-ng';
 
 @Component({
   selector: 'app-index',

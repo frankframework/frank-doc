@@ -1,7 +1,8 @@
 import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { DEFAULT_RETURN_CHARACTER } from './app.constants';
-import { ElementDetails, FilterLabels, NgFFDoc } from '@frankframework/ff-doc';
+import { ElementDetails, FilterLabels } from '@frankframework/doc-library-core';
+import { NgFFDoc } from '@frankframework/doc-library-ng';
 import { HttpClient } from '@angular/common/http';
 
 export type FilterGroups = Record<string, string[]>;
