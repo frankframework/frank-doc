@@ -489,16 +489,16 @@ public class FrankDocJsonFactory {
 	}
 
 	private JsonObject credentialProviderToJson(CredentialProvider credentialProvider) {
-		JsonObjectBuilder b = bf.createObjectBuilder();
+		JsonObjectBuilder jsonObjectBuilder = bf.createObjectBuilder();
 
-		b.add("fullName", credentialProvider.fullName());
+		jsonObjectBuilder.add("fullName", credentialProvider.fullName());
 		if (credentialProvider.description() != null) {
-			b.add("description", credentialProvider.description());
+			jsonObjectBuilder.add("description", credentialProvider.description());
 
-			addNotesToBuilder(credentialProvider.notes(), b);
+			addNotesToBuilder(credentialProvider.notes(), jsonObjectBuilder);
 		}
 
-		return b.build();
+		return jsonObjectBuilder.build();
 	}
 
 	private void addNotesToBuilder(List<Note> notes, JsonObjectBuilder parent) {
