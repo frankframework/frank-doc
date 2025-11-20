@@ -7,7 +7,8 @@ import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { fuseOptions, splitOnPascalCaseRegex } from '../../../app.constants';
 import { NameWbrPipe } from '../../../components/name-wbr.pipe';
-import { ElementDetails, NgFFDoc } from '@frankframework/ff-doc';
+import { ElementDetails } from '@frankframework/doc-library-core';
+import { NgFFDoc } from '@frankframework/doc-library-ng';
 
 @Component({
   selector: 'app-details-search',

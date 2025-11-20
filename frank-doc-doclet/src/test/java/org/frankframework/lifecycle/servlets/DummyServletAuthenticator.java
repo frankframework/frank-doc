@@ -4,6 +4,9 @@ package org.frankframework.lifecycle.servlets;
  * Sample documentation
  *
  * {@value VALUE}
+ *
+ * @ff.info Please note that recursive group membership is not supported.
+ * @ff.info Please note that this authenticator is not compatible with ApacheDS.
  */
 public class DummyServletAuthenticator implements IAuthenticator {
 

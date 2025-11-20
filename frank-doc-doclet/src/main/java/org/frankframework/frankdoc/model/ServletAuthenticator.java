@@ -21,5 +21,6 @@ public record ServletAuthenticator(
 	 String simpleName,
 	 String fullName,
 	 String description,
-	 List<ServletAuthenticatorMethod> methods
+	 List<ServletAuthenticatorMethod> methods,
+	 List<Note> notes
 ) { }

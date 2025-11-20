@@ -7,7 +7,8 @@ import Fuse, { FuseResult } from 'fuse.js';
 import { HomeFiltersComponent } from './home-filters/home-filters.component';
 import { fuseOptions } from '../../app.constants';
 import { SearchQueryParamsService } from '../../search-query-params.service';
-import { ElementDetails, Elements, NgFFDoc } from '@frankframework/ff-doc';
+import { ElementDetails, Elements } from '@frankframework/doc-library-core';
+import { NgFFDoc } from '@frankframework/doc-library-ng';
 
 @Component({
   selector: 'app-home',
