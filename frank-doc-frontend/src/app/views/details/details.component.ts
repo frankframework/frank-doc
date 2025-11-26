@@ -138,7 +138,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
     }
     if (element.parameters) tableOfContents.push({ name: 'Parameters', anchor: '#parameters', active: false });
     if (element.children) tableOfContents.push({ name: 'Nested Elements', anchor: '#nested-elements', active: false });
-    if (element.forwards || this.hasInheritedProperties.forwards)
+    if ((element.forwards && Object.keys(element.forwards).length > 0) || this.hasInheritedProperties.forwards)
       tableOfContents.push({ name: 'Forwards', anchor: '#forwards', active: false });
 
     this.tableOfContents = tableOfContents;
