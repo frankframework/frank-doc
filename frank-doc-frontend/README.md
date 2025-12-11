@@ -2,9 +2,8 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.5.
 
-
 ## Development server
-To start the project, run the following commands:
+To start the project, run the following commands in the `frank-doc-frontend` folder:
 ```
 pnpm i
 pnpm start
