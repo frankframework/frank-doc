@@ -645,12 +645,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 
 	private boolean isNoElementTypeNeeded(ElementRole role) {
 		ElementType elementType = role.getElementType();
-		if(elementType.isFromJavaInterface()) {
-			return false;
-		}
-		else {
-			return true;
-		}
+		return !elementType.isFromJavaInterface();
 	}
 
 	private void addConfigChildSingleReferredElement(XmlBuilder context, ObjectConfigChild child) {
@@ -660,6 +655,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 			log.trace("Omitting config child [{}] because of name conflict", child::toString);
 			return;
 		}
+
 		String referredXsdElementName = elementInType.getXsdElementName(role);
 		log.trace("Config child appears as element reference to FrankElement [{}], XSD element [{}]", elementInType::getFullName, () -> referredXsdElementName);
 		addElement(context, referredXsdElementName, getTypeName(referredXsdElementName), getMinOccurs(child), getMaxOccurs(child));
