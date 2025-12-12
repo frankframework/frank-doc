@@ -66,6 +66,7 @@ import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.TextConfigChild;
 import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
+import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
 
 /**
  * This class writes the XML schema document (XSD) that checks the validity of a
@@ -167,6 +168,11 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private final Set<String> definedAttributeEnumInstances = new HashSet<>();
 	private final AttributeTypeStrategy attributeTypeStrategy;
 	private final String frankFrameworkVersion;
+	/**
+	 * Map {@link AdditionalRootElement} enum values for Frank!Framework Java types that have been encountered to the XSD types
+	 * that they map to.
+	 */
+	private final Map<AdditionalRootElement, String> additionalRootElements = new EnumMap<>(AdditionalRootElement.class);
 
 	public FrankDocXsdFactory(FrankDocModel model, AttributeTypeStrategy attributeTypeStrategy, String frankFrameworkVersion, String startClassName, XsdVersion version) {
 		this.model = model;
@@ -230,6 +236,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		default:
 			throw new IllegalArgumentException("Cannot happen - all case labels should be in switch");
 		}
+		additionalRootElements.forEach(this::createAdditionalRootElement);
 	}
 
 	/** Defines XML element {@code <Configuration>} */
@@ -255,6 +262,26 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 			FrankDocXsdFactoryXmlUtils.addGroupRef(complexType, declaredChildGroup);
 		}
 		log.trace("Adding attribute active explicitly to [{}] and also any attribute in another namespace", () -> Constants.MODULE_ELEMENT_NAME);
+		XmlBuilder attributeActive = AttributeTypeStrategy.createAttributeActive();
+		attributeReuseManager.addAttribute(attributeActive, complexType);
+		XmlBuilder anyOther = createAnyOtherNamespaceAttribute();
+		attributeReuseManager.addAttribute(anyOther, complexType);
+	}
+
+	/**
+	 * Defines XML element {@code <PipelinePart/>} or other additional root elements
+	 */
+	private void createAdditionalRootElement(AdditionalRootElement additionalRootElement, String referencedElementGroupName) {
+		String elementName = additionalRootElement.getElementName();
+		log.trace("Creating element [{}]", elementName);
+		XmlBuilder startElementBuilder = createElementWithName(elementName);
+		xsdElements.add(startElementBuilder);
+		addDocumentation(startElementBuilder, additionalRootElement.getDocString());
+		XmlBuilder complexType = addComplexType(startElementBuilder);
+		XmlBuilder sequence = addSequence(complexType);
+		FrankDocXsdFactoryXmlUtils.addGroupRef(sequence, referencedElementGroupName, "0", "unbounded");
+
+		log.trace("Adding attribute active explicitly to [{}] and also any attribute in another namespace", elementName);
 		XmlBuilder attributeActive = AttributeTypeStrategy.createAttributeActive();
 		attributeReuseManager.addAttribute(attributeActive, complexType);
 		XmlBuilder anyOther = createAnyOtherNamespaceAttribute();
@@ -521,7 +548,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void addConfigChildrenNoPluralConfigChildSets(ElementBuildingStrategy elementBuildingStrategy, FrankElement frankElement) {
 		Consumer<GroupCreator.Callback<ConfigChild>> cumulativeGroupTrigger =
 				ca -> frankElement.walkCumulativeConfigChildren(ca, version.getChildSelector(), version.getChildRejector());
-		new GroupCreator<ConfigChild>(frankElement, version.getHasRelevantChildrenPredicate(ConfigChild.class), cumulativeGroupTrigger, new GroupCreator.Callback<ConfigChild>() {
+		new GroupCreator<>(frankElement, version.getHasRelevantChildrenPredicate(ConfigChild.class), cumulativeGroupTrigger, new GroupCreator.Callback<>() {
 			private XmlBuilder cumulativeBuilder;
 			private String cumulativeGroupName;
 
@@ -618,12 +645,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 
 	private boolean isNoElementTypeNeeded(ElementRole role) {
 		ElementType elementType = role.getElementType();
-		if(elementType.isFromJavaInterface()) {
-			return false;
-		}
-		else {
-			return true;
-		}
+		return !elementType.isFromJavaInterface();
 	}
 
 	private void addConfigChildSingleReferredElement(XmlBuilder context, ObjectConfigChild child) {
@@ -633,6 +655,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 			log.trace("Omitting config child [{}] because of name conflict", child::toString);
 			return;
 		}
+
 		String referredXsdElementName = elementInType.getXsdElementName(role);
 		log.trace("Config child appears as element reference to FrankElement [{}], XSD element [{}]", elementInType::getFullName, () -> referredXsdElementName);
 		addElement(context, referredXsdElementName, getTypeName(referredXsdElementName), getMinOccurs(child), getMaxOccurs(child));
@@ -707,6 +730,15 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 			XmlBuilder choice = addChoice(group);
 			addElementGroupGenericOption(choice, roles);
 			addElementGroupOptions(choice, roles);
+			String elementTypeSimpleName = key.iterator().next().getElementTypeSimpleName();
+
+			// The "Include" element should be manually added to the XSD as part of the "xs:choice" for this element-group.
+			// We cannot have it added in a simpler way from the Frank!Framework code, as it will then not be valid as
+			// part of the choice of elements in this element-group, but as a separate group of elements.
+			if (model.shouldGetIncludeElement(elementTypeSimpleName)) {
+				addElement(choice, "Include", "IncludeType", "0", "unbounded");
+				additionalRootElements.put(model.getAdditionalRootElement(elementTypeSimpleName), groupName);
+			}
 		} else {
 			log.trace("Element group already exists");
 		}
@@ -734,7 +766,8 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void defineElementGroupBaseUnchecked(ElementRole role) {
-		XmlBuilder group = createGroup(role.createXsdElementName(ELEMENT_GROUP_BASE));
+		String groupName = role.createXsdElementName(ELEMENT_GROUP_BASE);
+		XmlBuilder group = createGroup(groupName);
 		xsdComplexItems.add(group);
 		XmlBuilder choice = addChoice(group);
 		List<FrankElement> frankElementOptions = role.getMembers().stream()
