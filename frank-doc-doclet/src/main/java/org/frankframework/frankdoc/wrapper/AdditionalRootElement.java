@@ -17,6 +17,7 @@ package org.frankframework.frankdoc.wrapper;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -26,7 +27,8 @@ import lombok.Getter;
  * a configuration.
  */
 public enum AdditionalRootElement {
-	PIPELINE_PART("PipelinePart", "IPipe", "Wrapper element to help create reusable parts of a pipeline");
+	PIPELINE_PART("PipelinePart", "IPipe", true, "Wrapper element to help create reusable parts of a pipeline that can be included into other pipelines"),
+	COMPONENT_PIPE("Pipeline", "ComponentPipe", false, "Wrapper element to help create reusable parts of a pipeline that can be built as independent pipelines", "Pipeline");
 
 	/**
 	 * Lookup-map to find the Enum value by the (simple) classname of a type being processed.
@@ -44,13 +46,24 @@ public enum AdditionalRootElement {
 	 */
 	private final @Getter String typeName;
 	/**
+	 * If true, and the typeName is an interface from which a group-type will be generated consisting of all implementations
+	 * of the interface, the "Include" element will be added to that group.
+	 */
+	private final @Getter boolean addIncludeToTypeGroup;
+	/**
 	 * Doc string that should be added to the XSD or JSON for this top-level element.
 	 */
 	private final @Getter String docString;
 
-	AdditionalRootElement(String elementName, String typeName, String docString) {
+	/**
+	 * Set of types allowed in the additional root element
+	 */
+	private final @Getter Set<String> allowedTypes;
+	AdditionalRootElement(String elementName, String typeName, boolean addIncludeToTypeGroup, String docString, String... allowedTypes) {
 		this.elementName = elementName;
 		this.typeName = typeName;
+		this.addIncludeToTypeGroup = addIncludeToTypeGroup;
 		this.docString = docString;
+		this.allowedTypes = Set.of(allowedTypes);
 	}
 }
