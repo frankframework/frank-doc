@@ -45,6 +45,7 @@ import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.model.FrankElement;
 import org.frankframework.frankdoc.model.MandatoryStatus;
+import org.frankframework.frankdoc.model.Note;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.ParsedJavaDocTag;
 import org.frankframework.frankdoc.model.ServletAuthenticator;
@@ -269,18 +270,9 @@ public class FrankDocJsonFactory {
 			});
 			result.add("links", builder.build());
 		}
-		if (!frankElement.getNotes().isEmpty()) {
-			final var builder = bf.createArrayBuilder();
-			frankElement.getNotes().forEach(note -> {
-				final var noteBuilder = bf.createObjectBuilder();
 
-				noteBuilder.add("type", note.type().name());
-				noteBuilder.add("value", note.value());
+		addNotesToBuilder(frankElement.getNotes(), result);
 
-				builder.add(noteBuilder);
-			});
-			result.add("notes", builder.build());
-		}
 		return result.build();
 	}
 
@@ -555,14 +547,33 @@ public class FrankDocJsonFactory {
 	}
 
 	private JsonObject credentialProviderToJson(CredentialProvider credentialProvider) {
-		JsonObjectBuilder b = bf.createObjectBuilder();
+		JsonObjectBuilder jsonObjectBuilder = bf.createObjectBuilder();
 
-		b.add("fullName", credentialProvider.fullName());
+		jsonObjectBuilder.add("fullName", credentialProvider.fullName());
 		if (credentialProvider.description() != null) {
-			b.add("description", credentialProvider.description());
+			jsonObjectBuilder.add("description", credentialProvider.description());
+
+			addNotesToBuilder(credentialProvider.notes(), jsonObjectBuilder);
 		}
 
-		return b.build();
+		return jsonObjectBuilder.build();
+	}
+
+	private void addNotesToBuilder(List<Note> notes, JsonObjectBuilder parent) {
+		if (!notes.isEmpty()) {
+			final var builder = bf.createArrayBuilder();
+
+			notes.forEach(note -> {
+				final var noteBuilder = bf.createObjectBuilder();
+
+				noteBuilder.add("type", note.type().name());
+				noteBuilder.add("value", note.value());
+
+				builder.add(noteBuilder);
+			});
+
+			parent.add("notes", builder.build());
+		}
 	}
 
 	private Optional<JsonObject> getServletAuthenticators() {
@@ -589,6 +600,8 @@ public class FrankDocJsonFactory {
 		if (!servletAuthenticator.methods().isEmpty()) {
 			b.add("methods", getServletAuthenticatorMethods(servletAuthenticator.methods()));
 		}
+
+		addNotesToBuilder(servletAuthenticator.notes(), b);
 
 		return b.build();
 	}

@@ -16,7 +16,8 @@ import { ButtonComponent, CheckboxComponent } from '@frankframework/angular-comp
 import { AppService, FilterGroups } from '../../../app.service';
 import { KeyValuePipe, NgClass } from '@angular/common';
 import { InitFilterToggleDirective } from './init-filter-toggle.directive';
-import { FilterLabels, NgFFDoc } from '@frankframework/ff-doc';
+import { FilterLabels } from '@frankframework/doc-library-core';
+import { NgFFDoc } from '@frankframework/doc-library-ng';
 
 type FilterEntry = {
   name: string;

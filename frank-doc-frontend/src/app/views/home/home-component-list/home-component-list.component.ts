@@ -7,7 +7,8 @@ import { TruncatePipe } from '../../../components/truncate.pipe';
 import { environment } from '../../../../environments/environment';
 import { CardDirective } from './card.directive';
 import { NgClass } from '@angular/common';
-import { ElementDetails, Elements, JavadocTransformDirective } from '@frankframework/ff-doc';
+import { ElementDetails, Elements } from '@frankframework/doc-library-core';
+import { JavadocTransformDirective } from '@frankframework/doc-library-ng';
 
 @Component({
   selector: 'app-home-component-list',

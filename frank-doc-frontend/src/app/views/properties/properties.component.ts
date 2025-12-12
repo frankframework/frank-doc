@@ -6,7 +6,8 @@ import { CollapseDirective } from '../../components/collapse.directive';
 import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.component';
 import { NgClass } from '@angular/common';
 import { IconHelpComponent } from '../../icons/icon-help/icon-help.component';
-import { Elements, FFDocJson, JavadocTransformDirective, NgFFDoc, Property } from '@frankframework/ff-doc';
+import { Elements, FFDocJson, Property } from '@frankframework/doc-library-core';
+import { JavadocTransformDirective, NgFFDoc } from '@frankframework/doc-library-ng';
 
 @Component({
   selector: 'app-properties',

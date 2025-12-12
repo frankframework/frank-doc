@@ -44,6 +44,7 @@ import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.feature.Description;
 import org.frankframework.frankdoc.feature.ExcludeFromTypeFeature;
 import org.frankframework.frankdoc.feature.Mandatory;
+import org.frankframework.frankdoc.feature.Notes;
 import org.frankframework.frankdoc.feature.Optional;
 import org.frankframework.frankdoc.feature.Protected;
 import org.frankframework.frankdoc.feature.Reference;
@@ -955,7 +956,8 @@ public class FrankDocModel {
 			.stream().map(cls -> new CredentialProvider(
 				cls.getSimpleName(),
 				cls.getPackageName() + "." + cls.getSimpleName(),
-				Description.getInstance().valueOf(cls))
+				Description.getInstance().valueOf(cls),
+				Notes.getInstance().valueOf(cls))
 			).toList();
 	}
 
@@ -970,7 +972,8 @@ public class FrankDocModel {
 						.map(method -> new ServletAuthenticatorMethod(
 							WordUtils.uncapitalize(method.getName().replace("set", "")),
 							Description.getInstance().valueOf(method))
-						).toList()
+						).toList(),
+					Notes.getInstance().valueOf(cls)
 				)
 			).toList();
 	}

@@ -15,10 +15,11 @@ limitations under the License.
 */
 package org.frankframework.frankdoc.model;
 
+import java.util.List;
+
 public record CredentialProvider(
 	String simpleName,
 	String fullName,
-	String description
-) {
-
+	String description,
+	List<Note> notes) {
 }

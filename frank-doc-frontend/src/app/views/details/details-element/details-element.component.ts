@@ -22,6 +22,7 @@ import { DEFAULT_RETURN_CHARACTER } from '../../../app.constants';
 import { HasInheritedProperties } from '../details.component';
 import { Title } from '@angular/platform-browser';
 import { NameWbrPipe } from '../../../components/name-wbr.pipe';
+import { JavadocTransformDirective, NgFFDoc } from '@frankframework/doc-library-ng';
 import {
   Attribute,
   DeprecationInfo,
@@ -30,12 +31,10 @@ import {
   Elements,
   EnumValue,
   getInheritedProperties,
+  groupAttributesByMandatory,
   InheritedProperties,
-  JavadocTransformDirective,
-  NgFFDoc,
   Note,
-} from '@frankframework/ff-doc';
-import { groupAttributesByMandatory } from '@frankframework/ff-doc';
+} from '@frankframework/doc-library-core';
 
 type EnumValueEntry = {
   valueName: string;
@@ -261,17 +260,31 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   }
 
   private generateElementSyntax(): void {
-    if (this.element) {
-      const requiredAttributes = Object.entries(this.getAllRequiredAttributes())
-        .map(
-          ([attributeName, attribute]) =>
-            `${attributeName}="${attribute.default ?? this.getTypeDefaultValue(attribute.type)}"`,
-        )
-        .join(' ');
-      this.elementSyntax = `
-<${this.element.name} ${requiredAttributes}/>
-`.trim();
-    }
+    if (!this.element) return;
+    const requiredAttributes = Object.entries(this.getAllRequiredAttributes())
+      .map(
+        ([attributeName, attribute]) =>
+          `${attributeName}="${attribute.default ?? this.getTypeDefaultValue(attribute.type)}"`,
+      )
+      .join(' ');
+    const params = Object.keys(this.element.parameters ?? {})
+      .map((paramName) => `  <param name="${paramName}" .../>`)
+      .join('\n');
+    const hasNestedElements = this.element.children !== undefined && this.element.children.length > 0;
+    this.elementSyntax = this.buildSyntax(this.element.name, requiredAttributes, params, hasNestedElements);
+  }
+
+  private buildSyntax(elementName: string, attributes: string, params: string, hasNestedElements: boolean): string {
+    const elementTag = `${elementName} ${attributes}`.trimEnd();
+    const closing =
+      hasNestedElements || params !== ''
+        ? `>\n  ${this.generateInnerSyntax(params, hasNestedElements)}\n</${elementName}>`
+        : ' />';
+    return `<${elementTag}${closing}`.trim();
+  }
+
+  private generateInnerSyntax(params: string, hasNestedElements: boolean): string {
+    return `${params} ${hasNestedElements ? '\n  ...' : ''}`.trim();
   }
 
   private getTypeDefaultValue(type: Attribute['type']): string {
