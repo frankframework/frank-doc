@@ -1,8 +1,8 @@
 package org.frankframework.frankdoc.integration;
 
-import org.junit.jupiter.api.Test;
-
 import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
+
+import org.junit.jupiter.api.Test;
 
 class CredentialProviderTest extends BaseIntegrationTest {
 

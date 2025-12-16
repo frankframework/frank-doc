@@ -20,4 +20,16 @@ public class HierarchyTest extends BaseIntegrationTest {
 
 		assertXsdEqual(actual, "hierarchy.xsd");
 	}
+
+	@Test
+	public void testStrictJson() throws Exception {
+		var model = createModel(
+			DIGESTER_RULES_FILE,
+			null,
+			START_CLASS_NAME
+		);
+		var actual = convertModelToJson(model);
+
+		assertJsonEqual(actual, "hierarchy.json");
+	}
 }

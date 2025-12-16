@@ -16,19 +16,44 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.Getter;
+import static org.frankframework.frankdoc.model.ElementChild.ALL;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Constants;
 import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.feature.*;
+import org.frankframework.frankdoc.feature.Default;
 import org.frankframework.frankdoc.feature.Deprecated;
+import org.frankframework.frankdoc.feature.Description;
+import org.frankframework.frankdoc.feature.ExcludeFromTypeFeature;
+import org.frankframework.frankdoc.feature.Mandatory;
+import org.frankframework.frankdoc.feature.Notes;
 import org.frankframework.frankdoc.feature.Optional;
+import org.frankframework.frankdoc.feature.Protected;
+import org.frankframework.frankdoc.feature.Reference;
+import org.frankframework.frankdoc.feature.Reintroduce;
 import org.frankframework.frankdoc.model.AncestorMethodBrowser.References;
 import org.frankframework.frankdoc.properties.Group;
 import org.frankframework.frankdoc.properties.PropertyParser;
 import org.frankframework.frankdoc.util.LogUtil;
+import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
@@ -36,14 +61,7 @@ import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.net.URL;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
-import static org.frankframework.frankdoc.model.ElementChild.ALL;
+import lombok.Getter;
 
 public class FrankDocModel {
 	private static final Logger log = LogUtil.getLogger(FrankDocModel.class);
@@ -186,6 +204,14 @@ public class FrankDocModel {
 
 	public boolean hasType(String typeName) {
 		return allTypes.containsKey(typeName);
+	}
+
+	public boolean shouldGetIncludeElement(String classSimpleName) {
+		return classRepository.isIncludeTypePresent() && AdditionalRootElement.VALUE_BY_TYPE.containsKey(classSimpleName);
+	}
+
+	public AdditionalRootElement getAdditionalRootElement(String classSimpleName) {
+		return AdditionalRootElement.VALUE_BY_TYPE.get(classSimpleName);
 	}
 
 	void buildDescendants() throws Exception {
