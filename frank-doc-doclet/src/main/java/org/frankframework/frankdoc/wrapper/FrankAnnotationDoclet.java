@@ -16,23 +16,27 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
-import com.sun.tools.javac.code.Attribute;
-import com.sun.tools.javac.code.Symbol;
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
-
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.AnnotationValueVisitor;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
 
 class FrankAnnotationDoclet implements FrankAnnotation {
 	private static final Logger log = LogUtil.getLogger(FrankAnnotationDoclet.class);
@@ -91,31 +95,8 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 		}
 	}
 
-	private Object parseAnnotationValue(AnnotationValue raw) {
-		if (raw instanceof Attribute.Array array) {
-			if (array.values.length > 0 && array.values[0].getValue() instanceof AnnotationMirror) {
-				List<AnnotationMirror> annotations = (List<AnnotationMirror>) raw.getValue();
-				return annotations.stream().map(FrankAnnotationDoclet::new).toArray(FrankAnnotation[]::new);
-			}
-
-			return parseAnnotationValueAsStringArray(((Attribute.Array) raw).getValue());
-		}
-		if (raw instanceof Attribute.Class) {
-			return ((Attribute.Class) raw).classType.toString();
-		}
-		if (raw instanceof Attribute.Enum enumInstance) {
-			return new FrankEnumConstantDoclet(enumInstance.getValue(), null);
-		}
-
-		return raw.getValue();
-	}
-
-	private Object parseAnnotationValueAsStringArray(com.sun.tools.javac.util.List<Attribute> valueList) {
-		String[] result = new String[valueList.size()];
-		for (int i = 0; i < valueList.size(); ++i) {
-			result[i] = valueList.get(i).getValue().toString();
-		}
-		return result;
+	private static Object parseAnnotationValue(AnnotationValue raw) {
+		return raw.accept(new AnnotationValueParser(), null);
 	}
 
 	public static Object getAnnotationDefaultValue(AnnotationMirror annotationMirror, String elementName) {
@@ -125,9 +106,11 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 			.findFirst()
 			.orElse(null);
 
-		if (defaultValueMethod instanceof Symbol.MethodSymbol) {
-			Symbol.MethodSymbol methodSymbol = (Symbol.MethodSymbol) defaultValueMethod;
-			return methodSymbol.getDefaultValue().getValue();
+		if (defaultValueMethod instanceof ExecutableElement executableElement) {
+			AnnotationValue defaultValue = executableElement.getDefaultValue();
+			if (defaultValue != null) {
+				return defaultValue.getValue();
+			}
 		}
 		return null;
 	}
@@ -143,8 +126,109 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof FrankAnnotationDoclet other)) return false;
+
+		return getName().equals(other.getName())
+			&& Objects.equals(getValue(), other.getValue())
+			&& getAnnotationCount() == other.getAnnotationCount();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getName(), getValue(), getAnnotationCount());
+	}
+
+	@Override
 	public String toString() {
 		final String value = getValue() == null ? "null" : getValue().toString();
 		return "FrankAnnotationDoclet name: [" + getName() + "], value: [" + value + "] annotations size: " + getAnnotationCount();
+	}
+
+	private static class AnnotationValueParser implements AnnotationValueVisitor<Object, Object> {
+		@Override
+		public Object visit(AnnotationValue av, Object o) {
+			return av.getValue();
+		}
+
+		@Override
+		public Object visitBoolean(boolean b, Object o) {
+			return b;
+		}
+
+		@Override
+		public Object visitByte(byte b, Object o) {
+			return b;
+		}
+
+		@Override
+		public Object visitChar(char c, Object o) {
+			return c;
+		}
+
+		@Override
+		public Object visitDouble(double d, Object o) {
+			return d;
+		}
+
+		@Override
+		public Object visitFloat(float f, Object o) {
+			return f;
+		}
+
+		@Override
+		public Object visitInt(int i, Object o) {
+			return i;
+		}
+
+		@Override
+		public Object visitLong(long i, Object o) {
+			return i;
+		}
+
+		@Override
+		public Object visitShort(short s, Object o) {
+			return s;
+		}
+
+		@Override
+		public Object visitString(String s, Object o) {
+			return s;
+		}
+
+		@Override
+		public Object visitType(TypeMirror t, Object o) {
+			return t.toString();
+		}
+
+		@Override
+		public Object visitEnumConstant(VariableElement c, Object o) {
+			return new FrankEnumConstantDoclet(c, null);
+		}
+
+		@Override
+		public Object visitAnnotation(AnnotationMirror a, Object o) {
+			return new FrankAnnotationDoclet(a);
+		}
+
+		@Override
+		public Object visitArray(List<? extends AnnotationValue> vals, Object o) {
+			if (!vals.isEmpty() && vals.get(0).getValue() instanceof AnnotationMirror) {
+				return vals.stream()
+					.map(AnnotationValue::getValue)
+					.map(AnnotationMirror.class::cast)
+					.map(FrankAnnotationDoclet::new)
+					.toArray(FrankAnnotationDoclet[]::new);
+			}
+			return vals.stream()
+				.map(AnnotationValue::getValue)
+				.map(Object::toString)
+				.toArray(String[]::new);
+		}
+
+		@Override
+		public Object visitUnknown(AnnotationValue av, Object o) {
+			return av.toString();
+		}
 	}
 }

@@ -16,17 +16,20 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
-import com.sun.source.doctree.DocCommentTree;
-import lombok.Getter;
-import org.frankframework.frankdoc.model.EnumValue;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+
+import org.frankframework.frankdoc.model.EnumValue;
+
+import com.sun.source.doctree.DocCommentTree;
+
+import lombok.Getter;
 
 class FrankEnumConstantDoclet implements FrankEnumConstant {
 	private final @Getter String name;
@@ -76,5 +79,29 @@ class FrankEnumConstantDoclet implements FrankEnumConstant {
 	@Override
 	public String getJavaDocTag(String tagName) {
 		return FrankDocletUtils.getJavaDocTag(docCommentTree, tagName);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof FrankEnumConstantDoclet other)) {
+			return false;
+		}
+		if (!name.equals(other.name)) {
+			return false;
+		}
+		if (!variableElement.equals(other.variableElement)) {
+			return false;
+		}
+		return isPublic == other.isPublic;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, variableElement, isPublic);
+	}
+
+	@Override
+	public String toString() {
+		return "FrankEnumConstantDoclet:[%s];VariableElement:[%s];public:[%b]".formatted(name, variableElement, isPublic);
 	}
 }
