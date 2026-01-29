@@ -23,7 +23,7 @@
             "parametersDescription": "All parameters",
             "parameters": {
                 "Param1": {
-                    "description": "This is a parameter\n\n {@inheritClassDoc }"
+                    "description": "This is a parameter\n\n{@inheritClassDoc}"
                 }
             },
             "children": [
@@ -49,7 +49,7 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Parent": {
             "name": "Parent",
-            "description": "Description of parent.\n Description of parent of parent.",
+            "description": "Description of parent.\nDescription of parent of parent.",
             "attributes": {
                 "hasNoJavaDocAttribute": {},
                 "inheritedAttribute": {

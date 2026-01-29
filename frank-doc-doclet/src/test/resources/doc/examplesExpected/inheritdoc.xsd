@@ -4,8 +4,8 @@
   <xs:element name="Child">
     <xs:annotation>
       <xs:documentation>Description of child.
- Description of parent.
- Description of parent of parent.</xs:documentation>
+Description of parent.
+Description of parent of parent.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
@@ -31,7 +31,7 @@
       <xs:annotation>
         <xs:documentation>Documentation of the inherited attribute from the parent.
 
- With a bit of additional text.</xs:documentation>
+With a bit of additional text.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="hasNoJavaDocAttribute" type="xs:string">
