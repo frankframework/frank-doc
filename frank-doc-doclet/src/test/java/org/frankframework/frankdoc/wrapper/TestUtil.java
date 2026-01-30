@@ -37,6 +37,7 @@ import com.sun.tools.javac.util.Context;
 import jdk.javadoc.internal.tool.Start;
 import lombok.extern.log4j.Log4j2;
 
+// TODO: Get rid of the JDK internal imports jdk.javadoc.internal.tool.Start, com.sun.tools.javac.util.Context and com.sun.tools.javac.file.JavacFileManager
 @Log4j2
 public final class TestUtil {
 	private static final Properties BUILD_PROPERTIES = new TestUtil().loadBuildProperties();
