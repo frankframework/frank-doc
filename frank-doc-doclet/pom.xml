@@ -16,6 +16,7 @@
 
 	<properties>
 		<log4j2.version>2.25.2</log4j2.version>
+    <lombok.version>1.18.42</lombok.version>
 		<argLine /> <!-- add empty default argLine so Surefire won't fail when JaCoCo isn't present -->
 	</properties>
 
@@ -88,10 +89,6 @@
 						<include>**/*.java</include>
 					</includes>
 					<argLine>@{argLine} -Dfile.encoding=UTF-8
-						--add-exports jdk.javadoc/jdk.javadoc.internal.tool=ALL-UNNAMED
-						--add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
-						--add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
-						--add-exports jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED
 					</argLine>
 				</configuration>
 			</plugin>
@@ -111,7 +108,7 @@
 					</execution>
 				</executions>
 			</plugin>
-		</plugins>
+    </plugins>
 		<pluginManagement>
 			<plugins>
 				<!-- This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself -->
@@ -186,7 +183,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.32</version>
+			<version>${lombok.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

@@ -14,8 +14,7 @@
 	<properties>
 		<revision>4.3.0-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.release>17</maven.compiler.release>
 	</properties>
 
 	<prerequisites>
@@ -117,19 +116,6 @@
 					<configuration>
 						<source>${maven.compiler.source}</source>
 						<target>${maven.compiler.target}</target>
-						<compilerArgs>
-              <!-- Contains class com.sun.tools.javac.util.Context which we need for testing, in org.frankframework.frankdoc.wrapper.TestUtil -->
-							<arg>--add-exports</arg>
-							<arg>jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
-
-              <!-- Contains class com.sun.tools.javac.file.JavacFileManager which we need for testing, in org.frankframework.frankdoc.wrapper.TestUtil -->
-							<arg>--add-exports</arg>
-							<arg>jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
-
-              <!-- Contains class jdk.javadoc.internal.tool.Start which we need for testing, in org.frankframework.frankdoc.wrapper.TestUtil -->
-							<arg>--add-exports</arg>
-							<arg>jdk.javadoc/jdk.javadoc.internal.tool=ALL-UNNAMED</arg>
-						</compilerArgs>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -179,12 +165,6 @@
 					<configuration>
 						<doclint>none</doclint>
 						<useStandardDocletOptions>true</useStandardDocletOptions>
-						<additionalOptions>
-							<additionalOption>--add-exports</additionalOption>
-							<additionalOption>jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</additionalOption>
-							<additionalOption>--add-exports</additionalOption>
-							<additionalOption>jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</additionalOption>
-						</additionalOptions>
 					</configuration>
 				</plugin>
 
