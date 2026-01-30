@@ -65,6 +65,12 @@ jobs:
           fetch-depth: 2
           repository: frankframework/frankframework
           path: frankframework
+      
+      - name: Set up JDK 25 # The Frank!Framework needs to be build with a newer JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
 
       - name: Build Frank!Framework
         env:
