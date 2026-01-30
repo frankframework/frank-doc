@@ -16,10 +16,9 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
-import com.sun.source.doctree.DocCommentTree;
-import com.sun.tools.javac.code.Type;
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -28,11 +27,14 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.NoType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
+
+import com.sun.source.doctree.DocCommentTree;
 
 class FrankMethodDoclet extends FrankMethodDocletBase {
 	private static final Logger log = LogUtil.getLogger(FrankMethodDoclet.class);
@@ -95,23 +97,11 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 	}
 
 	private FrankType typeOf(TypeMirror docletType) {
-		if (docletType instanceof PrimitiveType || docletType instanceof Type.JCVoidType) {
+		if (docletType instanceof PrimitiveType || docletType instanceof NoType) {
 			return new FrankPrimitiveType(docletType.toString());
 		}
 
-		String fullNameWithoutTypeInfo = docletType.toString();
-
-		// Fix situation where the type is a generic type, e.g. FrankClass<String> var.
-		if (docletType instanceof Type.ClassType) {
-			fullNameWithoutTypeInfo = ((Type.ClassType) docletType).tsym.toString();
-		}
-		// Fix situation where the type is an array of generic type, e.g. FrankClass<?>[] vars.
-		if (docletType instanceof Type.ArrayType) {
-			fullNameWithoutTypeInfo = ((Type.ArrayType) docletType).elemtype.tsym.toString();
-		}
-		if (fullNameWithoutTypeInfo.contains("<")) {
-			log.error("Still found type with Generic information in type at: {}; {}. Please fix this inside FrankDocDoclet.", fullNameWithoutTypeInfo, getName());
-		}
+		String fullNameWithoutTypeInfo = FrankDocletUtils.getFullNameWithoutTypeInfo(docletType);
 		try {
 			FrankClass clazz = getDeclaringClass().getRepository().findClass(fullNameWithoutTypeInfo);
 			if (clazz == null) {

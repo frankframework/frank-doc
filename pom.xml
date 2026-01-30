@@ -14,8 +14,7 @@
 	<properties>
 		<revision>4.3.0-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.release>21</maven.compiler.release>
 	</properties>
 
 	<prerequisites>
@@ -113,26 +112,15 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.11.0</version>
+					<version>3.14.1</version>
 					<configuration>
-						<source>${maven.compiler.source}</source>
-						<target>${maven.compiler.target}</target>
-						<compilerArgs>
-							<arg>--add-exports</arg>
-							<arg>jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
-							<arg>--add-exports</arg>
-							<arg>jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
-							<arg>--add-exports</arg>
-							<arg>jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-							<arg>--add-exports</arg>
-							<arg>jdk.javadoc/jdk.javadoc.internal.tool=ALL-UNNAMED</arg>
-						</compilerArgs>
+            <release>${maven.compiler.release}</release>
 					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.5.0</version>
 					<configuration>
 						<archive>
 							<addMavenDescriptor>true</addMavenDescriptor>
@@ -146,7 +134,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.4.0</version>
 					<executions>
 						<execution>
 							<id>attach-sources</id>
@@ -161,7 +149,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.6.3</version>
+					<version>3.12.0</version>
 					<executions>
 						<execution>
 							<id>attach-javadocs</id>
@@ -176,33 +164,31 @@
 					<configuration>
 						<doclint>none</doclint>
 						<useStandardDocletOptions>true</useStandardDocletOptions>
-						<additionalOptions>
-							<additionalOption>--add-exports</additionalOption>
-							<additionalOption>jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</additionalOption>
-							<additionalOption>--add-exports</additionalOption>
-							<additionalOption>jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</additionalOption>
-						</additionalOptions>
 					</configuration>
 				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
-					<version>3.1.1</version>
+					<version>3.1.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.12.1</version>
+					<version>3.21.0</version>
 					<configuration>
 						<skip>true</skip>
 						<skipDeploy>true</skipDeploy>
 					</configuration>
 				</plugin>
+        <plugin>
+          <groupId>org.projectlombok</groupId>
+          <artifactId>lombok-maven-plugin</artifactId>
+        </plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>flatten-maven-plugin</artifactId>
-					<version>1.6.0</version>
+					<version>1.7.3</version>
 					<configuration>
 						<updatePomFile>true</updatePomFile>
 						<flattenMode>resolveCiFriendliesOnly</flattenMode>

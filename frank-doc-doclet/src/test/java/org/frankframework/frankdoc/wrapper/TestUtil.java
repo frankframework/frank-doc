@@ -1,21 +1,7 @@
 package org.frankframework.frankdoc.wrapper;
 
-import com.sun.source.util.DocTrees;
-import com.sun.tools.javac.file.JavacFileManager;
-import com.sun.tools.javac.util.Context;
-import jdk.javadoc.internal.tool.Start;
-import lombok.extern.log4j.Log4j2;
-import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.testdoclet.EasyDoclet;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.lang.model.element.Element;
-import javax.tools.JavaFileManager;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardLocation;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.sax.SAXSource;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,16 +9,36 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import javax.lang.model.element.Element;
+import javax.tools.DiagnosticListener;
+import javax.tools.DocumentationTool;
+import javax.tools.JavaFileManager;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
+import javax.tools.ToolProvider;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.sax.SAXSource;
+
+import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.testdoclet.EasyDoclet;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import com.sun.source.util.DocTrees;
+
+import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public final class TestUtil {
@@ -68,6 +74,10 @@ public final class TestUtil {
 	}
 
 	static void initEasyDoclet(String... packages) {
+		DocumentationTool docTool = ToolProvider.getSystemDocumentationTool();
+		DiagnosticListener<Object> diagnosticListener = diagnostic -> log.debug("Reporting JavaDoc diagnostic: {}", diagnostic);
+		Writer out = new StringWriter();
+
 		// Cache the previous run if the packages are the same. Saves 50% of the time.
 		if (Arrays.equals(packages, EasyDoclet.getPackages())) {
 			return;
@@ -81,16 +91,16 @@ public final class TestUtil {
 			log.debug("Package: {}", pack);
 		}
 
-		Start start = new Start(new Context());
 		Iterable<String> options = Arrays.asList("-sourcepath", TEST_SOURCE_DIRECTORY.getAbsolutePath(), "-doclet", EasyDoclet.class.getName(), "-subpackages", String.join(":", packages));
 		ArrayList<JavaFileObject> fileObjects = new ArrayList<>();
-		try (JavaFileManager fileManager = new JavacFileManager(new Context(), true, StandardCharsets.UTF_8)) {
+		try (JavaFileManager fileManager = docTool.getStandardFileManager(diagnosticListener, Locale.ROOT, StandardCharsets.UTF_8)) {
 			for (String pack : packages) {
 				log.debug("Listing source path for package {}", pack);
 				Iterable<JavaFileObject> packageFileObjects = fileManager.list(StandardLocation.SOURCE_PATH, pack, Set.of(JavaFileObject.Kind.SOURCE), true);
 				packageFileObjects.iterator().forEachRemaining(fileObjects::add);
 			}
-			start.begin(EasyDoclet.class, options, fileObjects);
+			DocumentationTool.DocumentationTask task = docTool.getTask(out, fileManager, diagnosticListener, EasyDoclet.class, options, fileObjects);
+			task.call();
 		} catch (IOException e) {
 			log.error("Cannot create file manager OR cannot process Doclet generation", e);
 			throw new RuntimeException("Cannot create file manager OR cannot process Doclet generation", e);
@@ -112,7 +122,7 @@ public final class TestUtil {
 		}
 	}
 
-	public static URL resourceAsURL(String path) throws IOException {
+	public static URL resourceAsURL(String path) {
 		if (!path.startsWith("/")) {
 			path = "/" + path;
 		}
@@ -174,11 +184,11 @@ public final class TestUtil {
 		return string.toString();
 	}
 
-	static public void assertEqualsIgnoreCRLF(String expected, String actual) {
+	public static void assertEqualsIgnoreCRLF(String expected, String actual) {
 		assertEqualsIgnoreCRLF(null, expected, actual);
 	}
 
-	static public void assertEqualsIgnoreCRLF(String message, String expected, String actual) {
+	public static void assertEqualsIgnoreCRLF(String message, String expected, String actual) {
 		assertEquals(expected.trim().replace("\r", ""), actual.trim().replace("\r", ""), message);
 	}
 }

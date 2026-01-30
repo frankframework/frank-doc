@@ -16,27 +16,6 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
-import com.sun.source.doctree.DocCommentTree;
-import com.sun.source.doctree.DocTree;
-import com.sun.source.util.DocTrees;
-import com.sun.tools.javac.code.Kinds;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Type;
-import lombok.AccessLevel;
-import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
-
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,6 +29,27 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.logging.log4j.Logger;
+import org.frankframework.frankdoc.util.LogUtil;
+
+import com.sun.source.doctree.DocCommentTree;
+import com.sun.source.doctree.DocTree;
+import com.sun.source.util.DocTrees;
+
+import lombok.AccessLevel;
+import lombok.Getter;
 
 public class FrankClass implements FrankType {
 	private static final Logger log = LogUtil.getLogger(FrankClass.class);
@@ -196,10 +196,7 @@ public class FrankClass implements FrankType {
 		for (TypeMirror interfaceDoc : clazz.getInterfaces()) {
 			try {
 				// Need to retrieve this full name, otherwise class name includes type parameters, e.g. org.ClassName<String>
-				String fullNameWithoutTypeInfo = ((Type.ClassType) interfaceDoc).tsym.toString();
-				if (fullNameWithoutTypeInfo.contains("<")) {
-					log.error("2 HELP! {}; {}", fullNameWithoutTypeInfo, getName());
-				}
+				String fullNameWithoutTypeInfo = FrankDocletUtils.getFullNameWithoutTypeInfo(interfaceDoc);
 				FrankClass interfaze = repository.findClass(fullNameWithoutTypeInfo);
 				if (interfaze != null) {
 					resultList.add(interfaze);
@@ -211,16 +208,13 @@ public class FrankClass implements FrankType {
 		return resultList;
 	}
 
-
 	public boolean isAbstract() {
 		return clazz.getModifiers().stream().anyMatch(m -> m == Modifier.ABSTRACT);
 	}
 
-
 	public boolean isInterface() {
 		return clazz.getKind().isInterface();
 	}
-
 
 	public boolean isPublic() {
 		return clazz.getModifiers().stream().anyMatch(m -> m == Modifier.PUBLIC);
@@ -240,7 +234,7 @@ public class FrankClass implements FrankType {
 		return interfaceImplementationsByName.values().stream()
 			// Remove abstract classes to make it the same as reflection does it.
 			.filter(c -> !c.isAbstract())
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 
@@ -253,7 +247,7 @@ public class FrankClass implements FrankType {
 	public FrankMethod[] getDeclaredAndInheritedMethods() {
 		List<FrankMethod> resultList = getDeclaredAndInheritedMethodsAsMap().values().stream()
 			.filter(FrankMethod::isPublic)
-			.collect(Collectors.toList());
+			.toList();
 		FrankMethod[] result = new FrankMethod[resultList.size()];
 		for (int i = 0; i < resultList.size(); ++i) {
 			result[i] = resultList.get(i);
@@ -322,8 +316,7 @@ public class FrankClass implements FrankType {
 	}
 
 	boolean isTopLevel() {
-		// Note: the isInner() method does not work for 'public static' inner classes.
-		return !((Symbol.ClassSymbol) clazz).owner.kind.equals(Kinds.Kind.TYP);
+		return !clazz.getNestingKind().isNested();
 	}
 
 	public String toString() {
