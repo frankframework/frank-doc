@@ -16,7 +16,8 @@ limitations under the License.
 
 package org.frankframework.frankdoc.feature;
 
-import lombok.NonNull;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
@@ -25,9 +26,12 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
+import lombok.NonNull;
+
 public class Description {
-	public static final String INHERIT_DOC_TAG = "{@inheritDoc}";
-	public static final String INHERIT_CLASS_DOC_TAG = "{@inheritClassDoc }"; // The space is intentional, due to the way tags are parsed.
+	// The space is for how tags are parsed in class Javadoc & comments with JDK <25.
+	public static final Pattern INHERIT_DOC_TAG = Pattern.compile(" ?\\{@inheritDoc ?}");
+	public static final Pattern INHERIT_CLASS_DOC_TAG = Pattern.compile(" ?\\{@inheritClassDoc ?}");
 	private static final Logger log = LogUtil.getLogger(Description.class);
 	private static final Description INSTANCE = new Description();
 
@@ -43,7 +47,7 @@ public class Description {
 		String comment = method.getComment();
 
 		// Recursively searches for a method with the same signature to use as this method's javadoc.
-		if (result != null && result.contains(INHERIT_DOC_TAG)) {
+		if (result != null && INHERIT_DOC_TAG.matcher(result).find()) {
 			FrankClass clazz = method.getDeclaringClass();
 			String parentJavadoc = null;
 
@@ -57,7 +61,7 @@ public class Description {
 				}
 			}
 
-			result = result.replace(INHERIT_DOC_TAG, parentJavadoc == null ? "" : parentJavadoc).strip();
+			result = INHERIT_DOC_TAG.matcher(result).replaceFirst(parentJavadoc == null ? "" : parentJavadoc).strip();
 		} else if (comment != null)
 			this.checkCommentForUnparsedJavaDocTags(comment, INHERIT_CLASS_DOC_TAG, INHERIT_DOC_TAG, method.getDeclaringClass().getName(), method.getName());
 		return Utils.substituteJavadocTags(result, method.getDeclaringClass());
@@ -68,15 +72,16 @@ public class Description {
 			return childJavaDoc;
 		}
 
+		// If parent class has any JavaDoc it might contain property-references as examples. These ${...} need to be escaped when used as replacement in the regex matcher
 		String parentJavaDoc = valueOf(superClazz);
-		return childJavaDoc.replace(INHERIT_CLASS_DOC_TAG, parentJavaDoc == null ? "" : parentJavaDoc).strip();
+		return INHERIT_CLASS_DOC_TAG.matcher(childJavaDoc).replaceFirst(parentJavaDoc == null ? "" : parentJavaDoc.replace("${", "\\${")).strip();
 	}
 
 	public String valueOf(FrankClass clazz) {
 		String result = clazz.getJavaDoc();
 		String comment = clazz.getComment();
 
-		if (result != null && result.contains(INHERIT_CLASS_DOC_TAG)) {
+		if (result != null && INHERIT_CLASS_DOC_TAG.matcher(result).find()) {
 			FrankClass superClazz = clazz.getSuperclass();
 			result = replaceInheritDocInResult(superClazz, result);
 		} else if (comment != null)
@@ -94,9 +99,9 @@ public class Description {
 		return null;
 	}
 
-	private void checkCommentForUnparsedJavaDocTags(@NonNull String comment, @NonNull String wrongTag, @NonNull String correctTag, @NonNull String className, String methodName) {
-		if (comment.contains(correctTag)) this.logCommentHasIgnoredTag(correctTag, className, methodName);
-		if (comment.contains(wrongTag)) this.logCommentHasWrongTag(wrongTag, correctTag, className, methodName);
+	private void checkCommentForUnparsedJavaDocTags(@NonNull String comment, @NonNull Pattern wrongTag, @NonNull Pattern correctTag, @NonNull String className, String methodName) {
+		if (correctTag.matcher(comment).find()) this.logCommentHasIgnoredTag(correctTag.toString(), className, methodName);
+		if (wrongTag.matcher(comment).find()) this.logCommentHasWrongTag(wrongTag.toString(), correctTag.toString(), className, methodName);
 	}
 
 	private void logCommentHasIgnoredTag(@NonNull String ignoredTag, @NonNull String className, String methodName) {

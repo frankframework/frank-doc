@@ -13,7 +13,7 @@
     "elements": {
         "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Child": {
             "name": "Child",
-            "description": "Description of child.\n Description of parent.\n Description of parent of parent.",
+            "description": "Description of child.\nDescription of parent.\nDescription of parent of parent.",
             "parent": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Parent",
             "attributes": {
                 "inheritedAttribute": {
@@ -46,7 +46,7 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Parent": {
             "name": "Parent",
-            "description": "Description of parent.\n Description of parent of parent.",
+            "description": "Description of parent.\nDescription of parent of parent.",
             "attributes": {
                 "hasNoJavaDocAttribute": {},
                 "inheritedAttribute": {

@@ -43,7 +43,7 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Parent": {
             "name": "Parent",
-            "description": "Description of parent.\n Description of parent of parent.",
+            "description": "Description of parent.\nDescription of parent of parent.",
             "attributes": {
                 "hasNoJavaDocAttribute": {},
                 "inheritedAttribute": {
