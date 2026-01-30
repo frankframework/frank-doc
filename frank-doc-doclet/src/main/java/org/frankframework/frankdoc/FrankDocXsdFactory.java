@@ -175,6 +175,12 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private final Map<AdditionalRootElement, String> additionalRootElements = new EnumMap<>(AdditionalRootElement.class);
 
 	public FrankDocXsdFactory(FrankDocModel model, AttributeTypeStrategy attributeTypeStrategy, String frankFrameworkVersion, String startClassName, XsdVersion version) {
+		if (model == null) {
+			throw new IllegalArgumentException("FrankDoc model cannot be NULL! AttributeTypeStrategy=[%s], frankFrameworkVersion=[%s], startClassName=[%s], XsdVersion=[%s]".formatted(
+				attributeTypeStrategy, frankFrameworkVersion, startClassName, version
+			));
+		}
+
 		this.model = model;
 		this.attributeTypeStrategy = attributeTypeStrategy;
 		this.frankFrameworkVersion = frankFrameworkVersion;
