@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -34,6 +33,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.SimpleAnnotationValueVisitor14;
 
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.util.LogUtil;
@@ -53,8 +53,7 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 		this.annotation = annotation;
 		AnnotationMirror[] javaDocAnnotationsOfAnnotation = annotation.getAnnotationType().asElement().getAnnotationMirrors().stream()
 			.filter(a -> !RECURSIVE_ANNOTATIONS.contains(a.getAnnotationType().toString()))
-			.collect(Collectors.toList())
-			.toArray(new AnnotationMirror[]{});
+			.toArray(AnnotationMirror[]::new);
 
 		if (javaDocAnnotationsOfAnnotation.length > 0) {
 			log.trace("Creating annotations of annotations");
@@ -145,55 +144,11 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 		return "FrankAnnotationDoclet name: [" + getName() + "], value: [" + value + "] annotations size: " + getAnnotationCount();
 	}
 
-	private static class AnnotationValueParser implements AnnotationValueVisitor<Object, Object> {
+	@SuppressWarnings("java:S110")
+	private static class AnnotationValueParser extends SimpleAnnotationValueVisitor14<Object,Object> implements AnnotationValueVisitor<Object, Object> {
 		@Override
-		public Object visit(AnnotationValue av, Object o) {
-			return av.getValue();
-		}
-
-		@Override
-		public Object visitBoolean(boolean b, Object o) {
-			return b;
-		}
-
-		@Override
-		public Object visitByte(byte b, Object o) {
-			return b;
-		}
-
-		@Override
-		public Object visitChar(char c, Object o) {
-			return c;
-		}
-
-		@Override
-		public Object visitDouble(double d, Object o) {
-			return d;
-		}
-
-		@Override
-		public Object visitFloat(float f, Object o) {
-			return f;
-		}
-
-		@Override
-		public Object visitInt(int i, Object o) {
-			return i;
-		}
-
-		@Override
-		public Object visitLong(long i, Object o) {
-			return i;
-		}
-
-		@Override
-		public Object visitShort(short s, Object o) {
-			return s;
-		}
-
-		@Override
-		public Object visitString(String s, Object o) {
-			return s;
+		protected Object defaultAction(Object o, Object o2) {
+			return o;
 		}
 
 		@Override
