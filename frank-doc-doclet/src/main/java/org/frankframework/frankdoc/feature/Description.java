@@ -68,16 +68,15 @@ public class Description {
 	}
 
 	private String replaceInheritDocInResult(FrankClass superClazz, String childJavaDoc) {
-		if (superClazz == null) {
-			return childJavaDoc;
-		}
-
 		// If parent class has any JavaDoc it might contain property-references as examples. These ${...} need to be escaped when used as replacement in the regex matcher
 		String parentJavaDoc = valueOf(superClazz);
 		return INHERIT_CLASS_DOC_TAG.matcher(childJavaDoc).replaceFirst(parentJavaDoc == null ? "" : parentJavaDoc.replace("${", "\\${")).strip();
 	}
 
 	public String valueOf(FrankClass clazz) {
+		if (clazz == null) {
+			return "";
+		}
 		String result = clazz.getJavaDoc();
 		String comment = clazz.getComment();
 
