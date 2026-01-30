@@ -144,7 +144,7 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 		return "FrankAnnotationDoclet name: [" + getName() + "], value: [" + value + "] annotations size: " + getAnnotationCount();
 	}
 
-	@SuppressWarnings("java:S110")
+	@SuppressWarnings("java:S110") // Sonar says: Too many parent classes. Sorry, can't help it.
 	private static class AnnotationValueParser extends SimpleAnnotationValueVisitor14<Object,Object> implements AnnotationValueVisitor<Object, Object> {
 		@Override
 		protected Object defaultAction(Object o, Object o2) {
