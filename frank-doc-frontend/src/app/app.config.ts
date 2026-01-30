@@ -1,4 +1,4 @@
-import { ApplicationConfig, Provider } from '@angular/core';
+import { ApplicationConfig, Provider, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, TitleStrategy, withHashLocation, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -9,6 +9,7 @@ const provideTitleStrategy: Provider = { provide: TitleStrategy, useClass: ViewT
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideZoneChangeDetection(),
     provideRouter(routes, withHashLocation(), withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })),
     provideHttpClient(),
     provideTitleStrategy,
