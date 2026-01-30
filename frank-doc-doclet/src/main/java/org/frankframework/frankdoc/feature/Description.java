@@ -16,7 +16,8 @@ limitations under the License.
 
 package org.frankframework.frankdoc.feature;
 
-import lombok.NonNull;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
@@ -25,7 +26,7 @@ import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
-import java.util.regex.Pattern;
+import lombok.NonNull;
 
 public class Description {
 	// The space is for how tags are parsed in class Javadoc & comments with JDK <25.
@@ -71,12 +72,9 @@ public class Description {
 			return childJavaDoc;
 		}
 
-		// TODO remove test code
-		var testValue = "Test\n\n {@inheritClassDoc}\n\n EndTest";
-		var replaced = INHERIT_CLASS_DOC_TAG.matcher(testValue).replaceFirst("Replaced");
-
+		// If parent class has any JavaDoc it might contain property-references as examples. These ${...} need to be escaped when used as replacement in the regex matcher
 		String parentJavaDoc = valueOf(superClazz);
-		return INHERIT_CLASS_DOC_TAG.matcher(childJavaDoc).replaceFirst(parentJavaDoc == null ? "" : parentJavaDoc).strip();
+		return INHERIT_CLASS_DOC_TAG.matcher(childJavaDoc).replaceFirst(parentJavaDoc == null ? "" : parentJavaDoc.replace("${", "\\${")).strip();
 	}
 
 	public String valueOf(FrankClass clazz) {
