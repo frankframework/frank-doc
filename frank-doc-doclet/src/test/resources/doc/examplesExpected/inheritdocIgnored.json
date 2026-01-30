@@ -23,7 +23,7 @@
             "parametersDescription": "All parameters",
             "parameters": {
                 "Param1": {
-                    "description": "This is a parameter\n\n{@inheritClassDoc}"
+                    "description": "This is a parameter\n\n {@inheritClassDoc }"
                 }
             },
             "children": [

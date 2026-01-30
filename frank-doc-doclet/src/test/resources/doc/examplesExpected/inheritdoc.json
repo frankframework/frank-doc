@@ -17,7 +17,7 @@
             "parent": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Parent",
             "attributes": {
                 "inheritedAttribute": {
-                    "description": "Documentation of the inherited attribute from the parent.\n\nWith a bit of additional text."
+                    "description": "Documentation of the inherited attribute from the parent.\n\n With a bit of additional text."
                 },
                 "hasNoJavaDocAttribute": {
                     "description": "An additional line of text."

@@ -31,7 +31,7 @@ Description of parent of parent.</xs:documentation>
       <xs:annotation>
         <xs:documentation>Documentation of the inherited attribute from the parent.
 
-With a bit of additional text.</xs:documentation>
+ With a bit of additional text.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="hasNoJavaDocAttribute" type="xs:string">
