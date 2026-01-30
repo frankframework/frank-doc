@@ -15,6 +15,20 @@ limitations under the License.
 */
 package org.frankframework.frankdoc;
 
+import static org.frankframework.frankdoc.Utils.JAVADOC_CODE_START_DELIMITER;
+import static org.frankframework.frankdoc.Utils.isConfigChildSetter;
+import static org.frankframework.frankdoc.Utils.replacePattern;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
@@ -23,18 +37,6 @@ import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static org.frankframework.frankdoc.Utils.isConfigChildSetter;
-import static org.frankframework.frankdoc.Utils.replacePattern;
-import static org.frankframework.frankdoc.Utils.*;
-import static org.frankframework.frankdoc.wrapper.TestUtil.assertJsonEqual;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class UtilsTest {
 	private static final String SIMPLE = "org.frankframework.frankdoc.testtarget.simple";
@@ -48,9 +50,9 @@ public class UtilsTest {
 	@Test
 	public void testGetSpringBeans() throws FrankDocException {
 		List<FrankClass> actual = repository.findClass(SIMPLE + ".IListener").getInterfaceImplementations();
-		Collections.sort(actual, Comparator.comparing(FrankClass::getName));
 		assertEquals(4, actual.size());
-		Iterator<FrankClass> it = actual.iterator();
+		List<FrankClass> sorted = actual.stream().sorted(Comparator.comparing(FrankClass::getName)).toList();
+		Iterator<FrankClass> it = sorted.iterator();
 		FrankClass first = it.next();
 		assertEquals(SIMPLE + ".ListenerChild", first.getName());
 		FrankClass second = it.next();

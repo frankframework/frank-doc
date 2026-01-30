@@ -196,9 +196,7 @@ public class FrankClass implements FrankType {
 		for (TypeMirror interfaceDoc : clazz.getInterfaces()) {
 			try {
 				// Need to retrieve this full name, otherwise class name includes type parameters, e.g. org.ClassName<String>
-				String fullName = interfaceDoc.toString();
-				int typeParamPos = fullName.indexOf('<');
-				String fullNameWithoutTypeInfo = typeParamPos == -1 ? fullName : fullName.substring(0, typeParamPos);
+				String fullNameWithoutTypeInfo = FrankDocletUtils.getFullNameWithoutTypeInfo(interfaceDoc);
 				FrankClass interfaze = repository.findClass(fullNameWithoutTypeInfo);
 				if (interfaze != null) {
 					resultList.add(interfaze);
@@ -210,16 +208,13 @@ public class FrankClass implements FrankType {
 		return resultList;
 	}
 
-
 	public boolean isAbstract() {
 		return clazz.getModifiers().stream().anyMatch(m -> m == Modifier.ABSTRACT);
 	}
 
-
 	public boolean isInterface() {
 		return clazz.getKind().isInterface();
 	}
-
 
 	public boolean isPublic() {
 		return clazz.getModifiers().stream().anyMatch(m -> m == Modifier.PUBLIC);
@@ -239,7 +234,7 @@ public class FrankClass implements FrankType {
 		return interfaceImplementationsByName.values().stream()
 			// Remove abstract classes to make it the same as reflection does it.
 			.filter(c -> !c.isAbstract())
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 
@@ -252,7 +247,7 @@ public class FrankClass implements FrankType {
 	public FrankMethod[] getDeclaredAndInheritedMethods() {
 		List<FrankMethod> resultList = getDeclaredAndInheritedMethodsAsMap().values().stream()
 			.filter(FrankMethod::isPublic)
-			.collect(Collectors.toList());
+			.toList();
 		FrankMethod[] result = new FrankMethod[resultList.size()];
 		for (int i = 0; i < resultList.size(); ++i) {
 			result[i] = resultList.get(i);
