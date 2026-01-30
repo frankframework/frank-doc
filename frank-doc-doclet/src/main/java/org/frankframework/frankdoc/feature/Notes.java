@@ -52,7 +52,7 @@ public class Notes {
 
 		String javaDoc = clazz.getJavaDoc();
 
-		if (javaDoc != null && javaDoc.contains(Description.INHERIT_CLASS_DOC_TAG)) {
+		if (javaDoc != null && Description.INHERIT_CLASS_DOC_TAG.matcher(javaDoc).find()) {
 			FrankClass superClazz = clazz.getSuperclass();
 			if (superClazz != null) {
 				notes.addAll(valueOf(superClazz));
