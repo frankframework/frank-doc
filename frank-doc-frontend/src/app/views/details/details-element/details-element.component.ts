@@ -87,14 +87,14 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     inheritedRequired: new Map<string, boolean>(),
     inheritedOptional: new Map<string, boolean>(),
   };
-  protected elementSyntax: string = '';
+  protected elementSyntax = '';
   protected collapsedInheritedThreshold = 1;
   protected _hasInheritedProperties: HasInheritedProperties = {
     required: false,
     optional: false,
     forwards: false,
   };
-  protected loading: boolean = true;
+  protected loading = true;
 
   protected readonly appService: AppService = inject(AppService);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;

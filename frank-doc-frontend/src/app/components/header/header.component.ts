@@ -17,6 +17,6 @@ import { environment } from '../../../environments/environment';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  @Input() version: string = '';
+  @Input() version = '';
   protected applicationName = environment.applicationName.replace('FF! ', '');
 }

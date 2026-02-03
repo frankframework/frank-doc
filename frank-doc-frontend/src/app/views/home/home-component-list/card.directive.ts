@@ -4,5 +4,5 @@ import { Directive } from '@angular/core';
   selector: '[appCard]',
 })
 export class CardDirective {
-  activeHover: boolean = false;
+  activeHover = false;
 }

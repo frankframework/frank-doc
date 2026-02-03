@@ -5,8 +5,8 @@
       @for (authenticator of servletAuthenticatorNames(); track authenticator) {
         <li
           class="nav-item"
-          (click)="handleSelectedAuthenticator(authenticator)"
           [ngClass]="{ active: selectedAuthenticator()?.name === authenticator }"
+          (click)="handleSelectedAuthenticator(authenticator)"
         >
           {{ authenticator }}
         </li>

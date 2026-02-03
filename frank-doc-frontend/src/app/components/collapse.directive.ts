@@ -1,27 +1,27 @@
 import { Directive, HostListener, Input, booleanAttribute, Output, EventEmitter, AfterViewInit } from '@angular/core';
 
 @Directive({
-  selector: '[collapse]',
+  selector: '[appCollapse]',
   standalone: true,
 })
 export class CollapseDirective implements AfterViewInit {
-  @Input({ required: true }) collapse!: HTMLElement;
-  @Input({ transform: booleanAttribute }) collapsed: boolean = false;
-  @Input() animationSpeed: number = 300;
+  @Input({ required: true }) appCollapse!: HTMLElement;
+  @Input({ transform: booleanAttribute }) collapsed = false;
+  @Input() animationSpeed = 300;
   @Output() collapsedChange = new EventEmitter<boolean>();
 
   private collapseAnimation: Animation | null = null;
-  private clientHeight: number = 0;
-
-  ngAfterViewInit(): void {
-    this.setInitialState();
-  }
+  private clientHeight = 0;
 
   @HostListener('click')
   onClick(): void {
     this.collapsed = !this.collapsed;
     this.collapsedChange.emit(this.collapsed);
     this.updateState();
+  }
+
+  ngAfterViewInit(): void {
+    this.setInitialState();
   }
 
   updateState(): void {
@@ -31,7 +31,7 @@ export class CollapseDirective implements AfterViewInit {
     }
 
     if (this.collapsed) {
-      this.clientHeight = this.collapse.clientHeight;
+      this.clientHeight = this.appCollapse.clientHeight;
       this.collapseElement();
     } else {
       this.expandElement();
@@ -40,35 +40,35 @@ export class CollapseDirective implements AfterViewInit {
 
   private setInitialState(): void {
     if (this.collapsed) {
-      this.clientHeight = this.collapse.clientHeight;
-      this.collapse.classList.add('collapsed');
+      this.clientHeight = this.appCollapse.clientHeight;
+      this.appCollapse.classList.add('collapsed');
     }
   }
 
   private collapseElement(): void {
-    this.collapse.classList.add('transforming');
-    this.collapseAnimation = this.collapse.animate(
+    this.appCollapse.classList.add('transforming');
+    this.collapseAnimation = this.appCollapse.animate(
       { height: [`${this.clientHeight}px`, '0px'] },
       { duration: this.animationSpeed, easing: 'ease-in-out' },
     );
     this.collapseAnimation.finished
       .then(() => {
-        this.collapse.classList.add('collapsed');
+        this.appCollapse.classList.add('collapsed');
       })
       .finally(() => {
-        this.collapse.classList.remove('transforming');
+        this.appCollapse.classList.remove('transforming');
         this.collapseAnimation = null;
       });
   }
 
   private expandElement(): void {
-    this.collapseAnimation = this.collapse.animate(
+    this.collapseAnimation = this.appCollapse.animate(
       { height: ['0px', `${this.clientHeight}px`] },
       { duration: this.animationSpeed, easing: 'ease-in-out' },
     );
     this.collapseAnimation.finished
       .then(() => {
-        this.collapse.classList.remove('collapsed');
+        this.appCollapse.classList.remove('collapsed');
       })
       .finally(() => {
         this.collapseAnimation = null;

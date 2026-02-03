@@ -1,11 +1,11 @@
-<ff-search slim [focusKeyEnabled]="false" [(ngModel)]="searchQuery" (ngModelChange)="search()"></ff-search>
+<ff-search slim [focusKeyEnabled]="false" [(ngModel)]="searchQuery" (ngModelChange)="search()" />
 <div class="search-results">
   <span class="title">Results</span>
   <span class="count">{{ filteredElements.length }}</span>
   <ul>
     @for (searchElement of filteredElements; track searchElement.item.name) {
       <li [ngClass]="{ active: searchElement.item.name === element?.name, deprecated: searchElement.item.deprecated }">
-        @let labelGroup = getFirstLabelGroup(searchElement.item.labels);
+        @let labelGroup = appService.getFirstLabelGroup(searchElement.item.labels);
         <a
           [routerLink]="
             searchElement.item.labels
@@ -25,7 +25,7 @@
     @for (relatedElement of relatedElements; track relatedElement.item.name) {
       @if (!relatedElement.item.deprecated) {
         <li [ngClass]="{ active: relatedElement.item.name === element?.name }">
-          @let labelGroup = getFirstLabelGroup(relatedElement.item.labels);
+          @let labelGroup = appService.getFirstLabelGroup(relatedElement.item.labels);
           <a
             [routerLink]="
               relatedElement.item.labels

@@ -13,8 +13,8 @@ type SearchFilters = {
 export class SearchQueryParamsService {
   private router: Router = inject(Router);
   private currentRoute: ActivatedRoute = inject(ActivatedRoute);
-  private searchParam: string = '';
-  private filterParams: Map<string, string> = new Map();
+  private searchParam = '';
+  private filterParams = new Map<string, string>();
 
   constructor() {
     this.currentRoute.queryParamMap.subscribe((queryParams) => {

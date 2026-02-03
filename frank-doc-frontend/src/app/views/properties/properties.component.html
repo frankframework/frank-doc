@@ -3,7 +3,7 @@
     @for (propertyGroup of properties(); track index; let index = $index) {
       <div
         class="nav-group-name"
-        [collapse]="propertyList"
+        [appCollapse]="propertyList"
         [collapsed]="!!getNameOrNull(propertyGroup.name)"
         (collapsedChange)="expandedFilterGroups()[getPropertyGroupKey(propertyGroup.name, index)] = !$event"
       >
@@ -12,11 +12,14 @@
           [width]="18"
           [height]="18"
           [rotation]="expandedFilterGroups()[getPropertyGroupKey(propertyGroup.name, index)] ? 'up' : 'down'"
-        ></app-icon-caret>
+        />
       </div>
       <ul #propertyList>
         @for (propertyName of getPropertyNamesFromGroup(propertyGroup); track index; let index = $index) {
-          <li class="nav-item" (click)="scrollToElement('#' + convertToId(propertyGroup.name + '-' + propertyName))">
+          <li
+            class="nav-item"
+            (click)="appService.scrollToElement('#' + convertToId(propertyGroup.name + '-' + propertyName))"
+          >
             {{ propertyName }}
           </li>
         }
@@ -32,7 +35,7 @@
     </p>
     @for (propertyGroup of properties(); track index; let index = $index) {
       <div class="property-group">
-        <h3 class="sub-title" id="{{ propertyGroup.name }}">
+        <h3 class="sub-title" [id]="propertyGroup.name">
           {{ getNameOrNull(propertyGroup.name) ?? DEFAULT_UNKNOWN_PROPERTY_GROUP }}
         </h3>
         <table>
@@ -49,7 +52,7 @@
               <tr class="border-top" [ngClass]="{ 'padding-bottom': !property.description }">
                 <td class="property-info">
                   @if (property.flags) {
-                    <app-icon-help class="icon" height="18" width="18" colour="grey"></app-icon-help>
+                    <app-icon-help class="icon" height="18" width="18" colour="grey" />
                     <span class="property-info__flags">
                       {{ property.flags.join(', ') }}
                     </span>

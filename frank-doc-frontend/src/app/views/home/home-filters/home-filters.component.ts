@@ -37,16 +37,13 @@ export class HomeFiltersComponent implements OnDestroy {
   protected filters: Signal<FilterEntry[]> = computed(() =>
     Object.entries(this.ffDoc.filters()).map(([name, filter]) => ({ name, filter })),
   );
-  protected open: boolean = false;
+  protected open = false;
   protected selectedFilter: FilterEntry | null = null;
   protected selectedFilterLabels: WritableSignal<FilterGroups> = signal({});
   protected selectedFilterLocked = false;
-
-  private readonly appService: AppService = inject(AppService);
-  protected getLabelEntries = this.appService.getLabelEntries;
+  protected readonly appService: AppService = inject(AppService);
 
   private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
-  private onOutsideClick: (event: MouseEvent) => void = (event: MouseEvent): void => this.outsideClickHandler(event);
 
   @Input()
   set initialFilters(initialFilters: FilterGroups) {
@@ -121,17 +118,17 @@ export class HomeFiltersComponent implements OnDestroy {
     this.updateSelectedFilters(selectedFilterLabels);
   }
 
-  private updateSelectedFilters(selectedFilters: FilterGroups): void {
-    // using spread to have directive input's update, maybe input signals will improve this so no spreading is needed
-    this.selectedFilterLabels.set({ ...selectedFilters });
-    this.selectedFilters.emit(this.selectedFilterLabels());
-  }
-
-  private outsideClickHandler(event: MouseEvent): void {
+  protected onOutsideClick(event: MouseEvent): void {
     const clickedElement = event.target as HTMLElement;
     if (!clickedElement.closest('.menu.open')) {
       this.open = false;
       this.toggleDropdown();
     }
+  }
+
+  private updateSelectedFilters(selectedFilters: FilterGroups): void {
+    // using spread to have directive input's update, maybe input signals will improve this so no spreading is needed
+    this.selectedFilterLabels.set({ ...selectedFilters });
+    this.selectedFilters.emit(this.selectedFilterLabels());
   }
 }

@@ -1,9 +1,9 @@
-<app-header [version]="version()"></app-header>
+<app-header [version]="appService.ffDocVersion()" />
 @if (error) {
   <ff-alert type="error">{{ error }}</ff-alert>
 }
 <main>
-  <router-outlet></router-outlet>
+  <router-outlet />
 </main>
-<app-feedback></app-feedback>
-<app-footer></app-footer>
+<app-feedback />
+<app-footer />

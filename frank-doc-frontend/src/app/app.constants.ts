@@ -32,4 +32,4 @@ export const fuseOptions: IFuseOptions<ElementDetails> = {
   ignoreLocation: true,
 };
 
-export const splitOnPascalCaseRegex: RegExp = /(?=[\dA-Z])/;
+export const splitOnPascalCaseRegex = /(?=[\dA-Z])/;

@@ -22,13 +22,12 @@ export class HomeComponentListComponent {
 
   protected relatedComponents: FuseResult<ElementDetails>[] = [];
   protected showRelated: boolean = environment.relatedSearchResults;
+  protected readonly appService: AppService = inject(AppService);
 
   private readonly router: Router = inject(Router);
-  private readonly appService: AppService = inject(AppService);
-  protected getFirstLabelGroup = this.appService.getFirstLabelGroup;
 
   protected navigateToElement(element: ElementDetails): void {
-    const [labelGroup, label] = this.getFirstLabelGroup(element.labels);
+    const [labelGroup, label] = this.appService.getFirstLabelGroup(element.labels);
     const route = element.labels ? ['/', labelGroup, label, element.name] : ['/', element.className];
     this.router.navigate(route);
   }

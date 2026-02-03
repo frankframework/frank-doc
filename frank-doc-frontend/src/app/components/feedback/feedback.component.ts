@@ -15,7 +15,7 @@ export class FeedbackComponent {
 
   onFeedbackClick(): void {
     const currentPage = this.router.url;
-    const selectedText = window.getSelection()?.toString().trim() || 'None';
+    const selectedText = globalThis.getSelection()?.toString().trim() || 'None';
 
     const markdown = `
 **Current Page:** \`${currentPage}\`
