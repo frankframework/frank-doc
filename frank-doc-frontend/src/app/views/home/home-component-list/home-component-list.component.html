@@ -15,23 +15,24 @@
   @for (component of components; track component.item.name) {
     @let element = component.item;
     <div
-      class="card"
-      appCard
       #card
+      class="card"
+      tabindex="0"
+      appCard
       (click)="navigateToElement(component.item)"
       (mouseenter)="setActiveHover(card, true)"
       (mouseleave)="setActiveHover(card, false)"
     >
       <p class="label">
-        {{ element.labels ? getFirstLabelGroup(element.labels)[1] : '' }}
+        {{ element.labels ? appService.getFirstLabelGroup(element.labels)[1] : '' }}
       </p>
       <p class="name" [ngClass]="{ deprecated: element.deprecated }" [title]="component.item.name">
         {{ element.name }}
       </p>
       <p
         class="description"
-        [ngClass]="{ deprecated: element.deprecated }"
         *fdJavadocTransform="let text of element.description; elements: elements; asText: true"
+        [ngClass]="{ deprecated: element.deprecated }"
       >
         {{ text | truncate: 150 }}
       </p>

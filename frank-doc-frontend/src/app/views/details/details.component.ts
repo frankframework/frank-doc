@@ -46,10 +46,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
     forwards: false,
   };
   protected tableOfContents: TOCEntry[] = [];
-  protected showNavigation: boolean = false;
-
-  private appService: AppService = inject(AppService);
-  protected readonly scrollToElement = this.appService.scrollToElement;
+  protected showNavigation = false;
+  protected readonly appService: AppService = inject(AppService);
   protected readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
 
   private route: ActivatedRoute = inject(ActivatedRoute);
@@ -73,7 +71,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
       this.elementByRoute = this.findElement(this.ffDoc.elements());
     });
 
-    this.scrollEvent = fromEvent(window, 'scroll')
+    this.scrollEvent = fromEvent(globalThis, 'scroll')
       .pipe(throttleTime(50))
       .subscribe(() => this.updateActiveTOC());
   }
@@ -89,10 +87,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
     for (const key in this.tableOfContents) {
       const index = Number(key);
       const entry = this.tableOfContents[index];
-      const elementRef = document.querySelector(entry.anchor);
+      const elementReference = document.querySelector(entry.anchor);
 
       entry.active = false;
-      if (elementRef && elementRef.getBoundingClientRect().top < 30) {
+      if (elementReference && elementReference.getBoundingClientRect().top < 30) {
         activeIndex = index;
       }
     }

@@ -17,10 +17,11 @@ import { AlertComponent } from '@frankframework/angular-components';
 })
 export class CredentialProvidersComponent {
   protected readonly credentialProviderNames: Signal<string[]> = computed(
-    () => Object.keys(this.ffDoc.credentialProviders()).sort((a, b) => a.localeCompare(b)) ?? [],
+    () => Object.keys(this.ffDoc.credentialProviders()).toSorted((a, b) => a.localeCompare(b)) ?? [],
   );
   protected readonly elements: Signal<Elements | null> = computed(() => this.ffDoc.elements() ?? null);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
+  protected readonly selectedProviderName: Signal<string | null | undefined>;
   protected readonly selectedProvider: Signal<{ name: string; provider: CredentialProvider } | null> = computed(() => {
     const providerName = this.selectedProviderName();
     const providers = this.ffDoc.credentialProviders();
@@ -33,11 +34,13 @@ export class CredentialProvidersComponent {
   });
 
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
-  protected readonly selectedProviderName = toSignal(this.route.paramMap.pipe(map((params) => params.get('name'))));
-
   private readonly router: Router = inject(Router);
   private readonly appService: AppService = inject(AppService);
   private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
+
+  constructor() {
+    this.selectedProviderName = toSignal(this.route.paramMap.pipe(map((params) => params.get('name'))));
+  }
 
   protected handleSelectedProvider(providerName: string): void {
     this.router.navigate(['credential-providers', providerName]);

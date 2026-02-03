@@ -2,11 +2,8 @@
   <div class="search-container">
     <p class="subtitle">Technical documentation of our FF! Components</p>
     <h2 class="title">What are you looking for?</h2>
-    <ff-search autofocus [(ngModel)]="searchQuery" (ngModelChange)="search($event)"></ff-search>
-    <app-home-filters
-      [initialFilters]="initialFilters"
-      (selectedFilters)="updateSelectedFilters($event)"
-    ></app-home-filters>
+    <ff-search autofocus [(ngModel)]="searchQuery" (ngModelChange)="search($event)" />
+    <app-home-filters [initialFilters]="initialFilters" (selectedFilters)="updateSelectedFilters($event)" />
   </div>
   @if (loading) {
     <div class="loading">
@@ -14,7 +11,7 @@
     </div>
   } @else if (searchQuery.trim() !== '') {
     <div class="elements">
-      <app-home-component-list [components]="filteredElements"></app-home-component-list>
+      <app-home-component-list [components]="filteredElements" />
     </div>
   }
 </div>

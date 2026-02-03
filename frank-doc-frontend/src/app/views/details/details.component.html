@@ -1,12 +1,9 @@
 <div class="page">
   <div class="side-search fixed-sidenav">
-    <app-details-search [element]="getFoundElement()"></app-details-search>
+    <app-details-search [element]="getFoundElement()" />
   </div>
   <div class="details">
-    <app-details-element
-      [element]="getFoundElement()"
-      (hasInheritedProperties)="updateElementDetailInfo($event)"
-    ></app-details-element>
+    <app-details-element [element]="getFoundElement()" (hasInheritedProperties)="updateElementDetailInfo($event)" />
   </div>
   @if (showNavigation) {
     <div class="side-navigation">
@@ -15,15 +12,17 @@
           @for (entry of tableOfContents; track entry.name) {
             @if (entry.children) {
               <li [ngClass]="{ active: entry.active }">
-                <span (click)="scrollToElement(entry.anchor)">{{ entry.name }}</span>
+                <span tabindex="0" (click)="appService.scrollToElement(entry.anchor)">{{ entry.name }}</span>
                 <ul>
                   @for (child of entry.children; track child.name) {
-                    <li (click)="scrollToElement(child.anchor)">{{ child.name }}</li>
+                    <li (click)="appService.scrollToElement(child.anchor)">{{ child.name }}</li>
                   }
                 </ul>
               </li>
             } @else {
-              <li [ngClass]="{ active: entry.active }" (click)="scrollToElement(entry.anchor)">{{ entry.name }}</li>
+              <li [ngClass]="{ active: entry.active }" (click)="appService.scrollToElement(entry.anchor)">
+                {{ entry.name }}
+              </li>
             }
           }
         </ul>

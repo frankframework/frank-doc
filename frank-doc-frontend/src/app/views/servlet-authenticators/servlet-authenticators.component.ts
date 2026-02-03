@@ -18,20 +18,10 @@ import { AlertComponent } from '@frankframework/angular-components';
 })
 export class ServletAuthenticatorsComponent {
   protected readonly servletAuthenticatorNames: Signal<string[]> = computed(
-    () => Object.keys(this.ffDoc.servletAuthenticators()).sort((a, b) => a.localeCompare(b)) ?? [],
+    () => Object.keys(this.ffDoc.servletAuthenticators()).toSorted((a, b) => a.localeCompare(b)) ?? [],
   );
   protected readonly elements: Signal<Elements | null> = computed(() => this.ffDoc.elements() ?? null);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
-
-  private readonly appService: AppService = inject(AppService);
-  private readonly router: Router = inject(Router);
-  private readonly route: ActivatedRoute = inject(ActivatedRoute);
-  private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
-
-  protected readonly selectedAuthenticatorName = toSignal(
-    this.route.paramMap.pipe(map((params) => params.get('name'))),
-  );
-
   protected readonly selectedAuthenticator: Signal<{ name: string; authenticator: ServletAuthenticator } | null> =
     computed(() => {
       const authenticatorName = this.selectedAuthenticatorName();
@@ -43,6 +33,16 @@ export class ServletAuthenticatorsComponent {
 
       return { name: authenticatorName, authenticator: authenticators[authenticatorName] };
     });
+  protected readonly selectedAuthenticatorName: Signal<string | null | undefined>;
+
+  private readonly appService: AppService = inject(AppService);
+  private readonly router: Router = inject(Router);
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
+
+  constructor() {
+    this.selectedAuthenticatorName = toSignal(this.route.paramMap.pipe(map((params) => params.get('name'))));
+  }
 
   protected handleSelectedAuthenticator(authenticator: string): void {
     this.router.navigate(['servlet-authenticators', authenticator]);

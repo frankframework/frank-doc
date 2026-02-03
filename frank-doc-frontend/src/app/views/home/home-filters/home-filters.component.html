@@ -4,7 +4,7 @@
     @for (selectedFilter of selectedFilterGroup.value; track selectedFilter; let index = $index) {
       <span class="selected-filters__item"
         ><span>{{ selectedFilter }}</span
-        ><span class="close-button" (click)="removeSelectedFilterLabel(selectedFilterGroup.key, index)"
+        ><span class="close-button" tabindex="0" (click)="removeSelectedFilterLabel(selectedFilterGroup.key, index)"
           >&times;</span
         ></span
       >
@@ -16,24 +16,25 @@
     <ul>
       @for (filterEntry of filters(); track filterEntry.name) {
         <li
-          (mouseover)="toggleFilterMenu(filterEntry)"
-          (click)="toggleFilterMenu(filterEntry, true)"
           [ngClass]="{ active: selectedFilter?.name === filterEntry.name && selectedFilterLocked }"
+          (mouseover)="toggleFilterMenu(filterEntry)"
+          (focus)="toggleFilterMenu(filterEntry)"
+          (click)="toggleFilterMenu(filterEntry, true)"
         >
           {{ filterEntry.name }}
         </li>
       }
     </ul>
-    <button (click)="clearFilters()" [class.disabled]="areAllFilterGroupsEmpty()">Clear all filters</button>
+    <button [class.disabled]="areAllFilterGroupsEmpty()" (click)="clearFilters()">Clear all filters</button>
   </div>
   @if (selectedFilter) {
     <div class="menu-card labels">
       <ul>
-        @for (label of getLabelEntries(selectedFilter.filter); track label.name) {
+        @for (label of appService.getLabelEntries(selectedFilter.filter); track label.name) {
           <li>
             <ff-checkbox
               class="checkbox-pointer"
-              [initFilterToggle]="selectedFilterLabels()"
+              [appInitFilterToggle]="selectedFilterLabels()"
               [initFilterName]="selectedFilter.name"
               [initLabelName]="label.name"
               (click)="toggleMenuLabel(selectedFilter!.name, label.name)"
@@ -42,7 +43,7 @@
           </li>
         }
       </ul>
-      <button (click)="clearSelectedLabels()" [class.disabled]="isFilterGroupEmpty(selectedFilter.name)">
+      <button [class.disabled]="isFilterGroupEmpty(selectedFilter.name)" (click)="clearSelectedLabels()">
         Clear selected filters
       </button>
     </div>

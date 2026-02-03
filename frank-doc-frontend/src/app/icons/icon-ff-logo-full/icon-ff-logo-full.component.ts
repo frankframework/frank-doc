@@ -7,8 +7,8 @@ import { IconBaseComponent } from '@frankframework/angular-components';
   templateUrl: './icon-ff-logo-full.component.html',
 })
 export class IconFfLogoFullComponent extends IconBaseComponent {
-  override width: number = 510;
-  override height: number = 95;
-  override colour: string = 'white';
-  @Input() colourExclamationMark: string = '#FDC300';
+  @Input() colourExclamationMark = '#FDC300';
+  override width = 510;
+  override height = 95;
+  override colour = 'white';
 }

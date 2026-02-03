@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
   protected readonly elements: Signal<Elements> = computed(() => this.ffDoc.elements() ?? {});
   protected filteredElements: FuseResult<ElementDetails>[] = [];
   protected initialFilters: FilterGroups = {};
-  protected loading: boolean = true;
+  protected loading = true;
 
   private readonly appService: AppService = inject(AppService);
   private readonly searchParamsService: SearchQueryParamsService = inject(SearchQueryParamsService);

@@ -17,20 +17,24 @@ type HSL = {
   providedIn: 'root',
 })
 export class AppService {
-  hasLoaded: boolean = false;
-  previousSearchQuery: string = '';
-  readonly darkmode: WritableSignal<boolean> = signal(false);
-  readonly ffDocVersion: Signal<string> = computed(() => {
+  public hasLoaded = false;
+  public previousSearchQuery = '';
+  public readonly applicationLoaded$: Observable<void>;
+  public readonly darkmode: WritableSignal<boolean> = signal(false);
+  public readonly ffDocVersion: Signal<string> = computed(() => {
     const ffDoc = this.ffDoc.ffDoc();
     if (!this.hasLoaded && ffDoc) this.triggerApplicationLoaded();
     return ffDoc?.metadata.version ?? 'unknown';
   });
 
-  private readonly applicationLoadedSubject: Subject<void> = new Subject();
-  readonly applicationLoaded$: Observable<void> = this.applicationLoadedSubject.asObservable();
+  private readonly applicationLoadedSubject = new Subject<void>();
 
   private readonly http: HttpClient = inject(HttpClient);
   private readonly ffDoc: NgFFDoc = new NgFFDoc(this.http);
+
+  constructor() {
+    this.applicationLoaded$ = this.applicationLoadedSubject.asObservable();
+  }
 
   getFFDoc(): NgFFDoc {
     return this.ffDoc;

@@ -20,17 +20,16 @@ export class PropertiesComponent {
   protected readonly elements: Signal<Elements> = computed(() => this.ffDoc.elements() ?? {});
   protected expandedFilterGroups: Signal<Record<string, boolean>> = computed(() =>
     this.properties().reduce<Record<string, boolean>>((acc, propertyGroup, index) => {
-      if (!!this.getNameOrNull(propertyGroup.name)) return acc;
+      if (this.getNameOrNull(propertyGroup.name)) return acc;
       acc[`${DEFAULT_UNKNOWN_PROPERTY_GROUP}-${index}`] = true;
       return acc;
     }, {}),
   );
   protected readonly DEFAULT_UNKNOWN_PROPERTY_GROUP = DEFAULT_UNKNOWN_PROPERTY_GROUP;
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
+  protected readonly appService: AppService = inject(AppService);
 
-  private readonly appService: AppService = inject(AppService);
   private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
-  protected readonly scrollToElement = this.appService.scrollToElement;
 
   getPropertyNamesFromGroup(group: Property): string[] {
     return group.properties.map((prop) => prop.name);

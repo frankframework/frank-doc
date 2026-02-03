@@ -23,10 +23,8 @@ export class DetailsSearchComponent implements OnChanges {
   protected relatedSearchQuery = '';
   protected filteredElements: FuseResult<ElementDetails>[] = [];
   protected relatedElements: FuseResult<ElementDetails>[] = [];
-
-  private appService: AppService = inject(AppService);
+  protected readonly appService: AppService = inject(AppService);
   protected readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
-  protected getFirstLabelGroup = this.appService.getFirstLabelGroup;
 
   private elementsList: Signal<ElementDetails[]> = computed(() => {
     const elementsList = Object.values(this.ffDoc.elements() ?? {});
@@ -34,8 +32,8 @@ export class DetailsSearchComponent implements OnChanges {
     return elementsList;
   });
   private exclusiveElementsList: ElementDetails[] = [];
-  private fuse: Fuse<ElementDetails> = new Fuse([], fuseOptions);
-  private fuseRelated: Fuse<ElementDetails> = new Fuse([], { ...fuseOptions, shouldSort: false });
+  private fuse = new Fuse<ElementDetails>([], fuseOptions);
+  private fuseRelated = new Fuse<ElementDetails>([], { ...fuseOptions, shouldSort: false });
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['element']) {

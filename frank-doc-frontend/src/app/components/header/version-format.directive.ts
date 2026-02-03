@@ -5,8 +5,8 @@ import { environment } from '../../../environments/environment';
   selector: '[appVersionFormat]',
 })
 export class VersionFormatDirective {
-  private fullVersion: string = '';
-  private shortVersion: string = '';
+  private fullVersion = '';
+  private shortVersion = '';
   private elementAnimation: Animation | null = null;
   private elementRef: ElementRef<HTMLElement> = inject(ElementRef);
   private element = this.elementRef.nativeElement;
@@ -31,7 +31,7 @@ export class VersionFormatDirective {
     this.transition(this.shortVersion, true);
   }
 
-  transition(newText: string, keepOldTextInTransition: boolean = false): void {
+  transition(newText: string, keepOldTextInTransition = false): void {
     if (environment.hideSnapshotVersion) {
       const oldText = this.element.textContent!;
       const beforeWidth = this.getClientWidth();

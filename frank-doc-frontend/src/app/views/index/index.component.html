@@ -3,20 +3,16 @@
     @for (filterEntry of filters(); track filterEntry.name) {
       <div
         class="nav-group-name"
-        [collapse]="filterList"
+        [appCollapse]="filterList"
         (collapsedChange)="collapsedFilters[filterEntry.name] = $event"
       >
         <span>{{ filterEntry.name }} ({{ filterEntry.filterCount }})</span>
-        <app-icon-caret
-          [width]="18"
-          [height]="18"
-          [rotation]="collapsedFilters[filterEntry.name] ? 'down' : 'up'"
-        ></app-icon-caret>
+        <app-icon-caret [width]="18" [height]="18" [rotation]="collapsedFilters[filterEntry.name] ? 'down' : 'up'" />
       </div>
       <ul #filterList>
         @for (labelEntry of filterEntry.filter | keyvalue; track labelEntry.key) {
           <li class="nav-item" (click)="appService.scrollToElement('#' + filterEntry.name + '-' + labelEntry.key)">
-            <ff-chip [colour]="appService.getLabelColor(filterEntry.name)" slim>{{ labelEntry.key.charAt(0) }}</ff-chip>
+            <ff-chip slim [colour]="appService.getLabelColor(filterEntry.name)">{{ labelEntry.key.charAt(0) }}</ff-chip>
             {{ labelEntry.key }} ({{ labelEntry.value.length }})
           </li>
         }
@@ -41,11 +37,12 @@
         <h3 class="sub-title">{{ filterEntry.name }}</h3>
         @for (labelEntries of appService.getLabelEntries(filterEntry.filter); track labelEntries.name) {
           <div class="label-container">
-            <h4 id="{{ filterEntry.name }}-{{ labelEntries.name }}">{{ labelEntries.name }}</h4>
+            @let entryName = filterEntry.name + '-' + labelEntries.name;
+            <h4 [id]="entryName">{{ labelEntries.name }}</h4>
             <div class="elements">
               @for (element of labelEntries.labels; track $index) {
                 <a [routerLink]="['/', filterEntry.name, labelEntries.name, element]"
-                  ><ff-chip [colour]="appService.getLabelColor(filterEntry.name)" slim>{{
+                  ><ff-chip slim [colour]="appService.getLabelColor(filterEntry.name)">{{
                     labelEntries.name.charAt(0)
                   }}</ff-chip>
                   <span

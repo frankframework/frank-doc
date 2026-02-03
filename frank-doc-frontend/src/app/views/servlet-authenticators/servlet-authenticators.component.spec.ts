@@ -4,7 +4,7 @@ import { ServletAuthenticatorsComponent } from './servlet-authenticators.compone
 import { AppService } from '../../app.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 describe('ServletAuthenticatorsComponent', () => {
   let component: ServletAuthenticatorsComponent;
