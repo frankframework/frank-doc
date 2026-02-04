@@ -10,7 +10,7 @@
   bottom: 3em;
   padding: 1em;
   border-radius: 100%;
-  background: var(--ff-color-dark);
+  background: var(--color-text-dark);
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
   border: none;
   outline: none;
@@ -31,7 +31,7 @@
     border-radius: 0.25em;
     display: none;
     font-size: 16px;
-    background: var(--ff-color-dark);
+    background: var(--color-text-dark);
     color: white;
     right: calc(24px + 2.5em); // Icon + Spacing
     top: 50%;

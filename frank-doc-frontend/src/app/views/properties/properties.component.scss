@@ -58,7 +58,7 @@
     }
 
     .property-name {
-      color: var(--ff-color-dark);
+      color: var(--color-text-dark);
       font-family: 'DM Mono', monospace;
       font-weight: 500;
 
@@ -83,7 +83,7 @@
         padding: 0.5em;
         border-radius: 0.25em;
         display: none;
-        background: var(--ff-color-dark);
+        background: var(--color-text-dark);
         color: white;
         left: 50%;
         transform: translateX(-50%);

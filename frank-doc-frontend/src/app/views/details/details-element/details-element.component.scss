@@ -1,6 +1,6 @@
 h2 {
   margin: 0;
-  color: var(--ff-color-dark);
+  color: var(--color-text-dark);
   font-size: 50px;
   font-weight: 700;
   word-break: break-word;
@@ -22,9 +22,9 @@ h2 {
 pre {
   padding: 26px;
   border-radius: 8px;
-  border: 1px solid var(--ff-bgcolor-gray);
+  border: 1px solid #D8D8D8;
   font-size: 16px;
-  color: var(--ff-color-dark);
+  color: var(--color-text-dark);
   background: rgba(237, 237, 237, 0.5);
 }
 
@@ -94,9 +94,9 @@ h3 {
   display: block;
   padding: 26px;
   border-radius: 8px;
-  border: 1px solid var(--ff-bgcolor-gray);
+  border: 1px solid #D8D8D8;
   font-size: 16px;
-  color: var(--ff-color-dark);
+  color: var(--color-text-dark);
   background: rgba(237, 237, 237, 0.5);
 
   code {
@@ -169,7 +169,7 @@ h3 {
     }
 
     .name {
-      color: var(--ff-color-dark);
+      color: var(--color-text-dark);
       font-family: 'DM Mono', monospace;
       font-weight: 500;
     }
@@ -207,8 +207,8 @@ h3 {
     display: flex;
     margin-bottom: 20px;
     padding: 15px 0;
-    border-bottom: 1px solid var(--ff-color-dark);
-    color: var(--ff-color-dark);
+    border-bottom: 1px solid var(--color-text-dark);
+    color: var(--color-text-dark);
     font-size: 2rem;
     font-weight: 600;
 
@@ -223,7 +223,7 @@ h3 {
   }
 
   .options-sub-title {
-    color: var(--ff-color-dark);
+    color: var(--color-text-dark);
     font-size: 1.5rem;
     font-weight: 600;
     margin-top: 1em;
@@ -239,7 +239,7 @@ h3 {
     margin-top: 10px;
     padding: 15px 20px;
     background: var(--ff-color-light-gray);
-    color: var(--ff-color-dark);
+    color: var(--color-text-dark);
     font-size: 16px;
     font-weight: 600;
     line-height: normal;

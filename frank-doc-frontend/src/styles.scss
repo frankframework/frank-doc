@@ -1,9 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@use "sass:meta";
-@use "sass:map";
-
-@use '@frankframework/angular-components';
-@use '@frankframework/angular-components/styles/variables';
+@import '@frankframework/angular-components/bundle.css';
 
 @font-face {
   font-family: 'DM Mono';
@@ -23,9 +19,8 @@ body {
 }
 
 app-root {
-  @each $key, $value in meta.module-variables('variables') {
-    --#{$key}: #{$value};
-  }
+  /* TODO application specific theme colours */
+  /* use find "--ff..." or "var(--ff-...)" */
 }
 
 
@@ -67,8 +62,8 @@ app-root {
       }
 
       &.active {
-        border-left: 1px solid var(--ff-color-dark);
-        color: var(--ff-color-dark);
+        border-left: 1px solid var(--color-text-dark);
+        color: var(--color-text-dark);
         font-weight: 600;
       }
     }
@@ -93,13 +88,13 @@ app-root {
 
   .nav-group-name {
     margin-bottom: 5px;
-    color: var(--ff-color-dark);
+    color: var(--color-text-dark);
     font-size: 18px;
     font-weight: 600;
   }
 
   .title {
-    color: var(--ff-color-dark);
+    color: var(--color-text-dark);
     font-size: 16px;
     font-weight: 600;
   }
@@ -108,14 +103,14 @@ app-root {
 h2.page-title {
   margin-top: 0;
   margin-bottom: 10px;
-  color: var(--ff-color-dark);
+  color: var(--color-text-dark);
   font-size: 50px;
   font-weight: 700;
   line-height: 0.9;
 }
 
 h3.sub-title {
-  color: var(--ff-color-dark);
+  color: var(--color-text-dark);
   font-size: 32px;
   font-weight: 600;
 }
@@ -134,7 +129,7 @@ h3.sub-title {
     font-family: 'DM Mono', monospace;
     font-size: 85%;
     background: rgba(237, 237, 237, 0.5);
-    border: 1px solid var(--ff-bgcolor-gray);
+    border: 1px solid #D8D8D8;
     border-radius: 5px;
   }
 
@@ -146,8 +141,8 @@ h3.sub-title {
       display: block;
       padding: 8px;
       border-radius: 8px;
-      border: 1px solid variables.$ff-bgcolor-gray;
-      color: variables.$ff-color-dark;
+      border: 1px solid #D8D8D8;
+      color: var(--color-text-dark);
       background: rgba(237, 237, 237, 0.50);
       word-break: break-all;
       word-wrap: break-word;
@@ -158,13 +153,13 @@ h3.sub-title {
   }
 
   a {
-    color: variables.$ff-anchor-default;
+    color: var(--color-anchor);
     font-size: 16px;
     font-weight: 500;
     text-decoration: none;
 
     &:active {
-      color: variables.$ff-anchor-active;
+      color: var(--color-brand);
     }
 
     &:hover {
