@@ -44,11 +44,11 @@ header {
           text-decoration: none;
 
           &:hover:not(.active) {
-            color: var(--ff-bgcolor-yellow);
+            color: var(--color-brand);
           }
 
           &.active {
-            border-bottom: 3px solid var(--ff-bgcolor-yellow);
+            border-bottom: 3px solid var(--color-brand);
           }
         }
       }

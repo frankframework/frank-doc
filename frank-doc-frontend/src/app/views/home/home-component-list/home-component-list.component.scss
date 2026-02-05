@@ -18,7 +18,7 @@
     .count {
       margin-left: 4px;
       padding: 0 6px;
-      background-color: var(--ff-color-light-gray);
+      background-color: var(--color-gray-light);
       border: 1px solid #D8D8D8;
       border-radius: 5px;
       font-size: 12px;
@@ -45,7 +45,7 @@
     cursor: pointer;
 
     &:hover {
-      border: 1px solid var(--ff-bgcolor-yellow);
+      border: 1px solid var(--color-brand);
     }
 
     .name,
@@ -71,7 +71,7 @@
     }
 
     .label {
-      color: var(--ff-color-gray);
+      color: var(--color-gray);
       font-size: 14px;
       font-weight: 500;
     }
@@ -91,6 +91,6 @@
 }
 
 .deprecated {
-  color: var(--ff-color-gray) !important;
+  color: var(--color-gray) !important;
   text-decoration: line-through;
 }

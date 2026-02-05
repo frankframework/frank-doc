@@ -7,7 +7,7 @@
     display: flex;
     padding-left: 16px;
     border-radius: 50px;
-    border: 1px solid var(--ff-bgcolor-yellow);
+    border: 1px solid var(--color-brand);
     justify-content: center;
     align-items: center;
     font-size: 16px;
@@ -25,11 +25,11 @@
     .close-button {
       margin-left: 12px;
       padding: 9px 16px 9px 12px;
-      border-left: 1px solid var(--ff-bgcolor-yellow);
+      border-left: 1px solid var(--color-brand);
       height: 100%;
 
       &:hover {
-        background: var(--ff-bgcolor-yellow);
+        background: var(--color-brand);
       }
     }
   }
@@ -77,7 +77,7 @@
         cursor: pointer;
 
         &.active {
-          background: var(--ff-bgcolor-yellow);
+          background: var(--color-brand);
         }
 
         ff-checkbox {
@@ -122,7 +122,7 @@
       width: 100%;
       padding: 14px 25px;
       border: none;
-      border-top: 1px solid var(--ff-color-light-gray);
+      border-top: 1px solid var(--color-gray-light);
       border-radius: 0 0 15px 15px;
       color: #1e1e1e;
       font-size: 16px;
@@ -138,7 +138,7 @@
       }
 
       &:hover:not(.disabled) {
-        background: var(--ff-bgcolor-yellow);
+        background: var(--color-brand);
       }
     }
   }

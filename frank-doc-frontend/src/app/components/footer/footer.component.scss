@@ -2,7 +2,7 @@ footer {
   width: 100%;
   padding: 60px 100px;
   border-radius: 15px 15px 0 0;
-  background: var(--ff-bgcolor-yellow);
+  background: var(--color-brand);
 }
 
 .divider-top {
@@ -27,7 +27,7 @@ footer {
 
       cursor: pointer;
       text-decoration: none;
-      color: var(--ff-bgcolor-dark-gray);
+      color: #343434;
       font-size: 16px;
       font-weight: 500;
       text-transform: capitalize;
