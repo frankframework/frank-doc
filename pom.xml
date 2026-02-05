@@ -14,7 +14,7 @@
 	<properties>
 		<revision>4.3.0-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.release>25</maven.compiler.release>
+		<maven.compiler.source>25</maven.compiler.source>
     <maven.compiler.proc>full</maven.compiler.proc>
 	</properties>
 
@@ -119,9 +119,9 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.14.1</version>
 					<configuration>
-            <release>${maven.compiler.release}</release>
-            <source>${maven.compiler.release}</source>
-            <target>${maven.compiler.release}</target>
+            <release>${maven.compiler.source}</release>
+            <source>${maven.compiler.source}</source>
+            <target>${maven.compiler.source}</target>
 					</configuration>
 				</plugin>
 				<plugin>
