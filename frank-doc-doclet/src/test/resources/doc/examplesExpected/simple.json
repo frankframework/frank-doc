@@ -30,7 +30,7 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild": {
             "name": "DescribedPossibleIChild",
-            "description": "This is the header of the JavaDoc of \\\"DescribedPossibleIChild\\\".\n\n And this is remaining documentation of \\\"DescribedPossibleIChild\\\".",
+            "description": "This is the header of the JavaDoc of \\\"DescribedPossibleIChild\\\".\n\nAnd this is remaining documentation of \\\"DescribedPossibleIChild\\\".",
             "attributes": {
                 "firstAttribute": {
                     "mandatory": true
@@ -70,7 +70,7 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.simple.TChild": {
             "name": "RoleNameTChild",
-            "description": "This is the header of the JavaDoc of \\\"TChild\\\", with package name nl.nn.something.\n \n And this is remaining documentation of \\\"TChild\\\".",
+            "description": "This is the header of the JavaDoc of \\\"TChild\\\", with package name nl.nn.something.\n\nAnd this is remaining documentation of \\\"TChild\\\".",
             "attributes": {
                 "active": {
                     "description": "If defined and empty or false, then this element and all its children are ignored"
@@ -79,7 +79,7 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.simple.Start": {
             "name": "Start",
-            "description": "Description of Start. Value of VARIABLE is <code>variable value</code>. Value of TheEnum.ENUM_CONSTANT is <code>enum constant</code>.\n Value of literal is <pre>This is a literal</pre>.",
+            "description": "Description of Start. Value of VARIABLE is <code>variable value</code>. Value of TheEnum.ENUM_CONSTANT is <code>enum constant</code>.\nValue of literal is <pre>This is a literal</pre>.",
             "parent": "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart",
             "attributes": {
                 "attribute": {}

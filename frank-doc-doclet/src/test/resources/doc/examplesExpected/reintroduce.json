@@ -28,7 +28,7 @@
         },
         "org.frankframework.frankdoc.testtarget.examples.reintroduce.Child": {
             "name": "Child",
-            "description": "The attribute and the config child are the same as in parent and they are not documented.\n They should still be declared as attribute and config child of Child because of the",
+            "description": "The attribute and the config child are the same as in parent and they are not documented.\nThey should still be declared as attribute and config child of Child because of the",
             "parent": "org.frankframework.frankdoc.testtarget.examples.reintroduce.Parent",
             "attributes": {
                 "attribute": {

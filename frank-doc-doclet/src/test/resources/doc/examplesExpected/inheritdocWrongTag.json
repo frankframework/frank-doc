@@ -13,11 +13,11 @@
     "elements": {
         "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Wrong": {
             "name": "Wrong",
-            "description": "Description of child with the wrong tag.\n {@inheritDoc}",
+            "description": "Description of child with the wrong tag.\n{@inheritDoc}",
             "parent": "org.frankframework.frankdoc.testtarget.examples.inheritdoc.Parent",
             "attributes": {
                 "hasNoJavaDocAttribute": {
-                    "description": "An additional line of text.\n {@inheritClassDoc }"
+                    "description": "An additional line of text.\n{@inheritClassDoc}"
                 }
             },
             "children": [

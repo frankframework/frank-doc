@@ -17,7 +17,7 @@
         },
         "org.frankframework.frankdoc.testtarget.notes.Note": {
             "name": "Note",
-            "description": "First line of documentation.\n Second line of documentation.",
+            "description": "First line of documentation.\nSecond line of documentation.",
             "attributes": {
                 "attribute": {},
                 "active": {
@@ -35,11 +35,11 @@
             "notes": [
                 {
                     "type": "INFO",
-                    "value": "First line\n Second line\n Third line"
+                    "value": "First line\nSecond line\nThird line"
                 },
                 {
                     "type": "INFO",
-                    "value": "First line\n <pre><code>&lt;Element&gt;\n \t  &lt;Param /&gt;\n \t&lt;/Element&gt;</code></pre>"
+                    "value": "First line\n<pre><code>&lt;Element&gt;\n\t  &lt;Param /&gt;\n\t&lt;/Element&gt;</code></pre>"
                 },
                 {
                     "type": "TIP",
@@ -47,7 +47,7 @@
                 },
                 {
                     "type": "WARNING",
-                    "value": "First line\n Second line"
+                    "value": "First line\nSecond line"
                 },
                 {
                     "type": "DANGER",
