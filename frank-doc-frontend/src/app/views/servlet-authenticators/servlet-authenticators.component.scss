@@ -1,6 +1,6 @@
 .page > .description {
   max-width: 900px;
-  color: var(--ff-color-dark-gray);
+  color: var(--color-gray-dark);
   font-size: 16px;
   font-weight: 400;
 }
@@ -13,13 +13,13 @@
   }
 
   .fullname {
-    color: var(--ff-color-gray);
+    color: var(--color-gray);
     font-size: 14px;
   }
 
   .description {
     margin: 8px 0;
-    color: var(--ff-color-dark-gray);
+    color: var(--color-gray-dark);
     font-size: 16px;
   }
 
@@ -28,7 +28,7 @@
 
     th {
       padding: 10px 0;
-      color: var(--ff-color-gray);
+      color: var(--color-gray);
       background-color: #fff;
       font-size: 12px;
       font-weight: 600;
@@ -48,8 +48,8 @@
 
     td {
       padding: 13px 3px;
-      border-top: 1px solid var(--ff-color-light-gray);
-      color: var(--ff-border-gray);
+      border-top: 1px solid var(--color-gray-light);
+      color: var(--color-gray-dark);
       font-size: 16px;
       font-weight: 400;
       vertical-align: text-top;
@@ -57,7 +57,7 @@
 
       &:first-child {
         padding-left: 3px;
-        color: var(--ff-color-dark);
+        color: var(--color-text-dark);
         font-family: 'DM Mono', monospace;
         font-weight: 500;
 

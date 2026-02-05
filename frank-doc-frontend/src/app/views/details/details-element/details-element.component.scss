@@ -1,6 +1,6 @@
 h2 {
   margin: 0;
-  color: var(--ff-color-dark);
+  color: var(--color-text-dark);
   font-size: 50px;
   font-weight: 700;
   word-break: break-word;
@@ -15,16 +15,16 @@ h2 {
 }
 
 .classname {
-  color: var(--ff-color-dark-gray);
+  color: var(--color-gray-dark);
   font-size: 14px;
 }
 
 pre {
   padding: 26px;
   border-radius: 8px;
-  border: 1px solid var(--ff-bgcolor-gray);
+  border: 1px solid #D8D8D8;
   font-size: 16px;
-  color: var(--ff-color-dark);
+  color: var(--color-text-dark);
   background: rgba(237, 237, 237, 0.5);
 }
 
@@ -64,7 +64,7 @@ h3 {
 
 .explanation {
   & > span {
-    color: var(--ff-color-dark-gray);
+    color: var(--color-gray-dark);
     font-size: 16px;
   }
 }
@@ -94,9 +94,9 @@ h3 {
   display: block;
   padding: 26px;
   border-radius: 8px;
-  border: 1px solid var(--ff-bgcolor-gray);
+  border: 1px solid #D8D8D8;
   font-size: 16px;
-  color: var(--ff-color-dark);
+  color: var(--color-text-dark);
   background: rgba(237, 237, 237, 0.5);
 
   code {
@@ -133,13 +133,13 @@ h3 {
       text-decoration: line-through;
 
       &.forRemoval {
-        text-decoration-color: var(--ff-alert-error);
+        text-decoration-color: var(--color-alert-error);
       }
     }
 
     th {
       padding: 10px 0;
-      color: var(--ff-color-gray);
+      color: var(--color-gray);
       font-size: 12px;
       font-weight: 600;
       text-align: left;
@@ -150,7 +150,7 @@ h3 {
     tr.border-top {
       td {
         padding-top: 1em;
-        border-top: 1px solid var(--ff-color-light-gray);
+        border-top: 1px solid var(--color-gray-light);
       }
     }
 
@@ -161,7 +161,7 @@ h3 {
     }
 
     td {
-      color: var(--ff-border-gray);
+      color: var(--color-gray-dark);
       font-size: 16px;
       font-weight: 400;
       word-break: break-word;
@@ -169,7 +169,7 @@ h3 {
     }
 
     .name {
-      color: var(--ff-color-dark);
+      color: var(--color-text-dark);
       font-family: 'DM Mono', monospace;
       font-weight: 500;
     }
@@ -181,7 +181,7 @@ h3 {
   }
 
   .nav-to-enum {
-    color: var(--ff-anchor-default);
+    color: var(--color-anchor);
     font-weight: 500;
     cursor: pointer;
 
@@ -207,8 +207,8 @@ h3 {
     display: flex;
     margin-bottom: 20px;
     padding: 15px 0;
-    border-bottom: 1px solid var(--ff-color-dark);
-    color: var(--ff-color-dark);
+    border-bottom: 1px solid var(--color-text-dark);
+    color: var(--color-text-dark);
     font-size: 2rem;
     font-weight: 600;
 
@@ -223,7 +223,7 @@ h3 {
   }
 
   .options-sub-title {
-    color: var(--ff-color-dark);
+    color: var(--color-text-dark);
     font-size: 1.5rem;
     font-weight: 600;
     margin-top: 1em;
@@ -238,8 +238,8 @@ h3 {
     border-radius: 10px;
     margin-top: 10px;
     padding: 15px 20px;
-    background: var(--ff-color-light-gray);
-    color: var(--ff-color-dark);
+    background: var(--color-gray-light);
+    color: var(--color-text-dark);
     font-size: 16px;
     font-weight: 600;
     line-height: normal;
@@ -271,5 +271,5 @@ code.deprecated {
 }
 
 p.description {
-  color: var(--ff-color-gray);
+  color: var(--color-gray);
 }

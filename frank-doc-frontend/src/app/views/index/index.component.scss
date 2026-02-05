@@ -7,7 +7,7 @@ ff-chip {
 .page {
   .description {
     max-width: 900px;
-    color: var(--ff-color-dark-gray);
+    color: var(--color-gray-dark);
     font-size: 16px;
     font-weight: 400;
   }
@@ -20,7 +20,7 @@ ff-chip {
 
       h4 {
         margin-bottom: 15px;
-        color: var(--ff-color-dark);
+        color: var(--color-text-dark);
         font-size: 24px;
         font-weight: 600;
       }
@@ -33,7 +33,7 @@ ff-chip {
         a {
           display: inline-block;
           width: 250px;
-          color: var(--ff-color-dark);
+          color: var(--color-text-dark);
           font-size: 16px;
           text-transform: capitalize;
           text-decoration: none;

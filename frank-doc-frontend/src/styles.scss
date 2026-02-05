@@ -1,9 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@use "sass:meta";
-@use "sass:map";
-
-@use '@frankframework/angular-components';
-@use '@frankframework/angular-components/styles/variables';
+@import '@frankframework/angular-components/bundle.css';
 
 @font-face {
   font-family: 'DM Mono';
@@ -23,11 +19,50 @@ body {
 }
 
 app-root {
-  @each $key, $value in meta.module-variables('variables') {
-    --#{$key}: #{$value};
+  --color-gray: #8A8A8A;
+  --color-gray-dark: #626262;
+  --color-gray-light: #EDEDED;
+
+  /* Since angular-components has these stripped, see issue https://github.com/frankframework/angular-components/issues/39 */
+  --color-anchor: #0066AF;
+  --color-active: var(--color-brand);
+}
+
+/* fixes against tailwind's defaults */
+p {
+  margin: 1em 0;
+}
+
+svg {
+  display: inline;
+  vertical-align: initial;
+}
+
+a {
+  text-decoration: underline;
+}
+
+ul, ol, menu {
+  list-style: disc;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  padding-inline-start: 40px;
+
+  ul, ol, menu {
+    margin-block-start: 0;
+    margin-block-end: 0;
   }
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+h1 { font-size: 2em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.17em; }
+h5 { font-size: 0.83em; }
+h6 { font-size: 0.67em; }
+/* --- */
 
 .page-container {
   display: flex;
@@ -49,14 +84,14 @@ app-root {
 
 .sidenav, .search-related, .search-results {
   ul {
-    margin-top: 0;
+    margin-block: 0 1em;
     padding: 0;
     list-style: none;
 
     li {
       padding: 3px 0 3px 16px;
-      border-left: 1px solid var(--ff-color-light-gray);
-      color: var(--ff-color-dark-gray);
+      border-left: 1px solid var(--color-gray-light);
+      color: var(--color-gray-dark);
       font-size: 16px;
       font-weight: 400;
       text-transform: capitalize;
@@ -67,8 +102,8 @@ app-root {
       }
 
       &.active {
-        border-left: 1px solid var(--ff-color-dark);
-        color: var(--ff-color-dark);
+        border-left: 1px solid var(--color-text-dark);
+        color: var(--color-text-dark);
         font-weight: 600;
       }
     }
@@ -82,7 +117,7 @@ app-root {
 
 .sidenav {
   padding: 20px 20px 20px 0;
-  border-image: linear-gradient(180deg, #fff 0%, var(--ff-color-light-gray) 50px) 1;
+  border-image: linear-gradient(180deg, #fff 0%, var(--color-gray-light) 50px) 1;
   border-width: 0 1px 0 0;
   border-style: solid;
 
@@ -93,13 +128,13 @@ app-root {
 
   .nav-group-name {
     margin-bottom: 5px;
-    color: var(--ff-color-dark);
+    color: var(--color-text-dark);
     font-size: 18px;
     font-weight: 600;
   }
 
   .title {
-    color: var(--ff-color-dark);
+    color: var(--color-text-dark);
     font-size: 16px;
     font-weight: 600;
   }
@@ -108,14 +143,14 @@ app-root {
 h2.page-title {
   margin-top: 0;
   margin-bottom: 10px;
-  color: var(--ff-color-dark);
+  color: var(--color-text-dark);
   font-size: 50px;
   font-weight: 700;
   line-height: 0.9;
 }
 
 h3.sub-title {
-  color: var(--ff-color-dark);
+  color: var(--color-text-dark);
   font-size: 32px;
   font-weight: 600;
 }
@@ -134,7 +169,7 @@ h3.sub-title {
     font-family: 'DM Mono', monospace;
     font-size: 85%;
     background: rgba(237, 237, 237, 0.5);
-    border: 1px solid var(--ff-bgcolor-gray);
+    border: 1px solid #D8D8D8;
     border-radius: 5px;
   }
 
@@ -146,8 +181,8 @@ h3.sub-title {
       display: block;
       padding: 8px;
       border-radius: 8px;
-      border: 1px solid variables.$ff-bgcolor-gray;
-      color: variables.$ff-color-dark;
+      border: 1px solid #D8D8D8;
+      color: var(--color-text-dark);
       background: rgba(237, 237, 237, 0.50);
       word-break: break-all;
       word-wrap: break-word;
@@ -158,13 +193,13 @@ h3.sub-title {
   }
 
   a {
-    color: variables.$ff-anchor-default;
+    color: var(--color-anchor);
     font-size: 16px;
     font-weight: 500;
     text-decoration: none;
 
     &:active {
-      color: variables.$ff-anchor-active;
+      color: var(--color-brand);
     }
 
     &:hover {
