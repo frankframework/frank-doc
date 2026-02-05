@@ -1,16 +1,16 @@
 package org.frankframework.frankdoc.wrapper;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class FrankClassTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.doclet.";
@@ -18,7 +18,7 @@ public class FrankClassTest {
 
 	private static final String EXPECTED_TYPE_ELEMENT =
 			"This is test class \"Child\". We use this comment to see how\n" +
-			" JavaDoc text is treated by the Doclet API.";
+			"JavaDoc text is treated by the Doclet API.";
 
 	private FrankClassRepository repository;
 	private FrankClass instance;

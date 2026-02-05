@@ -4,7 +4,7 @@
   <xs:element name="Configuration">
     <xs:annotation>
       <xs:documentation>The Configuration is placeholder of all configuration objects. Besides that, it provides
- functions for starting and stopping adapters as a facade.</xs:documentation>
+functions for starting and stopping adapters as a facade.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
@@ -25,7 +25,7 @@
   <xs:complexType name="AdapterType">
     <xs:annotation>
       <xs:documentation>The Adapter is the central manager in the Frank!Framework, that has knowledge
- and uses Receiver and a PipeLine.</xs:documentation>
+and uses Receiver and a PipeLine.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element name="ConfigWarning" minOccurs="0" maxOccurs="unbounded" type="WarningType" />

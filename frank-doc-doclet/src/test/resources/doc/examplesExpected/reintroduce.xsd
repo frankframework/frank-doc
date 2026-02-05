@@ -59,7 +59,7 @@
       <xs:element name="ChildA">
         <xs:annotation>
           <xs:documentation>The attribute and the config child are the same as in parent and they are not documented.
- They should still be declared as attribute and config child of Child because of the</xs:documentation>
+They should still be declared as attribute and config child of Child because of the</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>

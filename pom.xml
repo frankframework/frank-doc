@@ -12,9 +12,9 @@
 	<url>https://github.com/frankframework/frank-doc</url>
 
 	<properties>
-		<revision>4.3.0-SNAPSHOT</revision>
+		<revision>4.4.0-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.release>21</maven.compiler.release>
+		<maven.compiler.source>25</maven.compiler.source>
     <maven.compiler.proc>full</maven.compiler.proc>
 	</properties>
 
@@ -107,6 +107,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+      </plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -115,7 +119,9 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.14.1</version>
 					<configuration>
-            <release>${maven.compiler.release}</release>
+            <release>${maven.compiler.source}</release>
+            <source>${maven.compiler.source}</source>
+            <target>${maven.compiler.source}</target>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -207,6 +213,26 @@
 						</execution>
 					</executions>
 				</plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.6.2</version>
+          <executions>
+            <execution>
+              <id>enforce-jdk-version</id>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <requireJavaVersion>
+                    <version>[25,26)</version>
+                  </requireJavaVersion>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

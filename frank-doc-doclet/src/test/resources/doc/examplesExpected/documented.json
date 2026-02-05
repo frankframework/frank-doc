@@ -50,7 +50,7 @@
         },
         "org.frankframework.frankdoc.testtarget.featurepackage.DocumentedParent": {
             "name": "DocumentedParent",
-            "description": "Sends a message using a {@link ISender sender} and optionally receives a reply from the same sender, or\n from a {@link ICorrelatedPullingListener listener}.",
+            "description": "Sends a message using a {@link ISender sender} and optionally receives a reply from the same sender, or\nfrom a {@link ICorrelatedPullingListener listener}.",
             "attributes": {
                 "destinationName": {
                     "description": "Name of the JMS destination (queue or topic) to use"
@@ -73,7 +73,7 @@
             "parametersDescription": "any parameters defined on the pipe will be handed to the sender, if this is a {@link ISenderWithParameters ISenderWithParameters}",
             "parameters": {
                 "stubFilename": {
-                    "description": "will <u>not</u> be handed to the sender\n and it is used at runtime instead of the <pre>stubFilename</pre> specified by the attribute. A lookup of the\n file for this stubFilename will be done at runtime, while the file for the stubFilename specified\n as an attribute will be done at configuration time."
+                    "description": "will <u>not</u> be handed to the sender\nand it is used at runtime instead of the <pre>stubFilename</pre> specified by the attribute. A lookup of the\nfile for this stubFilename will be done at runtime, while the file for the stubFilename specified\nas an attribute will be done at configuration time."
                 }
             },
             "forwards": {

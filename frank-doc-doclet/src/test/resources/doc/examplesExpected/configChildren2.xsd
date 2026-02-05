@@ -72,8 +72,8 @@
       <xs:element name="B">
         <xs:annotation>
           <xs:documentation>Not added to element group of IChildWithConflictingElement because of name conflict.
- This element should appear as the default value for the className attribute in the generic
- element option.</xs:documentation>
+This element should appear as the default value for the className attribute in the generic
+element option.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>

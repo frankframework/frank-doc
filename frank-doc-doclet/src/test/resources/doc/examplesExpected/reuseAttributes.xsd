@@ -73,12 +73,12 @@
     <xs:attribute name="overriddenAttribute" type="xs:string">
       <xs:annotation>
         <xs:documentation>Documentation in Child - attribute reusedAttribute
- does not come from parent. Therefore reusedAttribute
- appears both in ParentDeclaredChildGroup and ChildCumulativeChildGroup.
- We test that that attribute is reused.
- 
- There are two different attributes overriddenAttribute; one
- in Parent and one in Child. These should be inline.</xs:documentation>
+does not come from parent. Therefore reusedAttribute
+appears both in ParentDeclaredChildGroup and ChildCumulativeChildGroup.
+We test that that attribute is reused.
+
+There are two different attributes overriddenAttribute; one
+in Parent and one in Child. These should be inline.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:attributeGroup>
