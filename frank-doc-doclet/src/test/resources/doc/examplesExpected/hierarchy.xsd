@@ -32,9 +32,18 @@
     <xs:attribute name="elementRole" type="xs:string" fixed="include" use="prohibited" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
+  <xs:complexType name="PipelineType">
+    <xs:sequence>
+      <xs:group ref="PipeElementGroup" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.hierarchy.PipeLine" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:attribute name="elementRole" type="xs:string" fixed="pipeline" use="prohibited" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
   <xs:element name="PipelinePart">
     <xs:annotation>
-      <xs:documentation>Wrapper element to help create reusable parts of a pipeline</xs:documentation>
+      <xs:documentation>Wrapper element to help create reusable parts of a pipeline that can be included into other pipelines</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -54,8 +63,8 @@
     <xs:sequence>
       <xs:element ref="Module" minOccurs="0" maxOccurs="unbounded" />
       <xs:group ref="ParamElementGroup" minOccurs="0" maxOccurs="unbounded" />
-      <xs:group ref="PipeElementGroup" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="Include" minOccurs="0" maxOccurs="unbounded" type="IncludeType" />
+      <xs:element name="Pipeline" minOccurs="0" maxOccurs="1" type="PipelineType" />
     </xs:sequence>
   </xs:group>
   <xs:group name="ParamElementGroup">
@@ -129,6 +138,15 @@
   </xs:group>
   <xs:group name="PipeElementGroupBase">
     <xs:choice>
+      <xs:element name="ComponentPipe">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="ComponentPipeType">
+              <xs:attribute name="elementRole" type="xs:string" fixed="pipe" use="prohibited" />
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="JwtPipe">
         <xs:complexType>
           <xs:complexContent>
@@ -140,6 +158,11 @@
       </xs:element>
     </xs:choice>
   </xs:group>
+  <xs:complexType name="ComponentPipeType">
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.hierarchy.ComponentPipe" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
   <xs:complexType name="JwtPipeType">
     <xs:attributeGroup ref="JwtPipeDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.hierarchy.JwtPipe" use="prohibited" />

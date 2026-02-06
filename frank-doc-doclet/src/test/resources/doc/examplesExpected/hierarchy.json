@@ -8,10 +8,14 @@
             "org.frankframework.frankdoc.testtarget.hierarchy.Parameter"
         ],
         "org.frankframework.frankdoc.testtarget.hierarchy.IPipe": [
+            "org.frankframework.frankdoc.testtarget.hierarchy.ComponentPipe",
             "org.frankframework.frankdoc.testtarget.hierarchy.JwtPipe"
         ],
         "org.frankframework.frankdoc.testtarget.hierarchy.Include": [
             "org.frankframework.frankdoc.testtarget.hierarchy.Include"
+        ],
+        "org.frankframework.frankdoc.testtarget.hierarchy.PipeLine": [
+            "org.frankframework.frankdoc.testtarget.hierarchy.PipeLine"
         ],
         "org.frankframework.frankdoc.testtarget.hierarchy.Start": [
             "org.frankframework.frankdoc.testtarget.hierarchy.Start"
@@ -30,7 +34,7 @@
         },
         "PipelinePart": {
             "name": "PipelinePart",
-            "description": "Wrapper element to help create reusable parts of a pipeline"
+            "description": "Wrapper element to help create reusable parts of a pipeline that can be included into other pipelines"
         },
         "org.frankframework.frankdoc.testtarget.hierarchy.NumberParameter": {
             "name": "NumberParameter",
@@ -69,15 +73,23 @@
                 },
                 {
                     "multiple": true,
-                    "roleName": "pipe",
-                    "type": "org.frankframework.frankdoc.testtarget.hierarchy.IPipe"
-                },
-                {
-                    "multiple": true,
                     "roleName": "include",
                     "type": "org.frankframework.frankdoc.testtarget.hierarchy.Include"
+                },
+                {
+                    "multiple": false,
+                    "roleName": "pipeline",
+                    "type": "org.frankframework.frankdoc.testtarget.hierarchy.PipeLine"
                 }
             ]
+        },
+        "org.frankframework.frankdoc.testtarget.hierarchy.ComponentPipe": {
+            "name": "ComponentPipe",
+            "attributes": {
+                "active": {
+                    "description": "If defined and empty or false, then this element and all its children are ignored"
+                }
+            }
         },
         "org.frankframework.frankdoc.testtarget.hierarchy.Include": {
             "name": "Include",
@@ -115,6 +127,21 @@
                     "description": "If defined and empty or false, then this element and all its children are ignored"
                 }
             }
+        },
+        "org.frankframework.frankdoc.testtarget.hierarchy.PipeLine": {
+            "name": "Pipeline",
+            "attributes": {
+                "active": {
+                    "description": "If defined and empty or false, then this element and all its children are ignored"
+                }
+            },
+            "children": [
+                {
+                    "multiple": true,
+                    "roleName": "pipe",
+                    "type": "org.frankframework.frankdoc.testtarget.hierarchy.IPipe"
+                }
+            ]
         }
     },
     "elementNames": {
@@ -139,11 +166,17 @@
         "Start": {
             "className": "org.frankframework.frankdoc.testtarget.hierarchy.Start"
         },
+        "ComponentPipe": {
+            "className": "org.frankframework.frankdoc.testtarget.hierarchy.ComponentPipe"
+        },
         "Include": {
             "className": "org.frankframework.frankdoc.testtarget.hierarchy.Include"
         },
         "Param": {
             "className": "org.frankframework.frankdoc.testtarget.hierarchy.Parameter"
+        },
+        "Pipeline": {
+            "className": "org.frankframework.frankdoc.testtarget.hierarchy.PipeLine"
         }
     },
     "enums": {}
