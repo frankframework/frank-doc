@@ -18,14 +18,13 @@ package org.frankframework.frankdoc.model;
 
 import java.util.function.Predicate;
 
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.FrankDocXsdFactory;
 import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.util.LogUtil;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Base class of FrankAttribute and ConfigChild. This class was introduced
@@ -41,8 +40,8 @@ import lombok.Setter;
  *
  * @author martijn
  */
+@Log4j2
 public abstract class ElementChild {
-	private static final Logger log = LogUtil.getLogger(ElementChild.class);
 
 	private final @Getter FrankElement owningElement;
 

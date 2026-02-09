@@ -31,6 +31,8 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
+import org.jspecify.annotations.NonNull;
+
 import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
@@ -39,7 +41,6 @@ import com.sun.source.doctree.EntityTree;
 import com.sun.source.doctree.StartElementTree;
 import com.sun.source.doctree.TextTree;
 
-import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2

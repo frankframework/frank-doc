@@ -25,17 +25,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.util.LogUtil;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class ElementRole implements Comparable<ElementRole> {
-	private static final Logger log = LogUtil.getLogger(ElementRole.class);
 
 	private static final Comparator<ElementRole> COMPARATOR =
 		Comparator.comparing(ElementRole::getRoleName).thenComparing(role -> role.getElementType().getFullName());

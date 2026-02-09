@@ -17,11 +17,12 @@ limitations under the License.
 package org.frankframework.frankdoc.feature;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class Mandatory {
 	public enum Value {
 		IGNORE_COMPATIBILITY,
@@ -34,7 +35,6 @@ public class Mandatory {
 	private static final String IGNORE_COMPATIBILITY_MODE = "ignoreInCompatibilityMode";
 
 	private static final Mandatory INSTANCE = new Mandatory();
-	private static Logger log = LogUtil.getLogger(Mandatory.class);
 
 	public static Mandatory getInstance() {
 		return INSTANCE;

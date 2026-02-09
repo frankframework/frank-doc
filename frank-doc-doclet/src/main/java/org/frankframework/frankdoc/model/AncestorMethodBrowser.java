@@ -18,12 +18,12 @@ package org.frankframework.frankdoc.model;
 
 import java.util.function.Consumer;
 
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.feature.Reference;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
+
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Browse ancestor methods taking into account feature {@link org.frankframework.frankdoc.feature.Reference}.
@@ -48,13 +48,12 @@ import org.frankframework.frankdoc.wrapper.FrankMethod;
  * @author M66C303
  *
  */
+@Log4j2
 class AncestorMethodBrowser {
 	enum References {
 		WITH_REFERENCES,
 		WITHOUT_REFERENCES;
 	}
-
-	private static Logger log = LogUtil.getLogger(AncestorMethodBrowser.class);
 	private final Reference referenceFeature;
 	private final References referenceHandling;
 

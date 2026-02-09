@@ -23,13 +23,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 
-class AttributeEnumFactory {
-	private static Logger log = LogUtil.getLogger(AttributeEnumFactory.class);
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
+class AttributeEnumFactory {
 	private final Map<String, AttributeEnum> allAttributeEnumInstances = new LinkedHashMap<>();
 	private final Map<String, Integer> lastAssignedSeq = new HashMap<>();
 

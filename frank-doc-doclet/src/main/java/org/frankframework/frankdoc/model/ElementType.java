@@ -24,15 +24,14 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Models a collection of FrankElement. The collection can be characterized by
@@ -43,9 +42,8 @@ import lombok.Getter;
  *
  * @author martijn
  */
+@Log4j2
 public class ElementType implements Comparable<ElementType> {
-	private static final Logger log = LogUtil.getLogger(ElementType.class);
-
 	private static final String JAVADOC_DEFAULT_CLASSNAME = "@ff.defaultElement";
 
 	private static final Comparator<ElementType> COMPARATOR =

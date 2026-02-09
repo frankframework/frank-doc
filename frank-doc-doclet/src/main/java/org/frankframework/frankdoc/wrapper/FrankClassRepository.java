@@ -28,17 +28,14 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
-
 import com.sun.source.util.DocTrees;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class FrankClassRepository {
-	private static final Logger log = LogUtil.getLogger(FrankClassRepository.class);
-
 	private final @Getter(AccessLevel.PACKAGE) Set<String> excludeFiltersForSuperclass;
 
 	private final Map<String, FrankClass> classesByName = new LinkedHashMap<>();
@@ -98,7 +95,7 @@ public class FrankClassRepository {
 	private void setInterfaceImplementations(FrankClass clazz) {
 		List<FrankClass> implementedInterfaces = clazz.getInterfacesAsList().stream()
 			.distinct()
-			.collect(Collectors.toList());
+			.toList();
 		if (!implementedInterfaces.isEmpty()) {
 			log.trace("Directly implemented interfaces for class [{}]: [{}]", clazz::getSimpleName, () -> implementedInterfaces.stream().map(FrankClass::getSimpleName).collect(Collectors.joining(", ")));
 		}

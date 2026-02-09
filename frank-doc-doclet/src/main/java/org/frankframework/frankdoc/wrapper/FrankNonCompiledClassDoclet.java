@@ -23,7 +23,7 @@ package org.frankframework.frankdoc.wrapper;
  * @author martijn
  *
  */
-class FrankNonCompiledClassDoclet extends FrankSimpleType {
+public class FrankNonCompiledClassDoclet extends FrankSimpleType {
 	FrankNonCompiledClassDoclet(String name) {
 		super(name);
 	}

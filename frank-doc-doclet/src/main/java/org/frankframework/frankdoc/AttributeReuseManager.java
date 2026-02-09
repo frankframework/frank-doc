@@ -128,7 +128,7 @@ class AttributeReuseManager {
 		}
 
 		void add(AttributeReference item) {
-			if(item.frankAttribute != itemsThatShareFrankAttribute.get(0).frankAttribute) {
+			if(item.frankAttribute != itemsThatShareFrankAttribute.getFirst().frankAttribute) {
 				throw new IllegalArgumentException("Referenced FrankAttribute does not match");
 			}
 			itemsThatShareFrankAttribute.add(item);
@@ -139,7 +139,7 @@ class AttributeReuseManager {
 		}
 
 		String getAttributeName() {
-			return itemsThatShareFrankAttribute.get(0).frankAttribute.getName();
+			return itemsThatShareFrankAttribute.getFirst().frankAttribute.getName();
 		}
 
 		void setNoAttributeReferenceReuses() {

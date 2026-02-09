@@ -19,18 +19,16 @@ package org.frankframework.frankdoc.model;
 import java.util.EnumSet;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankType;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class FrankAttribute extends ElementChild {
-	private static final Logger log = LogUtil.getLogger(FrankAttribute.class);
-
 	static final String JAVADOC_ATTRIBUTE_REF = "@ff.ref";
 
 	@EqualsAndHashCode(callSuper = false)

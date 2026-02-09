@@ -28,7 +28,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -41,8 +40,7 @@ import javax.lang.model.type.TypeMirror;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
+import org.jspecify.annotations.Nullable;
 
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
@@ -50,10 +48,10 @@ import com.sun.source.util.DocTrees;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class FrankClass implements FrankType {
-	private static final Logger log = LogUtil.getLogger(FrankClass.class);
-
 	private final FrankClassRepository repository;
 	private final TypeElement clazz;
 
@@ -239,20 +237,14 @@ public class FrankClass implements FrankType {
 
 
 	public FrankMethod[] getDeclaredMethods() {
-		List<FrankMethod> resultList = new ArrayList<>(frankMethodsByDocletMethod.values());
-		return resultList.toArray(new FrankMethod[]{});
+		return frankMethodsByDocletMethod.values().toArray(FrankMethod[]::new);
 	}
 
 
 	public FrankMethod[] getDeclaredAndInheritedMethods() {
-		List<FrankMethod> resultList = getDeclaredAndInheritedMethodsAsMap().values().stream()
+		return getDeclaredAndInheritedMethodsAsMap().values().stream()
 			.filter(FrankMethod::isPublic)
-			.toList();
-		FrankMethod[] result = new FrankMethod[resultList.size()];
-		for (int i = 0; i < resultList.size(); ++i) {
-			result[i] = resultList.get(i);
-		}
-		return result;
+			.toArray(FrankMethod[]::new);
 	}
 
 	private Map<ExecutableElement, FrankMethod> getDeclaredAndInheritedMethodsAsMap() {
@@ -270,14 +262,14 @@ public class FrankClass implements FrankType {
 
 
 	public FrankEnumConstant[] getEnumConstants() {
-		return enumFields.values().toArray(new FrankEnumConstant[]{});
+		return enumFields.values().toArray(FrankEnumConstant[]::new);
 	}
 
 	FrankClassRepository getRepository() {
 		return repository;
 	}
 
-	FrankMethod recursivelyFindFrankMethod(ExecutableElement executableElement) {
+	@Nullable FrankMethod recursivelyFindFrankMethod(ExecutableElement executableElement) {
 		if (frankMethodsByDocletMethod.containsKey(executableElement)) {
 			return frankMethodsByDocletMethod.get(executableElement);
 		} else if (getSuperclass() != null) {
@@ -299,7 +291,7 @@ public class FrankClass implements FrankType {
 		return result;
 	}
 
-	<T> T getMethodItemFromSignature(String methodSignature, Function<FrankMethodDocletBase, T> getter) {
+	<T> T getMethodItemFromSignature(String methodSignature, Function<FrankMethodDocletBase, @Nullable T> getter) {
 		FrankMethodDoclet frankMethod = getMethodFromSignature(methodSignature);
 		if (frankMethod != null) {
 			return getter.apply(frankMethod);
@@ -330,12 +322,12 @@ public class FrankClass implements FrankType {
 			.append("annotations", getAnnotations()).append("javaDoc", StringUtils.substring(getJavaDoc(), 0, 25)).toString();
 	}
 
-	public FrankAnnotation getAnnotationIncludingInherited(String annotationFullName) throws FrankDocException {
+	public FrankAnnotation getAnnotationIncludingInherited(String annotationFullName) {
 		Function<FrankClass, FrankAnnotation> getter = c -> c.getAnnotation(annotationFullName);
 		return getIncludingInherited(getter).orElse(null);
 	}
 
-	private <T> Optional<T> getIncludingInherited(Function<FrankClass, T> getter) throws FrankDocException {
+	private <T> Optional<T> getIncludingInherited(Function<FrankClass, @Nullable T> getter) {
 		T result = getExcludingImplementedInterfaces(getter);
 		if (result == null) {
 			result = getFromImplementedInterfaces(getter);
@@ -343,7 +335,7 @@ public class FrankClass implements FrankType {
 		return Optional.ofNullable(result);
 	}
 
-	private <T> T getExcludingImplementedInterfaces(Function<FrankClass, T> getter) throws FrankDocException {
+	private <T> @Nullable T getExcludingImplementedInterfaces(Function<FrankClass, @Nullable T> getter) {
 		T result = getter.apply(this);
 		if ((result == null) && (getSuperclass() != null)) {
 			result = getSuperclass().getExcludingImplementedInterfaces(getter);
@@ -351,7 +343,7 @@ public class FrankClass implements FrankType {
 		return result;
 	}
 
-	private <T> T getFromImplementedInterfaces(Function<FrankClass, T> getter) {
+	private <T> @Nullable T getFromImplementedInterfaces(Function<FrankClass, @Nullable T> getter) {
 		TransitiveImplementedInterfaceBrowser<T> browser = new TransitiveImplementedInterfaceBrowser<>(this);
 		T result = browser.search(getter);
 		if ((result == null) && (getSuperclass() != null)) {
@@ -360,24 +352,19 @@ public class FrankClass implements FrankType {
 		return result;
 	}
 
-	public void browseAncestors(Consumer<FrankClass> handler) throws FrankDocException {
-		Function<FrankClass, Boolean> getter = c -> adapt(c, handler);
+	public void browseAncestors(Consumer<FrankClass> handler) {
+		Function<FrankClass, @Nullable Boolean> getter = c -> adapt(c, handler);
 		getIncludingInherited(getter);
 	}
 
-	private Boolean adapt(FrankClass c, Consumer<FrankClass> handler) {
+	private @Nullable Boolean adapt(FrankClass c, Consumer<FrankClass> handler) {
 		handler.accept(c);
 		return null;
 	}
 
 	public boolean extendsOrImplements(FrankClass ancestorCandidate) {
 		Function<FrankClass, Boolean> getter = c -> c.equals(ancestorCandidate) ? true : null;
-		try {
-			return getIncludingInherited(getter).orElse(false);
-		} catch (FrankDocException e) {
-			log.error("Caught exception while checking if class [{}] has ancestor [{}]", this.getName(), ancestorCandidate.getName(), e);
-			return false;
-		}
+		return getIncludingInherited(getter).orElse(false);
 	}
 
 	public String getJavaDocTag(String tagName) {
@@ -398,7 +385,7 @@ public class FrankClass implements FrankType {
 		return tagValues;
 	}
 
-	public String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException {
+	public String getJavaDocTagIncludingInherited(String tagName) {
 		Function<FrankClass, String> getter = c -> c.getJavaDocTag(tagName);
 		return getIncludingInherited(getter).orElse(null);
 	}
@@ -423,7 +410,7 @@ public class FrankClass implements FrankType {
 		private final Set<String> doNotAddAgain = new HashSet<>();
 
 		MultiplyInheritedMethodBrowser() {
-			List<String> declaredMethodSignatures = Arrays.asList(FrankClass.this.getDeclaredMethods()).stream().map(FrankMethod::getSignature).collect(Collectors.toList());
+			List<String> declaredMethodSignatures = Arrays.stream(FrankClass.this.getDeclaredMethods()).map(FrankMethod::getSignature).toList();
 			doNotAddAgain.addAll(declaredMethodSignatures);
 		}
 
@@ -451,12 +438,7 @@ public class FrankClass implements FrankType {
 
 	public String resolveValue(String variable, Function<FrankEnumConstant, String> enumHandler) {
 		Function<FrankClass, String> getter = frankClass -> resolveValueImpl(frankClass, variable, enumHandler);
-		try {
-			return getIncludingInherited(getter).orElse(null);
-		} catch (FrankDocException e) {
-			log.error("Error resolving variable [{}]", variable);
-			return null;
-		}
+		return getIncludingInherited(getter).orElse(null);
 	}
 
 	private String resolveValueImpl(FrankClass owner, String variable, Function<FrankEnumConstant, String> enumHandler) {
@@ -474,9 +456,6 @@ public class FrankClass implements FrankType {
 	/**
 	 * Find a class in the repository that is enclosed by this class. E.g. classes in the same package
 	 * Secondly, search for elements inside this class.
-	 *
-	 * @param name
-	 * @return
 	 */
 	public FrankClass findClass(String name) {
 		TypeElement foundTypeElement = (TypeElement) clazz.getEnclosingElement().getEnclosedElements().stream()
@@ -494,13 +473,14 @@ public class FrankClass implements FrankType {
 			try {
 				return repository.findClass(foundTypeElement.getQualifiedName().toString());
 			} catch (FrankDocException e) {
-				log.error("Error searching for class [{}]", foundTypeElement.getQualifiedName());
+				log.error("Error searching for class [{}]", foundTypeElement.getQualifiedName(), e);
 			}
 		}
 		// If still not found, try searching everywhere
 		try {
 			return repository.findClass(name);
-		} catch (FrankDocException ignored) {
+		} catch (FrankDocException _) {
+			// Ignore exception
 		}
 		return null;
 	}

@@ -22,12 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class LabelValues {
-	private static final Logger log = LogUtil.getLogger(LabelValues.class);
-
 	private final Map<String, List<String>> data = new HashMap<>();
 
 	void setValues(String label, List<String> values) {

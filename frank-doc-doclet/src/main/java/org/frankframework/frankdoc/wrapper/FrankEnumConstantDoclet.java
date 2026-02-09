@@ -54,16 +54,13 @@ class FrankEnumConstantDoclet implements FrankEnumConstant {
 	public List<String> getAllEnumValues() {
 		var enumParent = (TypeElement) variableElement.getEnclosingElement();
 
-		return enumParent.getEnclosedElements().stream().map(e -> {
-			if (e instanceof VariableElement ve) {
-				var x = new FrankEnumConstantDoclet(ve, null);
-
-				var enumValue = new EnumValue(x);
-				return enumValue.getLabel();
-			}
-
-			return null;
-		}).filter(Objects::nonNull).toList();
+		return enumParent.getEnclosedElements().stream()
+			.filter(VariableElement.class::isInstance)
+			.map(VariableElement.class::cast)
+			.map(ve -> new FrankEnumConstantDoclet(ve, null))
+			.map(EnumValue::new)
+			.map(EnumValue::getLabel)
+			.toList();
 	}
 
 	@Override

@@ -31,7 +31,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.AttributeType;
 import org.frankframework.frankdoc.model.ConfigChild;
@@ -52,13 +51,15 @@ import org.frankframework.frankdoc.model.ServletAuthenticator;
 import org.frankframework.frankdoc.model.ServletAuthenticatorMethod;
 import org.frankframework.frankdoc.properties.Group;
 import org.frankframework.frankdoc.properties.Property;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class FrankDocJsonFactory {
-	private static final Logger log = LogUtil.getLogger(FrankDocJsonFactory.class);
 
 	private static final String DESCRIPTION = "description";
 	public static final String DEPRECATED = "deprecated";
@@ -89,7 +90,7 @@ public class FrankDocJsonFactory {
 			.toList();
 	}
 
-	public JsonObject getJson() {
+	public @Nullable JsonObject getJson() {
 		try {
 			JsonObjectBuilder result = bf.createObjectBuilder();
 			// If the Frank!Framework version is null, the error is logged elsewhere.
@@ -295,7 +296,7 @@ public class FrankDocJsonFactory {
 
 				if (!labels.isEmpty()) {
 					// Only get the first label since, most if not all categories have only one label
-					labelsBuilder.add(group, labels.get(0));
+					labelsBuilder.add(group, labels.getFirst());
 				}
 			});
 
@@ -359,7 +360,7 @@ public class FrankDocJsonFactory {
 		if (frankAttribute.isUnsafe()) {
 			result.add("unsafe", true);
 		}
-		addIfNotNull(result, "description", frankAttribute.getDescription());
+		addIfNotNull(result, DESCRIPTION, frankAttribute.getDescription());
 		addIfNotNull(result, "default", frankAttribute.getDefaultValue());
 		if (!frankAttribute.getAttributeType().equals(AttributeType.STRING)) {
 			result.add("type", frankAttribute.getAttributeType().name().toLowerCase());
@@ -372,7 +373,7 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getAttributeActive() {
 		JsonObjectBuilder result = bf.createObjectBuilder();
-		result.add("description", "If defined and empty or false, then this element and all its children are ignored");
+		result.add(DESCRIPTION, "If defined and empty or false, then this element and all its children are ignored");
 		return result.build();
 	}
 
@@ -403,7 +404,7 @@ public class FrankDocJsonFactory {
 		JsonObjectBuilder result = bf.createObjectBuilder();
 		result.add("multiple", true);
 		result.add("roleName", Constants.MODULE_ELEMENT_NAME.toLowerCase());
-		result.add("description", Constants.MODULE_ELEMENT_DESCRIPTION);
+		result.add(DESCRIPTION, Constants.MODULE_ELEMENT_DESCRIPTION);
 		result.add("type", Constants.MODULE_ELEMENT_NAME);
 		return result.build();
 	}

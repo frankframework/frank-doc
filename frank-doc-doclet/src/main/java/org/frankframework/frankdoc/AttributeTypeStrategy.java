@@ -36,22 +36,21 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.AttributeType;
 import org.frankframework.frankdoc.model.EnumValue;
 import org.frankframework.frankdoc.model.FrankAttribute;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public enum AttributeTypeStrategy {
 	// Also excludes deprecated enum values
 	ALLOW_PROPERTY_REF(new DelegateAllowPropertyRefEnumDocumentedCaseSensitive()),
 
 	// Also includes deprecated enum values
 	ALLOW_PROPERTY_REF_ENUM_VALUES_IGNORE_CASE(new DelegateAllowPropertyRefEnumIgnoreCase());
-
-	private static final Logger log = LogUtil.getLogger(AttributeTypeStrategy.class);
 
 	static final String ATTRIBUTE_ACTIVE_NAME = "active";
 

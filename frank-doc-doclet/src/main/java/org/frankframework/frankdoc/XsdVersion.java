@@ -20,23 +20,21 @@ import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSequence
 
 import java.util.function.Predicate;
 
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeUse;
 import org.frankframework.frankdoc.model.ConfigChild;
 import org.frankframework.frankdoc.model.ElementChild;
 import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.model.FrankElement;
 import org.frankframework.frankdoc.model.MandatoryStatus;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public enum XsdVersion {
 	STRICT(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED, f -> ! f.isDeprecated(), new DelegateStrict(), "Public FrankDoc XSD, should be used within an IDE to validate a configuration."),
 	COMPATIBILITY(ElementChild.IN_COMPATIBILITY_XSD, ElementChild.EXCLUDED, f -> true, new DelegateCompatibility(), "Compatibility XSD, internal use only!");
-
-	private static final Logger log = LogUtil.getLogger(XsdVersion.class);
 
 	private final @Getter Predicate<ElementChild> childSelector;
 	private final @Getter Predicate<ElementChild> childRejector;

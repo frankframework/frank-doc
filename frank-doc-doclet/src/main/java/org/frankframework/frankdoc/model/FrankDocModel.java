@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Constants;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Default;
@@ -52,7 +51,6 @@ import org.frankframework.frankdoc.feature.Reintroduce;
 import org.frankframework.frankdoc.model.AncestorMethodBrowser.References;
 import org.frankframework.frankdoc.properties.Group;
 import org.frankframework.frankdoc.properties.PropertyParser;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
@@ -62,9 +60,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class FrankDocModel {
-	private static final Logger log = LogUtil.getLogger(FrankDocModel.class);
 	private static final String ENUM = "Enum";
 	private static final List<String> EXPECTED_HTML_TAGS = Arrays.asList("a", "b", "br", "code", "h1", "h2", "h3", "h4", "i", "li", "ol", "p", "pre", "strong", "table", "td", "th", "tr", "ul");
 	private static final String UNSAFE_ANNOTATION_CLASSNAME = "org.frankframework.doc.Unsafe";
@@ -214,7 +213,7 @@ public class FrankDocModel {
 		return AdditionalRootElement.VALUE_BY_TYPE.get(classSimpleName);
 	}
 
-	void buildDescendants() throws Exception {
+	void buildDescendants() throws FrankDocException {
 		log.trace("Enter");
 		boolean addedDescendants;
 		int pass = 1;
@@ -419,7 +418,7 @@ public class FrankDocModel {
 					.toList();
 			if(candidateTypes.size() >= 2) {
 				log.error("Class [{}] has overloaded declared or inherited attribute setters. Type of attribute [{}] can be any of [{}]",
-						clazz.getName(), attributeName, String.join(", ", candidateTypes));
+					clazz::getName, ()-> attributeName, ()-> String.join(", ", candidateTypes));
 			}
 		}
 	}
@@ -659,7 +658,7 @@ public class FrankDocModel {
 
 	private boolean excludedByExcludeFromTypeFeature(FrankClass member, FrankClass typeClass) {
 		Set<FrankClass> explicitExcludes = ExcludeFromTypeFeature.getInstance(classRepository).excludedFrom(member);
-		if((explicitExcludes != null) && explicitExcludes.contains(typeClass)) {
+		if(explicitExcludes.contains(typeClass)) {
 			return true;
 		} else if(member.getSuperclass() != null) {
 			return excludedByExcludeFromTypeFeature(member.getSuperclass(), typeClass);
@@ -793,7 +792,7 @@ public class FrankDocModel {
 		Set<ElementRole.Key> key = roles.stream()
 				.map(ElementRole::getKey)
 				.collect(Collectors.toSet());
-		ElementRoleSet elementRoleSet = allElementRoleSets.computeIfAbsent(key, k -> {
+		ElementRoleSet elementRoleSet = allElementRoleSets.computeIfAbsent(key, _ -> {
 				log.trace("New ElementRoleSet for roles [{}]", () -> ElementRole.describeCollection(roles));
 				return new ElementRoleSet(roles);
 			}
@@ -842,13 +841,14 @@ public class FrankDocModel {
 	void findOrCreateElementRoleSetForMemberChildren(List<ConfigChild> configChildren, int recursionDepth) {
 		Set<ElementRole> roles = ConfigChild.getElementRoleStream(configChildren).collect(Collectors.toSet());
 		Set<ElementRole.Key> key = roles.stream().map(ElementRole::getKey).collect(Collectors.toSet());
-		if (!allElementRoleSets.containsKey(key)) {
-			allElementRoleSets.put(key, new ElementRoleSet(roles));
-			log.trace("Added new ElementRoleSet [{}]", () -> allElementRoleSets.get(key).toString());
+		allElementRoleSets.computeIfAbsent(key, _ -> {
+			ElementRoleSet result = new ElementRoleSet(roles);
+			log.trace("Added new ElementRoleSet [{}]", result);
 			List<ElementRole> recursionParents = new ArrayList<>(roles);
 			Collections.sort(recursionParents);
 			recursivelyCreateElementRoleSets(recursionParents, recursionDepth + 1);
-		}
+			return result;
+		});
 	}
 
 	AttributeEnum findOrCreateAttributeEnum(FrankClass clazz) {

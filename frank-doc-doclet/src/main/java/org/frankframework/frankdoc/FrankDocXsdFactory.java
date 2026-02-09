@@ -49,7 +49,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.ConfigChild;
@@ -64,9 +63,10 @@ import org.frankframework.frankdoc.model.FrankElement;
 import org.frankframework.frankdoc.model.Note;
 import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.TextConfigChild;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
 import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
+
+import lombok.extern.log4j.Log4j2;
 
 /**
  * This class writes the XML schema document (XSD) that checks the validity of a
@@ -137,8 +137,8 @@ import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
  * @author martijn
  *
  */
+@Log4j2
 public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
-	private static final Logger log = LogUtil.getLogger(FrankDocXsdFactory.class);
 
 	private static final Map<XsdVersion, String> outputFileNames = new EnumMap<>(XsdVersion.class);
 	public static final String UNBOUNDED = "unbounded";
@@ -673,7 +673,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		if(members.isEmpty()) {
 			return null;
 		}
-		return members.iterator().next();
+		return members.getFirst();
 	}
 
 	private void recursivelyDefineSimpleFrankElementType(FrankElement frankElement, ElementRole role) {
@@ -821,7 +821,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void addDocumentationFrom(XmlBuilder element, FrankElement frankElement) {
-		if(version == XsdVersion.STRICT) {
+		if (version == XsdVersion.STRICT) {
 			if (!StringUtils.isBlank(frankElement.getDescription())) {
 				StringBuilder description = new StringBuilder(frankElement.getDescription());
 
@@ -923,7 +923,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void addConfigChildrenOfRoleNameToGenericOption(XmlBuilder context, List<ConfigChild> configChildren) {
-		ConfigChild configChild = configChildren.get(0);
+		ConfigChild configChild = configChildren.getFirst();
 		String roleName = configChild.getRoleName();
 		switch(ConfigChildGroupKind.groupKind(configChildren)) {
 		case TEXT:
@@ -943,11 +943,11 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void addObjectConfigChildrenToGenericOption(XmlBuilder context, List<ConfigChild> configChildren) {
-		String roleName = configChildren.get(0).getRoleName();
+		String roleName = configChildren.getFirst().getRoleName();
 		List<ElementRole> childRoles = ElementRole.promoteIfConflict(ConfigChild.getElementRoleStream(configChildren).toList());
-		if((childRoles.size() == 1) && isNoElementTypeNeeded(childRoles.get(0))) {
-			log.trace("A single ElementRole [{}] that appears as element reference", () -> childRoles.get(0).toString());
-			addElementRoleAsElement(context, childRoles.get(0));
+		if((childRoles.size() == 1) && isNoElementTypeNeeded(childRoles.getFirst())) {
+			log.trace("A single ElementRole [{}] that appears as element reference", () -> childRoles.getFirst().toString());
+			addElementRoleAsElement(context, childRoles.getFirst());
 		} else {
 			if(log.isTraceEnabled()) {
 				ThreadContext.push(String.format("nest [%s]", roleName));
@@ -1051,9 +1051,9 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 
 	private void addPluralObjectConfigChild(XmlBuilder choice, ConfigChildSet configChildSet) {
 		List<ElementRole> roles = configChildSet.getFilteredElementRoles(version.getChildSelector(), version.getChildRejector());
-		if((roles.size() == 1) && isNoElementTypeNeeded(roles.get(0))) {
+		if((roles.size() == 1) && isNoElementTypeNeeded(roles.getFirst())) {
 			log.trace("Config child set appears as element reference");
-			addElementRoleAsElement(choice, roles.get(0));
+			addElementRoleAsElement(choice, roles.getFirst());
 		} else {
 			log.trace("Config child set appears as group reference");
 			requestElementGroupForConfigChildSet(configChildSet, roles);
