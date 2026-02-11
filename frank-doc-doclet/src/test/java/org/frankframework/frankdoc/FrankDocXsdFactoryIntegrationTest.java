@@ -15,20 +15,8 @@ limitations under the License.
 */
 package org.frankframework.frankdoc;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.model.FrankDocModel;
-import org.frankframework.frankdoc.util.LogUtil;
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 
-import javax.xml.XMLConstants;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -36,10 +24,23 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
 
-import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
+import javax.xml.XMLConstants;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
+import org.frankframework.frankdoc.model.FrankDocModel;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.TestUtil;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class FrankDocXsdFactoryIntegrationTest {
-	private static Logger log = LogUtil.getLogger(FrankDocXsdFactoryIntegrationTest.class);
 	private static final String EXOTIC_PACKAGE = "org.frankframework.frankdoc.testtarget.exotic.";
 
 	private FrankClassRepository classRepository;

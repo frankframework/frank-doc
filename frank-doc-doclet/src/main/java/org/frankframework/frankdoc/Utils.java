@@ -49,9 +49,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.EnumValue;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.FrankType;
@@ -62,14 +60,15 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
+import lombok.extern.log4j.Log4j2;
+
 /**
  * Utility methods for the Frank!Doc.
  *
  * @author martijn
  */
+@Log4j2
 public final class Utils {
-	private static final Logger log = LogUtil.getLogger(Utils.class);
-
 	private static final String JAVA_STRING = "java.lang.String";
 	private static final String JAVA_INTEGER = "java.lang.Integer";
 	private static final String JAVA_BOOLEAN = "java.lang.Boolean";
@@ -235,7 +234,7 @@ public final class Utils {
 			jobj = jr.readObject();
 		}
 
-		Map<String, Object> properties = new HashMap<>(1);
+		Map<String, Object> properties = HashMap.newHashMap(1);
 		properties.put(JsonGenerator.PRETTY_PRINTING, true);
 
 		JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
@@ -266,14 +265,14 @@ public final class Utils {
 			.sorted()
 			.forEach(key -> {
 				JsonValue value = jsonObject.get(key);
-				if (value instanceof JsonObject object) {
-					// Recursively sort nested objects
-					builder.add(key, sortJsonObject(object));
-				} else if (value instanceof JsonArray array) {
-					// Recursively sort nested arrays
-					builder.add(key, sortJsonArray(array));
-				} else {
-					builder.add(key, value);
+				switch (value) {
+					case JsonObject object ->
+						// Recursively sort nested objects
+						builder.add(key, sortJsonObject(object));
+					case JsonArray array ->
+						// Recursively sort nested arrays
+						builder.add(key, sortJsonArray(array));
+					case null, default -> builder.add(key, value);
 				}
 			});
 
@@ -283,12 +282,10 @@ public final class Utils {
 	private static JsonArray sortJsonArray(JsonArray jsonArray) {
 		JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 		jsonArray.forEach(value -> {
-			if (value instanceof JsonObject object) {
-				arrayBuilder.add(sortJsonObject(object)); // Sort objects inside arrays
-			} else if (value instanceof JsonArray array) {
-				arrayBuilder.add(sortJsonArray(array)); // Sort arrays inside arrays
-			} else {
-				arrayBuilder.add(value);
+			switch (value) {
+				case JsonObject object -> arrayBuilder.add(sortJsonObject(object)); // Sort objects inside arrays
+				case JsonArray array -> arrayBuilder.add(sortJsonArray(array)); // Sort arrays inside arrays
+				case null, default -> arrayBuilder.add(value);
 			}
 		});
 		return arrayBuilder.build();
@@ -321,7 +318,8 @@ public final class Utils {
 
 			result.append(text, currentIndex, startIndex);
 
-			String match = text.substring(startIndex, stopIndex);
+			StringBuilder match = new StringBuilder(text.length());
+			match.append(text, startIndex, stopIndex);
 
 			int openingBracketsCount = StringUtils.countMatches(match, JAVADOC_SUBSTITUTION_PATTERN_START_DELIMITER);
 			int closingBracketsCount = StringUtils.countMatches(match, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER);
@@ -333,7 +331,7 @@ public final class Utils {
 					break;
 				}
 
-				match = match + text.substring(stopIndex, nextStopIndex);
+				match.append(text, stopIndex, nextStopIndex);
 
 				openingBracketsCount = StringUtils.countMatches(match, JAVADOC_SUBSTITUTION_PATTERN_START_DELIMITER);
 				closingBracketsCount = StringUtils.countMatches(match, JAVADOC_SUBSTITUTION_PATTERN_STOP_DELIMITER);

@@ -30,6 +30,10 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.SimpleTypeVisitor14;
+
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.DocCommentTree;
@@ -38,8 +42,8 @@ import com.sun.source.doctree.EndElementTree;
 import com.sun.source.doctree.EntityTree;
 import com.sun.source.doctree.StartElementTree;
 import com.sun.source.doctree.TextTree;
+import com.sun.source.util.SimpleDocTreeVisitor;
 
-import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -92,11 +96,11 @@ final class FrankDocletUtils {
 	 * @param docTreeList a list of {@link DocTree}
 	 * @return string representation of the docTreeList
 	 */
-	public static String convertDocTreeListToStr(List<? extends DocTree> docTreeList) {
+	public static @Nullable String convertDocTreeListToStr(List<? extends DocTree> docTreeList) {
 		String docTreeStrList = docTreesToText(docTreeList);
 		if (docTreeStrList.isEmpty())
 			return null;
-		return String.join("", docTreeStrList);
+		return docTreeStrList;
 	}
 
 	/**
@@ -110,34 +114,55 @@ final class FrankDocletUtils {
 	private static String docTreesToText(@NonNull List<? extends DocTree> docTreeList) {
 		StringBuilder builder = new StringBuilder();
 		for (DocTree docTree : docTreeList) {
-			if (docTree instanceof TextTree text) {
-				builder.append(text.getBody());
-			} else if (docTree instanceof EntityTree entity) {
-				builder.append('&')
-					.append(entity.getName())
-					.append(';');
-			} else if (docTree instanceof StartElementTree startEl) {
-				builder.append("<").append(startEl.getName());
-				for (DocTree tree : startEl.getAttributes()) {
-					if (tree instanceof AttributeTree att) {
-						char quote = (att.getValueKind() == AttributeTree.ValueKind.SINGLE) ? '\'' : '"';
-						builder.append(' ')
-							.append(att.getName())
-							.append('=')
-							.append(quote)
-							.append(docTreesToText(att.getValue()))
-							.append(quote);
+			docTree.accept(new SimpleDocTreeVisitor<Void, StringBuilder>() {
+				@Override
+				public Void visitText(TextTree text, StringBuilder stringBuilder) {
+					stringBuilder.append(text.getBody());
+					return null;
+				}
+
+				@Override
+				public Void visitEntity(EntityTree entity, StringBuilder stringBuilder) {
+					stringBuilder.append('&')
+						.append(entity.getName())
+						.append(';');
+					return null;
+				}
+
+				@Override
+				public Void visitStartElement(StartElementTree startEl, StringBuilder stringBuilder) {
+					stringBuilder.append("<").append(startEl.getName());
+					for (DocTree tree : startEl.getAttributes()) {
+						if (tree instanceof AttributeTree att) {
+							char quote = (att.getValueKind() == AttributeTree.ValueKind.SINGLE) ? '\'' : '"';
+							stringBuilder.append(' ')
+								.append(att.getName())
+								.append('=')
+								.append(quote)
+								.append(docTreesToText(att.getValue()))
+								.append(quote);
+						}
 					}
+					if (startEl.isSelfClosing()) {
+						stringBuilder.append('/');
+					}
+					stringBuilder.append('>');
+
+					return null;
 				}
-				if (startEl.isSelfClosing()) {
-					builder.append('/');
+
+				@Override
+				public Void visitEndElement(EndElementTree endEl, StringBuilder stringBuilder) {
+					stringBuilder.append("</").append(endEl.getName()).append(">");
+					return null;
 				}
-				builder.append('>');
-			} else if (docTree instanceof EndElementTree endEl) {
-				builder.append("</").append(endEl.getName()).append(">");
-			} else {
-				builder.append(docTree);
-			}
+
+				@Override
+				protected Void defaultAction(DocTree node, StringBuilder stringBuilder) {
+					stringBuilder.append(node);
+					return null;
+				}
+			}, builder);
 		}
 		return builder.toString();
 	}
@@ -166,26 +191,12 @@ final class FrankDocletUtils {
 	}
 
 	public static String getFullNameWithoutTypeInfo(TypeMirror typeMirror) {
-		String fullNameWithoutTypeInfo = _getFullNameWithoutTypeInfo(typeMirror);
+		String fullNameWithoutTypeInfo = typeMirror.accept(new NameWithoutTypeInfoBuilder(), null);
 		log.debug("<*> getFullNameWithoutTypeInfo: {}", fullNameWithoutTypeInfo);
 		if (fullNameWithoutTypeInfo.contains("<") || fullNameWithoutTypeInfo.contains("[")) {
 			log.error("Still found type with Generic or Array information in type at: {}; {}. Please fix this inside FrankDocletutils", fullNameWithoutTypeInfo, typeMirror);
 		}
 		return fullNameWithoutTypeInfo;
-	}
-
-	private static String _getFullNameWithoutTypeInfo(TypeMirror typeMirror) {
-		if (typeMirror instanceof ArrayType at) {
-			return getFullNameWithoutTypeInfo(at.getComponentType());
-		}
-		if (typeMirror instanceof DeclaredType dt) {
-			return buildQualifiedElementName(dt.asElement());
-		}
-		String fullName = typeMirror.toString();
-		int typeParamPos = fullName.indexOf('<');
-		String fullNameWithoutTypeInfo = typeParamPos == -1 ? fullName : fullName.substring(0, typeParamPos);
-		int arrayBracketPos = fullNameWithoutTypeInfo.indexOf('[');
-		return arrayBracketPos == -1 ? fullNameWithoutTypeInfo : fullNameWithoutTypeInfo.substring(0, arrayBracketPos);
 	}
 
 	private static String buildQualifiedElementName(Element el) {
@@ -197,5 +208,27 @@ final class FrankDocletUtils {
 			return el.toString();
 		}
 		return buildQualifiedElementName(enclosingElement) + "." + el.getSimpleName();
+	}
+
+	@SuppressWarnings("java:S110")
+	private static class NameWithoutTypeInfoBuilder extends SimpleTypeVisitor14<String, Void> {
+		@Override
+		protected String defaultAction(TypeMirror t, Void unused) {
+			String fullName = t.toString();
+			int typeParamPos = fullName.indexOf('<');
+			String fullNameWithoutTypeInfo = typeParamPos == -1 ? fullName : fullName.substring(0, typeParamPos);
+			int arrayBracketPos = fullNameWithoutTypeInfo.indexOf('[');
+			return arrayBracketPos == -1 ? fullNameWithoutTypeInfo : fullNameWithoutTypeInfo.substring(0, arrayBracketPos);
+		}
+
+		@Override
+		public String visitArray(ArrayType at, Void unused) {
+			return getFullNameWithoutTypeInfo(at.getComponentType());
+		}
+
+		@Override
+		public String visitDeclared(DeclaredType dt, Void unused) {
+			return buildQualifiedElementName(dt.asElement());
+		}
 	}
 }

@@ -25,13 +25,12 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
-import org.frankframework.frankdoc.util.LogUtil;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 class AncestorChildNavigation<T extends ElementChild> {
-	private static final Logger log = LogUtil.getLogger(AncestorChildNavigation.class);
-
 	private final CumulativeChildHandler<T> handler;
 	private final Predicate<ElementChild> childSelector;
 	private final Predicate<ElementChild> childRejector;

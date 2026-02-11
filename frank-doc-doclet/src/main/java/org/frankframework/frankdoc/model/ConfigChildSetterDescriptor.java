@@ -18,12 +18,11 @@ package org.frankframework.frankdoc.model;
 
 import java.util.List;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.xml.sax.SAXException;
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Class {@link org.frankframework.frankdoc.model.ConfigChild} specifies what Frank elements
@@ -40,9 +39,8 @@ import lombok.Getter;
  * {@code X.setAbc()} and {@code Y.setAbc()} can have a different {@code sequenceInConfig}.
  * That field is obtained from an {@code IbisDoc} annotation.
  */
+@Log4j2
 abstract class ConfigChildSetterDescriptor {
-	private static Logger log = LogUtil.getLogger(ConfigChildSetterDescriptor.class);
-
 	private @Getter String methodName;
 	private @Getter boolean allowMultiple;
 	private @Getter DigesterRulesPattern pattern;

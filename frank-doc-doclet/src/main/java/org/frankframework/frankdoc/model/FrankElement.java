@@ -35,14 +35,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.feature.Description;
 import org.frankframework.frankdoc.feature.Notes;
 import org.frankframework.frankdoc.feature.Protected;
 import org.frankframework.frankdoc.model.ElementChild.AbstractKey;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
@@ -53,12 +51,14 @@ import org.frankframework.frankdoc.wrapper.FrankType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Models a Java class that can be referred to in a Frank configuration.
  *
  * @author martijn
  */
+@Log4j2
 public class FrankElement implements Comparable<FrankElement> {
 	static final String JAVADOC_PARAMETERS = "@ff.parameters";
 	public static final String JAVADOC_PARAMETER = "@ff.parameter";
@@ -70,8 +70,6 @@ public class FrankElement implements Comparable<FrankElement> {
 	public static final String LABEL_NAME = "name";
 
 	private static final Pattern JAVADOC_SEE_PATTERN = Pattern.compile("<a href=[\"'](.*?)[\"']>(.*?)<\\/a>(.*)");
-
-	private static final Logger log = LogUtil.getLogger(FrankElement.class);
 
 	private static final Comparator<FrankElement> COMPARATOR =
 		Comparator.comparing(FrankElement::getSimpleName).thenComparing(FrankElement::getFullName);
@@ -107,7 +105,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	private final List<ConfigChild> configParents = new ArrayList<>();
 
 	private final Map<Class<? extends ElementChild>, LinkedHashMap<? extends AbstractKey, ? extends ElementChild>> allChildren;
-	private @Getter List<String> xmlElementNames;
+	private final @Getter List<String> xmlElementNames;
 	private @Getter FrankElementStatistics statistics;
 	private LinkedHashMap<String, ConfigChildSet> configChildSets;
 	private @Getter String description;
@@ -185,11 +183,7 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	static boolean classIsProtected(FrankClass clazz) {
 		IsProtectedContext ctx = new IsProtectedContext();
-		try {
-			clazz.browseAncestors(ctx::handleAncestorMethod);
-		} catch (FrankDocException e) {
-			log.error("Could not browse ancestor classes of class [{}]", clazz.getName(), e);
-		}
+		clazz.browseAncestors(ctx::handleAncestorMethod);
 		if (ctx.isProtected) {
 			log.trace("Class [{}] inherits feature Protected from class [{}]", clazz::getName, () -> ctx.cause.getName());
 		}

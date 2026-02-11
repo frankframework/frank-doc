@@ -15,18 +15,18 @@
 */
 package org.frankframework.frankdoc;
 
-import org.apache.logging.log4j.core.Filter;
-import org.apache.logging.log4j.core.Layout;
-import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.core.Logger;
-import org.apache.logging.log4j.core.appender.AbstractAppender;
-import org.frankframework.frankdoc.util.LogUtil;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.Layout;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
 
 public class TestAppender extends AbstractAppender implements AutoCloseable {
 	private final List<String> logMessages = new ArrayList<String>();
@@ -66,7 +66,7 @@ public class TestAppender extends AbstractAppender implements AutoCloseable {
 	}
 
 	private static Logger getRootLogger() {
-		return (Logger) LogUtil.getRootLogger();
+		return (Logger) LogManager.getRootLogger();
 	}
 
 	private void addToRootLogger(TestAppender appender) {

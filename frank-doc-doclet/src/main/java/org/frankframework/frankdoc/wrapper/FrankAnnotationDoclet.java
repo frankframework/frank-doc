@@ -35,11 +35,10 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor14;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 class FrankAnnotationDoclet implements FrankAnnotation {
-	private static final Logger log = LogUtil.getLogger(FrankAnnotationDoclet.class);
 	private static final Set<String> RECURSIVE_ANNOTATIONS = new HashSet<>(Arrays.asList(
 		"java.lang.annotation.Documented",
 		"java.lang.annotation.Retention",
@@ -168,7 +167,7 @@ class FrankAnnotationDoclet implements FrankAnnotation {
 
 		@Override
 		public Object visitArray(List<? extends AnnotationValue> vals, Object o) {
-			if (!vals.isEmpty() && vals.get(0).getValue() instanceof AnnotationMirror) {
+			if (!vals.isEmpty() && vals.getFirst().getValue() instanceof AnnotationMirror) {
 				return vals.stream()
 					.map(AnnotationValue::getValue)
 					.map(AnnotationMirror.class::cast)

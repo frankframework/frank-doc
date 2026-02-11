@@ -20,8 +20,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+
+import org.jspecify.annotations.Nullable;
 
 class TransitiveImplementedInterfaceBrowser<T> {
 	final List<FrankClass> interfaces = new ArrayList<>();
@@ -33,8 +36,10 @@ class TransitiveImplementedInterfaceBrowser<T> {
 
 	private void uniquelyEnqueueSuperInterfaces(FrankClass clazz) {
 		uniquelyEnqueueInterfacesOf(clazz);
-		if(! interfaces.isEmpty()) {
-			for(int index = 0; index < interfaces.size(); ++index) {
+		if (!interfaces.isEmpty()) {
+			// The functions we call will add more elements to the array over which we're iterating, and so we can not use normal iterator code
+			//noinspection ForLoopReplaceableByForEach
+			for (int index = 0; index < interfaces.size(); ++index) {
 				uniquelyEnqueueInterfacesOf(interfaces.get(index));
 			}
 		}
@@ -55,13 +60,11 @@ class TransitiveImplementedInterfaceBrowser<T> {
 		return interfaces;
 	}
 
-	T search(Function<FrankClass, T> testFunction) {
-		for (FrankClass intf : interfaces) {
-			T result = testFunction.apply(intf);
-			if (result != null) {
-				return result;
-			}
-		}
-		return null;
+	@Nullable T search(Function<FrankClass, @Nullable T> testFunction) {
+		return interfaces.stream()
+			.map(testFunction)
+			.filter(Objects::nonNull)
+			.findFirst()
+			.orElse(null);
 	}
 }

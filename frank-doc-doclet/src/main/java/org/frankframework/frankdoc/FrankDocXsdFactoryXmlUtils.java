@@ -16,15 +16,13 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 class FrankDocXsdFactoryXmlUtils {
-	private static final Logger log = LogUtil.getLogger(FrankDocXsdFactoryXmlUtils.class);
-
 	static final String XML_SCHEMA_URI = "http://www.w3.org/2001/XMLSchema";
 
 	private FrankDocXsdFactoryXmlUtils() {

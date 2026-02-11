@@ -31,13 +31,14 @@ import javax.lang.model.type.NoType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
+import org.jspecify.annotations.Nullable;
 
 import com.sun.source.doctree.DocCommentTree;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 class FrankMethodDoclet extends FrankMethodDocletBase {
-	private static final Logger log = LogUtil.getLogger(FrankMethodDoclet.class);
 
 	final ExecutableElement method;
 	private final DocCommentTree docCommentTree;
@@ -81,7 +82,7 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 	}
 
 	@Override
-	public String getJavaDoc() {
+	public @Nullable String getJavaDoc() {
 		return docCommentTree == null ? null : FrankDocletUtils.convertDocTreeListToStr(docCommentTree.getFullBody());
 	}
 
@@ -127,12 +128,11 @@ class FrankMethodDoclet extends FrankMethodDocletBase {
 
 	@Override
 	public FrankType[] getParameterTypes() {
-		VariableElement[] parametersDoclet = method.getParameters().toArray(new VariableElement[]{});
-		FrankType[] result = new FrankType[parametersDoclet.length];
-		for (int i = 0; i < parametersDoclet.length; ++i) {
-			result[i] = typeOf(parametersDoclet[i].asType());
-		}
-		return result;
+		return method.getParameters()
+			.stream()
+			.map(VariableElement::asType)
+			.map(this::typeOf)
+			.toArray(FrankType[]::new);
 	}
 
 	@Override

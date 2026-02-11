@@ -16,17 +16,18 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
-
-import javax.lang.model.element.ExecutableElement;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
-abstract class FrankMethodDocletBase implements FrankMethod {
-	private static Logger log = LogUtil.getLogger(FrankMethodDocletBase.class);
+import javax.lang.model.element.ExecutableElement;
 
+import org.jspecify.annotations.Nullable;
+
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
+abstract class FrankMethodDocletBase implements FrankMethod {
 	private final FrankClass declaringClass;
 	private final Set<ExecutableElement> warnedMethodsNotInJavaDoc = new HashSet<>();
 
@@ -40,24 +41,24 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 	}
 
 	@Override
-	public FrankAnnotation getAnnotationIncludingInherited(String name) throws FrankDocException {
+	public FrankAnnotation getAnnotationIncludingInherited(String name) {
 		Function<FrankMethodDocletBase, FrankAnnotation> getter = m -> m.getAnnotation(name);
 		return searchIncludingInherited(getter);
 	}
 
 	@Override
-	public String getJavaDocIncludingInherited() throws FrankDocException {
+	public String getJavaDocIncludingInherited() {
 		Function<FrankMethodDocletBase, String> getter = FrankMethod::getJavaDoc;
 		return searchIncludingInherited(getter);
 	}
 
 	@Override
-	public void browseAncestorsUntilTrue(Function<FrankMethod, Boolean> handler) throws FrankDocException {
+	public void browseAncestorsUntilTrue(Function<FrankMethod, Boolean> handler) {
 		Function<FrankMethodDocletBase, Boolean> getter = m -> foundTrue(m, handler);
 		searchIncludingInherited(getter);
 	}
 
-	private Boolean foundTrue(FrankMethodDocletBase m, Function<FrankMethod, Boolean> handler) {
+	private @Nullable Boolean foundTrue(FrankMethodDocletBase m, Function<FrankMethod, Boolean> handler) {
 		Boolean handlerResult = handler.apply(m);
 		if(handlerResult.equals(Boolean.TRUE)) {
 			return true;
@@ -67,12 +68,12 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 	}
 
 	@Override
-	public String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException {
+	public String getJavaDocTagIncludingInherited(String tagName) {
 		Function<FrankMethodDocletBase, String> getter = m -> m.getJavaDocTag(tagName);
 		return searchIncludingInherited(getter);
 	}
 
-	private <T> T searchIncludingInherited(Function<FrankMethodDocletBase, T> getter) throws FrankDocException {
+	private <T> T searchIncludingInherited(Function<FrankMethodDocletBase, T> getter) {
 		T result = searchExcludingImplementedInterfaces(getter);
 		if(result == null) {
 			result = searchImplementedInterfaces(this.getDeclaringClass(), this.getSignature(), getter);

@@ -22,17 +22,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.jspecify.annotations.NonNull;
 
-import lombok.NonNull;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public final class ExcludeFromTypeFeature {
-	private static final Logger log = LogUtil.getLogger(ExcludeFromTypeFeature.class);
 	private static final String ANNOTATION_NAME = "org.frankframework.doc.ExcludeFromType";
 	private static final String TAG_NAME = "@ff.excludeFromType";
 

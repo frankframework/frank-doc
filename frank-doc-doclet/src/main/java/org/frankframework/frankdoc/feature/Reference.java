@@ -17,17 +17,16 @@ limitations under the License.
 package org.frankframework.frankdoc.feature;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankDocletConstants;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class Reference {
-	private static Logger log = LogUtil.getLogger(Reference.class);
 	private static final String JAVADOC_ATTRIBUTE_REF = "@ff.ref";
 	private static final String REFER_TO = "org.frankframework.doc.ReferTo";
 

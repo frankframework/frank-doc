@@ -21,11 +21,11 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.logging.log4j.Logger;
-import org.frankframework.frankdoc.util.LogUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Parses file digester-rules.xml.
@@ -33,8 +33,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * Copied from package org.frankframework.configuration.digester.
  *
  */
+@Log4j2
 public abstract class DigesterRulesHandler extends DefaultHandler {
-	protected final Logger log = LogUtil.getLogger(DigesterRulesHandler.class);
 
 	/**
 	 * Parse all digester rules as {@link DigesterRule}

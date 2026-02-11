@@ -18,7 +18,7 @@ package org.frankframework.frankdoc.util;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.Strings;
 import org.jdom2.Attribute;
 import org.jdom2.CDATA;
 import org.jdom2.Document;
@@ -40,8 +40,6 @@ import org.jdom2.output.XMLOutputter;
  * @author Peter Leeuwenburgh
  **/
 public class XmlBuilder {
-	private static final Logger log = LogUtil.getLogger(XmlBuilder.class);
-
 	private static final String CDATA_END="]]>";
 
 	private final Element element;
@@ -58,7 +56,7 @@ public class XmlBuilder {
 		if (value != null) {
 			if (name.equalsIgnoreCase("xmlns")) {
 				element.setNamespace(Namespace.getNamespace(value));
-			} else if (StringUtils.startsWithIgnoreCase(name, "xmlns:")) {
+			} else if (Strings.CI.startsWith(name, "xmlns:")) {
 				String prefix = name.substring(6);
 				element.addNamespaceDeclaration(
 						Namespace.getNamespace(prefix, value));

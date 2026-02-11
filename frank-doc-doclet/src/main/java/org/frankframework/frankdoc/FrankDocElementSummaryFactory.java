@@ -108,7 +108,7 @@ public class FrankDocElementSummaryFactory {
 		}
 		stopAt = Math.min(stopAt + numPackageComponents, components.size());
 		List<String> result = new ArrayList<>(components.subList(0, stopAt));
-		String head = result.get(0);
+		String head = result.getFirst();
 		List<String> remainder = new ArrayList<>(result.subList(1, result.size()));
 		Collections.reverse(remainder);
 		if(remainder.isEmpty()) {

@@ -24,11 +24,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.Logger;
 import org.frankframework.frankdoc.FrankDocXsdFactory;
-import org.frankframework.frankdoc.util.LogUtil;
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Holds the list of all cumulative config children sharing some role name, say R, but
@@ -45,9 +44,8 @@ import lombok.Getter;
  *
  * @author martijn
  */
+@Log4j2
 public class ConfigChildSet {
-	private static final Logger log = LogUtil.getLogger(ConfigChildSet.class);
-
 	private final @Getter List<ConfigChild> configChildren;
 
 	/**

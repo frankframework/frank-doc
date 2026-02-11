@@ -62,7 +62,7 @@ class ElementGroupManager {
 	}
 
 	static String getRoleName(List<ElementRole> roles) {
-		return roles.get(0).getRoleName();
+		return roles.getFirst().getRoleName();
 	}
 
 	private String getRoleName(Set<ElementRole.Key> key) {
@@ -76,7 +76,7 @@ class ElementGroupManager {
 
 	String getGroupName(List<ElementRole> roles) {
 		Set<ElementRole.Key> key = ConfigChildSet.getKey(roles);
-		String roleName = roles.iterator().next().getRoleName();
+		String roleName = roles.getFirst().getRoleName();
 		return getGroupName(key, roleName);
 	}
 
