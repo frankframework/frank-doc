@@ -7,12 +7,14 @@ on:
       - 'versions/[0-9]+.[0-9]+'
     paths:
       - 'frank-doc-doclet/**'
+      - .github/workflows/test-doclet.yml
   pull_request:
     branches:
       - master
       - 'versions/[0-9]+.[0-9]+'
     paths:
       - 'frank-doc-doclet/**'
+      - .github/workflows/test-doclet.yml
   workflow_dispatch:
 
 jobs:
