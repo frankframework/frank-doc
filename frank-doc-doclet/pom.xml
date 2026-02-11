@@ -14,12 +14,6 @@
 	<url>https://frankframework.org</url>
 	<description>Doclet for the Frank!Doc</description>
 
-	<properties>
-		<log4j2.version>2.25.2</log4j2.version>
-    <lombok.version>1.18.42</lombok.version>
-		<argLine /> <!-- add empty default argLine so Surefire won't fail when JaCoCo isn't present -->
-	</properties>
-
 	<build>
 		<defaultGoal>install</defaultGoal>
 

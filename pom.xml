@@ -16,6 +16,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>25</maven.compiler.source>
     <maven.compiler.proc>full</maven.compiler.proc>
+    <log4j2.version>2.25.2</log4j2.version>
+    <lombok.version>1.18.42</lombok.version>
+    <argLine /> <!-- add empty default argLine so Surefire won't fail when JaCoCo isn't present -->
 	</properties>
 
 	<prerequisites>
@@ -117,11 +120,43 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.14.1</version>
+					<version>3.15.0</version>
 					<configuration>
             <release>${maven.compiler.source}</release>
             <source>${maven.compiler.source}</source>
             <target>${maven.compiler.source}</target>
+            <compilerArgs>
+              <arg>-parameters</arg>
+              <!-- Flags required for ErrorProne -->
+              <arg>-XDcompilePolicy=simple</arg>
+              <arg>--should-stop=ifError=FLOW</arg>
+              <arg>-XDaddTypeAnnotationsToSymbol=true</arg>
+              <!-- Flags to enable ErrorProne, and options for ErrorProne. Should be given in the same arg parameter otherwise it doesn't seem to work. -->
+              <arg>-Xplugin:ErrorProne -XepOpt:NullAway:AnnotatedPackages=org.frankframework -Xep:InvalidBlockTag:OFF -Xep:BanJNDI:WARN -Xep:EqualsHashCode:WARN -Xep:GetClassOnClass:WARN -Xep:InlineMeSuggester:OFF</arg>
+            </compilerArgs>
+            <annotationProcessorPaths>
+              <path>
+                <groupId>com.google.errorprone</groupId>
+                <artifactId>error_prone_core</artifactId>
+                <version>2.47.0</version>
+              </path>
+              <path>
+                <groupId>com.uber.nullaway</groupId>
+                <artifactId>nullaway</artifactId>
+                <version>0.13.1</version>
+              </path>
+              <!-- Because Error Prone needs to be added explicitly we now also need to explicitly add other annotation processors here -->
+              <path>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+              </path>
+              <path>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j2.version}</version>
+              </path>
+            </annotationProcessorPaths>
 					</configuration>
 				</plugin>
 				<plugin>
