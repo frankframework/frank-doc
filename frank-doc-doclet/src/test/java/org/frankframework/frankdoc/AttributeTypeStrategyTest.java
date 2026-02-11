@@ -136,10 +136,10 @@ public class AttributeTypeStrategyTest {
 		boolean actualAccepted = true;
 		try {
 			validate(testXml, theXsd);
-		} catch(SAXException e) {
+		} catch(SAXException _) {
 			actualAccepted = false;
 		} catch(IOException e) {
-			fail(String.format("Got IOException: %s - %s", e.getMessage(), e.getStackTrace()));
+			fail(String.format("Got IOException: %s - %s", e.getMessage(), Arrays.toString(e.getStackTrace())));
 		}
 		assertEquals(expectedValue, actualAccepted);
 	}

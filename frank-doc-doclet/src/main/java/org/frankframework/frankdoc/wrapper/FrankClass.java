@@ -299,7 +299,7 @@ public class FrankClass implements FrankType {
 		return null;
 	}
 
-	public String getJavaDoc() {
+	public @Nullable String getJavaDoc() {
 		return docCommentTree == null ? null : FrankDocletUtils.convertDocTreeListToStr(docCommentTree.getFullBody());
 	}
 

@@ -32,6 +32,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.DocCommentTree;
@@ -93,11 +94,11 @@ final class FrankDocletUtils {
 	 * @param docTreeList a list of {@link DocTree}
 	 * @return string representation of the docTreeList
 	 */
-	public static String convertDocTreeListToStr(List<? extends DocTree> docTreeList) {
+	public static @Nullable String convertDocTreeListToStr(List<? extends DocTree> docTreeList) {
 		String docTreeStrList = docTreesToText(docTreeList);
 		if (docTreeStrList.isEmpty())
 			return null;
-		return String.join("", docTreeStrList);
+		return docTreeStrList;
 	}
 
 	/**
