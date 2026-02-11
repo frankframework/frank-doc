@@ -2,11 +2,15 @@ name: Test Doclet
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+      - 'versions/[0-9]+.[0-9]+'
     paths:
       - 'frank-doc-doclet/**'
   pull_request:
-    branches: [master]
+    branches:
+      - master
+      - 'versions/[0-9]+.[0-9]+'
     paths:
       - 'frank-doc-doclet/**'
   workflow_dispatch:
