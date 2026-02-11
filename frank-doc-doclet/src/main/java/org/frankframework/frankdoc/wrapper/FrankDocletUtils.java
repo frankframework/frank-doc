@@ -30,6 +30,7 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.SimpleTypeVisitor14;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -168,26 +169,12 @@ final class FrankDocletUtils {
 	}
 
 	public static String getFullNameWithoutTypeInfo(TypeMirror typeMirror) {
-		String fullNameWithoutTypeInfo = _getFullNameWithoutTypeInfo(typeMirror);
+		String fullNameWithoutTypeInfo = typeMirror.accept(new NameWithoutTypeInfoBuilder(), null);
 		log.debug("<*> getFullNameWithoutTypeInfo: {}", fullNameWithoutTypeInfo);
 		if (fullNameWithoutTypeInfo.contains("<") || fullNameWithoutTypeInfo.contains("[")) {
 			log.error("Still found type with Generic or Array information in type at: {}; {}. Please fix this inside FrankDocletutils", fullNameWithoutTypeInfo, typeMirror);
 		}
 		return fullNameWithoutTypeInfo;
-	}
-
-	private static String _getFullNameWithoutTypeInfo(TypeMirror typeMirror) {
-		if (typeMirror instanceof ArrayType at) {
-			return getFullNameWithoutTypeInfo(at.getComponentType());
-		}
-		if (typeMirror instanceof DeclaredType dt) {
-			return buildQualifiedElementName(dt.asElement());
-		}
-		String fullName = typeMirror.toString();
-		int typeParamPos = fullName.indexOf('<');
-		String fullNameWithoutTypeInfo = typeParamPos == -1 ? fullName : fullName.substring(0, typeParamPos);
-		int arrayBracketPos = fullNameWithoutTypeInfo.indexOf('[');
-		return arrayBracketPos == -1 ? fullNameWithoutTypeInfo : fullNameWithoutTypeInfo.substring(0, arrayBracketPos);
 	}
 
 	private static String buildQualifiedElementName(Element el) {
@@ -199,5 +186,27 @@ final class FrankDocletUtils {
 			return el.toString();
 		}
 		return buildQualifiedElementName(enclosingElement) + "." + el.getSimpleName();
+	}
+
+	@SuppressWarnings("java:S110")
+	private static class NameWithoutTypeInfoBuilder extends SimpleTypeVisitor14<String, Void> {
+		@Override
+		protected String defaultAction(TypeMirror t, Void unused) {
+			String fullName = t.toString();
+			int typeParamPos = fullName.indexOf('<');
+			String fullNameWithoutTypeInfo = typeParamPos == -1 ? fullName : fullName.substring(0, typeParamPos);
+			int arrayBracketPos = fullNameWithoutTypeInfo.indexOf('[');
+			return arrayBracketPos == -1 ? fullNameWithoutTypeInfo : fullNameWithoutTypeInfo.substring(0, arrayBracketPos);
+		}
+
+		@Override
+		public String visitArray(ArrayType at, Void unused) {
+			return getFullNameWithoutTypeInfo(at.getComponentType());
+		}
+
+		@Override
+		public String visitDeclared(DeclaredType dt, Void unused) {
+			return buildQualifiedElementName(dt.asElement());
+		}
 	}
 }
