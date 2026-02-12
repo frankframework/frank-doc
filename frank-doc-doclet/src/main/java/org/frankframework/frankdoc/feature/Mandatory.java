@@ -18,36 +18,30 @@ package org.frankframework.frankdoc.feature;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 @Log4j2
 public class Mandatory {
-	public enum Value {
-		IGNORE_COMPATIBILITY,
-		DONT_IGNORE_COMPATIBILITY
-	}
-
 	private static final String TAG_NAME = "@ff.mandatory";
 	private static final String ANNOTATION_NAME = "org.frankframework.doc.Mandatory";
-
 	private static final String IGNORE_COMPATIBILITY_MODE = "ignoreInCompatibilityMode";
-
 	private static final Mandatory INSTANCE = new Mandatory();
+
+	private Mandatory() {
+	}
 
 	public static Mandatory getInstance() {
 		return INSTANCE;
 	}
 
-	private Mandatory() {
-	}
-
 	public Value valueOf(FrankMethod method) {
 		String tagValue = method.getJavaDocTag(TAG_NAME);
-		if(tagValue != null) {
-			if(StringUtils.isBlank(tagValue)) {
+		if (tagValue != null) {
+			if (StringUtils.isBlank(tagValue)) {
 				return Value.DONT_IGNORE_COMPATIBILITY;
-			} else if(tagValue.equals(IGNORE_COMPATIBILITY_MODE)) {
+			} else if (tagValue.equals(IGNORE_COMPATIBILITY_MODE)) {
 				return Value.IGNORE_COMPATIBILITY;
 			} else {
 				log.error("Method [{}] has JavaDoc tag [{}] with invalid value [{}]", method, TAG_NAME, tagValue);
@@ -55,15 +49,20 @@ public class Mandatory {
 			}
 		}
 		FrankAnnotation annotation = method.getAnnotation(ANNOTATION_NAME);
-		if(annotation != null) {
+		if (annotation != null) {
 			boolean annotationValue;
 			annotationValue = (Boolean) annotation.getValueOf(IGNORE_COMPATIBILITY_MODE);
-			if(annotationValue) {
+			if (annotationValue) {
 				return Value.IGNORE_COMPATIBILITY;
 			} else {
 				return Value.DONT_IGNORE_COMPATIBILITY;
 			}
 		}
 		return null;
+	}
+
+	public enum Value {
+		IGNORE_COMPATIBILITY,
+		DONT_IGNORE_COMPATIBILITY
 	}
 }

@@ -16,9 +16,9 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.Getter;
-
 import java.util.List;
+
+import lombok.Getter;
 
 public class AttributeEnum {
 	private final @Getter String fullName;

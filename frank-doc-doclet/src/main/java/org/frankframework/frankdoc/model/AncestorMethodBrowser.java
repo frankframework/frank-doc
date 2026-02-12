@@ -16,13 +16,14 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import java.util.function.Consumer;
+
 import lombok.extern.log4j.Log4j2;
+
 import org.frankframework.frankdoc.feature.Reference;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
-
-import java.util.function.Consumer;
 
 /**
  * Browse ancestor methods taking into account feature {@link org.frankframework.frankdoc.feature.Reference}.

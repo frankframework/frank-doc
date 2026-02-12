@@ -16,30 +16,51 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.WordUtils;
-import org.frankframework.frankdoc.Constants;
-import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.feature.*;
-import org.frankframework.frankdoc.feature.Deprecated;
-import org.frankframework.frankdoc.feature.Optional;
-import org.frankframework.frankdoc.model.AncestorMethodBrowser.References;
-import org.frankframework.frankdoc.properties.Group;
-import org.frankframework.frankdoc.properties.PropertyParser;
-import org.frankframework.frankdoc.wrapper.*;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import static org.frankframework.frankdoc.model.ElementChild.ALL;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.frankframework.frankdoc.model.ElementChild.ALL;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.WordUtils;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import org.frankframework.frankdoc.Constants;
+import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.feature.Default;
+import org.frankframework.frankdoc.feature.Deprecated;
+import org.frankframework.frankdoc.feature.Description;
+import org.frankframework.frankdoc.feature.ExcludeFromTypeFeature;
+import org.frankframework.frankdoc.feature.Mandatory;
+import org.frankframework.frankdoc.feature.Notes;
+import org.frankframework.frankdoc.feature.Optional;
+import org.frankframework.frankdoc.feature.Protected;
+import org.frankframework.frankdoc.feature.Reference;
+import org.frankframework.frankdoc.feature.Reintroduce;
+import org.frankframework.frankdoc.model.AncestorMethodBrowser.References;
+import org.frankframework.frankdoc.properties.Group;
+import org.frankframework.frankdoc.properties.PropertyParser;
+import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
+import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 @Log4j2
 public class FrankDocModel {

@@ -15,14 +15,19 @@ limitations under the License.
 */
 package org.frankframework.frankdoc.model;
 
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-import org.frankframework.frankdoc.FrankDocXsdFactory;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+
+import org.frankframework.frankdoc.FrankDocXsdFactory;
 
 /**
  * Holds the list of all cumulative config children sharing some role name, say R, but

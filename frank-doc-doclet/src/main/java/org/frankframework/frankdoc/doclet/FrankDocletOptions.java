@@ -16,17 +16,18 @@ limitations under the License.
 
 package org.frankframework.frankdoc.doclet;
 
-import jdk.javadoc.doclet.Doclet;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Set;
+
+import jdk.javadoc.doclet.Doclet;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+
+import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 @Log4j2
 @Getter(AccessLevel.PACKAGE)

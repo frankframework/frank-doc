@@ -16,15 +16,16 @@ limitations under the License.
 
 package org.frankframework.frankdoc.feature;
 
+import java.util.regex.Pattern;
+
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
+
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
-import org.jspecify.annotations.NonNull;
-
-import java.util.regex.Pattern;
 
 @Log4j2
 public class Description {

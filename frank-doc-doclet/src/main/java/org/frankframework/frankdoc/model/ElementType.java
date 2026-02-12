@@ -16,18 +16,23 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
+
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.jspecify.annotations.NonNull;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Models a collection of FrankElement. The collection can be characterized by

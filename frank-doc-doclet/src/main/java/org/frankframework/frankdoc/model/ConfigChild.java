@@ -16,19 +16,24 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+
 import org.frankframework.frankdoc.XsdVersion;
 import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.feature.Description;
 import org.frankframework.frankdoc.feature.Reintroduce;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
-
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A method on a class, which indicates which child elements can be used.

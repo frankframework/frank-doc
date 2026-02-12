@@ -16,15 +16,15 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
-import org.xml.sax.SAXException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.xml.sax.SAXException;
 
 class DigesterRulesPattern {
 	private final String originalPattern;

@@ -43,16 +43,15 @@ public class XmlAgainstXsdValidator {
 
 	static void main(String[] argv) {
 		try {
-			if((argv.length == 0) || (argv.length >= 3)) {
+			if ((argv.length == 0) || (argv.length >= 3)) {
 				printUsage();
 				System.exit(2);
 			} else {
-				if(! checkXmlAgainstXsd(argv[0], argv[1])) {
+				if (!checkXmlAgainstXsd(argv[0], argv[1])) {
 					System.exit(1);
 				}
 			}
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			System.out.printf("Failed validating XML file [%s] against XSD [%s]: %n", argv[0], argv[1]);
 			e.printStackTrace();
 			System.exit(1);
@@ -70,7 +69,7 @@ public class XmlAgainstXsdValidator {
 		InputSource inputSource = fileToInputSource(new File(fileNameXml));
 		XMLReader xmlReader = registerContentHandler(getXmlReader(), getValidatorHandler(fileToUrl(new File(fileNameXsd))));
 		xmlReader.parse(inputSource);
-		return ! errorHandler.hasErrors;
+		return !errorHandler.hasErrors;
 	}
 
 	private static URL fileToUrl(File f) throws IOException {

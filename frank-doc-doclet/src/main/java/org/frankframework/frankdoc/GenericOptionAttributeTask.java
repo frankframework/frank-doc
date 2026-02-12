@@ -15,10 +15,10 @@ limitations under the License.
 */
 package org.frankframework.frankdoc;
 
+import java.util.Set;
+
 import org.frankframework.frankdoc.model.ElementRole;
 import org.frankframework.frankdoc.util.XmlBuilder;
-
-import java.util.Set;
 
 record GenericOptionAttributeTask(Set<ElementRole.Key> rolesKey, XmlBuilder builder) {
 }

@@ -15,13 +15,17 @@
  */
 package org.frankframework.frankdoc.util;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
-import org.jdom2.*;
+import org.jdom2.Attribute;
+import org.jdom2.CDATA;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-
-import java.util.List;
 
 /**
  * Builds an XML-element with attributes and sub-elements. Attributes can be
@@ -36,7 +40,7 @@ import java.util.List;
  * @author Peter Leeuwenburgh
  **/
 public class XmlBuilder {
-	private static final String CDATA_END="]]>";
+	private static final String CDATA_END = "]]>";
 
 	private final Element element;
 

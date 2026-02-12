@@ -16,12 +16,13 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.xml.sax.SAXException;
 
-import java.util.List;
+import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 /**
  * Class {@link org.frankframework.frankdoc.model.ConfigChild} specifies what Frank elements

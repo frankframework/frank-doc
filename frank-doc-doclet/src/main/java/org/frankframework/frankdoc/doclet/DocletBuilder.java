@@ -16,17 +16,19 @@ limitations under the License.
 
 package org.frankframework.frankdoc.doclet;
 
+import java.util.Locale;
+import java.util.Set;
+
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
+
 import com.sun.source.util.DocTrees;
 import jdk.javadoc.doclet.DocletEnvironment;
 import jdk.javadoc.doclet.Reporter;
 import lombok.extern.log4j.Log4j2;
+
 import org.frankframework.frankdoc.util.ErrorDetectingAppender;
 import org.frankframework.frankdoc.wrapper.FrankDocException;
-
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import java.util.Locale;
-import java.util.Set;
 
 @Log4j2
 public class DocletBuilder implements jdk.javadoc.doclet.Doclet {
@@ -91,6 +93,4 @@ public class DocletBuilder implements jdk.javadoc.doclet.Doclet {
 	public SourceVersion getSupportedSourceVersion() {
 		return SourceVersion.latest();
 	}
-
-
 }
