@@ -16,18 +16,12 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-import static org.frankframework.frankdoc.FrankDocXsdFactory.ATTRIBUTE_VALUES_TYPE;
-import static org.frankframework.frankdoc.FrankDocXsdFactory.VARIABLE_REFERENCE;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.XML_SCHEMA_URI;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addDocumentation;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addEnumeration;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addPattern;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addRestriction;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSimpleType;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addUnion;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAttributeWithType;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createComplexType;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createSimpleType;
+import lombok.extern.log4j.Log4j2;
+import org.frankframework.frankdoc.model.AttributeEnum;
+import org.frankframework.frankdoc.model.AttributeType;
+import org.frankframework.frankdoc.model.EnumValue;
+import org.frankframework.frankdoc.model.FrankAttribute;
+import org.frankframework.frankdoc.util.XmlBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +30,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.frankframework.frankdoc.model.AttributeEnum;
-import org.frankframework.frankdoc.model.AttributeType;
-import org.frankframework.frankdoc.model.EnumValue;
-import org.frankframework.frankdoc.model.FrankAttribute;
-import org.frankframework.frankdoc.util.XmlBuilder;
-
-import lombok.extern.log4j.Log4j2;
+import static org.frankframework.frankdoc.FrankDocXsdFactory.ATTRIBUTE_VALUES_TYPE;
+import static org.frankframework.frankdoc.FrankDocXsdFactory.VARIABLE_REFERENCE;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.*;
 
 @Log4j2
 public enum AttributeTypeStrategy {
@@ -95,14 +85,10 @@ public enum AttributeTypeStrategy {
 		// This method expects that methods FrankDocXsdFactoryXmlUtils.createTypeFrankBoolean() and
 		// FrankDocXsdFactoryXmlUtils.createTypeFrankInteger() are used to define the referenced XSD types.
 		XmlBuilder createAttribute(String name, AttributeType modelAttributeType) {
-			return createAttribute(name, modelAttributeType, FRANK_BOOLEAN, FRANK_INT);
-		}
-
-		private XmlBuilder createAttribute(String name, AttributeType modelAttributeType, String boolType, String intType) {
 			XmlBuilder attribute = createAttributeWithType(name);
 			String typeName = switch (modelAttributeType) {
-				case BOOL -> boolType;
-				case INT -> intType;
+				case BOOL -> FRANK_BOOLEAN;
+				case INT -> FRANK_INT;
 				case STRING -> FrankDocXsdFactory.ELEMENT_TYPE_STRING;
 			};
 			attribute.addAttribute("type", typeName);
@@ -133,8 +119,9 @@ public enum AttributeTypeStrategy {
 			result.add(createTypeFrankBoolean());
 			result.add(createTypeFrankInteger());
 			result.add(createAttributeForAttributeActive());
+
 			// Helper type for allowing a variable reference instead of an enum value
-			result.add(createTypeVariableReference(VARIABLE_REFERENCE));
+			result.add(createStringRestriction(VARIABLE_REFERENCE, PATTERN_REF));
 			result.add(createTypeWarning());
 			return result;
 		}
@@ -166,10 +153,6 @@ public enum AttributeTypeStrategy {
 
 		private static XmlBuilder createTypeFrankInteger() {
 			return createStringRestriction(FRANK_INT, PATTERN_FRANK_INT);
-		}
-
-		private static XmlBuilder createTypeVariableReference(String name) {
-			return createStringRestriction(name, PATTERN_REF);
 		}
 
 		private static XmlBuilder createStringRestriction(String name, String pattern) {

@@ -39,7 +39,7 @@ public enum ConfigChildGroupKind {
 		boolean allObject = configChildren.stream().allMatch(ObjectConfigChild.class::isInstance);
 		// We also apply this method on config child collections where the config children
 		// can have different owning elements. This applies when the generic element option
-		// is being analysed. Therefore we allow multiple config children that are all
+		// is being analyzed. Therefore, we allow multiple config children that are all
 		// instance of TextConfigChild.
 		boolean allSingleText = configChildren.stream().allMatch(TextConfigChild.class::isInstance);
 		if(allObject) {

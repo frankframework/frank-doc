@@ -16,22 +16,16 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.frankframework.frankdoc.Utils;
-
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.frankframework.frankdoc.Utils;
+import org.jspecify.annotations.NonNull;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class ElementRole implements Comparable<ElementRole> {
@@ -72,7 +66,7 @@ public class ElementRole implements Comparable<ElementRole> {
 	}
 
 	// NOTE: A Lombok getter would look better, but it does not work properly with Javadoc.
-	//  A {@link} JavaDoc annotation pointing to a Lombok getter causes the method name to appear
+	//  A {@link} Javadoc annotation pointing to a Lombok getter causes the method name to appear
 	//  in the text but not as a link.
 	/**
 	 * Used to resolve conflicts by {@link org.frankframework.frankdoc.model.ElementType} interface
@@ -171,7 +165,7 @@ public class ElementRole implements Comparable<ElementRole> {
 	}
 
 	@Override
-	public int compareTo(ElementRole other) {
+	public int compareTo(@NonNull ElementRole other) {
 		return COMPARATOR.compare(this, other);
 	}
 

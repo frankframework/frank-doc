@@ -16,51 +16,30 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import static org.frankframework.frankdoc.model.ElementChild.ALL;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.frankframework.frankdoc.Constants;
 import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.feature.Default;
+import org.frankframework.frankdoc.feature.*;
 import org.frankframework.frankdoc.feature.Deprecated;
-import org.frankframework.frankdoc.feature.Description;
-import org.frankframework.frankdoc.feature.ExcludeFromTypeFeature;
-import org.frankframework.frankdoc.feature.Mandatory;
-import org.frankframework.frankdoc.feature.Notes;
 import org.frankframework.frankdoc.feature.Optional;
-import org.frankframework.frankdoc.feature.Protected;
-import org.frankframework.frankdoc.feature.Reference;
-import org.frankframework.frankdoc.feature.Reintroduce;
 import org.frankframework.frankdoc.model.AncestorMethodBrowser.References;
 import org.frankframework.frankdoc.properties.Group;
 import org.frankframework.frankdoc.properties.PropertyParser;
-import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
-import org.frankframework.frankdoc.wrapper.FrankClass;
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-import org.frankframework.frankdoc.wrapper.FrankMethod;
+import org.frankframework.frankdoc.wrapper.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URL;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import static org.frankframework.frankdoc.model.ElementChild.ALL;
 
 @Log4j2
 public class FrankDocModel {
@@ -168,7 +147,7 @@ public class FrankDocModel {
 						addTypeText(registerTextMethod, pattern);
 					}
 				} else {
-					// roleName is not final, so a lambda wont work in the trace statement.
+					// roleName is not final, so a lambda won't work in the trace statement.
 					// We use isTraceEnabled() instead.
 					if(log.isTraceEnabled()) {
 						log.trace("digester-rules.xml, ignoring role name {} because there is no registerMethod and no registerTextMethod attribute", pattern.getRoleName());
@@ -305,7 +284,7 @@ public class FrankDocModel {
 		log.trace("Considering the following methods as possible attribute setters: [{}]", () -> Arrays.asList(methods));
 		Map<String, FrankMethod> enumGettersByAttributeName = getEnumGettersByAttributeName(clazz);
 		LinkedHashMap<String, FrankMethod> setterAttributes = getAttributeToMethodMap(methods, "set");
-		Map<String, FrankMethod> getterAttributes = getGetterAndIsserAttributes(methods, attributeOwner);
+		Map<String, FrankMethod> getterAttributes = getGetAndIsAttributes(methods, attributeOwner);
 		List<FrankAttribute> result = new ArrayList<>();
 		for (Entry<String, FrankMethod> entry: setterAttributes.entrySet()) {
 			String attributeName = entry.getKey();
@@ -423,15 +402,17 @@ public class FrankDocModel {
 		}
 	}
 
-	private Map<String, FrankMethod> getGetterAndIsserAttributes(FrankMethod[] methods, FrankElement attributeOwner) {
+	private Map<String, FrankMethod> getGetAndIsAttributes(FrankMethod[] methods, FrankElement attributeOwner) {
 		Map<String, FrankMethod> getterAttributes = getAttributeToMethodMap(methods, "get");
-		Map<String, FrankMethod> isserAttributes = getAttributeToMethodMap(methods, "is");
-		for (Map.Entry<String, FrankMethod> entry: isserAttributes.entrySet()) {
-			String isserAttributeName =  entry.getKey();
-			if(getterAttributes.containsKey(isserAttributeName)) {
-				log.warn("For FrankElement [{}], attribute [{}] has both a getX and an isX method", attributeOwner::getSimpleName, () -> isserAttributeName);
+		Map<String, FrankMethod> isAttributes = getAttributeToMethodMap(methods, "is");
+
+		for (Map.Entry<String, FrankMethod> entry: isAttributes.entrySet()) {
+			String isAttributeName =  entry.getKey();
+
+			if (getterAttributes.containsKey(isAttributeName)) {
+				log.warn("For FrankElement [{}], attribute [{}] has both a getX and an isX method", attributeOwner::getSimpleName, () -> isAttributeName);
 			} else {
-				getterAttributes.put(isserAttributeName, entry.getValue());
+				getterAttributes.put(isAttributeName, entry.getValue());
 			}
 		}
 		return getterAttributes;
@@ -482,11 +463,11 @@ public class FrankDocModel {
 	}
 
 	private void checkForTypeConflict(FrankMethod setter, FrankMethod getter, FrankElement attributeOwner) {
-		log.trace("Checking for type conflict with getter or isser [{}]", getter::getName);
+		log.trace("Checking for type conflict with get or is method [{}]", getter::getName);
 		String setterType = setter.getParameterTypes()[0].getName();
 		String getterType = getter.getReturnType().getName();
 		if(getter.getName().startsWith("get")) {
-			// For issers we require an exact match of the type name. For getters,
+			// For is methods we require an exact match of the type name. For getters,
 			// the setter and the getter may mix boxed and unboxed types.
 			// This allows the framework code to distinguish null values
 			// (=not configured) from default values.
@@ -912,7 +893,7 @@ public class FrankDocModel {
 			Collections.sort(nameGroup);
 			for(int seq = 0; seq < nameGroup.size(); ++seq) {
 				// When we make names unique, we omit the first sequence number. We want names like
-				// xxx, xxx2, xxx3. If we would start with zero, we would have xxx, xxx1, xxx2 which
+				// xxx, xxx2, xxx3. If we started with zero, we would have xxx, xxx1, xxx2 which
 				// looks strange.
 				nameGroup.get(seq).setTypeNameSeq(seq + 1);
 			}

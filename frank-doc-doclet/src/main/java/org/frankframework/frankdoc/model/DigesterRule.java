@@ -21,7 +21,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Java representation of a digester rule specified in the digester-rules.xml file.
- *
+ * <p>
  * Copied from package org.frankframework.configuration.digester.
  *
  */
@@ -45,7 +45,7 @@ public class DigesterRule {
 	private @Getter @Setter String factory;
 
 	/**
-	 * The 'set-next-rule' attribute. Register the just-created-object on it's parent.
+	 * The 'set-next-rule' attribute. Register the just-created-object on its parent.
 	 */
 	private @Getter @Setter String registerMethod;
 

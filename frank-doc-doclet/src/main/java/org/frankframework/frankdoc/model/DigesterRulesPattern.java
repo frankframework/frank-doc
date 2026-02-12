@@ -16,20 +16,19 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.xml.sax.SAXException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.xml.sax.SAXException;
-
-import lombok.Getter;
-import lombok.Setter;
-
 class DigesterRulesPattern {
 	private final String originalPattern;
-	private List<String> components;
+	private final List<String> components;
 	private @Getter Matcher matcher;
 
 	DigesterRulesPattern(String pattern) throws SAXException {
@@ -43,7 +42,7 @@ class DigesterRulesPattern {
 			throw new SAXException(String.format("digester-rules.xml should not contain an empty pattern. The literal value was [%s]", originalPattern));
 		}
 		List<String> componentsThatShouldNotBeWildcard = components;
-		if(components.get(0).equals("*")) {
+		if (components.getFirst().equals("*")) {
 			componentsThatShouldNotBeWildcard = components.subList(1, components.size());
 		} else {
 			matchesOnlyRoot = true;
@@ -63,7 +62,7 @@ class DigesterRulesPattern {
 	}
 
 	String getRoleName() {
-		return components.get(components.size() - 1);
+		return components.getLast();
 	}
 
 	@Override
@@ -92,7 +91,7 @@ class DigesterRulesPattern {
 			boolean haveMatchForRoot = owners.stream()
 					.filter(RootFrankElement.class::isInstance)
 					.map(f -> (RootFrankElement) f)
-					.anyMatch(f -> f.getRoleName().equals(remainingBacktrackRoleNames.get(0)));
+					.anyMatch(f -> f.getRoleName().equals(remainingBacktrackRoleNames.getFirst()));
 			if(remainingBacktrackRoleNames.size() == 1) {
 				if(haveMatchForRoot) {
 					return true;
@@ -102,7 +101,7 @@ class DigesterRulesPattern {
 			}
 			List<ConfigChild> parents = owners.stream()
 					.flatMap(f -> f.getConfigParents().stream())
-					.filter(c -> c.getRoleName().equals(remainingBacktrackRoleNames.get(0)))
+					.filter(c -> c.getRoleName().equals(remainingBacktrackRoleNames.getFirst()))
 					.toList();
 			if(parents.isEmpty()) {
 				return false;

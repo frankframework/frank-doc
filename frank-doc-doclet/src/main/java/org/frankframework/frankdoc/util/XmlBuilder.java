@@ -15,25 +15,21 @@
  */
 package org.frankframework.frankdoc.util;
 
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
-import org.jdom2.Attribute;
-import org.jdom2.CDATA;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
+import org.jdom2.*;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import java.util.List;
+
 /**
- * Builds a XML-element with attributes and sub-elements. Attributes can be
+ * Builds an XML-element with attributes and sub-elements. Attributes can be
  * added with the addAttribute method, the content can be set with the setValue
- * method. Subelements can be added with the addSubElement method. the toXML
- * function returns the node and subnodes as an indented xml string.
+ * method. Sub elements can be added with the addSubElement method. the toXML
+ * function returns the node and subnodes as an indented XML string.
  * <p/>
- * Before February 2018 this class was deprecated. From then it uses the JDOM
+ * Before February 2018 this class was deprecated. From then, it uses the JDOM
  * standard solution.
  *
  * @author Johan Verrips

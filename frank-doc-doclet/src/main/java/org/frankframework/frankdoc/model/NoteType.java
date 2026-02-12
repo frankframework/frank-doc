@@ -20,5 +20,5 @@ public enum NoteType {
 	INFO,
 	TIP,
 	WARNING,
-	DANGER;
+	DANGER
 }

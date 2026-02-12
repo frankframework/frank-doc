@@ -16,51 +16,27 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
-import javax.json.JsonWriter;
-import javax.json.JsonWriterFactory;
-import javax.json.stream.JsonGenerator;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.frankframework.frankdoc.model.EnumValue;
 import org.frankframework.frankdoc.wrapper.FrankClass;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.FrankType;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import org.xml.sax.*;
 import org.xml.sax.ext.LexicalHandler;
 
-import lombok.extern.log4j.Log4j2;
+import javax.json.*;
+import javax.json.stream.JsonGenerator;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.*;
+import java.net.URL;
+import java.util.*;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Utility methods for the Frank!Doc.
@@ -229,9 +205,9 @@ public final class Utils {
 
 	public static String jsonPretty(String json) {
 		StringWriter sw = new StringWriter();
-		JsonObject jobj;
+		JsonObject jsonObject;
 		try (JsonReader jr = Json.createReader(new StringReader(json))) {
-			jobj = jr.readObject();
+			jsonObject = jr.readObject();
 		}
 
 		Map<String, Object> properties = HashMap.newHashMap(1);
@@ -239,7 +215,7 @@ public final class Utils {
 
 		JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
 		try (JsonWriter jsonWriter = writerFactory.createWriter(sw)) {
-			jsonWriter.writeObject(jobj);
+			jsonWriter.writeObject(jsonObject);
 		}
 
 		return sw.toString().trim();
@@ -296,7 +272,7 @@ public final class Utils {
 	}
 
 	/**
-	 * Replaces all instances of {@code patternStart}...} with a provided substitution. Allows for curly braces between
+	 * Replaces all instances of {@code patternStart} with a provided substitution. Allows for curly braces between
 	 * the text as long as they are evenly matched (same amount of opening braces and closing braces).
 	 */
 	public static String replacePattern(String text, String patternStart, Function<String, String> substitution) {

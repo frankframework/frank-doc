@@ -15,19 +15,14 @@ limitations under the License.
 */
 package org.frankframework.frankdoc;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Predicate;
-
 import org.frankframework.frankdoc.model.ConfigChildSet;
 import org.frankframework.frankdoc.model.ElementChild;
 import org.frankframework.frankdoc.model.ElementRole;
 import org.frankframework.frankdoc.model.ElementRole.Key;
 import org.frankframework.frankdoc.util.XmlBuilder;
+
+import java.util.*;
+import java.util.function.Predicate;
 
 class ElementGroupManager {
 	private static final String ELEMENT_GROUP = "ElementGroup";
@@ -69,11 +64,6 @@ class ElementGroupManager {
 		return key.iterator().next().getRoleName();
 	}
 
-	String getGroupName(Set<ElementRole.Key> key) {
-		String roleName = getRoleName(key);
-		return getGroupName(key, roleName);
-	}
-
 	String getGroupName(List<ElementRole> roles) {
 		Set<ElementRole.Key> key = ConfigChildSet.getKey(roles);
 		String roleName = roles.getFirst().getRoleName();
@@ -102,7 +92,7 @@ class ElementGroupManager {
 	}
 
 	XmlBuilder doGenericOptionAttributeTask(ConfigChildSet configChildSet) {
-		return genericOptionAttributeTasks.remove(keyOf(configChildSet)).getBuilder();
+		return genericOptionAttributeTasks.remove(keyOf(configChildSet)).builder();
 	}
 
 	List<GenericOptionAttributeTask> doLeftoverGenericOptionAttributeTasks() {

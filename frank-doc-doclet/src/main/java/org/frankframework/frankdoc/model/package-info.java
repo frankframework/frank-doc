@@ -149,7 +149,7 @@ limitations under the License.
  * In some cases, multiple {@link org.frankframework.frankdoc.model.ElementRole}-s have to
  * share a generic element option. The example is
  * <code>org.frankframework.batch.StreamTransformerPipe</code>. It has
- * config children with the followin {@link org.frankframework.frankdoc.model.ElementRole}-s:
+ * config children with the following {@link org.frankframework.frankdoc.model.ElementRole}-s:
  *
  * <ul>
  * <li>(IRecordHandlerManager, child)
@@ -158,8 +158,8 @@ limitations under the License.
  * <li>(IResultHandler, child)
  * </ul>
  *
- * If all of these would be used to define the generic element option <code>&lt;Child&gt;</code>,
- * the XML schema would be invalid. If the parser would encounter <code>&lt;Child&gt;</code>, it
+ * If all of these were used to define the generic element option <code>&lt;Child&gt;</code>,
+ * the XML schema would be invalid. If the parser encounters <code>&lt;Child&gt;</code>, it
  * would not know which definition to apply.
  * <p>
  * This potential conflict is resolved by merging config children. When a
@@ -191,7 +191,7 @@ limitations under the License.
  * But if both listener {@link org.frankframework.frankdoc.model.ElementRole}-s
  * (IPostboxListener, listener) and (ICorrelatedPullingListener, listener) would
  * be used to define the <code>&lt;Listener&gt;</code>, a conflict would result.
- * If the parser would encounter <code>&lt;Listener&gt;</code>, it would not know
+ * If the parser encounters <code>&lt;Listener&gt;</code>, it would not know
  * which of the two definitions to use.
  * <p>
  * This conflict is resolved by promoting the two {@link org.frankframework.frankdoc.model.ElementRole}-s
@@ -222,8 +222,8 @@ limitations under the License.
  * {@link org.frankframework.frankdoc.model.ElementRole}-s:
  *
  * <ul>
- * <li> (InputfieldsPart, child)
- * <li> (OutputfieldsPart, child)
+ * <li> {@code (InputfieldsPart, child)}
+ * <li> {@code (OutputfieldsPart, child)}
  * </ul>
  *
  * These are non-interface-based {@link org.frankframework.frankdoc.model.ElementRole}-s, so these
@@ -233,13 +233,13 @@ limitations under the License.
  * they are available in roles "inputFields" and "outputFields". Furthermore, they can
  * still be expressed in syntax 1: <code>&lt;Child className="...InputfieldsPart"&gt;</code>.
  * <p>
- * The config child setters for (InputfieldsPart, child) and (OutputfieldsPart, child)
+ * The config child setters for {@code (InputfieldsPart, child)} and {@code (OutputfieldsPart, child)}
  * are deprecated. One could wonder why we do not try to resolve the conflict by
- * omitting deprecated config children. In theory, a FF! version could have
- * existed in which the config child setter for (InputfieldsPart, child) was not deprecated.
+ * omitting deprecated config children. In theory, an FF! version could have
+ * existed in which the config child setter for {@code (InputfieldsPart, child)} was not deprecated.
  * Then that version could define <code>&lt;Child&gt;</code> to reference
  * Java class <code>InputfieldsPart</code> in role "child". We do not want this, however,
- * because it threats backward compatibility. We would have old Frank configs including
+ * because it threatens backward compatibility. We would have old Frank configs including
  * <code>&lt;Child&gt;</code>, but they would be incorrect now because of the conflict.
  * <p>
  * To detect member conflicts in shared generic element options, the model has entity

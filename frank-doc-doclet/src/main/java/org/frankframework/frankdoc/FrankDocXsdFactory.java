@@ -16,57 +16,21 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.ThreadContext;
+import org.frankframework.frankdoc.model.*;
+import org.frankframework.frankdoc.util.XmlBuilder;
+import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
+
+import java.util.*;
+import java.util.function.Consumer;
+
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeUse.OPTIONAL;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeUse.REQUIRED;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeValueStatus.DEFAULT;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeValueStatus.FIXED;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addChoice;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addComplexContent;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addComplexType;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addDocumentation;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addElement;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addElementRef;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addElementWithName;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addExtension;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSequence;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAnyAttribute;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAnyOtherNamespaceAttribute;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAttributeGroup;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createComplexType;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createElement;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createElementWithName;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createGroup;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.getXmlSchema;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.ThreadContext;
-import org.frankframework.frankdoc.model.AttributeEnum;
-import org.frankframework.frankdoc.model.ConfigChild;
-import org.frankframework.frankdoc.model.ConfigChildGroupKind;
-import org.frankframework.frankdoc.model.ConfigChildSet;
-import org.frankframework.frankdoc.model.ElementChild;
-import org.frankframework.frankdoc.model.ElementRole;
-import org.frankframework.frankdoc.model.ElementType;
-import org.frankframework.frankdoc.model.FrankAttribute;
-import org.frankframework.frankdoc.model.FrankDocModel;
-import org.frankframework.frankdoc.model.FrankElement;
-import org.frankframework.frankdoc.model.Note;
-import org.frankframework.frankdoc.model.ObjectConfigChild;
-import org.frankframework.frankdoc.model.TextConfigChild;
-import org.frankframework.frankdoc.util.XmlBuilder;
-import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
-
-import lombok.extern.log4j.Log4j2;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.*;
 
 /**
  * This class writes the XML schema document (XSD) that checks the validity of a
@@ -335,14 +299,14 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		XmlBuilder complexType = createComplexType(xsdElementTypeName);
 		xsdElements.add(complexType);
 		addDocumentationFrom(complexType, frankElement);
-		log.trace("Adding cumulative config chidren of FrankElement [{}] to XSD type [{}]", frankElement::getFullName, () -> xsdElementTypeName);
+		log.trace("Adding cumulative config children of FrankElement [{}] to XSD type [{}]", frankElement::getFullName, () -> xsdElementTypeName);
 		if (frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
 			log.trace("FrankElement [{}] has plural config children", frankElement::getFullName);
 			// Within <xs:sequence><xs:choice> group, we cannot enforce that mandatory config children are
 			// included. We also do not check there that non-plural config children occur at most once.
 			// Martijn investigated whether the <xs:all> element can be used instead. That element
 			// enforces that each <xs:element> inside occurs exactly once without enforcing a sequence.
-			// However, within <xs:all> the <xs:group> element is not allowed. Therefore <xs:all> will
+			// However, within <xs:all> the <xs:group> element is not allowed. Therefore, <xs:all> will
 			// not work. We accept the limitations of <xs:sequence><xs:choice>, becuase plural config
 			// children are rare within the Frank!Doc.
 			XmlBuilder sequence = addSequence(complexType);
@@ -421,7 +385,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	/**
-	 * This class is responsible for adding an xs:element in the XML schema if required.
+	 * This class is responsible for adding a xs:element in the XML schema if required.
 	 * If a FrankElement corresponds to an abstract class, then no XML element
 	 * should be added. This is achieved using the derived class ElementOmitter.
 	 * <br/>
@@ -490,7 +454,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		public void addGroupRef(String referencedGroupName) {
 			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}]", addingTo::getFullName, () -> referencedGroupName);
 			// We do not create configChildBuilder during construction, because
-			// that would produce an empty <seqneuce><choice> when there are no
+			// that would produce an empty <sequence><choice> when there are no
 			// config children.
 			if (configChildBuilder == null) {
 				log.trace("Create <sequence><choice> to wrap the config children in");
@@ -557,11 +521,6 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		new GroupCreator<>(frankElement, version.getHasRelevantChildrenPredicate(ConfigChild.class), cumulativeGroupTrigger, new GroupCreator.Callback<>() {
 			private XmlBuilder cumulativeBuilder;
 			private String cumulativeGroupName;
-
-			@Override
-			public void noChildren() {
-				// No-op in this implementation
-			}
 
 			@Override
 			public void addDeclaredGroupRef(FrankElement referee) {
@@ -695,20 +654,24 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		}
 	}
 
-	private XmlBuilder addConfigChildWithElementGroup(XmlBuilder context, ObjectConfigChild child) {
+	private void addConfigChildWithElementGroup(XmlBuilder context, ObjectConfigChild child) {
 		log.trace("Config child appears as element group reference");
 		// If this is a ConfigChildGroupKind.MIXED config child set, then the warning about that has been written already
 		// during model creation. We can assume we only have OBJECT config children.
 		ConfigChildSet configChildSet = child.getOwningElement().getConfigChildSet(child.getRoleName());
-		if(log.isTraceEnabled()) {
+
+		if (log.isTraceEnabled()) {
 			ThreadContext.push(String.format("Owning element [%s], ConfigChildSet [%s]", child.getOwningElement().getSimpleName(), configChildSet.toString()));
 		}
+
 		List<ElementRole> roles = configChildSet.getFilteredElementRoles(version.getChildSelector(), version.getChildRejector());
 		requestElementGroupForConfigChildSet(configChildSet, roles);
-		if(log.isTraceEnabled()) {
+
+		if (log.isTraceEnabled()) {
 			ThreadContext.pop();
 		}
-		return FrankDocXsdFactoryXmlUtils.addGroupRef(context, elementGroupManager.getGroupName(roles), getMinOccurs(child), getMaxOccurs(child));
+
+		FrankDocXsdFactoryXmlUtils.addGroupRef(context, elementGroupManager.getGroupName(roles), getMinOccurs(child), getMaxOccurs(child));
 	}
 
 	private void requestElementGroupForConfigChildSet(ConfigChildSet configChildSet, List<ElementRole> roles) {
@@ -872,7 +835,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		log.trace("Adding attribute [{}] to generic element option", ELEMENT_ROLE);
 		XmlBuilder attributeElementRole = FrankDocXsdFactoryXmlUtils.createAttribute(ELEMENT_ROLE, FIXED, configChildSet.getRoleName(), version.getRoleNameAttributeUse());
 		attributeReuseManager.addAttribute(attributeElementRole, complexType);
-		Optional<String> defaultFrankElementName = configChildSet.getGenericElementOptionDefault(version.getElementFilter());
+		Optional<String> defaultFrankElementName = configChildSet.getGenericElementOptionDefault();
 		XmlBuilder attributeClassName;
 		if(defaultFrankElementName.isPresent()) {
 			log.trace("Adding attribute [{}] with default [{}]", () -> CLASS_NAME, defaultFrankElementName::get);
@@ -891,8 +854,8 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void finishLeftoverGenericOptionsAttributes() {
 		log.trace("Setting attributes of leftover nested generic elements");
 		for(GenericOptionAttributeTask task: elementGroupManager.doLeftoverGenericOptionAttributeTasks()) {
-			log.trace("Have to do element group [{}]", () -> task.getRolesKey().toString());
-			addGenericElementOptionAttributes(task.getBuilder(), task.getRolesKey().iterator().next().getRoleName());
+			log.trace("Have to do element group [{}]", () -> task.rolesKey().toString());
+			addGenericElementOptionAttributes(task.builder(), task.rolesKey().iterator().next().getRoleName());
 		}
 		log.trace("Done setting attributes of leftover nested generic elements");
 	}
@@ -1199,7 +1162,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private XmlBuilder createAttribute(FrankAttribute frankAttribute) {
-		XmlBuilder attribute = null;
+		XmlBuilder attribute;
 		if(frankAttribute.getAttributeEnum() == null) {
 			// The default value in the model is a *description* of the default value.
 			// Therefore, it should be added to the description in the xs:attribute.

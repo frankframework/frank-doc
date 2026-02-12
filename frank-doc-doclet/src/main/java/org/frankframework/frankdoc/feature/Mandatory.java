@@ -16,17 +16,16 @@ limitations under the License.
 
 package org.frankframework.frankdoc.feature;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
-
-import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class Mandatory {
 	public enum Value {
 		IGNORE_COMPATIBILITY,
-		DONT_IGNORE_COMPATIBILITY;
+		DONT_IGNORE_COMPATIBILITY
 	}
 
 	private static final String TAG_NAME = "@ff.mandatory";

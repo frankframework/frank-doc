@@ -43,7 +43,7 @@ public class DocletBuilder implements jdk.javadoc.doclet.Doclet {
 		try {
 			new Doclet(docTrees, elements, options).generate();
 		} catch (RuntimeException e) {
-			e.printStackTrace();
+			log.error("RuntimeException occurred while running Frank!Doc Doclet", e);
 			result = false;
 		} catch (FrankDocException e) {
 			log.error("FrankDocException occurred while running Frank!Doc Doclet", e);
@@ -57,7 +57,7 @@ public class DocletBuilder implements jdk.javadoc.doclet.Doclet {
 	}
 
 	private void printOptions() {
-		log.info("Options used in the Frank!Doc doclet:");
+		log.info("Options used in the Frank!Doc Doclet:");
 		log.info(" rootClass: [{}]", options.getRootClass());
 		log.info(" outputDirectory: [{}]", options.getOutputDirectory());
 		log.info(" frankFrameworkVersion: [{}]", options.getFrankFrameworkVersion());

@@ -16,11 +16,11 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.sun.source.doctree.*;
+import com.sun.source.util.SimpleDocTreeVisitor;
+import lombok.extern.log4j.Log4j2;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -31,20 +31,11 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleTypeVisitor14;
-
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
-
-import com.sun.source.doctree.AttributeTree;
-import com.sun.source.doctree.DocCommentTree;
-import com.sun.source.doctree.DocTree;
-import com.sun.source.doctree.EndElementTree;
-import com.sun.source.doctree.EntityTree;
-import com.sun.source.doctree.StartElementTree;
-import com.sun.source.doctree.TextTree;
-import com.sun.source.util.SimpleDocTreeVisitor;
-
-import lombok.extern.log4j.Log4j2;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Log4j2
 final class FrankDocletUtils {
@@ -194,7 +185,7 @@ final class FrankDocletUtils {
 		String fullNameWithoutTypeInfo = typeMirror.accept(new NameWithoutTypeInfoBuilder(), null);
 		log.debug("<*> getFullNameWithoutTypeInfo: {}", fullNameWithoutTypeInfo);
 		if (fullNameWithoutTypeInfo.contains("<") || fullNameWithoutTypeInfo.contains("[")) {
-			log.error("Still found type with Generic or Array information in type at: {}; {}. Please fix this inside FrankDocletutils", fullNameWithoutTypeInfo, typeMirror);
+			log.error("Still found type with Generic or Array information in type at: {}; {}. Please fix this inside FrankDocletUtils", fullNameWithoutTypeInfo, typeMirror);
 		}
 		return fullNameWithoutTypeInfo;
 	}

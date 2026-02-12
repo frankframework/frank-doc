@@ -16,10 +16,9 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-import org.frankframework.frankdoc.util.XmlBuilder;
-
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.frankframework.frankdoc.util.XmlBuilder;
 
 @Log4j2
 class FrankDocXsdFactoryXmlUtils {
@@ -57,9 +56,11 @@ class FrankDocXsdFactoryXmlUtils {
 		return element;
 	}
 
+	// TODO: fix this, elementName, minOccurs and maxOccurs are not used, and ref is always to the same element -
+	// can we use addElementRef at line 71?
 	static XmlBuilder addElementRef(XmlBuilder context, String elementName, String minOccurs, String maxOccurs) {
 		XmlBuilder element = new XmlBuilder("element", "xs", XML_SCHEMA_URI);
-		element.addAttribute("ref", elementName);
+		element.addAttribute("ref", Constants.MODULE_ELEMENT_NAME);
 		element.addAttribute("minOccurs", minOccurs);
 		element.addAttribute("maxOccurs", maxOccurs);
 		context.addSubElement(element);
@@ -139,7 +140,7 @@ class FrankDocXsdFactoryXmlUtils {
 	enum AttributeUse {
 		OPTIONAL,
 		REQUIRED,
-		PROHIBITED;
+		PROHIBITED
 	}
 
 	enum AttributeValueStatus {
@@ -149,7 +150,7 @@ class FrankDocXsdFactoryXmlUtils {
 		@Getter
 		private final String xsdWord;
 
-		private AttributeValueStatus(String xsdWord) {
+		AttributeValueStatus(String xsdWord) {
 			this.xsdWord = xsdWord;
 		}
 	}
@@ -178,14 +179,11 @@ class FrankDocXsdFactoryXmlUtils {
 	}
 
 	private static void addValueToAttribute(XmlBuilder result, AttributeValueStatus valueStatus, String value) throws AttributeFormatException {
-		if(value == null) {
-			if(valueStatus == AttributeValueStatus.FIXED) {
+		if (value == null && valueStatus == AttributeValueStatus.FIXED) {
 				throw new AttributeFormatException("Attribute values can be omitted, but then they cannot be fixed");
-			}
 		}
-		else {
-			result.addAttribute(valueStatus.getXsdWord(), value);
-		}
+
+		result.addAttribute(valueStatus.getXsdWord(), value);
 	}
 
 	private static void addUsageToAttribute(XmlBuilder result, AttributeUse attributeUse) {

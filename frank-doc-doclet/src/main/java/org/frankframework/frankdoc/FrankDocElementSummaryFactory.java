@@ -16,18 +16,12 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.model.FrankElement;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Create text file, typically <code>elementSummary.txt</code>, with overview of Java classes with their Frank config XML elements.
@@ -35,7 +29,7 @@ import org.frankframework.frankdoc.model.FrankElement;
  * as the simple name of the Java class if this representation is unique. Otherwise, the last component(s) of the package name are
  * shown to make the label unique. The remainder of the line lists all XML elements that can be used in Frank configurations to reference
  * the Java class.
- *
+ * <p>
  * This file produces the text to be written. Writing the text to a file is done elsewhere.
  *
  * @author martijn
@@ -118,17 +112,5 @@ public class FrankDocElementSummaryFactory {
 		}
 	}
 
-	static class SummaryElement {
-		String label;
-		String xmlElements;
-		boolean isAbstract;
-
-		SummaryElement(String label, String xmlElements, boolean isAbstract) {
-			this.label = label;
-			this.xmlElements = xmlElements;
-			this.isAbstract = isAbstract;
-		}
-	}
-
-
+	record SummaryElement(String label, String xmlElements, boolean isAbstract) { }
 }

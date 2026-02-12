@@ -16,8 +16,7 @@ limitations under the License.
 
 package org.frankframework.frankdoc.feature;
 
-import java.util.regex.Pattern;
-
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.wrapper.FrankClass;
@@ -25,7 +24,7 @@ import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.jspecify.annotations.NonNull;
 
-import lombok.extern.log4j.Log4j2;
+import java.util.regex.Pattern;
 
 @Log4j2
 public class Description {
@@ -45,7 +44,7 @@ public class Description {
 		String result = method.getJavaDoc();
 		String comment = method.getComment();
 
-		// Recursively searches for a method with the same signature to use as this method's javadoc.
+		// Recursively searches for a method with the same signature to use as this method's Javadoc.
 		if (result != null && INHERIT_DOC_TAG.matcher(result).find()) {
 			FrankClass clazz = method.getDeclaringClass();
 			String parentJavadoc = null;
@@ -67,7 +66,7 @@ public class Description {
 	}
 
 	private String replaceInheritDocInResult(FrankClass superClazz, String childJavaDoc) {
-		// If parent class has any JavaDoc it might contain property-references as examples. These ${...} need to be escaped when used as replacement in the regex matcher
+		// If parent class has any Javadoc it might contain property-references as examples. These ${...} need to be escaped when used as replacement in the regex matcher
 		String parentJavaDoc = valueOf(superClazz);
 		return INHERIT_CLASS_DOC_TAG.matcher(childJavaDoc).replaceFirst(parentJavaDoc == null ? "" : parentJavaDoc.replace("${", "\\${")).strip();
 	}

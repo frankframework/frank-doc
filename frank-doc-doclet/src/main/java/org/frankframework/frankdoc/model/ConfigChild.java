@@ -16,24 +16,19 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.frankframework.frankdoc.XsdVersion;
 import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.feature.Description;
 import org.frankframework.frankdoc.feature.Reintroduce;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A method on a class, which indicates which child elements can be used.
@@ -77,7 +72,7 @@ public abstract class ConfigChild extends ElementChild {
 	 * isAllowMultiple() and isMandatory().
 	 * <p>
 	 * Now consider Java class <code>org.frankframework.senders.SenderSeries</code>. It both has methods
-	 * setSender() and registerSender(), which would cause a duplicate config child. If both would be
+	 * setSender() and registerSender(), which would cause a duplicate config child. If both are
 	 * included, the XSDs would define multiple times that a SenderSeries can have a sender as child.
 	 * This method makes the config children unique by role name and element type, which means
 	 * unique by {@link org.frankframework.frankdoc.model.ElementRole}.
@@ -87,7 +82,7 @@ public abstract class ConfigChild extends ElementChild {
 	 * there would be a duplicate config child. The first would be a deprecated config child that
 	 * is allowed multiple times. The second would be a non-deprecated config child that is allowed only once.
 	 * This method would then select the config child that is allowed only once, because that would be
-	 * the first after the sort applied in this method. But that config child setter is deprecated and it
+	 * the first after the sort applied in this method. But that config child setter is deprecated, and it
 	 * would be the only one left for the {@link ElementRole}. Therefore, strict.xsd would no longer
 	 * have a config child for the {@link ElementRole}.
 	 */
@@ -98,7 +93,7 @@ public abstract class ConfigChild extends ElementChild {
 			ConfigChildKey key = entry.getKey();
 			List<ConfigChild> bucket = new ArrayList<>(entry.getValue());
 			bucket.sort(REMOVE_DUPLICATES_COMPARATOR);
-			ConfigChild selected = bucket.get(0);
+			ConfigChild selected = bucket.getFirst();
 			result.add(selected);
 			if (selected.isDeprecated()) {
 				if (bucket.stream().allMatch(ElementChild::isDeprecated)) {

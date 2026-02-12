@@ -16,15 +16,14 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import java.util.function.Predicate;
-
-import org.frankframework.frankdoc.FrankDocXsdFactory;
-import org.frankframework.frankdoc.Utils;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.frankframework.frankdoc.FrankDocXsdFactory;
+import org.frankframework.frankdoc.Utils;
+
+import java.util.function.Predicate;
 
 /**
  * Base class of FrankAttribute and ConfigChild. This class was introduced
@@ -140,13 +139,13 @@ public abstract class ElementChild {
 	final boolean overrideIsMeaningful(ElementChild overriddenFrom) {
 		// Do not test whether property "deprecated" has changed. If an overridden method is deprecated
 		// and the overriding method is not deprecated, then the override can have no annotations and no
-		// JavaDoc. Then it is still a technical override.
+		// Javadoc. Then it is still a technical override.
 		//
 		// There are corner cases in which a technical override is not recognized, which
 		// causes an attribute to be reintroduced for a derived class. For example,
 		// if an attribute is MANDATORY in a parent class and BECOMES_MANDATORY in a
 		// derived class, then this is no reason to reintroduce it in FrankConfig-strict.xsd.
-		// Reintroducing is not an error however. It only makes the XSDs larger than is
+		// Reintroducing is not an error, however. It only makes the XSDs larger than is
 		// strictly necessary. We accept this behavior to avoid code complexity. In the
 		// mentioned example, we have a meaningful override for FrankConfig-compatibility.xsd.
 		// We do not want to make overrideIsMeaningful() dependent on the XsdVersion, because

@@ -16,47 +16,21 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
+import org.frankframework.frankdoc.model.*;
+import org.frankframework.frankdoc.properties.Group;
+import org.frankframework.frankdoc.properties.Property;
+import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
+import javax.json.*;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonException;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-
-import org.apache.commons.lang3.StringUtils;
-import org.frankframework.frankdoc.model.AttributeEnum;
-import org.frankframework.frankdoc.model.AttributeType;
-import org.frankframework.frankdoc.model.ConfigChild;
-import org.frankframework.frankdoc.model.CredentialProvider;
-import org.frankframework.frankdoc.model.DeprecationInfo;
-import org.frankframework.frankdoc.model.ElementChild;
-import org.frankframework.frankdoc.model.ElementType;
-import org.frankframework.frankdoc.model.EnumValue;
-import org.frankframework.frankdoc.model.Forward;
-import org.frankframework.frankdoc.model.FrankAttribute;
-import org.frankframework.frankdoc.model.FrankDocModel;
-import org.frankframework.frankdoc.model.FrankElement;
-import org.frankframework.frankdoc.model.MandatoryStatus;
-import org.frankframework.frankdoc.model.Note;
-import org.frankframework.frankdoc.model.ObjectConfigChild;
-import org.frankframework.frankdoc.model.ParsedJavaDocTag;
-import org.frankframework.frankdoc.model.ServletAuthenticator;
-import org.frankframework.frankdoc.model.ServletAuthenticatorMethod;
-import org.frankframework.frankdoc.properties.Group;
-import org.frankframework.frankdoc.properties.Property;
-import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
-
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
-
-import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class FrankDocJsonFactory {
@@ -66,7 +40,7 @@ public class FrankDocJsonFactory {
 
 	private final FrankDocModel model;
 	private final JsonBuilderFactory bf;
-	List<FrankElement> elementsOutsideChildren;
+	final List<FrankElement> elementsOutsideChildren;
 	private final String frankFrameworkVersion;
 
 	private final List<AdditionalRootElement> additionalRootElements;
@@ -584,13 +558,13 @@ public class FrankDocJsonFactory {
 
 		final var builder = bf.createObjectBuilder();
 		for (ServletAuthenticator servletAuthenticator : model.getServletAuthenticators()) {
-			builder.add(servletAuthenticator.simpleName(), servletAuthenticatorTojson(servletAuthenticator));
+			builder.add(servletAuthenticator.simpleName(), servletAuthenticatorToJson(servletAuthenticator));
 		}
 
 		return Optional.of(builder.build());
 	}
 
-	private JsonObject servletAuthenticatorTojson(ServletAuthenticator servletAuthenticator) {
+	private JsonObject servletAuthenticatorToJson(ServletAuthenticator servletAuthenticator) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
 
 		b.add("fullName", servletAuthenticator.fullName());

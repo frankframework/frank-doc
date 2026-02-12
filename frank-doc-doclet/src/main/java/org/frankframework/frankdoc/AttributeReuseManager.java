@@ -15,21 +15,16 @@ limitations under the License.
 */
 package org.frankframework.frankdoc;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
+import java.util.*;
+
 class AttributeReuseManager {
 	private static class AttributeReference {
-		FrankAttribute frankAttribute;
-		XmlBuilder xsdGroup;
-		String xsdGroupName;
+		final FrankAttribute frankAttribute;
+		final XmlBuilder xsdGroup;
+		final String xsdGroupName;
 		boolean reused = true;
 
 		AttributeReference(FrankAttribute frankAttribute, XmlBuilder xsdGroup, String xsdGroupName) {
@@ -40,8 +35,8 @@ class AttributeReuseManager {
 	}
 
 	private static class AttributeToInsert {
-		XmlBuilder attributeBuilder;
-		XmlBuilder parentBuilder;
+		final XmlBuilder attributeBuilder;
+		final XmlBuilder parentBuilder;
 
 		AttributeToInsert(XmlBuilder attributeBuilder, XmlBuilder parentBuilder) {
 			this.attributeBuilder = attributeBuilder;
@@ -70,7 +65,7 @@ class AttributeReuseManager {
 
 	/**
 	 * Call this method to add any attribute that does not appear in the FrankDocModel
-	 * (e.g. "active", "roleName"). If such attributes would be added directly to the
+	 * (e.g. "active", "roleName"). If such attributes are added directly to the
 	 * XSD, they would always come first which is not what we want.
 	 */
 	void addAttribute(XmlBuilder attributeBuilder, XmlBuilder group) {
