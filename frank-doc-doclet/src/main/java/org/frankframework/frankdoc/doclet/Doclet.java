@@ -16,27 +16,30 @@ limitations under the License.
 
 package org.frankframework.frankdoc.doclet;
 
-import com.sun.source.util.DocTrees;
-import lombok.extern.log4j.Log4j2;
-import org.frankframework.frankdoc.AttributeTypeStrategy;
-import org.frankframework.frankdoc.FrankDocXsdFactory;
-import org.frankframework.frankdoc.FrankDocElementSummaryFactory;
-import org.frankframework.frankdoc.FrankDocJsonFactory;
-import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.XsdVersion;
-import org.frankframework.frankdoc.model.FrankDocModel;
-import org.frankframework.frankdoc.model.FrankElementFilters;
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-
-import javax.json.JsonObject;
-import javax.lang.model.element.Element;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Set;
+
+import javax.lang.model.element.Element;
+
+import jakarta.json.JsonObject;
+
+import com.sun.source.util.DocTrees;
+import lombok.extern.log4j.Log4j2;
+
+import org.frankframework.frankdoc.AttributeTypeStrategy;
+import org.frankframework.frankdoc.FrankDocElementSummaryFactory;
+import org.frankframework.frankdoc.FrankDocJsonFactory;
+import org.frankframework.frankdoc.FrankDocXsdFactory;
+import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.XsdVersion;
+import org.frankframework.frankdoc.model.FrankDocModel;
+import org.frankframework.frankdoc.model.FrankElementFilters;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 @Log4j2
 class Doclet {

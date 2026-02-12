@@ -15,10 +15,6 @@ indent_style = space
 [*.json]
 indent_style = space
 
-[*.xml]
-indent_style = space
-indent_size = 2
-
 [*.yml]
 indent_style = space
 indent_size = 2
@@ -29,5 +25,3 @@ trim_trailing_whitespace = false
 
 [*.xsd]
 trim_trailing_whitespace = false
-indent_style = space
-indent_size = 2
