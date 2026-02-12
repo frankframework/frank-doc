@@ -19,12 +19,12 @@ package org.frankframework.frankdoc.wrapper;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.lang.model.element.ExecutableElement;
 
-import org.jspecify.annotations.Nullable;
-
 import lombok.extern.log4j.Log4j2;
+import org.jspecify.annotations.Nullable;
 
 @Log4j2
 abstract class FrankMethodDocletBase implements FrankMethod {
@@ -53,18 +53,19 @@ abstract class FrankMethodDocletBase implements FrankMethod {
 	}
 
 	@Override
-	public void browseAncestorsUntilTrue(Function<FrankMethod, Boolean> handler) {
+	public void browseAncestorsUntilTrue(Predicate<FrankMethod> handler) {
 		Function<FrankMethodDocletBase, Boolean> getter = m -> foundTrue(m, handler);
 		searchIncludingInherited(getter);
 	}
 
-	private @Nullable Boolean foundTrue(FrankMethodDocletBase m, Function<FrankMethod, Boolean> handler) {
-		Boolean handlerResult = handler.apply(m);
-		if(handlerResult.equals(Boolean.TRUE)) {
-			return true;
-		} else {
-			return null;
+	private @Nullable Boolean foundTrue(FrankMethodDocletBase m, Predicate<FrankMethod> handler) {
+		boolean handlerResult = handler.test(m);
+
+		if (handlerResult) {
+			return Boolean.TRUE;
 		}
+
+		return null;
 	}
 
 	@Override

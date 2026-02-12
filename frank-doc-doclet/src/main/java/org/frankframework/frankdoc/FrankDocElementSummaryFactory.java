@@ -16,12 +16,19 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
+
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.model.FrankElement;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Create text file, typically <code>elementSummary.txt</code>, with overview of Java classes with their Frank config XML elements.
@@ -72,9 +79,9 @@ public class FrankDocElementSummaryFactory {
 		for(String label: sortedLabels) {
 			SummaryElement e = summaryElementsByLabel.get(label);
 			if(e.isAbstract) {
-				b.append(String.format("%s: (abstract)\n", StringUtils.leftPad(label, maxLabelWidth)));
+				b.append(String.format("%s: (abstract)%n", StringUtils.leftPad(label, maxLabelWidth)));
 			} else {
-				b.append(String.format("%s: %s\n", StringUtils.leftPad(label, maxLabelWidth), e.xmlElements));
+				b.append(String.format("%s: %s%n", StringUtils.leftPad(label, maxLabelWidth), e.xmlElements));
 			}
 		}
 		return b.toString();

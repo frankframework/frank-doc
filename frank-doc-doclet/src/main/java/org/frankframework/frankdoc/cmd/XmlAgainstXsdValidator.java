@@ -16,8 +16,10 @@ limitations under the License.
 
 package org.frankframework.frankdoc.cmd;
 
-import org.xml.sax.*;
-import org.xml.sax.ext.LexicalHandler;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,12 +27,20 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.ValidatorHandler;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.ext.LexicalHandler;
 
 public class XmlAgainstXsdValidator {
+	private XmlAgainstXsdValidator() {
+		/* This utility class should not be instantiated */
+	}
+
 	static void main(String[] argv) {
 		try {
 			if((argv.length == 0) || (argv.length >= 3)) {

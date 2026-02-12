@@ -16,7 +16,7 @@ limitations under the License.
 
 package org.frankframework.frankdoc.wrapper;
 
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface FrankMethod extends FrankProgramElement {
 	boolean isMultiplyInheritedPlaceholder();
@@ -38,7 +38,7 @@ public interface FrankMethod extends FrankProgramElement {
 	String getJavaDocIncludingInherited() throws FrankDocException;
 	String getJavaDocTag(String tagName);
 	String getJavaDocTagIncludingInherited(String tagName) throws FrankDocException;
-	void browseAncestorsUntilTrue(Function<FrankMethod, Boolean> handler) throws FrankDocException;
+	void browseAncestorsUntilTrue(Predicate<FrankMethod> handler) throws FrankDocException;
 
 	default String toStringImpl() {
 		return String.format("%s.%s", getDeclaringClass().getSimpleName(), getName());

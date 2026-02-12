@@ -16,22 +16,57 @@ limitations under the License.
 
 package org.frankframework.frankdoc;
 
-import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.ThreadContext;
-import org.frankframework.frankdoc.model.FrankDocModel;
-import org.frankframework.frankdoc.model.FrankElement;
-import org.frankframework.frankdoc.util.XmlBuilder;
-import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
-
-import java.util.*;
-import java.util.function.Consumer;
-
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.*;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeUse.OPTIONAL;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeUse.REQUIRED;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeValueStatus.DEFAULT;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeValueStatus.FIXED;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addChoice;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addComplexContent;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addComplexType;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addDocumentation;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addElement;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addElementRef;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addElementWithName;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addExtension;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSequence;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAnyAttribute;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAnyOtherNamespaceAttribute;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createAttributeGroup;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createComplexType;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createElement;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createElementWithName;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.createGroup;
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.getXmlSchema;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
+
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.ThreadContext;
+
+import org.frankframework.frankdoc.model.AttributeEnum;
+import org.frankframework.frankdoc.model.ConfigChild;
+import org.frankframework.frankdoc.model.ConfigChildGroupKind;
+import org.frankframework.frankdoc.model.ConfigChildSet;
+import org.frankframework.frankdoc.model.ElementChild;
+import org.frankframework.frankdoc.model.ElementRole;
+import org.frankframework.frankdoc.model.ElementType;
+import org.frankframework.frankdoc.model.FrankAttribute;
+import org.frankframework.frankdoc.model.FrankDocModel;
+import org.frankframework.frankdoc.model.FrankElement;
+import org.frankframework.frankdoc.model.Note;
+import org.frankframework.frankdoc.model.ObjectConfigChild;
+import org.frankframework.frankdoc.model.TextConfigChild;
+import org.frankframework.frankdoc.util.XmlBuilder;
+import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
 
 /**
  * This class writes the XML schema document (XSD) that checks the validity of a
@@ -250,7 +285,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		addDocumentation(startElementBuilder, additionalRootElement.getDocString());
 		XmlBuilder complexType = addComplexType(startElementBuilder);
 		XmlBuilder sequence = addSequence(complexType);
-		FrankDocXsdFactoryXmlUtils.addGroupRef(sequence, referencedElementGroupName, "0", "unbounded");
+		FrankDocXsdFactoryXmlUtils.addGroupRef(sequence, referencedElementGroupName, "0", UNBOUNDED);
 
 		log.trace("Adding attribute active explicitly to [{}] and also any attribute in another namespace", elementName);
 		XmlBuilder attributeActive = AttributeTypeStrategy.createAttributeActive();
@@ -524,6 +559,11 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 			private String cumulativeGroupName;
 
 			@Override
+			public void noChildren() {
+				// No-op in this implementation
+			}
+
+			@Override
 			public void addDeclaredGroupRef(FrankElement referee) {
 				elementBuildingStrategy.addGroupRef(xsdDeclaredGroupNameForChildren(referee));
 			}
@@ -590,12 +630,16 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void addConfigChild(XmlBuilder context, ConfigChild child) {
 		log.trace("Adding config child [{}]", child::toString);
 		version.checkForMissingDescription(child);
-		if (child instanceof ObjectConfigChild objectConfigChild) {
-			addObjectConfigChild(context, objectConfigChild);
-		} else if (child instanceof TextConfigChild textConfigChild) {
-			addTextConfigChild(context, textConfigChild);
-		} else {
-			throw new IllegalArgumentException("Cannot happen, there are no other ConfigChild subclasses than ObjectConfigChild or TextConfigChild");
+
+		switch (child) {
+			case ObjectConfigChild objectConfigChild ->
+				addObjectConfigChild(context, objectConfigChild);
+
+			case TextConfigChild textConfigChild ->
+				addTextConfigChild(context, textConfigChild);
+			default ->
+				throw new IllegalArgumentException("Cannot happen, there are no other ConfigChild subclasses than ObjectConfigChild or TextConfigChild");
+
 		}
 		log.trace("Done adding config child [{}]", child::toString);
 	}
@@ -785,24 +829,22 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void addDocumentationFrom(XmlBuilder element, FrankElement frankElement) {
-		if (version == XsdVersion.STRICT) {
-			if (!StringUtils.isBlank(frankElement.getDescription())) {
-				StringBuilder description = new StringBuilder(frankElement.getDescription());
+		if (version == XsdVersion.STRICT && !StringUtils.isBlank(frankElement.getDescription())) {
+			StringBuilder description = new StringBuilder(frankElement.getDescription());
 
-				if (!frankElement.getNotes().isEmpty()) {
-					description.append("<br>");
-				}
-				for (Note note : frankElement.getNotes()) {
-					description.append("<br><b>")
-						.append(note.type().name())
-						.append("</b>")
-						.append("<p>")
-						.append(note.value())
-						.append("</p>");
-				}
-
-				addDocumentation(element, description.toString());
+			if (!frankElement.getNotes().isEmpty()) {
+				description.append("<br>");
 			}
+			for (Note note : frankElement.getNotes()) {
+				description.append("<br><b>")
+					.append(note.type().name())
+					.append("</b>")
+					.append("<p>")
+					.append(note.value())
+					.append("</p>");
+			}
+
+			addDocumentation(element, description.toString());
 		}
 	}
 

@@ -18,11 +18,16 @@ package org.frankframework.frankdoc;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+
 import org.frankframework.frankdoc.util.XmlBuilder;
 
 @Log4j2
 class FrankDocXsdFactoryXmlUtils {
 	static final String XML_SCHEMA_URI = "http://www.w3.org/2001/XMLSchema";
+	public static final String ATTRIBUTE_MIN_OCCURS = "minOccurs";
+	public static final String ATTRIBUTE_MAX_OCCURS = "maxOccurs";
+	public static final String TAG_ELEMENT = "element";
+	public static final String TAG_GROUP = "group";
 
 	private FrankDocXsdFactoryXmlUtils() {
 	}
@@ -49,8 +54,8 @@ class FrankDocXsdFactoryXmlUtils {
 
 	static XmlBuilder addElement(XmlBuilder context, String elementName, String elementType, String minOccurs, String maxOccurs) {
 		XmlBuilder element = createElementWithName(elementName);
-		element.addAttribute("minOccurs", minOccurs);
-		element.addAttribute("maxOccurs", maxOccurs);
+		element.addAttribute(ATTRIBUTE_MIN_OCCURS, minOccurs);
+		element.addAttribute(ATTRIBUTE_MAX_OCCURS, maxOccurs);
 		element.addAttribute("type", elementType);
 		context.addSubElement(element);
 		return element;
@@ -59,16 +64,16 @@ class FrankDocXsdFactoryXmlUtils {
 	// TODO: fix this, elementName, minOccurs and maxOccurs are not used, and ref is always to the same element -
 	// can we use addElementRef at line 71?
 	static XmlBuilder addElementRef(XmlBuilder context, String elementName, String minOccurs, String maxOccurs) {
-		XmlBuilder element = new XmlBuilder("element", "xs", XML_SCHEMA_URI);
+		XmlBuilder element = new XmlBuilder(TAG_ELEMENT, "xs", XML_SCHEMA_URI);
 		element.addAttribute("ref", Constants.MODULE_ELEMENT_NAME);
-		element.addAttribute("minOccurs", minOccurs);
-		element.addAttribute("maxOccurs", maxOccurs);
+		element.addAttribute(ATTRIBUTE_MIN_OCCURS, minOccurs);
+		element.addAttribute(ATTRIBUTE_MAX_OCCURS, maxOccurs);
 		context.addSubElement(element);
 		return element;
 	}
 
 	static void addElementRef(XmlBuilder context, String elementName) {
-		XmlBuilder element = new XmlBuilder("element", "xs", XML_SCHEMA_URI);
+		XmlBuilder element = new XmlBuilder(TAG_ELEMENT, "xs", XML_SCHEMA_URI);
 		element.addAttribute("ref", elementName);
 		context.addSubElement(element);
 	}
@@ -80,7 +85,7 @@ class FrankDocXsdFactoryXmlUtils {
 	}
 
 	static XmlBuilder createElementWithName(String name) {
-		XmlBuilder element = new XmlBuilder("element", "xs", XML_SCHEMA_URI);
+		XmlBuilder element = new XmlBuilder(TAG_ELEMENT, "xs", XML_SCHEMA_URI);
 		element.addAttribute("name", name);
 		return element;
 	}
@@ -126,8 +131,8 @@ class FrankDocXsdFactoryXmlUtils {
 
 	static XmlBuilder addChoice(XmlBuilder context, String minOccurs, String maxOccurs) {
 		XmlBuilder choice = addChoice(context);
-		choice.addAttribute("minOccurs", minOccurs);
-		choice.addAttribute("maxOccurs", maxOccurs);
+		choice.addAttribute(ATTRIBUTE_MIN_OCCURS, minOccurs);
+		choice.addAttribute(ATTRIBUTE_MAX_OCCURS, maxOccurs);
 		return choice;
 	}
 
@@ -245,30 +250,30 @@ class FrankDocXsdFactoryXmlUtils {
 	}
 
 	static XmlBuilder addGroup(XmlBuilder context, String name) {
-		XmlBuilder group = new XmlBuilder("group", "xs", XML_SCHEMA_URI);
+		XmlBuilder group = new XmlBuilder(TAG_GROUP, "xs", XML_SCHEMA_URI);
 		context.addSubElement(group);
 		group.addAttribute("name", name);
 		return group;
 	}
 
 	static XmlBuilder createGroup(String name) {
-		XmlBuilder group = new XmlBuilder("group", "xs", XML_SCHEMA_URI);
+		XmlBuilder group = new XmlBuilder(TAG_GROUP, "xs", XML_SCHEMA_URI);
 		group.addAttribute("name", name);
 		return group;
 	}
 
 	static XmlBuilder addGroupRef(XmlBuilder context, String id) {
-		XmlBuilder group = new XmlBuilder("group", "xs", XML_SCHEMA_URI);
+		XmlBuilder group = new XmlBuilder(TAG_GROUP, "xs", XML_SCHEMA_URI);
 		context.addSubElement(group);
 		group.addAttribute("ref", id);
 		return group;
 	}
 
 	static XmlBuilder addGroupRef(XmlBuilder context, String id, String minOccurs, String maxOccurs) {
-		XmlBuilder group = new XmlBuilder("group", "xs", XML_SCHEMA_URI);
+		XmlBuilder group = new XmlBuilder(TAG_GROUP, "xs", XML_SCHEMA_URI);
 		group.addAttribute("ref", id);
-		group.addAttribute("minOccurs", minOccurs);
-		group.addAttribute("maxOccurs", maxOccurs);
+		group.addAttribute(ATTRIBUTE_MIN_OCCURS, minOccurs);
+		group.addAttribute(ATTRIBUTE_MAX_OCCURS, maxOccurs);
 		context.addSubElement(group);
 		return group;
 	}
