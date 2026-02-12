@@ -19,18 +19,19 @@ package org.frankframework.frankdoc;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.ThreadContext;
-import org.frankframework.frankdoc.model.*;
+import org.frankframework.frankdoc.model.FrankDocModel;
+import org.frankframework.frankdoc.model.FrankElement;
 import org.frankframework.frankdoc.util.XmlBuilder;
 import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
 
 import java.util.*;
 import java.util.function.Consumer;
 
+import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.*;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeUse.OPTIONAL;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeUse.REQUIRED;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeValueStatus.DEFAULT;
 import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeValueStatus.FIXED;
-import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.*;
 
 /**
  * This class writes the XML schema document (XSD) that checks the validity of a
@@ -991,22 +992,22 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void addPluralConfigChild(XmlBuilder choice, ConfigChildSet configChildSet, FrankElement frankElement) {
 		if(log.isTraceEnabled()) {
 			log.trace("Adding ConfigChildSet [{}]", configChildSet::toString);
-			ThreadContext.push(String.format("Owning element [%s], ConfigChildSet [%s]", frankElement.getSimpleName(), configChildSet.toString()));
+			ThreadContext.push(String.format("Owning element [%s], ConfigChildSet [%s]", frankElement.getSimpleName(), configChildSet));
 		}
 		configChildSet.getConfigChildren().forEach(version::checkForMissingDescription);
-		switch(configChildSet.getConfigChildGroupKind()) {
-		case OBJECT:
-		// The warning that MIXED is not supported has been written during model initialization.
-		case MIXED:
-			addPluralObjectConfigChild(choice, configChildSet);
-			break;
-		case TEXT:
-			addPluralTextConfigChild(choice, configChildSet);
-			break;
-		default:
-			throw new IllegalArgumentException("Cannot happen, switch should cover all enum values");
+		switch (configChildSet.getConfigChildGroupKind()) {
+			// The warning that MIXED is not supported has been written during model initialization.
+			case OBJECT, MIXED:
+				addPluralObjectConfigChild(choice, configChildSet);
+				break;
+			case TEXT:
+				addPluralTextConfigChild(choice, configChildSet);
+				break;
+			default:
+				throw new IllegalArgumentException("Cannot happen, switch should cover all enum values");
 		}
-		if(log.isTraceEnabled()) {
+
+		if (log.isTraceEnabled()) {
 			ThreadContext.pop();
 			log.trace("Done adding ConfigChildSet with ElementRoleSet [{}]", configChildSet::toString);
 		}

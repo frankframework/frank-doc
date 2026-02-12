@@ -53,7 +53,7 @@ public class ConfigChildSet {
 	ConfigChildSet(List<ConfigChild> configChildren) {
 		this.configChildren = configChildren;
 		if (configChildren.isEmpty()) {
-			throw new IllegalStateException("A config child cannot have an empty list of config childs");
+			throw new IllegalStateException("A config child cannot have an empty list of config children");
 		}
 		if (configChildren.size() >= 2) {
 			FrankElement owner = configChildren.getFirst().getOwningElement();

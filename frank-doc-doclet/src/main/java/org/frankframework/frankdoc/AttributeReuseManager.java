@@ -34,14 +34,7 @@ class AttributeReuseManager {
 		}
 	}
 
-	private static class AttributeToInsert {
-		final XmlBuilder attributeBuilder;
-		final XmlBuilder parentBuilder;
-
-		AttributeToInsert(XmlBuilder attributeBuilder, XmlBuilder parentBuilder) {
-			this.attributeBuilder = attributeBuilder;
-			this.parentBuilder = parentBuilder;
-		}
+	private record AttributeToInsert(XmlBuilder attributeBuilder, XmlBuilder parentBuilder) {
 	}
 
 	private final List<Object> attributeSequence = new ArrayList<>();

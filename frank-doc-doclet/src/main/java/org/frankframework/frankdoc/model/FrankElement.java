@@ -429,7 +429,7 @@ public class FrankElement implements Comparable<FrankElement> {
 		Map<? extends AbstractKey, ? extends ElementChild> lookup = allChildren.get(kind);
 		return lookup.values().stream()
 			.filter(selector)
-			.map(c -> (T) c)
+ 			.map(c -> (T) c)
 			.toList();
 	}
 
@@ -494,7 +494,7 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	private <T extends ElementChild> List<T> getCumulativeChildren(Predicate<ElementChild> selector, Predicate<ElementChild> rejector, Class<T> kind) {
 		final List<T> result = new ArrayList<>();
-		new AncestorChildNavigation<T>(new CumulativeChildHandler<T>() {
+		new AncestorChildNavigation<>(new CumulativeChildHandler<>() {
 			@Override
 			public void handleSelectedChildren(List<T> children, FrankElement owner) {
 				result.addAll(children);

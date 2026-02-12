@@ -16,10 +16,10 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-public record ConfigChildKey(String roleName, ElementType elementType) implements ElementChild.AbstractKey {
+import org.jspecify.annotations.NonNull;public record ConfigChildKey(String roleName, ElementType elementType) implements ElementChild.AbstractKey {
 
 	@Override
-	public String toString() {
+	public @NonNull String toString() {
 		if (elementType == null) {
 			return "(roleName=" + roleName + ", no element type)";
 		} else {
