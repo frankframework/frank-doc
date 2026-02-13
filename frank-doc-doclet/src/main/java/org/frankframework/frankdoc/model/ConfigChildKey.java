@@ -17,8 +17,9 @@ limitations under the License.
 package org.frankframework.frankdoc.model;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-public record ConfigChildKey(String roleName, ElementType elementType) implements ElementChild.AbstractKey {
+public record ConfigChildKey(String roleName, @Nullable ElementType elementType) implements ElementChild.AbstractKey {
 
 	@Override
 	public @NonNull String toString() {
