@@ -28,7 +28,6 @@ import org.frankframework.frankdoc.model.FrankElement;
  * See {@link FrankDocXsdFactory} to understand what we try to achieve.
  *
  * @author martijn
- *
  */
 class GroupCreator<T extends ElementChild> {
 	interface Callback<T extends ElementChild> extends CumulativeChildHandler<T> {

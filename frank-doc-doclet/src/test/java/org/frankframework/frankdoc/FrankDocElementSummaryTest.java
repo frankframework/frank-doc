@@ -14,10 +14,12 @@ import org.frankframework.frankdoc.wrapper.TestUtil;
 
 class FrankDocElementSummaryTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.element.summary.";
-	private static final String EXPECTED = String.format("              Master: Master%n"
-		+ "              Object: %n"
-		+ "    Other (from sub): %n"
-		+ "Other (from summary): %n");
+
+	private static final String EXPECTED = String.format("""
+		              Master: Master%n\
+		              Object: %n\
+		    Other (from sub): %n\
+		Other (from summary): %n""");
 
 	@Test
 	void testElementSummary() {
