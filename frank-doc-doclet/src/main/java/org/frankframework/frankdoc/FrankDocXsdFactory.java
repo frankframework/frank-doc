@@ -48,9 +48,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.ThreadContext;
+
+import lombok.extern.log4j.Log4j2;
 
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.ConfigChild;

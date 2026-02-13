@@ -23,8 +23,9 @@ import java.util.function.Predicate;
 
 import javax.lang.model.element.ExecutableElement;
 
-import lombok.extern.log4j.Log4j2;
 import org.jspecify.annotations.Nullable;
+
+import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 abstract class FrankMethodDocletBase implements FrankMethod {

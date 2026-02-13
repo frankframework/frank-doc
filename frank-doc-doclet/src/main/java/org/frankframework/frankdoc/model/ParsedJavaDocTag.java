@@ -19,9 +19,10 @@ package org.frankframework.frankdoc.model;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
 
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.util.FrankDocThrowingFunction;

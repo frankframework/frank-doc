@@ -16,8 +16,9 @@ limitations under the License.
 
 package org.frankframework.frankdoc.feature;
 
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+
+import lombok.extern.log4j.Log4j2;
 
 import org.frankframework.frankdoc.wrapper.FrankAnnotation;
 import org.frankframework.frankdoc.wrapper.FrankMethod;

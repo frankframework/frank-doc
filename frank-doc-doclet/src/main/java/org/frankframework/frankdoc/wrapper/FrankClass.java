@@ -38,15 +38,17 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
-import com.sun.source.doctree.DocCommentTree;
-import com.sun.source.doctree.DocTree;
-import com.sun.source.util.DocTrees;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jspecify.annotations.Nullable;
+
+import com.sun.source.doctree.DocCommentTree;
+import com.sun.source.doctree.DocTree;
+import com.sun.source.util.DocTrees;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class FrankClass implements FrankType {

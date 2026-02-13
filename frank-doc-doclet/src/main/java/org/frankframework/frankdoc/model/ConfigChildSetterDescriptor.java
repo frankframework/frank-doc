@@ -18,9 +18,10 @@ package org.frankframework.frankdoc.model;
 
 import java.util.List;
 
+import org.xml.sax.SAXException;
+
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.xml.sax.SAXException;
 
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 

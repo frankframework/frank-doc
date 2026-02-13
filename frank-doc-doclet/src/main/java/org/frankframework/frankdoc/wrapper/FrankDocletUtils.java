@@ -32,6 +32,9 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleTypeVisitor14;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
@@ -40,9 +43,8 @@ import com.sun.source.doctree.EntityTree;
 import com.sun.source.doctree.StartElementTree;
 import com.sun.source.doctree.TextTree;
 import com.sun.source.util.SimpleDocTreeVisitor;
+
 import lombok.extern.log4j.Log4j2;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 @Log4j2
 final class FrankDocletUtils {

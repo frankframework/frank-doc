@@ -25,12 +25,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.NonNull;
+
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.jspecify.annotations.NonNull;
 
 import org.frankframework.frankdoc.Utils;
 

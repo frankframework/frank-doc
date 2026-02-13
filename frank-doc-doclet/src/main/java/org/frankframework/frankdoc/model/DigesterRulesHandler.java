@@ -21,10 +21,11 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 
-import lombok.extern.log4j.Log4j2;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Parses file digester-rules.xml.

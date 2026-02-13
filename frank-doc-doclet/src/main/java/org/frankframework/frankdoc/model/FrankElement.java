@@ -35,11 +35,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.NonNull;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.jspecify.annotations.NonNull;
 
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Deprecated;

@@ -21,10 +21,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
+
+import lombok.Getter;
+import lombok.Setter;
 
 class DigesterRulesPattern {
 	private final String originalPattern;

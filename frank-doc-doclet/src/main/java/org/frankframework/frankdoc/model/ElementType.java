@@ -23,11 +23,12 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
-import org.jspecify.annotations.NonNull;
 
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.wrapper.FrankClass;

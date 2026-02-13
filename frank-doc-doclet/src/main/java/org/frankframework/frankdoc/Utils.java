@@ -48,7 +48,6 @@ import jakarta.json.JsonWriter;
 import jakarta.json.JsonWriterFactory;
 import jakarta.json.stream.JsonGenerator;
 
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.xml.sax.ContentHandler;
@@ -57,6 +56,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
+
+import lombok.extern.log4j.Log4j2;
 
 import org.frankframework.frankdoc.model.EnumValue;
 import org.frankframework.frankdoc.wrapper.FrankClass;

@@ -34,12 +34,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 import org.frankframework.frankdoc.Constants;
 import org.frankframework.frankdoc.Utils;
