@@ -3,7 +3,7 @@
 Frank!Doc is a documentation generator for Frank!Framework. It generates documentation from the source code of your Frank!Framework application, including descriptions of the components, their properties, and how they are connected.
 
 ### Getting started
-Import the project in IntelliJ as a maven project. Make sure to use Java 21 or higher.
+Import the project in IntelliJ as a maven project. Make sure to use Java 25 or higher.
 
 ### Code style
 We use the code style of the Frank!Framework project. You can find the settings here:
