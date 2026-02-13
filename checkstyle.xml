@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN" "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!-- This configuration file was written by the eclipse-cs plugin configuration
+	editor -->
+<!-- Checkstyle-Configuration: Frank!Framework Description: none -->
+<module name="Checker">
+	<module name="SuppressionFilter">
+		<!-- The property config_loc is automatically set by the eclipse-cs plugin -->
+		<property name="file" value="${config_loc}/checkstyle-suppressions.xml"/>
+	</module>
+	<module name="BeforeExecutionExclusionFileFilter">
+		<property name="fileNamePattern" value=".*[\\/]net[\\/]wedjaa[\\/]ansible[\\/].*$"/>
+	</module>
+
+	<property name="severity" value="error"/>
+	<module name="TreeWalker">
+		<property name="fileExtensions" value="java"/>
+		<property name="severity" value="error"/>
+		<module name="RedundantImport"/>
+		<module name="UnusedImports">
+			<property name="processJavadoc" value="true"/> <!-- allow imports from javadoc comments -->
+		</module>
+		<module name="IllegalImport">
+			<property name="illegalPkgs" value="
+			junit.framework,
+			org.apache.commons.lang,
+			software.amazon.awssdk.utils,
+			javax.activation
+			javax.annotation,
+			javax.jms,
+			javax.servlet,
+			javax.ws,
+			"/>
+			<property name="illegalClasses" value="
+			org.apache.commons.codec.Charsets,
+			org.apache.commons.io.input.NullInputStream,
+			org.apache.cxf.helpers.FileUtils"/>
+		</module>
+		<module name="IllegalImport">
+			<property name="illegalPkgs" value="
+			org.jetbrains.annotations,
+			org.wildfly.common.annotation,
+			reactor.util.annotation,
+			org.springframework.lang,
+			com.mongodb.lang,
+			io.micrometer.common.lang,
+			org.checkerframework.checker.nullness.qual,
+			org.testcontainers.shaded.org.checkerframework.framework.qual,
+			"/>
+			<property name="illegalClasses" value="
+			com.sun.istack.Nullable,
+			com.sun.istack.NotNull,
+			com.unboundid.util.Nullable,
+			com.unboundid.util.NotNull,
+			jakarta.annotation.Nonnull,
+			jakarta.annotation.Nullable,
+			"/>
+		</module>
+		<module name="IllegalImport">
+			<property name="regexp" value="true"/>
+			<!-- Reject any org.junit import that's not also org.junit.jupiter or org.junit.platform (junit extensions) -->
+			<property name="illegalClasses" value="^org\.junit\.(?!(jupiter)|(platform)\.).+"/>
+		</module>
+		<module name="RegexpSinglelineJava">
+			<property name="format" value="\.deleteOnExit()"/>
+			<property name="message" value="You shouldn't use file.deleteOnExit()!"/>
+			<property name="ignoreComments" value="true"/>
+		</module>
+	</module>
+
+	<module name="TreeWalker">
+		<property name="severity" value="warning"/>
+		<module name="RegexpSinglelineJava">
+			<property name="format" value="^\t* +\t+ *[^\s]"/>
+			<property name="message" value="Indent must use tab characters."/>
+			<property name="ignoreComments" value="true"/>
+		</module>
+		<module name="RegexpSinglelineJava">
+			<property name="format" value="\s+$"/>
+			<property name="message" value="Line has trailing spaces."/>
+			<property name="ignoreComments" value="true"/>
+		</module>
+
+		<module name="RegexpSinglelineJava">
+			<property name="id" value="systemout"/>
+			<property name="format" value="^.*System\.(out|err).*$"/>
+			<property name="message" value="Don't use System.out/err, use LOG4J2 instead."/>
+			<property name="ignoreComments" value="true"/>
+		</module>
+	</module>
+
+	<module name="SuppressionSingleFilter">
+		<property name="checks" value="UnusedImports"/>
+		<property name="files" value="StandardLockService.java"/>
+	</module>
+
+	<module name="TreeWalker">
+		<property name="severity" value="info"/>
+		<metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+		<module name="AvoidStarImport">
+			<property name="allowStaticMemberImports" value="true"/>
+		</module>
+
+		<module name="EmptyBlock"/>
+		<module name="ModifierOrder"/>
+		<module name="RedundantModifier">
+			<property name="tokens" value="ANNOTATION_FIELD_DEF"/>
+		</module>
+		<module name="LeftCurly">
+			<property name="tokens" value="CLASS_DEF,CTOR_DEF,INTERFACE_DEF,METHOD_DEF,LITERAL_SWITCH,STATIC_INIT"/>
+		</module>
+		<module name="EmptyStatement"/>
+		<module name="IllegalInstantiation"/>
+		<module name="UpperEll"/>
+		<module name="PackageAnnotation"/>
+		<module name="ArrayTypeStyle"/>
+		<module name="SuppressWarnings">
+			<property name="format" value="^all$"/>
+		</module>
+
+		<module name="RegexpSinglelineJava">
+			<property name="format" value="^\t* "/>
+			<property name="message" value="Indent contains spaces."/>
+			<property name="ignoreComments" value="true"/>
+		</module>
+	</module>
+
+	<module name="TreeWalker">
+		<property name="severity" value="warning"/>
+		<module name="MatchXpath">
+			<property name="id" value="singleLineCommentStartWithSpace"/>
+			<property name="query"
+					  value="//SINGLE_LINE_COMMENT[./COMMENT_CONTENT[ not(matches(@text, '^/*[ \t].*' )) and not(@text = '\n') and not(matches(@text, '^/+\n$')) ]]"/>
+			<message key="matchxpath.match" value="Single line comment text should start with space."/>
+		</module>
+	</module>
+</module>
