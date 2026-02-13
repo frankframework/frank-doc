@@ -27,9 +27,9 @@ import org.frankframework.frankdoc.util.XmlBuilder;
 
 class AttributeReuseManager {
 	private static class AttributeReference {
-		FrankAttribute frankAttribute;
-		XmlBuilder xsdGroup;
-		String xsdGroupName;
+		final FrankAttribute frankAttribute;
+		final XmlBuilder xsdGroup;
+		final String xsdGroupName;
 		boolean reused = true;
 
 		AttributeReference(FrankAttribute frankAttribute, XmlBuilder xsdGroup, String xsdGroupName) {
@@ -39,15 +39,7 @@ class AttributeReuseManager {
 		}
 	}
 
-	private static class AttributeToInsert {
-		XmlBuilder attributeBuilder;
-		XmlBuilder parentBuilder;
-
-		AttributeToInsert(XmlBuilder attributeBuilder, XmlBuilder parentBuilder) {
-			this.attributeBuilder = attributeBuilder;
-			this.parentBuilder = parentBuilder;
-		}
-	}
+	private record AttributeToInsert(XmlBuilder attributeBuilder, XmlBuilder parentBuilder) {}
 
 	private final List<Object> attributeSequence = new ArrayList<>();
 	private final Map<String, ReferencedFrankAttributeNameGroup> groupedAttributeReferences = new HashMap<>();
@@ -70,7 +62,7 @@ class AttributeReuseManager {
 
 	/**
 	 * Call this method to add any attribute that does not appear in the FrankDocModel
-	 * (e.g. "active", "roleName"). If such attributes would be added directly to the
+	 * (e.g. "active", "roleName"). If such attributes are added directly to the
 	 * XSD, they would always come first which is not what we want.
 	 */
 	void addAttribute(XmlBuilder attributeBuilder, XmlBuilder group) {

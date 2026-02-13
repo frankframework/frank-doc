@@ -24,14 +24,16 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.frankframework.frankdoc.Utils;
-import org.frankframework.frankdoc.wrapper.FrankClass;
-import org.frankframework.frankdoc.wrapper.FrankClassRepository;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
+import org.jspecify.annotations.NonNull;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+
+import org.frankframework.frankdoc.Utils;
+import org.frankframework.frankdoc.wrapper.FrankClass;
+import org.frankframework.frankdoc.wrapper.FrankClassRepository;
+import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 /**
  * Models a collection of FrankElement. The collection can be characterized by
@@ -93,7 +95,7 @@ public class ElementType implements Comparable<ElementType> {
 	private static String parseDefaultElementTag(FrankClass clazz, FrankClassRepository repository) {
 		String value = clazz.getJavaDocTag(JAVADOC_DEFAULT_CLASSNAME);
 		if (StringUtils.isBlank(value)) {
-			// null means the JavaDoc tag was not present - then nothing to do.
+			// null means the Javadoc tag was not present - then nothing to do.
 			if (value != null) {
 				log.error("JavaDoc tag {} of interface [{}] should have a parameter", JAVADOC_DEFAULT_CLASSNAME, clazz.getName());
 			}
@@ -144,7 +146,7 @@ public class ElementType implements Comparable<ElementType> {
 	}
 
 	public ElementType getHighestCommonInterface() {
-		return commonInterfaceHierarchy.get(commonInterfaceHierarchy.size() - 1);
+		return commonInterfaceHierarchy.getLast();
 	}
 
 	private ElementType getNextCommonInterface(FrankDocModel model) {
@@ -158,7 +160,7 @@ public class ElementType implements Comparable<ElementType> {
 		if (candidates.isEmpty()) {
 			return null;
 		} else {
-			ElementType result = candidates.get(0);
+			ElementType result = candidates.getFirst();
 			if (candidates.size() >= 2) {
 				log.error("There are multiple candidates for the next common interface of ElementType [{}], which are [{}]. Chose [{}]",
 					this::getFullName, () -> candidates.stream().map(ElementType::getFullName).collect(Collectors.joining(", ")), result::getFullName);
@@ -178,7 +180,7 @@ public class ElementType implements Comparable<ElementType> {
 	}
 
 	@Override
-	public int compareTo(ElementType other) {
+	public int compareTo(@NonNull ElementType other) {
 		return COMPARATOR.compare(this, other);
 	}
 

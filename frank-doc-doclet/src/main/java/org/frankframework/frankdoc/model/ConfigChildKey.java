@@ -16,22 +16,14 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-@EqualsAndHashCode(callSuper = false)
-public class ConfigChildKey implements ElementChild.AbstractKey {
-	private final @Getter String roleName;
-	private final @Getter ElementType elementType;
-
-	public ConfigChildKey(String roleName, ElementType elementType) {
-		this.roleName = roleName;
-		this.elementType = elementType;
-	}
+public record ConfigChildKey(String roleName, @Nullable ElementType elementType) implements ElementChild.AbstractKey {
 
 	@Override
-	public String toString() {
-		if(elementType == null) {
+	public @NonNull String toString() {
+		if (elementType == null) {
 			return "(roleName=" + roleName + ", no element type)";
 		} else {
 			return "(roleName=" + roleName + ", elementType=" + elementType.getFullName() + ")";

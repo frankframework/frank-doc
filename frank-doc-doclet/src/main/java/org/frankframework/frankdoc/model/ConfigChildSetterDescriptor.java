@@ -18,18 +18,19 @@ package org.frankframework.frankdoc.model;
 
 import java.util.List;
 
-import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.xml.sax.SAXException;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+
+import org.frankframework.frankdoc.wrapper.FrankMethod;
 
 /**
  * Class {@link org.frankframework.frankdoc.model.ConfigChild} specifies what Frank elements
  * can be contained in another Frank element. The present class {@code ConfigChildSetterDescriptor}
  * contains some of the information that has to be put in {@link org.frankframework.frankdoc.model.ConfigChild}.
  * The present helper class holds the information that comes from the file {@code digester-rules.xml}.
- *
+ * <p>
  * Why don't we create {@link org.frankframework.frankdoc.model.ConfigChild} directly without
  * creating this helper class? As an example, consider a digester rule that links setter
  * {@code setAbc()} to a syntax 1 name {@code abc}.
@@ -41,9 +42,9 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 abstract class ConfigChildSetterDescriptor {
-	private @Getter String methodName;
-	private @Getter boolean allowMultiple;
-	private @Getter DigesterRulesPattern pattern;
+	private final @Getter String methodName;
+	private final @Getter boolean allowMultiple;
+	private final @Getter DigesterRulesPattern pattern;
 
 	ConfigChildSetterDescriptor(String methodName, DigesterRulesPattern pattern) throws SAXException {
 		this.methodName = methodName;
@@ -115,6 +116,6 @@ abstract class ConfigChildSetterDescriptor {
 			log.trace("The following config child setter descriptors match the element role");
 			matches.forEach(d -> log.trace("  {}", d));
 		}
-		return matches.get(0);
+		return matches.getFirst();
 	}
 }

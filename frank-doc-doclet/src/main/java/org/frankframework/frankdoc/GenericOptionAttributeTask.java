@@ -15,18 +15,10 @@ limitations under the License.
 */
 package org.frankframework.frankdoc;
 
-import lombok.Getter;
+import java.util.Set;
+
 import org.frankframework.frankdoc.model.ElementRole;
 import org.frankframework.frankdoc.util.XmlBuilder;
 
-import java.util.Set;
-
-class GenericOptionAttributeTask {
-	private final @Getter Set<ElementRole.Key> rolesKey;
-	private final @Getter XmlBuilder builder;
-
-	GenericOptionAttributeTask(Set<ElementRole.Key> rolesKey, XmlBuilder builder) {
-		this.rolesKey = rolesKey;
-		this.builder = builder;
-	}
+record GenericOptionAttributeTask(Set<ElementRole.Key> rolesKey, XmlBuilder builder) {
 }

@@ -29,7 +29,7 @@ import lombok.extern.log4j.Log4j2;
 
 /**
  * Parses file digester-rules.xml.
- *
+ * <p>
  * Copied from package org.frankframework.configuration.digester.
  *
  */

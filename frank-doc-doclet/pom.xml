@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -41,14 +42,14 @@
 				<configuration>
 					<archive>
 						<!-- This manifest makes the JAR file executable. When you use the JAR as executable,
-						     you can use it to verify an XML file against an XSD file.
-						     You can still use this JAR file as a doclet, because in a pom.xml file you
-						     pass the class name of the doclet to javadoc.
+							 you can use it to verify an XML file against an XSD file.
+							 You can still use this JAR file as a Doclet, because in a pom.xml file you
+							 pass the class name of the Doclet to Javadoc.
 						-->
-					  	<manifest>
-					  		<addClasspath>true</addClasspath>
-					  		<mainClass>org.frankframework.frankdoc.cmd.XmlAgainstXsdValidator</mainClass>
-					  	</manifest>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>org.frankframework.frankdoc.cmd.XmlAgainstXsdValidator</mainClass>
+						</manifest>
 					</archive>
 				</configuration>
 			</plugin>
@@ -102,7 +103,7 @@
 					</execution>
 				</executions>
 			</plugin>
-    </plugins>
+		</plugins>
 		<pluginManagement>
 			<plugins>
 				<!-- This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself -->
@@ -124,7 +125,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -137,7 +138,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
@@ -153,20 +154,20 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 		</dependency>
-    <dependency>
-      <groupId>org.jspecify</groupId>
-      <artifactId>jspecify</artifactId>
-      <version>1.0.0</version>
-    </dependency>
+		<dependency>
+			<groupId>org.jspecify</groupId>
+			<artifactId>jspecify</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.19.0</version>
+			<version>3.20.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
-			<version>1.14.0</version>
+			<version>1.15.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jdom</groupId>
@@ -175,8 +176,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish</groupId>
-			<artifactId>javax.json</artifactId>
-			<version>1.1.4</version>
+			<artifactId>jakarta.json</artifactId>
+			<version>2.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -187,13 +188,13 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.14.0</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-params</artifactId>
-			<version>5.14.0</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -203,7 +204,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>3.5.0</version>
+				<version>3.9.0</version>
 			</plugin>
 		</plugins>
 	</reporting>

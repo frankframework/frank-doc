@@ -28,19 +28,19 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 /**
- * Builds a XML-element with attributes and sub-elements. Attributes can be
+ * Builds an XML-element with attributes and sub-elements. Attributes can be
  * added with the addAttribute method, the content can be set with the setValue
- * method. Subelements can be added with the addSubElement method. the toXML
- * function returns the node and subnodes as an indented xml string.
+ * method. Sub elements can be added with the addSubElement method. the toXML
+ * function returns the node and subnodes as an indented XML string.
  * <p/>
- * Before February 2018 this class was deprecated. From then it uses the JDOM
+ * Before February 2018 this class was deprecated. From then, it uses the JDOM
  * standard solution.
  *
  * @author Johan Verrips
  * @author Peter Leeuwenburgh
  **/
 public class XmlBuilder {
-	private static final String CDATA_END="]]>";
+	private static final String CDATA_END = "]]>";
 
 	private final Element element;
 

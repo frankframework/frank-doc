@@ -50,6 +50,9 @@ import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.ThreadContext;
+
+import lombok.extern.log4j.Log4j2;
+
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.ConfigChild;
 import org.frankframework.frankdoc.model.ConfigChildGroupKind;
@@ -65,8 +68,6 @@ import org.frankframework.frankdoc.model.ObjectConfigChild;
 import org.frankframework.frankdoc.model.TextConfigChild;
 import org.frankframework.frankdoc.util.XmlBuilder;
 import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
-
-import lombok.extern.log4j.Log4j2;
 
 /**
  * This class writes the XML schema document (XSD) that checks the validity of a
@@ -285,7 +286,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		addDocumentation(startElementBuilder, additionalRootElement.getDocString());
 		XmlBuilder complexType = addComplexType(startElementBuilder);
 		XmlBuilder sequence = addSequence(complexType);
-		FrankDocXsdFactoryXmlUtils.addGroupRef(sequence, referencedElementGroupName, "0", "unbounded");
+		FrankDocXsdFactoryXmlUtils.addGroupRef(sequence, referencedElementGroupName, "0", UNBOUNDED);
 
 		log.trace("Adding attribute active explicitly to [{}] and also any attribute in another namespace", elementName);
 		XmlBuilder attributeActive = AttributeTypeStrategy.createAttributeActive();
@@ -335,14 +336,14 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		XmlBuilder complexType = createComplexType(xsdElementTypeName);
 		xsdElements.add(complexType);
 		addDocumentationFrom(complexType, frankElement);
-		log.trace("Adding cumulative config chidren of FrankElement [{}] to XSD type [{}]", frankElement::getFullName, () -> xsdElementTypeName);
+		log.trace("Adding cumulative config children of FrankElement [{}] to XSD type [{}]", frankElement::getFullName, () -> xsdElementTypeName);
 		if (frankElement.hasOrInheritsPluralConfigChildren(version.getChildSelector(), version.getChildRejector())) {
 			log.trace("FrankElement [{}] has plural config children", frankElement::getFullName);
 			// Within <xs:sequence><xs:choice> group, we cannot enforce that mandatory config children are
 			// included. We also do not check there that non-plural config children occur at most once.
 			// Martijn investigated whether the <xs:all> element can be used instead. That element
 			// enforces that each <xs:element> inside occurs exactly once without enforcing a sequence.
-			// However, within <xs:all> the <xs:group> element is not allowed. Therefore <xs:all> will
+			// However, within <xs:all> the <xs:group> element is not allowed. Therefore, <xs:all> will
 			// not work. We accept the limitations of <xs:sequence><xs:choice>, becuase plural config
 			// children are rare within the Frank!Doc.
 			XmlBuilder sequence = addSequence(complexType);
@@ -421,7 +422,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	/**
-	 * This class is responsible for adding an xs:element in the XML schema if required.
+	 * This class is responsible for adding a xs:element in the XML schema if required.
 	 * If a FrankElement corresponds to an abstract class, then no XML element
 	 * should be added. This is achieved using the derived class ElementOmitter.
 	 * <br/>
@@ -490,7 +491,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		public void addGroupRef(String referencedGroupName) {
 			log.trace("Appending XSD type def of [{}] with reference to XSD group [{}]", addingTo::getFullName, () -> referencedGroupName);
 			// We do not create configChildBuilder during construction, because
-			// that would produce an empty <seqneuce><choice> when there are no
+			// that would produce an empty <sequence><choice> when there are no
 			// config children.
 			if (configChildBuilder == null) {
 				log.trace("Create <sequence><choice> to wrap the config children in");
@@ -630,12 +631,16 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void addConfigChild(XmlBuilder context, ConfigChild child) {
 		log.trace("Adding config child [{}]", child::toString);
 		version.checkForMissingDescription(child);
-		if (child instanceof ObjectConfigChild objectConfigChild) {
-			addObjectConfigChild(context, objectConfigChild);
-		} else if (child instanceof TextConfigChild textConfigChild) {
-			addTextConfigChild(context, textConfigChild);
-		} else {
-			throw new IllegalArgumentException("Cannot happen, there are no other ConfigChild subclasses than ObjectConfigChild or TextConfigChild");
+
+		switch (child) {
+			case ObjectConfigChild objectConfigChild ->
+				addObjectConfigChild(context, objectConfigChild);
+
+			case TextConfigChild textConfigChild ->
+				addTextConfigChild(context, textConfigChild);
+			default ->
+				throw new IllegalArgumentException("Cannot happen, there are no other ConfigChild subclasses than ObjectConfigChild or TextConfigChild");
+
 		}
 		log.trace("Done adding config child [{}]", child::toString);
 	}
@@ -695,20 +700,24 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		}
 	}
 
-	private XmlBuilder addConfigChildWithElementGroup(XmlBuilder context, ObjectConfigChild child) {
+	private void addConfigChildWithElementGroup(XmlBuilder context, ObjectConfigChild child) {
 		log.trace("Config child appears as element group reference");
 		// If this is a ConfigChildGroupKind.MIXED config child set, then the warning about that has been written already
 		// during model creation. We can assume we only have OBJECT config children.
 		ConfigChildSet configChildSet = child.getOwningElement().getConfigChildSet(child.getRoleName());
-		if(log.isTraceEnabled()) {
+
+		if (log.isTraceEnabled()) {
 			ThreadContext.push(String.format("Owning element [%s], ConfigChildSet [%s]", child.getOwningElement().getSimpleName(), configChildSet.toString()));
 		}
+
 		List<ElementRole> roles = configChildSet.getFilteredElementRoles(version.getChildSelector(), version.getChildRejector());
 		requestElementGroupForConfigChildSet(configChildSet, roles);
-		if(log.isTraceEnabled()) {
+
+		if (log.isTraceEnabled()) {
 			ThreadContext.pop();
 		}
-		return FrankDocXsdFactoryXmlUtils.addGroupRef(context, elementGroupManager.getGroupName(roles), getMinOccurs(child), getMaxOccurs(child));
+
+		FrankDocXsdFactoryXmlUtils.addGroupRef(context, elementGroupManager.getGroupName(roles), getMinOccurs(child), getMaxOccurs(child));
 	}
 
 	private void requestElementGroupForConfigChildSet(ConfigChildSet configChildSet, List<ElementRole> roles) {
@@ -821,24 +830,22 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private void addDocumentationFrom(XmlBuilder element, FrankElement frankElement) {
-		if (version == XsdVersion.STRICT) {
-			if (!StringUtils.isBlank(frankElement.getDescription())) {
-				StringBuilder description = new StringBuilder(frankElement.getDescription());
+		if (version == XsdVersion.STRICT && !StringUtils.isBlank(frankElement.getDescription())) {
+			StringBuilder description = new StringBuilder(frankElement.getDescription());
 
-				if (!frankElement.getNotes().isEmpty()) {
-					description.append("<br>");
-				}
-				for (Note note : frankElement.getNotes()) {
-					description.append("<br><b>")
-						.append(note.type().name())
-						.append("</b>")
-						.append("<p>")
-						.append(note.value())
-						.append("</p>");
-				}
-
-				addDocumentation(element, description.toString());
+			if (!frankElement.getNotes().isEmpty()) {
+				description.append("<br>");
 			}
+			for (Note note : frankElement.getNotes()) {
+				description.append("<br><b>")
+					.append(note.type().name())
+					.append("</b>")
+					.append("<p>")
+					.append(note.value())
+					.append("</p>");
+			}
+
+			addDocumentation(element, description.toString());
 		}
 	}
 
@@ -872,7 +879,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 		log.trace("Adding attribute [{}] to generic element option", ELEMENT_ROLE);
 		XmlBuilder attributeElementRole = FrankDocXsdFactoryXmlUtils.createAttribute(ELEMENT_ROLE, FIXED, configChildSet.getRoleName(), version.getRoleNameAttributeUse());
 		attributeReuseManager.addAttribute(attributeElementRole, complexType);
-		Optional<String> defaultFrankElementName = configChildSet.getGenericElementOptionDefault(version.getElementFilter());
+		Optional<String> defaultFrankElementName = configChildSet.getGenericElementOptionDefault();
 		XmlBuilder attributeClassName;
 		if(defaultFrankElementName.isPresent()) {
 			log.trace("Adding attribute [{}] with default [{}]", () -> CLASS_NAME, defaultFrankElementName::get);
@@ -891,8 +898,8 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void finishLeftoverGenericOptionsAttributes() {
 		log.trace("Setting attributes of leftover nested generic elements");
 		for(GenericOptionAttributeTask task: elementGroupManager.doLeftoverGenericOptionAttributeTasks()) {
-			log.trace("Have to do element group [{}]", () -> task.getRolesKey().toString());
-			addGenericElementOptionAttributes(task.getBuilder(), task.getRolesKey().iterator().next().getRoleName());
+			log.trace("Have to do element group [{}]", () -> task.rolesKey().toString());
+			addGenericElementOptionAttributes(task.builder(), task.rolesKey().iterator().next().getRoleName());
 		}
 		log.trace("Done setting attributes of leftover nested generic elements");
 	}
@@ -1028,22 +1035,22 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	private void addPluralConfigChild(XmlBuilder choice, ConfigChildSet configChildSet, FrankElement frankElement) {
 		if(log.isTraceEnabled()) {
 			log.trace("Adding ConfigChildSet [{}]", configChildSet::toString);
-			ThreadContext.push(String.format("Owning element [%s], ConfigChildSet [%s]", frankElement.getSimpleName(), configChildSet.toString()));
+			ThreadContext.push(String.format("Owning element [%s], ConfigChildSet [%s]", frankElement.getSimpleName(), configChildSet));
 		}
 		configChildSet.getConfigChildren().forEach(version::checkForMissingDescription);
-		switch(configChildSet.getConfigChildGroupKind()) {
-		case OBJECT:
-		// The warning that MIXED is not supported has been written during model initialization.
-		case MIXED:
-			addPluralObjectConfigChild(choice, configChildSet);
-			break;
-		case TEXT:
-			addPluralTextConfigChild(choice, configChildSet);
-			break;
-		default:
-			throw new IllegalArgumentException("Cannot happen, switch should cover all enum values");
+		switch (configChildSet.getConfigChildGroupKind()) {
+			// The warning that MIXED is not supported has been written during model initialization.
+			case OBJECT, MIXED:
+				addPluralObjectConfigChild(choice, configChildSet);
+				break;
+			case TEXT:
+				addPluralTextConfigChild(choice, configChildSet);
+				break;
+			default:
+				throw new IllegalArgumentException("Cannot happen, switch should cover all enum values");
 		}
-		if(log.isTraceEnabled()) {
+
+		if (log.isTraceEnabled()) {
 			ThreadContext.pop();
 			log.trace("Done adding ConfigChildSet with ElementRoleSet [{}]", configChildSet::toString);
 		}
@@ -1199,7 +1206,7 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 	}
 
 	private XmlBuilder createAttribute(FrankAttribute frankAttribute) {
-		XmlBuilder attribute = null;
+		XmlBuilder attribute;
 		if(frankAttribute.getAttributeEnum() == null) {
 			// The default value in the model is a *description* of the default value.
 			// Therefore, it should be added to the description in the xs:attribute.

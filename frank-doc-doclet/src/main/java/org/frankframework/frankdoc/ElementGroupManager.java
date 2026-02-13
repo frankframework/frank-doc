@@ -69,11 +69,6 @@ class ElementGroupManager {
 		return key.iterator().next().getRoleName();
 	}
 
-	String getGroupName(Set<ElementRole.Key> key) {
-		String roleName = getRoleName(key);
-		return getGroupName(key, roleName);
-	}
-
 	String getGroupName(List<ElementRole> roles) {
 		Set<ElementRole.Key> key = ConfigChildSet.getKey(roles);
 		String roleName = roles.getFirst().getRoleName();
@@ -102,7 +97,7 @@ class ElementGroupManager {
 	}
 
 	XmlBuilder doGenericOptionAttributeTask(ConfigChildSet configChildSet) {
-		return genericOptionAttributeTasks.remove(keyOf(configChildSet)).getBuilder();
+		return genericOptionAttributeTasks.remove(keyOf(configChildSet)).builder();
 	}
 
 	List<GenericOptionAttributeTask> doLeftoverGenericOptionAttributeTasks() {

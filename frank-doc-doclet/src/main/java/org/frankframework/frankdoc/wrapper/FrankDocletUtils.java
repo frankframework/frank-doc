@@ -194,7 +194,7 @@ final class FrankDocletUtils {
 		String fullNameWithoutTypeInfo = typeMirror.accept(new NameWithoutTypeInfoBuilder(), null);
 		log.debug("<*> getFullNameWithoutTypeInfo: {}", fullNameWithoutTypeInfo);
 		if (fullNameWithoutTypeInfo.contains("<") || fullNameWithoutTypeInfo.contains("[")) {
-			log.error("Still found type with Generic or Array information in type at: {}; {}. Please fix this inside FrankDocletutils", fullNameWithoutTypeInfo, typeMirror);
+			log.error("Still found type with Generic or Array information in type at: {}; {}. Please fix this inside FrankDocletUtils", fullNameWithoutTypeInfo, typeMirror);
 		}
 		return fullNameWithoutTypeInfo;
 	}

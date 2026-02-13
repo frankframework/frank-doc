@@ -24,22 +24,22 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.frankframework.frankdoc.FrankDocXsdFactory;
-
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+
+import org.frankframework.frankdoc.FrankDocXsdFactory;
 
 /**
  * Holds the list of all cumulative config children sharing some role name, say R, but
  * only if there is no ancestor having the same config children for role name R.
  * <p>
  * Example. Assume that a class Super has a derived class Derived. Super has a method
- * registerChild(A a) while Derived has a method registerChild(B b). Then the cumulative
+ * {@code registerChild(A a)} while Derived has a method {@code registerChild(B b)}. Then the cumulative
  * config children of Derived with role name "child" are (A, child), (B, child). These
  * two go into a ConfigChildSet with common role name "child".
  * <p>
- * If the method registerChild(B b) would not be in Derived but in Super, then the cumulative
- * config children with role name "child" would be the same for Derived and Super. Therefore
+ * If the method {@code registerChild(B b)} would not be in Derived but in Super, then the cumulative
+ * config children with role name "child" would be the same for Derived and Super. Therefore,
  * only Super would have a ConfigChildSet for this role name, not Derived.
  *
  * @author martijn
@@ -58,11 +58,11 @@ public class ConfigChildSet {
 	ConfigChildSet(List<ConfigChild> configChildren) {
 		this.configChildren = configChildren;
 		if (configChildren.isEmpty()) {
-			throw new IllegalStateException("A config child cannot have an empty list of config childs");
+			throw new IllegalStateException("A config child cannot have an empty list of config children");
 		}
 		if (configChildren.size() >= 2) {
-			FrankElement owner = configChildren.get(0).getOwningElement();
-			ConfigChild previous = configChildren.get(0);
+			FrankElement owner = configChildren.getFirst().getOwningElement();
+			ConfigChild previous = configChildren.getFirst();
 			boolean sameOwner;
 			for (ConfigChild c : configChildren.subList(1, configChildren.size())) {
 				sameOwner = true;
@@ -94,11 +94,11 @@ public class ConfigChildSet {
 	}
 
 	public String getRoleName() {
-		return configChildren.get(0).getRoleName();
+		return configChildren.getFirst().getRoleName();
 	}
 
 	public String getElementTypeName() {
-		ConfigChild configChild = configChildren.get(0);
+		ConfigChild configChild = configChildren.getFirst();
 		if (configChild instanceof TextConfigChild textConfigChild) {
 			return textConfigChild.getElementTypeName();
 		}
@@ -167,12 +167,12 @@ public class ConfigChildSet {
 		return roles.stream().map(ElementRole::getKey).collect(Collectors.toSet());
 	}
 
-	public Optional<String> getGenericElementOptionDefault(Predicate<FrankElement> elementFilter) {
+	public Optional<String> getGenericElementOptionDefault() {
 		List<String> candidates = ConfigChild.getElementRoleStream(configChildren)
 			.flatMap(ConfigChildSet::getCandidatesForGenericElementOptionDefault)
 			.toList();
 		if (candidates.size() == 1) {
-			return Optional.of(candidates.get(0));
+			return Optional.of(candidates.getFirst());
 		} else {
 			if (candidates.size() >= 2) {
 				if (configChildren.stream()

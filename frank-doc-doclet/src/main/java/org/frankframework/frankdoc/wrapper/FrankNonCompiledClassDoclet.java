@@ -17,11 +17,11 @@ limitations under the License.
 package org.frankframework.frankdoc.wrapper;
 
 /**
- * Models classes like java.lang.Object, java.lang.String and org.apache.xerces.xs.XSTypeDefinition.
+ * Models classes like {@code java.lang.Object}, {@code java.lang.String} and {@code org.apache.xerces.xs.XSTypeDefinition}.
  * Such classes are referenced as arguments or return types in ExecutableElement objects, but
  * no detailed information about them is needed.
- * @author martijn
  *
+ * @author martijn
  */
 public class FrankNonCompiledClassDoclet extends FrankSimpleType {
 	FrankNonCompiledClassDoclet(String name) {

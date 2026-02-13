@@ -16,17 +16,18 @@ limitations under the License.
 
 package org.frankframework.frankdoc.doclet;
 
-import jdk.javadoc.doclet.Doclet;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-import org.frankframework.frankdoc.wrapper.FrankDocException;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Set;
+
+import jdk.javadoc.doclet.Doclet;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+
+import org.frankframework.frankdoc.wrapper.FrankDocException;
 
 @Log4j2
 @Getter(AccessLevel.PACKAGE)
@@ -49,7 +50,7 @@ public class FrankDocletOptions {
 		new Option("-rootClass", true, "rootClass description", STRING) {
 			@Override
 			public boolean process(String option, List<String> arguments) {
-				rootClass = arguments.get(0);
+				rootClass = arguments.getFirst();
 				return OK;
 			}
 		},
@@ -57,7 +58,7 @@ public class FrankDocletOptions {
 		new Option("-outputDirectory", true, "outputDirectory", STRING) {
 			@Override
 			public boolean process(String option, List<String> arguments) {
-				outputDirectory = arguments.get(0);
+				outputDirectory = arguments.getFirst();
 				return OK;
 			}
 		},
@@ -65,7 +66,7 @@ public class FrankDocletOptions {
 		new Option("-frankFrameworkVersion", true, "frankFrameworkVersion", STRING) {
 			@Override
 			public boolean process(String option, List<String> arguments) {
-				frankFrameworkVersion = arguments.get(0);
+				frankFrameworkVersion = arguments.getFirst();
 				return OK;
 			}
 		},
@@ -73,7 +74,7 @@ public class FrankDocletOptions {
 			@Override
 			public boolean process(String option, List<String> arguments) {
 				try {
-					digesterRulesUrl = createURLFromPath(arguments.get(0));
+					digesterRulesUrl = createURLFromPath(arguments.getFirst());
 					return OK;
 				} catch (FrankDocException e) {
 					log.error("Error: {}", e.getMessage());
@@ -85,7 +86,7 @@ public class FrankDocletOptions {
 			@Override
 			public boolean process(String option, List<String> arguments) {
 				try {
-					propertyFileUrl = createURLFromPath(arguments.get(0));
+					propertyFileUrl = createURLFromPath(arguments.getFirst());
 					return OK;
 				} catch (FrankDocException e) {
 					log.error("Error: {}", e.getMessage());
@@ -98,28 +99,28 @@ public class FrankDocletOptions {
 		new Option("-jsonFilePath", true, "File path to write JSON output to", STRING) {
 			@Override
 			public boolean process(String option, List<String> arguments) {
-				jsonOutputFilePath = arguments.get(0);
+				jsonOutputFilePath = arguments.getFirst();
 				return OK;
 			}
 		},
 		new Option("-xsdStrictPath", true, "File path to write strict XSD output to", STRING) {
 			@Override
 			public boolean process(String option, List<String> arguments) {
-				xsdStrictPath = arguments.get(0);
+				xsdStrictPath = arguments.getFirst();
 				return OK;
 			}
 		},
 		new Option("-xsdCompatibilityPath", true, "File path to write compatibility XSD output to", STRING) {
 			@Override
 			public boolean process(String option, List<String> arguments) {
-				xsdCompatibilityPath = arguments.get(0);
+				xsdCompatibilityPath = arguments.getFirst();
 				return OK;
 			}
 		},
 		new Option("-elementSummaryPath", true, "File path to write element summary file output to", STRING) {
 			@Override
 			public boolean process(String option, List<String> arguments) {
-				elementSummaryPath = arguments.get(0);
+				elementSummaryPath = arguments.getFirst();
 				return OK;
 			}
 		}

@@ -20,6 +20,9 @@ import static org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.addSequence
 
 import java.util.function.Predicate;
 
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+
 import org.frankframework.frankdoc.FrankDocXsdFactoryXmlUtils.AttributeUse;
 import org.frankframework.frankdoc.model.ConfigChild;
 import org.frankframework.frankdoc.model.ElementChild;
@@ -27,9 +30,6 @@ import org.frankframework.frankdoc.model.FrankAttribute;
 import org.frankframework.frankdoc.model.FrankElement;
 import org.frankframework.frankdoc.model.MandatoryStatus;
 import org.frankframework.frankdoc.util.XmlBuilder;
-
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public enum XsdVersion {
@@ -42,7 +42,7 @@ public enum XsdVersion {
 	private final Delegate delegate;
 	private final @Getter String description;
 
-	private XsdVersion(Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, Predicate<FrankElement> elementFilter, Delegate delegate, String description) {
+	XsdVersion(Predicate<ElementChild> childSelector, Predicate<ElementChild> childRejector, Predicate<FrankElement> elementFilter, Delegate delegate, String description) {
 		this.childSelector = childSelector;
 		this.childRejector = childRejector;
 		this.elementFilter = elementFilter;

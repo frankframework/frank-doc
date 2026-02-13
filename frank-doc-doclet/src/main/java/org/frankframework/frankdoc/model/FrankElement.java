@@ -35,6 +35,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.NonNull;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
+
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.feature.Deprecated;
 import org.frankframework.frankdoc.feature.Description;
@@ -47,11 +54,6 @@ import org.frankframework.frankdoc.wrapper.FrankDocException;
 import org.frankframework.frankdoc.wrapper.FrankEnumConstant;
 import org.frankframework.frankdoc.wrapper.FrankMethod;
 import org.frankframework.frankdoc.wrapper.FrankType;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 
 /**
  * Models a Java class that can be referred to in a Frank configuration.
@@ -66,7 +68,6 @@ public class FrankElement implements Comparable<FrankElement> {
 	public static final String JAVADOC_FORWARDS_ANNOTATION_CLASSNAME = "org.frankframework.doc.Forwards";
 	public static final String JAVADOC_LABEL_ANNOTATION_CLASSNAME = "org.frankframework.doc.Label";
 	public static final String JAVADOC_SEE = "@see";
-	public static final String LABEL = "org.frankframework.doc.Label";
 	public static final String LABEL_NAME = "name";
 
 	private static final Pattern JAVADOC_SEE_PATTERN = Pattern.compile("<a href=[\"'](.*?)[\"']>(.*?)<\\/a>(.*)");
@@ -92,7 +93,7 @@ public class FrankElement implements Comparable<FrankElement> {
 
 	// True if this FrankElement corresponds to a class that implements a Java interface
 	// that we model with an ElementType. This means: The Java interface only counts
-	// if it appears as argument type of a config child setter.
+	// if it appears as argument type of config child setter.
 	private @Getter @Setter(AccessLevel.PACKAGE) boolean interfaceBased = false;
 
 	// Represents the Java superclass.
@@ -418,7 +419,7 @@ public class FrankElement implements Comparable<FrankElement> {
 			throw new IllegalStateException(String.format("FrankElement [%s] has more then one possible XML element name: [%s]",
 				fullName, String.join(", ", xmlElementNames)));
 		}
-		return xmlElementNames.get(0);
+		return xmlElementNames.getFirst();
 	}
 
 	public void setAttributes(List<FrankAttribute> inputAttributes) {
@@ -442,12 +443,11 @@ public class FrankElement implements Comparable<FrankElement> {
 		return getChildrenOfKind(filter, FrankAttribute.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T extends ElementChild> List<T> getChildrenOfKind(Predicate<ElementChild> selector, Class<T> kind) {
 		Map<? extends AbstractKey, ? extends ElementChild> lookup = allChildren.get(kind);
 		return lookup.values().stream()
 			.filter(selector)
-			.map(c -> (T) c)
+ 			.map(c -> (T) c)
 			.toList();
 	}
 
@@ -503,16 +503,16 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	public List<ConfigChild> getCumulativeConfigChildren(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		return new ArrayList<>(getCumulativeChildren(selector, rejector, ConfigChild.class));
+		return getCumulativeChildren(selector, rejector, ConfigChild.class);
 	}
 
 	public List<FrankAttribute> getCumulativeAttributes(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		return new ArrayList<>(getCumulativeChildren(selector, rejector, FrankAttribute.class));
+		return getCumulativeChildren(selector, rejector, FrankAttribute.class);
 	}
 
 	private <T extends ElementChild> List<T> getCumulativeChildren(Predicate<ElementChild> selector, Predicate<ElementChild> rejector, Class<T> kind) {
 		final List<T> result = new ArrayList<>();
-		new AncestorChildNavigation<T>(new CumulativeChildHandler<T>() {
+		new AncestorChildNavigation<>(new CumulativeChildHandler<>() {
 			@Override
 			public void handleSelectedChildren(List<T> children, FrankElement owner) {
 				result.addAll(children);
@@ -639,7 +639,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	@Override
-	public int compareTo(FrankElement other) {
+	public int compareTo(@NonNull FrankElement other) {
 		return COMPARATOR.compare(this, other);
 	}
 

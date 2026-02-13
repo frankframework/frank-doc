@@ -22,15 +22,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonException;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonBuilderFactory;
+import jakarta.json.JsonException;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
+import lombok.extern.log4j.Log4j2;
+
 import org.frankframework.frankdoc.model.AttributeEnum;
 import org.frankframework.frankdoc.model.AttributeType;
 import org.frankframework.frankdoc.model.ConfigChild;
@@ -53,11 +58,6 @@ import org.frankframework.frankdoc.properties.Group;
 import org.frankframework.frankdoc.properties.Property;
 import org.frankframework.frankdoc.wrapper.AdditionalRootElement;
 
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
-
-import lombok.extern.log4j.Log4j2;
-
 @Log4j2
 public class FrankDocJsonFactory {
 
@@ -66,7 +66,7 @@ public class FrankDocJsonFactory {
 
 	private final FrankDocModel model;
 	private final JsonBuilderFactory bf;
-	List<FrankElement> elementsOutsideChildren;
+	final List<FrankElement> elementsOutsideChildren;
 	private final String frankFrameworkVersion;
 
 	private final List<AdditionalRootElement> additionalRootElements;
@@ -422,7 +422,7 @@ public class FrankDocJsonFactory {
 		}
 		result.add("multiple", child.isAllowMultiple());
 		result.add("roleName", child.getRoleName());
-		addIfNotNull(result, "description", child.getDescription());
+		addIfNotNull(result, DESCRIPTION, child.getDescription());
 		if(child instanceof ObjectConfigChild objectConfigChild) {
 			result.add("type", (objectConfigChild).getElementType().getFullName());
 		}
@@ -584,13 +584,13 @@ public class FrankDocJsonFactory {
 
 		final var builder = bf.createObjectBuilder();
 		for (ServletAuthenticator servletAuthenticator : model.getServletAuthenticators()) {
-			builder.add(servletAuthenticator.simpleName(), servletAuthenticatorTojson(servletAuthenticator));
+			builder.add(servletAuthenticator.simpleName(), servletAuthenticatorToJson(servletAuthenticator));
 		}
 
 		return Optional.of(builder.build());
 	}
 
-	private JsonObject servletAuthenticatorTojson(ServletAuthenticator servletAuthenticator) {
+	private JsonObject servletAuthenticatorToJson(ServletAuthenticator servletAuthenticator) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
 
 		b.add("fullName", servletAuthenticator.fullName());

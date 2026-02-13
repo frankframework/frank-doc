@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.frankframework</groupId>
@@ -15,10 +15,11 @@
 		<revision>4.4.0-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>25</maven.compiler.source>
-    <maven.compiler.proc>full</maven.compiler.proc>
-    <log4j2.version>2.25.3</log4j2.version>
-    <lombok.version>1.18.42</lombok.version>
-    <argLine /> <!-- add empty default argLine so Surefire won't fail when JaCoCo isn't present -->
+		<maven.compiler.proc>full</maven.compiler.proc>
+		<log4j2.version>2.25.3</log4j2.version>
+		<lombok.version>1.18.42</lombok.version>
+		<junit.version>6.0.2</junit.version>
+		<argLine/> <!-- add empty default argLine so Surefire won't fail when JaCoCo isn't present -->
 	</properties>
 
 	<prerequisites>
@@ -84,18 +85,18 @@
 				<artifactId>frank-doc-frontend</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-core</artifactId>
-        <version>${log4j2.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>${lombok.version}</version>
-      </dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j2.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>${lombok.version}</version>
+			</dependency>
 
-    </dependencies>
+		</dependencies>
 	</dependencyManagement>
 
 	<build>
@@ -105,7 +106,7 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
 			</plugin>
-      <plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 			</plugin>
@@ -121,10 +122,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-      </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -133,41 +134,43 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.15.0</version>
 					<configuration>
-            <release>${maven.compiler.source}</release>
-            <source>${maven.compiler.source}</source>
-            <target>${maven.compiler.source}</target>
-            <compilerArgs>
-              <arg>-parameters</arg>
-              <!-- Flags required for ErrorProne -->
-              <arg>-XDcompilePolicy=simple</arg>
-              <arg>--should-stop=ifError=FLOW</arg>
-              <arg>-XDaddTypeAnnotationsToSymbol=true</arg>
-              <!-- Flags to enable ErrorProne, and options for ErrorProne. Should be given in the same arg parameter otherwise it doesn't seem to work. -->
-              <arg>-Xplugin:ErrorProne -XepOpt:NullAway:AnnotatedPackages=org.frankframework -Xep:InvalidBlockTag:OFF -Xep:BanJNDI:WARN -Xep:EqualsHashCode:WARN -Xep:GetClassOnClass:WARN -Xep:InlineMeSuggester:OFF</arg>
-            </compilerArgs>
-            <annotationProcessorPaths>
-              <path>
-                <groupId>com.google.errorprone</groupId>
-                <artifactId>error_prone_core</artifactId>
-                <version>2.47.0</version>
-              </path>
-              <path>
-                <groupId>com.uber.nullaway</groupId>
-                <artifactId>nullaway</artifactId>
-                <version>0.13.1</version>
-              </path>
-              <!-- Because Error Prone needs to be added explicitly we now also need to explicitly add other annotation processors here -->
-              <path>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-              </path>
-              <path>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>${log4j2.version}</version>
-              </path>
-            </annotationProcessorPaths>
+						<release>${maven.compiler.source}</release>
+						<source>${maven.compiler.source}</source>
+						<target>${maven.compiler.source}</target>
+						<compilerArgs>
+							<arg>-parameters</arg>
+							<!-- Flags required for ErrorProne -->
+							<arg>-XDcompilePolicy=simple</arg>
+							<arg>--should-stop=ifError=FLOW</arg>
+							<arg>-XDaddTypeAnnotationsToSymbol=true</arg>
+							<!-- Flags to enable ErrorProne, and options for ErrorProne. Should be given in the same arg parameter otherwise it doesn't seem to work. -->
+							<arg>-Xplugin:ErrorProne -XepOpt:NullAway:AnnotatedPackages=org.frankframework -Xep:InvalidBlockTag:OFF -Xep:BanJNDI:WARN
+								-Xep:EqualsHashCode:WARN -Xep:GetClassOnClass:WARN -Xep:InlineMeSuggester:OFF
+							</arg>
+						</compilerArgs>
+						<annotationProcessorPaths>
+							<path>
+								<groupId>com.google.errorprone</groupId>
+								<artifactId>error_prone_core</artifactId>
+								<version>2.47.0</version>
+							</path>
+							<path>
+								<groupId>com.uber.nullaway</groupId>
+								<artifactId>nullaway</artifactId>
+								<version>0.13.1</version>
+							</path>
+							<!-- Because Error Prone needs to be added explicitly we now also need to explicitly add other annotation processors here -->
+							<path>
+								<groupId>org.projectlombok</groupId>
+								<artifactId>lombok</artifactId>
+								<version>${lombok.version}</version>
+							</path>
+							<path>
+								<groupId>org.apache.logging.log4j</groupId>
+								<artifactId>log4j-core</artifactId>
+								<version>${log4j2.version}</version>
+							</path>
+						</annotationProcessorPaths>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -259,26 +262,26 @@
 						</execution>
 					</executions>
 				</plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.6.2</version>
-          <executions>
-            <execution>
-              <id>enforce-jdk-version</id>
-              <goals>
-                <goal>enforce</goal>
-              </goals>
-              <configuration>
-                <rules>
-                  <requireJavaVersion>
-                    <version>[25,26)</version>
-                  </requireJavaVersion>
-                </rules>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>3.6.2</version>
+					<executions>
+						<execution>
+							<id>enforce-jdk-version</id>
+							<goals>
+								<goal>enforce</goal>
+							</goals>
+							<configuration>
+								<rules>
+									<requireJavaVersion>
+										<version>[25,26)</version>
+									</requireJavaVersion>
+								</rules>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

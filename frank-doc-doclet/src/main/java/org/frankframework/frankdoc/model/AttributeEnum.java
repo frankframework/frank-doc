@@ -16,15 +16,15 @@ limitations under the License.
 
 package org.frankframework.frankdoc.model;
 
-import lombok.Getter;
-
 import java.util.List;
 
+import lombok.Getter;
+
 public class AttributeEnum {
-	private @Getter String fullName;
-	private String simpleName;
+	private final @Getter String fullName;
+	private final String simpleName;
 	private final @Getter List<EnumValue> values;
-	private int seq;
+	private final int seq;
 
 	AttributeEnum(String fullName, String simpleName, List<EnumValue> values, int seq) {
 		this.fullName = fullName;
@@ -34,7 +34,7 @@ public class AttributeEnum {
 	}
 
 	public String getUniqueName(String groupWord) {
-		if(seq == 1) {
+		if (seq == 1) {
 			return String.format("%s%s", simpleName, groupWord);
 		} else {
 			return String.format("%s%s_%d", simpleName, groupWord, seq);

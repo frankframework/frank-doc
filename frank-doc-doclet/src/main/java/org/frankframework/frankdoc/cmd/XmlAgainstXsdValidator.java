@@ -16,6 +16,18 @@ limitations under the License.
 
 package org.frankframework.frankdoc.cmd;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.ValidatorHandler;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -24,30 +36,22 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.ValidatorHandler;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
-
 public class XmlAgainstXsdValidator {
-	public static void main(String[] argv) {
+	private XmlAgainstXsdValidator() {
+		/* This utility class should not be instantiated */
+	}
+
+	static void main(String[] argv) {
 		try {
-			if((argv.length == 0) || (argv.length >= 3)) {
+			if ((argv.length == 0) || (argv.length >= 3)) {
 				printUsage();
 				System.exit(2);
 			} else {
-				if(! checkXmlAgainstXsd(argv[0], argv[1])) {
+				if (!checkXmlAgainstXsd(argv[0], argv[1])) {
 					System.exit(1);
 				}
 			}
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			System.out.printf("Failed validating XML file [%s] against XSD [%s]: %n", argv[0], argv[1]);
 			e.printStackTrace();
 			System.exit(1);
@@ -65,7 +69,7 @@ public class XmlAgainstXsdValidator {
 		InputSource inputSource = fileToInputSource(new File(fileNameXml));
 		XMLReader xmlReader = registerContentHandler(getXmlReader(), getValidatorHandler(fileToUrl(new File(fileNameXsd))));
 		xmlReader.parse(inputSource);
-		return ! errorHandler.hasErrors;
+		return !errorHandler.hasErrors;
 	}
 
 	private static URL fileToUrl(File f) throws IOException {
@@ -83,9 +87,11 @@ public class XmlAgainstXsdValidator {
 		if (handler instanceof LexicalHandler) {
 			xmlReader.setProperty("http://xml.org/sax/properties/lexical-handler", handler);
 		}
-		if (handler instanceof ErrorHandler) {
-			xmlReader.setErrorHandler((ErrorHandler)handler);
+
+		if (handler instanceof ErrorHandler errorHandler) {
+			xmlReader.setErrorHandler(errorHandler);
 		}
+
 		return xmlReader;
 	}
 
@@ -95,8 +101,8 @@ public class XmlAgainstXsdValidator {
 		// In the original F!F code from which this was copied, an entity resolver is set.
 		// The Frank!Doc XSDs do not reference entities, so this is omitted here.
 		factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-		XMLReader xmlReader = factory.newSAXParser().getXMLReader();
-		return xmlReader;
+
+		return factory.newSAXParser().getXMLReader();
 	}
 
 	private static InputSource fileToInputSource(File f) throws IOException {
@@ -109,20 +115,20 @@ public class XmlAgainstXsdValidator {
 		boolean hasErrors = false;
 
 		@Override
-		public void warning(SAXParseException exception) throws SAXException {
+		public void warning(SAXParseException exception) {
 			System.out.println("Warning encountered:");
 			exception.printStackTrace();
 		}
 
 		@Override
-		public void error(SAXParseException exception) throws SAXException {
+		public void error(SAXParseException exception) {
 			System.out.println("Error encountered:");
 			exception.printStackTrace();
 			hasErrors = true;
 		}
 
 		@Override
-		public void fatalError(SAXParseException exception) throws SAXException {
+		public void fatalError(SAXParseException exception) {
 			System.out.println("Fatal error encountered:");
 			exception.printStackTrace();
 			hasErrors = true;

@@ -162,11 +162,11 @@ public class FrankClass implements FrankType {
 	}
 
 	public FrankClass getSuperclass() {
-		FrankClass result = null;
 		TypeElement superClazz = FrankDocletUtils.getSuperclassElement(clazz);
 		if (superClazz == null) {
 			return null;
 		}
+
 		try {
 			String superclassQualifiedName = superClazz.getQualifiedName().toString();
 			boolean omit = repository.getExcludeFiltersForSuperclass().stream()
@@ -174,11 +174,12 @@ public class FrankClass implements FrankType {
 			if (omit) {
 				return null;
 			}
-			result = repository.findClass(superclassQualifiedName);
+			return repository.findClass(superclassQualifiedName);
 		} catch (FrankDocException e) {
 			log.error("Could not get superclass of {}", getName(), e);
 		}
-		return result;
+
+		return null;
 	}
 
 	/**

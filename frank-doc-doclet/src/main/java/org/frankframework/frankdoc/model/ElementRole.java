@@ -25,13 +25,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.frankframework.frankdoc.Utils;
+import org.jspecify.annotations.NonNull;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+
+import org.frankframework.frankdoc.Utils;
 
 @Log4j2
 public class ElementRole implements Comparable<ElementRole> {
@@ -42,25 +44,21 @@ public class ElementRole implements Comparable<ElementRole> {
 	private final @Getter ElementType elementType;
 	private final @Getter String roleName;
 	private final int roleNameSeq;
-
-	/**
-	 * Used to solve conflicts between members and the element name of the
-	 * generic element option, see package-info of this package.
-	 */
-	private FrankElement defaultElementOptionConflict;
-
-	/**
-	 * Used to solve element role member conflicts as described in
-	 * the package-info of this package.
-	 */
-	private Set<FrankElement> nameConflicts;
-
 	/**
 	 * Used to resolve member conflicts in shared generic element options as
 	 * explained in the package-info of this package.
 	 */
 	private final Set<ElementRoleSet> participatesInRoleSets = new HashSet<>();
-
+	/**
+	 * Used to solve conflicts between members and the element name of the
+	 * generic element option, see package-info of this package.
+	 */
+	private FrankElement defaultElementOptionConflict;
+	/**
+	 * Used to solve element role member conflicts as described in
+	 * the package-info of this package.
+	 */
+	private Set<FrankElement> nameConflicts;
 	/** Used to solve conflict caused by ElementType interface inheritance. */
 	private @Setter(AccessLevel.PACKAGE) ElementRole highestCommonInterface;
 
@@ -72,8 +70,9 @@ public class ElementRole implements Comparable<ElementRole> {
 	}
 
 	// NOTE: A Lombok getter would look better, but it does not work properly with Javadoc.
-	//  A {@link} JavaDoc annotation pointing to a Lombok getter causes the method name to appear
+	//  A {@link} Javadoc annotation pointing to a Lombok getter causes the method name to appear
 	//  in the text but not as a link.
+
 	/**
 	 * Used to resolve conflicts by {@link org.frankframework.frankdoc.model.ElementType} interface
 	 * inheritance, see {@link org.frankframework.frankdoc.model}.
@@ -83,6 +82,7 @@ public class ElementRole implements Comparable<ElementRole> {
 	}
 
 	// NOTE: Same problem with Lombok
+
 	/**
 	 * Used to resolve conflicts between {@link org.frankframework.frankdoc.model.ElementRole} members
 	 * and the element name of the generic element option, see {@link org.frankframework.frankdoc.model}.
@@ -171,7 +171,7 @@ public class ElementRole implements Comparable<ElementRole> {
 	}
 
 	@Override
-	public int compareTo(ElementRole other) {
+	public int compareTo(@NonNull ElementRole other) {
 		return COMPARATOR.compare(this, other);
 	}
 

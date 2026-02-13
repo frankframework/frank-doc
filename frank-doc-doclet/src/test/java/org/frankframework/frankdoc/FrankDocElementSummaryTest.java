@@ -3,27 +3,26 @@ package org.frankframework.frankdoc;
 import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import org.junit.jupiter.api.Test;
 
 import org.frankframework.frankdoc.integration.BaseIntegrationTest;
 import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
-import org.junit.jupiter.api.Test;
 
-public class FrankDocElementSummaryTest {
+class FrankDocElementSummaryTest {
 	private static final String PACKAGE = "org.frankframework.frankdoc.testtarget.element.summary.";
-	private static final String EXPECTED = Stream.of(
-		"              Master: Master",
-		"              Object: ",
-		"    Other (from sub): ",
-		"Other (from summary): ").map(s -> s + "\n").collect(Collectors.joining());
+
+	private static final String EXPECTED = String.format("""
+		              Master: Master%n\
+		              Object: %n\
+		    Other (from sub): %n\
+		Other (from summary): %n""");
 
 	@Test
-	public void testElementSummary() throws IOException {
+	void testElementSummary() {
 		FrankClassRepository classRepository = TestUtil.getFrankClassRepositoryDoclet(PACKAGE, FRANK_DOC_GROUP_VALUES_PACKAGE);
 		FrankDocModel model = FrankDocModel.populate(getDigesterRulesURL(BaseIntegrationTest.GENERAL_DIGEST_RULES_FILE), null, PACKAGE + "Master", classRepository);
 		FrankDocElementSummaryFactory instance = new FrankDocElementSummaryFactory(model);
@@ -32,7 +31,7 @@ public class FrankDocElementSummaryTest {
 		assertEquals(EXPECTED, actual);
 	}
 
-	private URL getDigesterRulesURL(String fileName) throws IOException {
+	private URL getDigesterRulesURL(String fileName) {
 		return TestUtil.resourceAsURL("doc/" + fileName);
 	}
 

@@ -20,7 +20,7 @@ import javax.lang.model.element.ExecutableElement;
 /**
  * Placeholder for a method that is inherited from the superclass and also from interfaces in the
  * <code>implements</code> clause of a Java class.
- *
+ * <p>
  * There is no corresponding {@link javax.lang.model.element.ExecutableElement} because this placeholder does not
  * correspond to a declared Java method. An object of this type corresponds to an inherited
  * method that may be different from the inherited method because of inheritance from the
@@ -31,7 +31,7 @@ import javax.lang.model.element.ExecutableElement;
  *
  */
 public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
-	private FrankMethodDoclet classAncestorMethod;
+	private final FrankMethodDoclet classAncestorMethod;
 
 	MultiplyInheritedMethodPlaceholder(FrankMethodDoclet classAncestorMethod, FrankClass declaringClass) {
 		super(declaringClass);
@@ -87,8 +87,8 @@ public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 	}
 
 	/**
-	 * This is not a declared method, so it has no declared JavaDoc. To
-	 * see the inherited JavaDoc, use method <code>getJavaDocIncludingInherited()</code>
+	 * This is not a declared method, so it has no declared Javadoc. To
+	 * see the inherited Javadoc, use method <code>getJavaDocIncludingInherited()</code>
 	 * which is inherited from {@link FrankMethodDocletBase}.
 	 */
 	@Override
@@ -102,8 +102,8 @@ public class MultiplyInheritedMethodPlaceholder extends FrankMethodDocletBase {
 	}
 
 	/**
-	 * This is not a declared method, so it has no declared JavaDoc tags. To see an inherited
-	 * JavaDoc tag, use method <code>getJavaDocTagIncludingInherited()</code> which is
+	 * This is not a declared method, so it has no declared Javadoc tags. To see an inherited
+	 * Javadoc tag, use method <code>getJavaDocTagIncludingInherited()</code> which is
 	 * inherited from {@link FrankMethodDocletBase}.
 	 */
 	@Override
