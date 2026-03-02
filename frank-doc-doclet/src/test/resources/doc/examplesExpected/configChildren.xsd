@@ -19,10 +19,9 @@
     </xs:complexType>
   </xs:element>
   <xs:complexType name="MasterType">
-    <xs:group ref="MasterDeclaredChildGroup" />
+    <xs:group ref="MasterCumulativeChildGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children.Master" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="MasterDeclaredChildGroup">
     <xs:sequence>
@@ -79,7 +78,12 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="My1Type">
+    <xs:group ref="ObjectDeclaredChildGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children.My1" use="prohibited" />
+  </xs:complexType>
+  <xs:complexType name="ObjectType">
+    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
@@ -97,9 +101,9 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="My2Type">
+    <xs:group ref="ObjectDeclaredChildGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children.My2" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="BElementGroup">
     <xs:choice>
@@ -243,10 +247,9 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="Level1Type">
-    <xs:group ref="Level1DeclaredChildGroup" />
+    <xs:group ref="Level1CumulativeChildGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children.Level1" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="Level1DeclaredChildGroup">
     <xs:sequence>
@@ -280,11 +283,16 @@
       <xs:group ref="BElementGroupBase" />
     </xs:choice>
   </xs:group>
+  <xs:group name="Level1CumulativeChildGroup">
+    <xs:sequence>
+      <xs:group ref="Level1DeclaredChildGroup" />
+      <xs:group ref="ObjectDeclaredChildGroup" />
+    </xs:sequence>
+  </xs:group>
   <xs:complexType name="Level2Type">
     <xs:group ref="Level2CumulativeChildGroup" />
+    <xs:attributeGroup ref="Level1CumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children.Level2" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="Level2DeclaredChildGroup">
     <xs:sequence>
@@ -294,14 +302,13 @@
   <xs:group name="Level2CumulativeChildGroup">
     <xs:sequence>
       <xs:group ref="Level2DeclaredChildGroup" />
-      <xs:group ref="Level1DeclaredChildGroup" />
+      <xs:group ref="Level1CumulativeChildGroup" />
     </xs:sequence>
   </xs:group>
   <xs:complexType name="Level3Type">
     <xs:group ref="Level3CumulativeChildGroup" />
+    <xs:attributeGroup ref="Level2CumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children.Level3" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="Level3DeclaredChildGroup">
     <xs:sequence>
@@ -314,13 +321,13 @@
       <xs:group ref="Level3DeclaredChildGroup" />
       <xs:group ref="Level2DeclaredChildGroup" />
       <xs:group ref="BElementGroup_2" minOccurs="0" maxOccurs="unbounded" />
+      <xs:group ref="ObjectDeclaredChildGroup" />
     </xs:sequence>
   </xs:group>
   <xs:complexType name="LevelWithCumulativeType">
     <xs:group ref="LevelWithCumulativePluralConfigChildGroup" />
+    <xs:attributeGroup ref="Level3CumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulative" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="LevelWithCumulativePluralConfigChildGroup">
     <xs:sequence>
@@ -334,9 +341,8 @@
   </xs:group>
   <xs:complexType name="LevelWithCumulativeNoReuseType">
     <xs:group ref="LevelWithCumulativeNoReusePluralConfigChildGroup" />
+    <xs:attributeGroup ref="LevelWithCumulativeCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children.LevelWithCumulativeNoReuse" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="LevelWithCumulativeNoReusePluralConfigChildGroup">
     <xs:sequence>
@@ -346,6 +352,12 @@
         <xs:group ref="CElementGroup" />
         <xs:group ref="DElementGroup" />
       </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="MasterCumulativeChildGroup">
+    <xs:sequence>
+      <xs:group ref="MasterDeclaredChildGroup" />
+      <xs:group ref="ObjectDeclaredChildGroup" />
     </xs:sequence>
   </xs:group>
   <xs:simpleType name="frankBoolean">

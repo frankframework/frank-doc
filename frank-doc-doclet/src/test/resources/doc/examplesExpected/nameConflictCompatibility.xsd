@@ -39,6 +39,11 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="MemberType">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="Member2CumulativeChildGroup" />
+      </xs:choice>
+    </xs:sequence>
     <xs:attributeGroup ref="MemberCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Member" />
   </xs:complexType>
@@ -47,17 +52,29 @@
   </xs:attributeGroup>
   <xs:attributeGroup name="MemberCumulativeAttributeGroup">
     <xs:attributeGroup ref="MemberDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="Member2DeclaredAttributeGroup" />
+    <xs:attributeGroup ref="Member2CumulativeAttributeGroup" />
   </xs:attributeGroup>
   <xs:complexType name="Member2Type">
-    <xs:attributeGroup ref="Member2DeclaredAttributeGroup" />
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="ObjectDeclaredChildGroup" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attributeGroup ref="Member2CumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second.Member" />
   </xs:complexType>
   <xs:attributeGroup name="Member2DeclaredAttributeGroup">
     <xs:attribute name="myAttribute" type="xs:string" />
+  </xs:attributeGroup>
+  <xs:attributeGroup name="Member2CumulativeAttributeGroup">
+    <xs:attributeGroup ref="Member2DeclaredAttributeGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
+  </xs:attributeGroup>
+  <xs:complexType name="ObjectType">
+    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:attributeGroup>
+  </xs:complexType>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />

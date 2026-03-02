@@ -1,86 +1,80 @@
 {
-    "metadata": {
-        "version": "1.2.3-SNAPSHOT"
-    },
-    "types": {
-        "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.IChild": [
-            "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Member"
-        ],
-        "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master": [
-            "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master"
-        ],
-        "Module": [
-            "Module"
-        ]
-    },
-    "elements": {
-        "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master": {
-            "name": "Master",
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            },
-            "children": [
-                {
-                    "multiple": true,
-                    "roleName": "module",
-                    "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
-                    "type": "Module"
-                },
-                {
-                    "multiple": true,
-                    "roleName": "a",
-                    "type": "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.IChild"
-                }
-            ]
-        },
-        "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Member": {
-            "name": "Member",
-            "parent": "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second.Member",
-            "attributes": {
-                "myOtherAttribute": {}
-            }
-        },
-        "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second.Member": {
-            "name": "Member",
-            "deprecated": {
-                "forRemoval": false,
-                "since": ""
-            },
-            "attributes": {
-                "myAttribute": {},
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        },
-        "Module": {
-            "name": "Module",
-            "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations."
-        },
-        "java.lang.Object": {
-            "name": "Object",
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        }
-    },
-    "elementNames": {
-        "Master": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master"
-        },
-        "MemberA": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Member"
-        },
-        "Module": {
-            "className": "Module",
-            "labels": {
-                "FrankDocGroup": "Other"
-            }
-        }
-    },
-    "enums": {}
+	"elementNames": {
+		"Master": {
+			"className": "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master"
+		},
+		"MemberA": {
+			"className": "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Member"
+		},
+		"Module": {
+			"className": "Module",
+			"labels": {
+				"FrankDocGroup": "Other"
+			}
+		}
+	},
+	"elements": {
+		"Module": {
+			"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+			"name": "Module"
+		},
+		"java.lang.Object": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
+			"name": "Object"
+		},
+		"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master": {
+			"children": [
+				{
+					"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+					"multiple": true,
+					"roleName": "module",
+					"type": "Module"
+				},
+				{
+					"multiple": true,
+					"roleName": "a",
+					"type": "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.IChild"
+				}
+			],
+			"name": "Master",
+			"parent": "java.lang.Object"
+		},
+		"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Member": {
+			"attributes": {
+				"myOtherAttribute": {}
+			},
+			"name": "Member",
+			"parent": "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second.Member"
+		},
+		"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second.Member": {
+			"attributes": {
+				"myAttribute": {}
+			},
+			"deprecated": {
+				"forRemoval": false,
+				"since": ""
+			},
+			"name": "Member",
+			"parent": "java.lang.Object"
+		}
+	},
+	"enums": {},
+	"metadata": {
+		"version": "1.2.3-SNAPSHOT"
+	},
+	"types": {
+		"Module": [
+			"Module"
+		],
+		"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.IChild": [
+			"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Member"
+		],
+		"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master": [
+			"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master"
+		]
+	}
 }

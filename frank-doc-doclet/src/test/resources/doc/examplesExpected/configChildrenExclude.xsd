@@ -25,10 +25,9 @@
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:complexType name="MasterType">
-    <xs:group ref="MasterDeclaredChildGroup" />
+    <xs:group ref="MasterCumulativeChildGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children.excluded.Master" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="MasterDeclaredChildGroup">
     <xs:sequence>
@@ -78,25 +77,42 @@
   </xs:group>
   <xs:complexType name="ChildType">
     <xs:group ref="ChildCumulativeChildGroup" />
+    <xs:attributeGroup ref="ParentCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children.excluded.Child" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="ChildDeclaredChildGroup">
     <xs:sequence />
   </xs:group>
   <xs:group name="ChildCumulativeChildGroup">
-    <xs:sequence />
+    <xs:sequence>
+      <xs:group ref="ObjectDeclaredChildGroup" />
+    </xs:sequence>
   </xs:group>
   <xs:complexType name="ParentType">
-    <xs:group ref="ParentDeclaredChildGroup" />
+    <xs:group ref="ParentCumulativeChildGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.config.children.excluded.Parent" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="ParentDeclaredChildGroup">
     <xs:sequence>
       <xs:element name="C" minOccurs="0" maxOccurs="unbounded" type="CType" />
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="ParentCumulativeChildGroup">
+    <xs:sequence>
+      <xs:group ref="ParentDeclaredChildGroup" />
+      <xs:group ref="ObjectDeclaredChildGroup" />
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="ObjectType">
+    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
+  <xs:group name="MasterCumulativeChildGroup">
+    <xs:sequence>
+      <xs:group ref="MasterDeclaredChildGroup" />
+      <xs:group ref="ObjectDeclaredChildGroup" />
     </xs:sequence>
   </xs:group>
   <xs:simpleType name="frankBoolean">

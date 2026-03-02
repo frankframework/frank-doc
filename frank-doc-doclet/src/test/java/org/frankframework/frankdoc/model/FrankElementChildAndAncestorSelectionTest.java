@@ -42,24 +42,24 @@ public class FrankElementChildAndAncestorSelectionTest {
 	@Test
 	public void testBothSelectingAndRejectingAncestorsConsideredForAttributes() {
 		FrankElement instance = model.findFrankElement(PACKAGE + "BottomOfInheritance");
-		FrankElement actualAncestor = instance.getNextAncestorThatHasOrRejectsAttributes(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED);
+		FrankElement actualAncestor = instance.getParent();
 		assertEquals("RejectingAncestor", actualAncestor.getSimpleName());
-		actualAncestor = actualAncestor.getNextAncestorThatHasOrRejectsAttributes(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED);
+		actualAncestor = actualAncestor.getParent();
 		assertEquals("SelectingAncestor", actualAncestor.getSimpleName());
-		actualAncestor = actualAncestor.getNextAncestorThatHasOrRejectsAttributes(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED);
+		actualAncestor = actualAncestor.getParent();
 		assertEquals("DefaultAncestor", actualAncestor.getSimpleName());
-		assertNull(actualAncestor.getNextAncestorThatHasOrRejectsAttributes(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED));
+		assertNull(actualAncestor.getParent());
 	}
 
 	@Test
 	public void testBothSelectingAndRejectingAncestorsConsideredForConfigChildren() {
 		FrankElement instance = model.findFrankElement(PACKAGE + "BottomOfInheritance");
-		FrankElement actualAncestor = instance.getNextAncestorThatHasOrRejectsConfigChildren(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED);
+		FrankElement actualAncestor = instance.getParent();
 		assertEquals("RejectingAncestor", actualAncestor.getSimpleName());
-		actualAncestor = actualAncestor.getNextAncestorThatHasOrRejectsConfigChildren(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED);
+		actualAncestor = actualAncestor.getParent();
 		assertEquals("SelectingAncestor", actualAncestor.getSimpleName());
-		actualAncestor = actualAncestor.getNextAncestorThatHasOrRejectsConfigChildren(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED);
+		actualAncestor = actualAncestor.getParent();
 		assertEquals("DefaultAncestor", actualAncestor.getSimpleName());
-		assertNull(actualAncestor.getNextAncestorThatHasOrRejectsConfigChildren(ElementChild.IN_XSD, ElementChild.REJECT_DEPRECATED));
+		assertNull(actualAncestor.getParent());
 	}
 }

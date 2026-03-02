@@ -18,6 +18,7 @@
     </xs:complexType>
   </xs:element>
   <xs:complexType name="ChildType">
+    <xs:group ref="JmsListenerCumulativeChildGroup" />
     <xs:attributeGroup ref="ChildCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.packageprivate.override.Child" use="prohibited" />
   </xs:complexType>
@@ -37,9 +38,18 @@
   <xs:attributeGroup name="ChildCumulativeAttributeGroup">
     <xs:attributeGroup ref="ChildDeclaredAttributeGroup" />
     <xs:attribute ref="keyField" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
   </xs:attributeGroup>
+  <xs:complexType name="JmsListenerType">
+    <xs:group ref="PushingJmsListenerCumulativeChildGroup" />
+    <xs:attributeGroup ref="PushingJmsListenerCumulativeAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.packageprivate.override.JmsListener" use="prohibited" />
+  </xs:complexType>
+  <xs:complexType name="PushingJmsListenerType">
+    <xs:group ref="AbstractParentCumulativeChildGroup" />
+    <xs:attributeGroup ref="AbstractParentCumulativeAttributeGroup" />
+    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.packageprivate.override.PushingJmsListener" use="prohibited" />
+  </xs:complexType>
   <xs:attributeGroup name="AbstractParentDeclaredAttributeGroup">
     <xs:attribute ref="keyField" />
     <xs:attribute name="destinationName" type="xs:string">
@@ -52,9 +62,16 @@
         <xs:documentation>By default text from Parent. Default: false</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="AbstractParentCumulativeAttributeGroup">
+    <xs:attributeGroup ref="AbstractParentDeclaredAttributeGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
+  </xs:attributeGroup>
+  <xs:complexType name="ObjectType">
+    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:attributeGroup>
+  </xs:complexType>
   <xs:attribute name="keyField" type="xs:string">
     <xs:annotation>
       <xs:documentation>Primary key field of the table, used to identify messages. &lt;a href="https://www.eclipse.org/paho/files/javadoc" target="_blank"&gt;link&lt;/a&gt;.
