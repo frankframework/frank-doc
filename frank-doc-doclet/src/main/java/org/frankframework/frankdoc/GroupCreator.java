@@ -53,36 +53,28 @@ class GroupCreator<T extends ElementChild> {
 
 	void run() {
 		boolean hasNoRelevantChildren = ! hasRelevantChildren.test(frankElement);
-		FrankElement ancestor = nextAncestor(frankElement);
-		if(hasNoRelevantChildren) {
-			if(ancestor == null) {
+		FrankElement ancestor = frankElement.getParent();
+		if (hasNoRelevantChildren) {
+			if (ancestor == null) {
 				callback.noChildren();
-			}
-			else {
-				FrankElement superAncestor = nextAncestor(ancestor);
+			} else {
+				FrankElement superAncestor = ancestor.getParent();
 				if(superAncestor == null) {
 					callback.addDeclaredGroupRef(ancestor);
-				}
-				else {
+				} else {
 					callback.addCumulativeGroupRef(ancestor);
 				}
 			}
-		}
-		else {
-			if(ancestor == null) {
+		} else {
+			if (ancestor == null) {
 				callback.addTopLevelDeclaredGroup();
 				callback.addDeclaredGroupRef(frankElement);
-			}
-			else {
+			} else {
 				callback.addDeclaredGroup();
 				callback.addCumulativeGroupRef(frankElement);
 				addCumulativeChildGroup();
 			}
 		}
-	}
-
-	private FrankElement nextAncestor(FrankElement e) {
-		return e.getNextAncestorThatHasChildren(hasRelevantChildren.negate());
 	}
 
 	private void addCumulativeChildGroup() {

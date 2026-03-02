@@ -56,9 +56,10 @@ class AncestorChildNavigation<T extends ElementChild> {
 		enter(start);
 		overridden = new HashMap<>();
 		addDeclaredGroupOrRepeatChildrenInXsd();
-		while(current.getNextAncestorThatHasChildren(noChildren) != null) {
-			enter(current.getNextAncestorThatHasChildren(noChildren));
-			if(getOverriddenChildren().stream().noneMatch(childSelector)) {
+
+		while (current.getParent() != null) {
+			enter(current.getParent());
+			if (getOverriddenChildren().stream().noneMatch(childSelector)) {
 				safeAddCumulative();
 				return;
 			}
@@ -120,7 +121,7 @@ class AncestorChildNavigation<T extends ElementChild> {
 	}
 
 	private void handleSelectedChildren(List<T> children) {
-		if(current.getNextAncestorThatHasChildren(noChildren) == null) {
+		if (current.getParent() == null) {
 			handler.handleSelectedChildrenOfTopLevel(children, current);
 		} else {
 			handler.handleSelectedChildren(children, current);
@@ -184,7 +185,7 @@ class AncestorChildNavigation<T extends ElementChild> {
 	}
 
 	private void safeAddCumulative() {
-		if(current.getNextAncestorThatHasChildren(noChildren) == null) {
+		if (current.getParent() == null) {
 			handler.handleChildrenOf(current);
 		} else {
 			handler.handleCumulativeChildrenOf(current);
