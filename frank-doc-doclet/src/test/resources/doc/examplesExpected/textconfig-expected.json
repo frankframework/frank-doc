@@ -1,116 +1,106 @@
 {
-    "elementNames": {
-        "C": {
-            "className": "org.frankframework.frankdoc.testtarget.textconfig.GrandChild"
-        },
-        "ChildImplA": {
-            "className": "org.frankframework.frankdoc.testtarget.textconfig.ChildImpl"
-        },
-        "ChildImplB": {
-            "className": "org.frankframework.frankdoc.testtarget.textconfig.ChildImpl"
-        },
-        "Module": {
-            "className": "Module",
-            "labels": {
-                "FrankDocGroup": "Other"
-            }
-        },
-        "Start": {
-            "className": "org.frankframework.frankdoc.testtarget.textconfig.Start"
-        }
-    },
-    "elements": {
-        "Module": {
-            "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
-            "name": "Module"
-        },
-        "java.lang.Object": {
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            },
-            "name": "Object"
-        },
-        "org.frankframework.frankdoc.testtarget.textconfig.ChildImpl": {
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            },
-            "children": [
-                {
-                    "multiple": true,
-                    "roleName": "configWarning"
-                },
-                {
-                    "multiple": true,
-                    "roleName": "q"
-                },
-                {
-                    "multiple": true,
-                    "roleName": "c",
-                    "type": "org.frankframework.frankdoc.testtarget.textconfig.GrandChild"
-                }
-            ],
-            "name": "ChildImpl"
-        },
-        "org.frankframework.frankdoc.testtarget.textconfig.GrandChild": {
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            },
-            "name": "C"
-        },
-        "org.frankframework.frankdoc.testtarget.textconfig.Start": {
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                },
-                "i": {}
-            },
-            "children": [
-                {
-                    "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
-                    "multiple": true,
-                    "roleName": "module",
-                    "type": "Module"
-                },
-                {
-                    "multiple": true,
-                    "roleName": "p"
-                },
-                {
-                    "multiple": true,
-                    "roleName": "a",
-                    "type": "org.frankframework.frankdoc.testtarget.textconfig.IChild"
-                },
-                {
-                    "multiple": true,
-                    "roleName": "b",
-                    "type": "org.frankframework.frankdoc.testtarget.textconfig.IChild"
-                }
-            ],
-            "name": "Start"
-        }
-    },
-    "enums": {},
-    "metadata": {
-        "version": "1.2.3-SNAPSHOT"
-    },
-    "types": {
-        "Module": [
-            "Module"
-        ],
-        "org.frankframework.frankdoc.testtarget.textconfig.GrandChild": [
-            "org.frankframework.frankdoc.testtarget.textconfig.GrandChild"
-        ],
-        "org.frankframework.frankdoc.testtarget.textconfig.IChild": [
-            "org.frankframework.frankdoc.testtarget.textconfig.ChildImpl"
-        ],
-        "org.frankframework.frankdoc.testtarget.textconfig.Start": [
-            "org.frankframework.frankdoc.testtarget.textconfig.Start"
-        ]
-    }
+	"elementNames": {
+		"C": {
+			"className": "org.frankframework.frankdoc.testtarget.textconfig.GrandChild"
+		},
+		"ChildImplA": {
+			"className": "org.frankframework.frankdoc.testtarget.textconfig.ChildImpl"
+		},
+		"ChildImplB": {
+			"className": "org.frankframework.frankdoc.testtarget.textconfig.ChildImpl"
+		},
+		"Module": {
+			"className": "Module",
+			"labels": {
+				"FrankDocGroup": "Other"
+			}
+		},
+		"Start": {
+			"className": "org.frankframework.frankdoc.testtarget.textconfig.Start"
+		}
+	},
+	"elements": {
+		"Module": {
+			"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+			"name": "Module"
+		},
+		"java.lang.Object": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
+			"name": "Object"
+		},
+		"org.frankframework.frankdoc.testtarget.textconfig.ChildImpl": {
+			"children": [
+				{
+					"multiple": true,
+					"roleName": "configWarning"
+				},
+				{
+					"multiple": true,
+					"roleName": "q"
+				},
+				{
+					"multiple": true,
+					"roleName": "c",
+					"type": "org.frankframework.frankdoc.testtarget.textconfig.GrandChild"
+				}
+			],
+			"name": "ChildImpl",
+			"parent": "java.lang.Object"
+		},
+		"org.frankframework.frankdoc.testtarget.textconfig.GrandChild": {
+			"name": "C",
+			"parent": "java.lang.Object"
+		},
+		"org.frankframework.frankdoc.testtarget.textconfig.Start": {
+			"attributes": {
+				"i": {}
+			},
+			"children": [
+				{
+					"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+					"multiple": true,
+					"roleName": "module",
+					"type": "Module"
+				},
+				{
+					"multiple": true,
+					"roleName": "p"
+				},
+				{
+					"multiple": true,
+					"roleName": "a",
+					"type": "org.frankframework.frankdoc.testtarget.textconfig.IChild"
+				},
+				{
+					"multiple": true,
+					"roleName": "b",
+					"type": "org.frankframework.frankdoc.testtarget.textconfig.IChild"
+				}
+			],
+			"name": "Start",
+			"parent": "java.lang.Object"
+		}
+	},
+	"enums": {},
+	"metadata": {
+		"version": "1.2.3-SNAPSHOT"
+	},
+	"types": {
+		"Module": [
+			"Module"
+		],
+		"org.frankframework.frankdoc.testtarget.textconfig.GrandChild": [
+			"org.frankframework.frankdoc.testtarget.textconfig.GrandChild"
+		],
+		"org.frankframework.frankdoc.testtarget.textconfig.IChild": [
+			"org.frankframework.frankdoc.testtarget.textconfig.ChildImpl"
+		],
+		"org.frankframework.frankdoc.testtarget.textconfig.Start": [
+			"org.frankframework.frankdoc.testtarget.textconfig.Start"
+		]
+	}
 }

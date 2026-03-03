@@ -1,97 +1,91 @@
 {
-    "metadata": {
-        "version": "1.2.3-SNAPSHOT"
-    },
-    "types": {
-        "org.frankframework.frankdoc.testtarget.notes.Note": [
-            "org.frankframework.frankdoc.testtarget.notes.Note"
-        ],
-        "Module": [
-            "Module"
-        ]
-    },
-    "elements": {
-        "Module": {
-            "name": "Module",
-            "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations."
-        },
-        "org.frankframework.frankdoc.testtarget.notes.Note": {
-            "name": "Note",
-            "description": "First line of documentation.\nSecond line of documentation.",
-            "attributes": {
-                "attribute": {},
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            },
-            "children": [
-                {
-                    "multiple": true,
-                    "roleName": "module",
-                    "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
-                    "type": "Module"
-                }
-            ],
-            "notes": [
-                {
-                    "type": "INFO",
-                    "value": "First line\nSecond line\nThird line"
-                },
-                {
-                    "type": "INFO",
-                    "value": "First line\n<pre><code>&lt;Element&gt;\n\t  &lt;Param /&gt;\n\t&lt;/Element&gt;</code></pre>"
-                },
-                {
-                    "type": "TIP",
-                    "value": "First line"
-                },
-                {
-                    "type": "WARNING",
-                    "value": "First line\nSecond line"
-                },
-                {
-                    "type": "DANGER",
-                    "value": "First line"
-                },
-                {
-                    "type": "INFO",
-                    "value": "Description from the parent."
-                }
-            ]
-        },
-        "java.lang.Object": {
-            "name": "Object",
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        },
-        "org.frankframework.frankdoc.testtarget.notes.Parent": {
-            "name": "Parent",
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            },
-            "notes": [
-                {
-                    "type": "INFO",
-                    "value": "Description from the parent."
-                }
-            ]
-        }
-    },
-    "elementNames": {
-        "Module": {
-            "className": "Module",
-            "labels": {
-                "FrankDocGroup": "Other"
-            }
-        },
-        "Note": {
-            "className": "org.frankframework.frankdoc.testtarget.notes.Note"
-        }
-    },
-    "enums": {}
+	"elementNames": {
+		"Module": {
+			"className": "Module",
+			"labels": {
+				"FrankDocGroup": "Other"
+			}
+		},
+		"Note": {
+			"className": "org.frankframework.frankdoc.testtarget.notes.Note"
+		}
+	},
+	"elements": {
+		"Module": {
+			"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+			"name": "Module"
+		},
+		"java.lang.Object": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
+			"name": "Object"
+		},
+		"org.frankframework.frankdoc.testtarget.notes.Note": {
+			"attributes": {
+				"attribute": {}
+			},
+			"children": [
+				{
+					"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+					"multiple": true,
+					"roleName": "module",
+					"type": "Module"
+				}
+			],
+			"description": "First line of documentation.\nSecond line of documentation.",
+			"name": "Note",
+			"notes": [
+				{
+					"type": "INFO",
+					"value": "First line\nSecond line\nThird line"
+				},
+				{
+					"type": "INFO",
+					"value": "First line\n<pre><code>&lt;Element&gt;\n\t  &lt;Param /&gt;\n\t&lt;/Element&gt;</code></pre>"
+				},
+				{
+					"type": "TIP",
+					"value": "First line"
+				},
+				{
+					"type": "WARNING",
+					"value": "First line\nSecond line"
+				},
+				{
+					"type": "DANGER",
+					"value": "First line"
+				},
+				{
+					"type": "INFO",
+					"value": "Description from the parent."
+				}
+			],
+			"parent": "org.frankframework.frankdoc.testtarget.notes.Parent"
+		},
+		"org.frankframework.frankdoc.testtarget.notes.Parent": {
+			"name": "Parent",
+			"notes": [
+				{
+					"type": "INFO",
+					"value": "Description from the parent."
+				}
+			],
+			"parent": "java.lang.Object"
+		}
+	},
+	"enums": {},
+	"metadata": {
+		"version": "1.2.3-SNAPSHOT"
+	},
+	"types": {
+		"Module": [
+			"Module"
+		],
+		"org.frankframework.frankdoc.testtarget.notes.Note": [
+			"org.frankframework.frankdoc.testtarget.notes.Note"
+		]
+	}
 }
