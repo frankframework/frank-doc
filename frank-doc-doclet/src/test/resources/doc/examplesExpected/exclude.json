@@ -1,95 +1,89 @@
 {
-    "metadata": {
-        "version": "1.2.3-SNAPSHOT"
-    },
-    "types": {
-        "org.frankframework.frankdoc.testtarget.examples.exclude.IInterface": [
-            "org.frankframework.frankdoc.testtarget.examples.exclude.Child",
-            "org.frankframework.frankdoc.testtarget.examples.exclude.GrandChild",
-            "org.frankframework.frankdoc.testtarget.examples.exclude.Parent"
-        ],
-        "org.frankframework.frankdoc.testtarget.examples.exclude.Master": [
-            "org.frankframework.frankdoc.testtarget.examples.exclude.Master"
-        ],
-        "Module": [
-            "Module"
-        ]
-    },
-    "elements": {
-        "org.frankframework.frankdoc.testtarget.examples.exclude.Child": {
-            "name": "Child",
-            "parent": "org.frankframework.frankdoc.testtarget.examples.exclude.Parent",
-            "nonInheritedAttributes": [
-                "childExcludedAttribute"
-            ]
-        },
-        "org.frankframework.frankdoc.testtarget.examples.exclude.GrandChild": {
-            "name": "GrandChild",
-            "parent": "org.frankframework.frankdoc.testtarget.examples.exclude.Child"
-        },
-        "org.frankframework.frankdoc.testtarget.examples.exclude.Master": {
-            "name": "Master",
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            },
-            "children": [
-                {
-                    "multiple": true,
-                    "roleName": "module",
-                    "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
-                    "type": "Module"
-                },
-                {
-                    "multiple": true,
-                    "roleName": "a",
-                    "type": "org.frankframework.frankdoc.testtarget.examples.exclude.IInterface"
-                }
-            ]
-        },
-        "Module": {
-            "name": "Module",
-            "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations."
-        },
-        "java.lang.Object": {
-            "name": "Object",
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        },
-        "org.frankframework.frankdoc.testtarget.examples.exclude.Parent": {
-            "name": "Parent",
-            "attributes": {
-                "childExcludedAttribute": {},
-                "keptParentAttribute": {},
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        }
-    },
-    "elementNames": {
-        "ChildA": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.exclude.Child"
-        },
-        "GrandChildA": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.exclude.GrandChild"
-        },
-        "Master": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.exclude.Master"
-        },
-        "Module": {
-            "className": "Module",
-            "labels": {
-                "FrankDocGroup": "Other"
-            }
-        },
-        "ParentA": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.exclude.Parent"
-        }
-    },
-    "enums": {}
+	"elementNames": {
+		"ChildA": {
+			"className": "org.frankframework.frankdoc.testtarget.examples.exclude.Child"
+		},
+		"GrandChildA": {
+			"className": "org.frankframework.frankdoc.testtarget.examples.exclude.GrandChild"
+		},
+		"Master": {
+			"className": "org.frankframework.frankdoc.testtarget.examples.exclude.Master"
+		},
+		"Module": {
+			"className": "Module",
+			"labels": {
+				"FrankDocGroup": "Other"
+			}
+		},
+		"ParentA": {
+			"className": "org.frankframework.frankdoc.testtarget.examples.exclude.Parent"
+		}
+	},
+	"elements": {
+		"Module": {
+			"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+			"name": "Module"
+		},
+		"java.lang.Object": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
+			"name": "Object"
+		},
+		"org.frankframework.frankdoc.testtarget.examples.exclude.Child": {
+			"name": "Child",
+			"nonInheritedAttributes": [
+				"childExcludedAttribute"
+			],
+			"parent": "org.frankframework.frankdoc.testtarget.examples.exclude.Parent"
+		},
+		"org.frankframework.frankdoc.testtarget.examples.exclude.GrandChild": {
+			"name": "GrandChild",
+			"parent": "org.frankframework.frankdoc.testtarget.examples.exclude.Child"
+		},
+		"org.frankframework.frankdoc.testtarget.examples.exclude.Master": {
+			"children": [
+				{
+					"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+					"multiple": true,
+					"roleName": "module",
+					"type": "Module"
+				},
+				{
+					"multiple": true,
+					"roleName": "a",
+					"type": "org.frankframework.frankdoc.testtarget.examples.exclude.IInterface"
+				}
+			],
+			"name": "Master",
+			"parent": "java.lang.Object"
+		},
+		"org.frankframework.frankdoc.testtarget.examples.exclude.Parent": {
+			"attributes": {
+				"childExcludedAttribute": {},
+				"keptParentAttribute": {}
+			},
+			"name": "Parent",
+			"parent": "java.lang.Object"
+		}
+	},
+	"enums": {},
+	"metadata": {
+		"version": "1.2.3-SNAPSHOT"
+	},
+	"types": {
+		"Module": [
+			"Module"
+		],
+		"org.frankframework.frankdoc.testtarget.examples.exclude.IInterface": [
+			"org.frankframework.frankdoc.testtarget.examples.exclude.Child",
+			"org.frankframework.frankdoc.testtarget.examples.exclude.GrandChild",
+			"org.frankframework.frankdoc.testtarget.examples.exclude.Parent"
+		],
+		"org.frankframework.frankdoc.testtarget.examples.exclude.Master": [
+			"org.frankframework.frankdoc.testtarget.examples.exclude.Master"
+		]
+	}
 }

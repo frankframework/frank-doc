@@ -68,6 +68,7 @@
   <xs:group name="DocumentedCumulativeChildGroup">
     <xs:sequence>
       <xs:group ref="DocumentedDeclaredChildGroup" />
+      <xs:group ref="ObjectDeclaredChildGroup" />
     </xs:sequence>
   </xs:group>
   <xs:attributeGroup name="DocumentedDeclaredAttributeGroup">
@@ -79,16 +80,22 @@
   </xs:attributeGroup>
   <xs:attributeGroup name="DocumentedCumulativeAttributeGroup">
     <xs:attributeGroup ref="DocumentedDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="DocumentedParentDeclaredAttributeGroup" />
+    <xs:attributeGroup ref="DocumentedParentCumulativeAttributeGroup" />
   </xs:attributeGroup>
   <xs:complexType name="DocumentedParentType">
-    <xs:group ref="DocumentedParentDeclaredChildGroup" />
-    <xs:attributeGroup ref="DocumentedParentDeclaredAttributeGroup" />
+    <xs:group ref="DocumentedParentCumulativeChildGroup" />
+    <xs:attributeGroup ref="DocumentedParentCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.featurepackage.DocumentedParent" use="prohibited" />
   </xs:complexType>
   <xs:group name="DocumentedParentDeclaredChildGroup">
     <xs:sequence>
       <xs:group ref="ListenerElementGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="DocumentedParentCumulativeChildGroup">
+    <xs:sequence>
+      <xs:group ref="DocumentedParentDeclaredChildGroup" />
+      <xs:group ref="ObjectDeclaredChildGroup" />
     </xs:sequence>
   </xs:group>
   <xs:attributeGroup name="DocumentedParentDeclaredAttributeGroup">
@@ -102,9 +109,16 @@
         <xs:documentation>The functional name of the object.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="DocumentedParentCumulativeAttributeGroup">
+    <xs:attributeGroup ref="DocumentedParentDeclaredAttributeGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
+  </xs:attributeGroup>
+  <xs:complexType name="ObjectType">
+    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:attributeGroup>
+  </xs:complexType>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />

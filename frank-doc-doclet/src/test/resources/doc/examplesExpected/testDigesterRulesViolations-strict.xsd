@@ -35,10 +35,9 @@
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:complexType name="AType">
-    <xs:group ref="ADeclaredChildGroup" />
+    <xs:group ref="ACumulativeChildGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.pattern.violation.A" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="ADeclaredChildGroup">
     <xs:sequence>
@@ -46,6 +45,17 @@
       <xs:element name="B" minOccurs="0" maxOccurs="unbounded" type="BType" />
     </xs:sequence>
   </xs:group>
+  <xs:group name="ACumulativeChildGroup">
+    <xs:sequence>
+      <xs:group ref="ADeclaredChildGroup" />
+      <xs:group ref="ObjectDeclaredChildGroup" />
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="ObjectType">
+    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:complexType>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />

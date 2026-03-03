@@ -34,7 +34,7 @@ And this is remaining documentation of "TChild".</xs:documentation>
     <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:complexType name="StartType">
-    <xs:group ref="StartDeclaredChildGroup" />
+    <xs:group ref="StartCumulativeChildGroup" />
     <xs:attributeGroup ref="StartCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.Start" use="prohibited" />
   </xs:complexType>
@@ -86,17 +86,26 @@ And this is remaining documentation of "DescribedPossibleIChild".</xs:documentat
     </xs:choice>
   </xs:group>
   <xs:complexType name="DescribedPossibleIChildType">
-    <xs:attributeGroup ref="DescribedPossibleIChildDeclaredAttributeGroup" />
+    <xs:group ref="ObjectDeclaredChildGroup" />
+    <xs:attributeGroup ref="DescribedPossibleIChildCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="DescribedPossibleIChildDeclaredAttributeGroup">
     <xs:attribute name="firstAttribute" type="xs:string" use="required" />
     <xs:attribute name="secondAttribute" type="xs:string" />
+  </xs:attributeGroup>
+  <xs:attributeGroup name="DescribedPossibleIChildCumulativeAttributeGroup">
+    <xs:attributeGroup ref="DescribedPossibleIChildDeclaredAttributeGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
+  </xs:attributeGroup>
+  <xs:complexType name="ObjectType">
+    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:attributeGroup>
+  </xs:complexType>
   <xs:complexType name="NotDescribedPossibleIChildType">
-    <xs:attributeGroup ref="NotDescribedPossibleIChildDeclaredAttributeGroup" />
+    <xs:group ref="ObjectDeclaredChildGroup" />
+    <xs:attributeGroup ref="NotDescribedPossibleIChildCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="NotDescribedPossibleIChildDeclaredAttributeGroup">
@@ -107,20 +116,30 @@ And this is remaining documentation of "DescribedPossibleIChild".</xs:documentat
     </xs:attribute>
     <xs:attribute name="secondAttribute" type="xs:string" />
     <xs:attribute name="thirdAttribute" type="frankInt" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
+  <xs:attributeGroup name="NotDescribedPossibleIChildCumulativeAttributeGroup">
+    <xs:attributeGroup ref="NotDescribedPossibleIChildDeclaredAttributeGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
+  </xs:attributeGroup>
+  <xs:group name="StartCumulativeChildGroup">
+    <xs:sequence>
+      <xs:group ref="StartDeclaredChildGroup" />
+      <xs:group ref="AbstractParentOfStartCumulativeChildGroup" />
+    </xs:sequence>
+  </xs:group>
   <xs:attributeGroup name="StartDeclaredAttributeGroup">
     <xs:attribute name="attribute" type="xs:string" />
   </xs:attributeGroup>
   <xs:attributeGroup name="StartCumulativeAttributeGroup">
     <xs:attributeGroup ref="StartDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="AbstractParentOfStartDeclaredAttributeGroup" />
+    <xs:attributeGroup ref="AbstractParentOfStartCumulativeAttributeGroup" />
   </xs:attributeGroup>
   <xs:attributeGroup name="AbstractParentOfStartDeclaredAttributeGroup">
     <xs:attribute name="abstractParentOfStartAttribute" type="xs:string" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
+  </xs:attributeGroup>
+  <xs:attributeGroup name="AbstractParentOfStartCumulativeAttributeGroup">
+    <xs:attributeGroup ref="AbstractParentOfStartDeclaredAttributeGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
   </xs:attributeGroup>
   <xs:simpleType name="MyEnumAttributeValuesType">
     <xs:restriction base="xs:string">

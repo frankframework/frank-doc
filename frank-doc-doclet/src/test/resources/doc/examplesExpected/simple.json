@@ -1,193 +1,183 @@
 {
-    "metadata": {
-        "version": "1.2.3-SNAPSHOT"
-    },
-    "types": {
-        "org.frankframework.frankdoc.testtarget.examples.simple.IChild": [
-            "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
-            "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild"
-        ],
-        "org.frankframework.frankdoc.testtarget.examples.simple.Start": [
-            "org.frankframework.frankdoc.testtarget.examples.simple.Start"
-        ],
-        "org.frankframework.frankdoc.testtarget.examples.simple.TChild": [
-            "org.frankframework.frankdoc.testtarget.examples.simple.TChild"
-        ],
-        "Module": [
-            "Module"
-        ]
-    },
-    "elements": {
-        "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart": {
-            "name": "AbstractParentOfStart",
-            "abstract": true,
-            "attributes": {
-                "abstractParentOfStartAttribute": {},
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        },
-        "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild": {
-            "name": "DescribedPossibleIChild",
-            "description": "This is the header of the JavaDoc of \\\"DescribedPossibleIChild\\\".\n\nAnd this is remaining documentation of \\\"DescribedPossibleIChild\\\".",
-            "attributes": {
-                "firstAttribute": {
-                    "mandatory": true
-                },
-                "secondAttribute": {},
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        },
-        "Module": {
-            "name": "Module",
-            "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations."
-        },
-        "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild": {
-            "name": "NotDescribedPossibleIChild",
-            "attributes": {
-                "firstAttribute": {
-                    "enum": "org.frankframework.frankdoc.testtarget.examples.simple.MyEnum"
-                },
-                "secondAttribute": {},
-                "thirdAttribute": {
-                    "type": "int"
-                },
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        },
-        "java.lang.Object": {
-            "name": "Object",
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        },
-        "org.frankframework.frankdoc.testtarget.examples.simple.TChild": {
-            "name": "RoleNameTChild",
-            "description": "This is the header of the JavaDoc of \\\"TChild\\\", with package name nl.nn.something.\n\nAnd this is remaining documentation of \\\"TChild\\\".",
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        },
-        "org.frankframework.frankdoc.testtarget.examples.simple.Start": {
-            "name": "Start",
-            "description": "Description of Start. Value of VARIABLE is <code>variable value</code>. Value of TheEnum.ENUM_CONSTANT is <code>enum constant</code>.\nValue of literal is <pre>This is a literal</pre>.",
-            "parent": "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart",
-            "attributes": {
-                "attribute": {}
-            },
-            "children": [
-                {
-                    "multiple": true,
-                    "roleName": "module",
-                    "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
-                    "type": "Module"
-                },
-                {
-                    "multiple": false,
-                    "roleName": "roleNameIChild",
-                    "type": "org.frankframework.frankdoc.testtarget.examples.simple.IChild"
-                },
-                {
-                    "multiple": true,
-                    "roleName": "roleNameTChild",
-                    "type": "org.frankframework.frankdoc.testtarget.examples.simple.TChild"
-                }
-            ]
-        }
-    },
-    "elementNames": {
-        "DescribedPossibleIRoleNameIChild": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
-            "labels": {
-                "FrankDocGroup": "Sender"
-            }
-        },
-        "Module": {
-            "className": "Module",
-            "labels": {
-                "FrankDocGroup": "Other"
-            }
-        },
-        "NotDescribedPossibleIRoleNameIChild": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild",
-            "labels": {
-                "FrankDocGroup": "ErrorMessageFormatter"
-            }
-        },
-        "RoleNameTChild": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.simple.TChild"
-        },
-        "Start": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.simple.Start",
-            "labels": {
-                "FrankDocGroup": "Batch"
-            }
-        }
-    },
-    "enums": {
-        "org.frankframework.frankdoc.testtarget.examples.simple.MyEnum": {
-            "ONE": {},
-            "customLabelTwo": {
-                "description": "Description of TWO"
-            }
-        }
-    },
-    "labels": {
-        "FrankDocGroup": [
-            "Pipe",
-            "Sender",
-            "Listener",
-            "Validator",
-            "Wrapper",
-            "TransactionalStorage",
-            "ErrorMessageFormatter",
-            "Batch",
-            "Monitoring",
-            "Job",
-            "Other"
-        ]
-    },
-    "properties": [
-        {
-            "name": "First group",
-            "properties": [
-                {
-                    "name": "property.first",
-                    "description": "This is a description",
-                    "defaultValue": "Value"
-                },
-                {
-                    "name": "propery.second",
-                    "description": "First line\nSecond line",
-                    "flags": [
-                        "Deprecated",
-                        "Generated"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "",
-            "properties": [
-                {
-                    "name": "property.third",
-                    "description": "First line\nSecond line\nThird line",
-                    "defaultValue": "10"
-                },
-                {
-                    "name": "property.fourth",
-                    "defaultValue": "true"
-                }
-            ]
-        }
-    ]
+	"elementNames": {
+		"DescribedPossibleIRoleNameIChild": {
+			"className": "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
+			"labels": {
+				"FrankDocGroup": "Sender"
+			}
+		},
+		"Module": {
+			"className": "Module",
+			"labels": {
+				"FrankDocGroup": "Other"
+			}
+		},
+		"NotDescribedPossibleIRoleNameIChild": {
+			"className": "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild",
+			"labels": {
+				"FrankDocGroup": "ErrorMessageFormatter"
+			}
+		},
+		"RoleNameTChild": {
+			"className": "org.frankframework.frankdoc.testtarget.examples.simple.TChild"
+		},
+		"Start": {
+			"className": "org.frankframework.frankdoc.testtarget.examples.simple.Start",
+			"labels": {
+				"FrankDocGroup": "Batch"
+			}
+		}
+	},
+	"elements": {
+		"Module": {
+			"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+			"name": "Module"
+		},
+		"java.lang.Object": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
+			"name": "Object"
+		},
+		"org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart": {
+			"abstract": true,
+			"attributes": {
+				"abstractParentOfStartAttribute": {}
+			},
+			"name": "AbstractParentOfStart",
+			"parent": "java.lang.Object"
+		},
+		"org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild": {
+			"attributes": {
+				"firstAttribute": {
+					"mandatory": true
+				},
+				"secondAttribute": {}
+			},
+			"description": "This is the header of the JavaDoc of \\\"DescribedPossibleIChild\\\".\n\nAnd this is remaining documentation of \\\"DescribedPossibleIChild\\\".",
+			"name": "DescribedPossibleIChild",
+			"parent": "java.lang.Object"
+		},
+		"org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild": {
+			"attributes": {
+				"firstAttribute": {
+					"enum": "org.frankframework.frankdoc.testtarget.examples.simple.MyEnum"
+				},
+				"secondAttribute": {},
+				"thirdAttribute": {
+					"type": "int"
+				}
+			},
+			"name": "NotDescribedPossibleIChild",
+			"parent": "java.lang.Object"
+		},
+		"org.frankframework.frankdoc.testtarget.examples.simple.Start": {
+			"attributes": {
+				"attribute": {}
+			},
+			"children": [
+				{
+					"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+					"multiple": true,
+					"roleName": "module",
+					"type": "Module"
+				},
+				{
+					"multiple": false,
+					"roleName": "roleNameIChild",
+					"type": "org.frankframework.frankdoc.testtarget.examples.simple.IChild"
+				},
+				{
+					"multiple": true,
+					"roleName": "roleNameTChild",
+					"type": "org.frankframework.frankdoc.testtarget.examples.simple.TChild"
+				}
+			],
+			"description": "Description of Start. Value of VARIABLE is <code>variable value</code>. Value of TheEnum.ENUM_CONSTANT is <code>enum constant</code>.\nValue of literal is <pre>This is a literal</pre>.",
+			"name": "Start",
+			"parent": "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart"
+		},
+		"org.frankframework.frankdoc.testtarget.examples.simple.TChild": {
+			"description": "This is the header of the JavaDoc of \\\"TChild\\\", with package name nl.nn.something.\n\nAnd this is remaining documentation of \\\"TChild\\\".",
+			"name": "RoleNameTChild",
+			"parent": "java.lang.Object"
+		}
+	},
+	"enums": {
+		"org.frankframework.frankdoc.testtarget.examples.simple.MyEnum": {
+			"ONE": {},
+			"customLabelTwo": {
+				"description": "Description of TWO"
+			}
+		}
+	},
+	"labels": {
+		"FrankDocGroup": [
+			"Pipe",
+			"Sender",
+			"Listener",
+			"Validator",
+			"Wrapper",
+			"TransactionalStorage",
+			"ErrorMessageFormatter",
+			"Batch",
+			"Monitoring",
+			"Job",
+			"Other"
+		]
+	},
+	"metadata": {
+		"version": "1.2.3-SNAPSHOT"
+	},
+	"properties": [
+		{
+			"name": "First group",
+			"properties": [
+				{
+					"defaultValue": "Value",
+					"description": "This is a description",
+					"name": "property.first"
+				},
+				{
+					"description": "First line\nSecond line",
+					"flags": [
+						"Deprecated",
+						"Generated"
+					],
+					"name": "propery.second"
+				}
+			]
+		},
+		{
+			"name": "",
+			"properties": [
+				{
+					"defaultValue": "10",
+					"description": "First line\nSecond line\nThird line",
+					"name": "property.third"
+				},
+				{
+					"defaultValue": "true",
+					"name": "property.fourth"
+				}
+			]
+		}
+	],
+	"types": {
+		"Module": [
+			"Module"
+		],
+		"org.frankframework.frankdoc.testtarget.examples.simple.IChild": [
+			"org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
+			"org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild"
+		],
+		"org.frankframework.frankdoc.testtarget.examples.simple.Start": [
+			"org.frankframework.frankdoc.testtarget.examples.simple.Start"
+		],
+		"org.frankframework.frankdoc.testtarget.examples.simple.TChild": [
+			"org.frankframework.frankdoc.testtarget.examples.simple.TChild"
+		]
+	}
 }

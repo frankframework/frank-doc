@@ -47,7 +47,13 @@ public class FrankElementChildAndAncestorSelectionTest {
 		actualAncestor = actualAncestor.getParent();
 		assertEquals("SelectingAncestor", actualAncestor.getSimpleName());
 		actualAncestor = actualAncestor.getParent();
+		assertEquals("NoRelevantAncestorBecauseOnlyTechnicalOverrides", actualAncestor.getSimpleName());
+
+		actualAncestor = actualAncestor.getParent();
 		assertEquals("DefaultAncestor", actualAncestor.getSimpleName());
+		actualAncestor = actualAncestor.getParent();
+		assertEquals("Object", actualAncestor.getSimpleName());
+
 		assertNull(actualAncestor.getParent());
 	}
 
@@ -59,7 +65,12 @@ public class FrankElementChildAndAncestorSelectionTest {
 		actualAncestor = actualAncestor.getParent();
 		assertEquals("SelectingAncestor", actualAncestor.getSimpleName());
 		actualAncestor = actualAncestor.getParent();
+		assertEquals("NoRelevantAncestorBecauseOnlyTechnicalOverrides", actualAncestor.getSimpleName());
+		actualAncestor = actualAncestor.getParent();
 		assertEquals("DefaultAncestor", actualAncestor.getSimpleName());
+		actualAncestor = actualAncestor.getParent();
+		assertEquals("Object", actualAncestor.getSimpleName());
+
 		assertNull(actualAncestor.getParent());
 	}
 }

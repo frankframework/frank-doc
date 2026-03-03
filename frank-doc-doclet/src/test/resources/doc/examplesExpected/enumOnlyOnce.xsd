@@ -18,7 +18,8 @@
     </xs:complexType>
   </xs:element>
   <xs:complexType name="MasterType">
-    <xs:attributeGroup ref="MasterDeclaredAttributeGroup" />
+    <xs:group ref="ObjectDeclaredChildGroup" />
+    <xs:attributeGroup ref="MasterCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.sameEnum.only.once.Master" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="MasterDeclaredAttributeGroup">
@@ -37,9 +38,16 @@
         <xs:union memberTypes="MyEnumAttributeValuesType variableRef" />
       </xs:simpleType>
     </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="MasterCumulativeAttributeGroup">
+    <xs:attributeGroup ref="MasterDeclaredAttributeGroup" />
+    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
+  </xs:attributeGroup>
+  <xs:complexType name="ObjectType">
+    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:attributeGroup>
+  </xs:complexType>
   <xs:simpleType name="MyEnumAttributeValuesType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="FIRST" />

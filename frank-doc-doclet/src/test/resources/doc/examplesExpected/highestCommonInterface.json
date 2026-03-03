@@ -1,85 +1,77 @@
 {
-    "metadata": {
-        "version": "1.2.3-SNAPSHOT"
-    },
-    "types": {
-        "org.frankframework.frankdoc.testtarget.highest.commonInterface.IExtension": [
-            "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
-        ],
-        "org.frankframework.frankdoc.testtarget.highest.commonInterface.IListener": [
-            "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
-        ],
-        "org.frankframework.frankdoc.testtarget.highest.commonInterface.Master": [
-            "org.frankframework.frankdoc.testtarget.highest.commonInterface.Master"
-        ],
-        "Module": [
-            "Module"
-        ]
-    },
-    "elements": {
-        "org.frankframework.frankdoc.testtarget.highest.commonInterface.Master": {
-            "name": "Master",
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            },
-            "children": [
-                {
-                    "multiple": true,
-                    "roleName": "module",
-                    "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
-                    "type": "Module"
-                },
-                {
-                    "multiple": true,
-                    "roleName": "a",
-                    "type": "org.frankframework.frankdoc.testtarget.highest.commonInterface.IListener"
-                },
-                {
-                    "multiple": true,
-                    "roleName": "b",
-                    "type": "org.frankframework.frankdoc.testtarget.highest.commonInterface.IExtension"
-                }
-            ]
-        },
-        "Module": {
-            "name": "Module",
-            "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations."
-        },
-        "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener": {
-            "name": "MyListener",
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        },
-        "java.lang.Object": {
-            "name": "Object",
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        }
-    },
-    "elementNames": {
-        "Master": {
-            "className": "org.frankframework.frankdoc.testtarget.highest.commonInterface.Master"
-        },
-        "Module": {
-            "className": "Module",
-            "labels": {
-                "FrankDocGroup": "Other"
-            }
-        },
-        "MyA": {
-            "className": "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
-        },
-        "MyB": {
-            "className": "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
-        }
-    },
-    "enums": {}
+	"elementNames": {
+		"Master": {
+			"className": "org.frankframework.frankdoc.testtarget.highest.commonInterface.Master"
+		},
+		"Module": {
+			"className": "Module",
+			"labels": {
+				"FrankDocGroup": "Other"
+			}
+		},
+		"MyA": {
+			"className": "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
+		},
+		"MyB": {
+			"className": "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
+		}
+	},
+	"elements": {
+		"Module": {
+			"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+			"name": "Module"
+		},
+		"java.lang.Object": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
+			"name": "Object"
+		},
+		"org.frankframework.frankdoc.testtarget.highest.commonInterface.Master": {
+			"children": [
+				{
+					"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+					"multiple": true,
+					"roleName": "module",
+					"type": "Module"
+				},
+				{
+					"multiple": true,
+					"roleName": "a",
+					"type": "org.frankframework.frankdoc.testtarget.highest.commonInterface.IListener"
+				},
+				{
+					"multiple": true,
+					"roleName": "b",
+					"type": "org.frankframework.frankdoc.testtarget.highest.commonInterface.IExtension"
+				}
+			],
+			"name": "Master",
+			"parent": "java.lang.Object"
+		},
+		"org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener": {
+			"name": "MyListener",
+			"parent": "java.lang.Object"
+		}
+	},
+	"enums": {},
+	"metadata": {
+		"version": "1.2.3-SNAPSHOT"
+	},
+	"types": {
+		"Module": [
+			"Module"
+		],
+		"org.frankframework.frankdoc.testtarget.highest.commonInterface.IExtension": [
+			"org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
+		],
+		"org.frankframework.frankdoc.testtarget.highest.commonInterface.IListener": [
+			"org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
+		],
+		"org.frankframework.frankdoc.testtarget.highest.commonInterface.Master": [
+			"org.frankframework.frankdoc.testtarget.highest.commonInterface.Master"
+		]
+	}
 }

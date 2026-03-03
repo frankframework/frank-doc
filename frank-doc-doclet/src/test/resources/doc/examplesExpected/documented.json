@@ -1,124 +1,122 @@
 {
-    "metadata": {
-        "version": "1.2.3-SNAPSHOT"
-    },
-    "types": {
-        "org.frankframework.frankdoc.testtarget.featurepackage.Documented": [
-            "org.frankframework.frankdoc.testtarget.featurepackage.Documented"
-        ],
-        "org.frankframework.frankdoc.testtarget.featurepackage.ICorrelatedPullingListener": [],
-        "org.frankframework.frankdoc.testtarget.featurepackage.ISender": [],
-        "Module": [
-            "Module"
-        ]
-    },
-    "elements": {
-        "org.frankframework.frankdoc.testtarget.featurepackage.Documented": {
-            "name": "Documented",
-            "description": "Plain extension to {@link DocumentedParent} that can be used directly in configurations.",
-            "parent": "org.frankframework.frankdoc.testtarget.featurepackage.DocumentedParent",
-            "attributes": {
-                "transacted": {
-                    "description": "controls the use of transactions",
-                    "type": "bool"
-                }
-            },
-            "children": [
-                {
-                    "multiple": true,
-                    "roleName": "module",
-                    "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
-                    "type": "Module"
-                },
-                {
-                    "mandatory": true,
-                    "reintroduced": true,
-                    "multiple": false,
-                    "roleName": "sender",
-                    "description": "The sender that should send the message",
-                    "type": "org.frankframework.frankdoc.testtarget.featurepackage.ISender"
-                },
-                {
-                    "reintroduced": true,
-                    "multiple": false,
-                    "roleName": "listener",
-                    "description": "Listener for responses on the request sent",
-                    "type": "org.frankframework.frankdoc.testtarget.featurepackage.ICorrelatedPullingListener"
-                }
-            ],
-            "parametersDescription": "Any parameters defined on the pipe will be handed to the sender, if this is a ISenderWithParameters."
-        },
-        "org.frankframework.frankdoc.testtarget.featurepackage.DocumentedParent": {
-            "name": "DocumentedParent",
-            "description": "Sends a message using a {@link ISender sender} and optionally receives a reply from the same sender, or\nfrom a {@link ICorrelatedPullingListener listener}.",
-            "attributes": {
-                "destinationName": {
-                    "description": "Name of the JMS destination (queue or topic) to use"
-                },
-                "name": {
-                    "description": "The functional name of the object."
-                },
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            },
-            "children": [
-                {
-                    "multiple": false,
-                    "roleName": "listener",
-                    "description": "Listener for responses on the request sent",
-                    "type": "org.frankframework.frankdoc.testtarget.featurepackage.ICorrelatedPullingListener"
-                }
-            ],
-            "parametersDescription": "any parameters defined on the pipe will be handed to the sender, if this is a {@link ISenderWithParameters ISenderWithParameters}",
-            "parameters": {
-                "stubFilename": {
-                    "description": "will <u>not</u> be handed to the sender\nand it is used at runtime instead of the <pre>stubFilename</pre> specified by the attribute. A lookup of the\nfile for this stubFilename will be done at runtime, while the file for the stubFilename specified\nas an attribute will be done at configuration time."
-                }
-            },
-            "forwards": {
-                "timeout": {},
-                "illegalResult": {},
-                "presumedTimeout": {},
-                "<pre>interrupt</pre>": {},
-                "&lt;defined-by-sender&gt;": {
-                    "description": "any <pre>forward</pre>, as returned by name by {@link ISender sender}"
-                }
-            }
-        },
-        "Module": {
-            "name": "Module",
-            "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations."
-        },
-        "java.lang.Object": {
-            "name": "Object",
-            "attributes": {
-                "active": {
-                    "description": "If defined and empty or false, then this element and all its children are ignored"
-                }
-            }
-        }
-    },
-    "elementNames": {
-        "Documented": {
-            "className": "org.frankframework.frankdoc.testtarget.featurepackage.Documented",
-            "labels": {
-                "Category": "Basic"
-            }
-        },
-        "Module": {
-            "className": "Module",
-            "labels": {
-                "FrankDocGroup": "Other"
-            }
-        }
-    },
-    "enums": {},
-    "labels": {
-        "Category": [
-            "Basic",
-            "Advanced",
-            "NN-Special"
-        ]
-    }
+	"elementNames": {
+		"Documented": {
+			"className": "org.frankframework.frankdoc.testtarget.featurepackage.Documented",
+			"labels": {
+				"Category": "Basic"
+			}
+		},
+		"Module": {
+			"className": "Module",
+			"labels": {
+				"FrankDocGroup": "Other"
+			}
+		}
+	},
+	"elements": {
+		"Module": {
+			"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+			"name": "Module"
+		},
+		"java.lang.Object": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
+			"name": "Object"
+		},
+		"org.frankframework.frankdoc.testtarget.featurepackage.Documented": {
+			"attributes": {
+				"transacted": {
+					"description": "controls the use of transactions",
+					"type": "bool"
+				}
+			},
+			"children": [
+				{
+					"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+					"multiple": true,
+					"roleName": "module",
+					"type": "Module"
+				},
+				{
+					"description": "The sender that should send the message",
+					"mandatory": true,
+					"multiple": false,
+					"reintroduced": true,
+					"roleName": "sender",
+					"type": "org.frankframework.frankdoc.testtarget.featurepackage.ISender"
+				},
+				{
+					"description": "Listener for responses on the request sent",
+					"multiple": false,
+					"reintroduced": true,
+					"roleName": "listener",
+					"type": "org.frankframework.frankdoc.testtarget.featurepackage.ICorrelatedPullingListener"
+				}
+			],
+			"description": "Plain extension to {@link DocumentedParent} that can be used directly in configurations.",
+			"name": "Documented",
+			"parametersDescription": "Any parameters defined on the pipe will be handed to the sender, if this is a ISenderWithParameters.",
+			"parent": "org.frankframework.frankdoc.testtarget.featurepackage.DocumentedParent"
+		},
+		"org.frankframework.frankdoc.testtarget.featurepackage.DocumentedParent": {
+			"attributes": {
+				"destinationName": {
+					"description": "Name of the JMS destination (queue or topic) to use"
+				},
+				"name": {
+					"description": "The functional name of the object."
+				}
+			},
+			"children": [
+				{
+					"description": "Listener for responses on the request sent",
+					"multiple": false,
+					"roleName": "listener",
+					"type": "org.frankframework.frankdoc.testtarget.featurepackage.ICorrelatedPullingListener"
+				}
+			],
+			"description": "Sends a message using a {@link ISender sender} and optionally receives a reply from the same sender, or\nfrom a {@link ICorrelatedPullingListener listener}.",
+			"forwards": {
+				"&lt;defined-by-sender&gt;": {
+					"description": "any <pre>forward</pre>, as returned by name by {@link ISender sender}"
+				},
+				"<pre>interrupt</pre>": {},
+				"illegalResult": {},
+				"presumedTimeout": {},
+				"timeout": {}
+			},
+			"name": "DocumentedParent",
+			"parameters": {
+				"stubFilename": {
+					"description": "will <u>not</u> be handed to the sender\nand it is used at runtime instead of the <pre>stubFilename</pre> specified by the attribute. A lookup of the\nfile for this stubFilename will be done at runtime, while the file for the stubFilename specified\nas an attribute will be done at configuration time."
+				}
+			},
+			"parametersDescription": "any parameters defined on the pipe will be handed to the sender, if this is a {@link ISenderWithParameters ISenderWithParameters}",
+			"parent": "java.lang.Object"
+		}
+	},
+	"enums": {},
+	"labels": {
+		"Category": [
+			"Basic",
+			"Advanced",
+			"NN-Special"
+		]
+	},
+	"metadata": {
+		"version": "1.2.3-SNAPSHOT"
+	},
+	"types": {
+		"Module": [
+			"Module"
+		],
+		"org.frankframework.frankdoc.testtarget.featurepackage.Documented": [
+			"org.frankframework.frankdoc.testtarget.featurepackage.Documented"
+		],
+		"org.frankframework.frankdoc.testtarget.featurepackage.ICorrelatedPullingListener": [],
+		"org.frankframework.frankdoc.testtarget.featurepackage.ISender": []
+	}
 }
