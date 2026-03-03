@@ -30,6 +30,11 @@
 			"name": "Object"
 		},
 		"org.frankframework.frankdoc.testtarget.entity.reference.Adapter": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
 			"children": [
 				{
 					"multiple": true,
@@ -42,11 +47,13 @@
 				}
 			],
 			"description": "The Adapter is the central manager in the Frank!Framework, that has knowledge\nand uses Receiver and a PipeLine.",
-			"name": "Adapter",
-			"parent": "java.lang.Object"
+			"name": "Adapter"
 		},
 		"org.frankframework.frankdoc.testtarget.entity.reference.Configuration": {
 			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				},
 				"myAttribute": {
 					"description": "This attribute should be allowed in element Configuration, but not in element Module."
 				}
@@ -70,10 +77,14 @@
 				}
 			],
 			"description": "The Configuration is placeholder of all configuration objects. Besides that, it provides\nfunctions for starting and stopping adapters as a facade.",
-			"name": "Configuration",
-			"parent": "java.lang.Object"
+			"name": "Configuration"
 		},
 		"org.frankframework.frankdoc.testtarget.entity.reference.Receiver": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
 			"children": [
 				{
 					"multiple": true,
@@ -81,8 +92,7 @@
 				}
 			],
 			"description": "Receiver controls the Listeners",
-			"name": "Receiver",
-			"parent": "java.lang.Object"
+			"name": "Receiver"
 		}
 	},
 	"enums": {},

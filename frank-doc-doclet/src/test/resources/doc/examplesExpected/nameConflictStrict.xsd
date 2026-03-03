@@ -19,9 +19,10 @@
     </xs:complexType>
   </xs:element>
   <xs:complexType name="MasterType">
-    <xs:group ref="MasterCumulativeChildGroup" />
-    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
+    <xs:group ref="MasterDeclaredChildGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="MasterDeclaredChildGroup">
     <xs:sequence>
@@ -56,7 +57,7 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="MemberType">
-    <xs:group ref="Member2CumulativeChildGroup" />
+    <xs:group ref="Member2DeclaredChildGroup" />
     <xs:attributeGroup ref="MemberCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Member" use="prohibited" />
   </xs:complexType>
@@ -65,31 +66,17 @@
   </xs:attributeGroup>
   <xs:attributeGroup name="MemberCumulativeAttributeGroup">
     <xs:attributeGroup ref="MemberDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="Member2CumulativeAttributeGroup" />
+    <xs:attributeGroup ref="Member2DeclaredAttributeGroup" />
   </xs:attributeGroup>
   <xs:complexType name="Member2Type">
-    <xs:group ref="ObjectDeclaredChildGroup" />
-    <xs:attributeGroup ref="Member2CumulativeAttributeGroup" />
+    <xs:attributeGroup ref="Member2DeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second.Member" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="Member2DeclaredAttributeGroup">
     <xs:attribute name="myAttribute" type="xs:string" />
-  </xs:attributeGroup>
-  <xs:attributeGroup name="Member2CumulativeAttributeGroup">
-    <xs:attributeGroup ref="Member2DeclaredAttributeGroup" />
-    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
-  </xs:attributeGroup>
-  <xs:complexType name="ObjectType">
-    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:complexType>
-  <xs:group name="MasterCumulativeChildGroup">
-    <xs:sequence>
-      <xs:group ref="MasterDeclaredChildGroup" />
-      <xs:group ref="ObjectDeclaredChildGroup" />
-    </xs:sequence>
-  </xs:group>
+  </xs:attributeGroup>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />

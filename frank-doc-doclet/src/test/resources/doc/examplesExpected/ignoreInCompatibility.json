@@ -28,6 +28,9 @@
 		},
 		"org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Master": {
 			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				},
 				"becomesMandatory": {
 					"mandatory": true
 				}
@@ -46,12 +49,15 @@
 					"type": "org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Nested"
 				}
 			],
-			"name": "Master",
-			"parent": "java.lang.Object"
+			"name": "Master"
 		},
 		"org.frankframework.frankdoc.testtarget.examples.ignore.in.compatibility.Nested": {
-			"name": "A",
-			"parent": "java.lang.Object"
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
+			"name": "A"
 		}
 	},
 	"enums": {},

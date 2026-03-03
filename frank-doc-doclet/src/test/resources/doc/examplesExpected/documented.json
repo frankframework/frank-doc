@@ -63,6 +63,9 @@
 		},
 		"org.frankframework.frankdoc.testtarget.featurepackage.DocumentedParent": {
 			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				},
 				"destinationName": {
 					"description": "Name of the JMS destination (queue or topic) to use"
 				},
@@ -94,8 +97,7 @@
 					"description": "will <u>not</u> be handed to the sender\nand it is used at runtime instead of the <pre>stubFilename</pre> specified by the attribute. A lookup of the\nfile for this stubFilename will be done at runtime, while the file for the stubFilename specified\nas an attribute will be done at configuration time."
 				}
 			},
-			"parametersDescription": "any parameters defined on the pipe will be handed to the sender, if this is a {@link ISenderWithParameters ISenderWithParameters}",
-			"parent": "java.lang.Object"
+			"parametersDescription": "any parameters defined on the pipe will be handed to the sender, if this is a {@link ISenderWithParameters ISenderWithParameters}"
 		}
 	},
 	"enums": {},

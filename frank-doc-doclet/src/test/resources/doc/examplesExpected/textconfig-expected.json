@@ -33,6 +33,11 @@
 			"name": "Object"
 		},
 		"org.frankframework.frankdoc.testtarget.textconfig.ChildImpl": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
 			"children": [
 				{
 					"multiple": true,
@@ -48,15 +53,21 @@
 					"type": "org.frankframework.frankdoc.testtarget.textconfig.GrandChild"
 				}
 			],
-			"name": "ChildImpl",
-			"parent": "java.lang.Object"
+			"name": "ChildImpl"
 		},
 		"org.frankframework.frankdoc.testtarget.textconfig.GrandChild": {
-			"name": "C",
-			"parent": "java.lang.Object"
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
+			"name": "C"
 		},
 		"org.frankframework.frankdoc.testtarget.textconfig.Start": {
 			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				},
 				"i": {}
 			},
 			"children": [
@@ -81,8 +92,7 @@
 					"type": "org.frankframework.frankdoc.testtarget.textconfig.IChild"
 				}
 			],
-			"name": "Start",
-			"parent": "java.lang.Object"
+			"name": "Start"
 		}
 	},
 	"enums": {},

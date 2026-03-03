@@ -28,6 +28,9 @@
 		},
 		"org.frankframework.frankdoc.testtarget.examples.deprecated.Master": {
 			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				},
 				"value": {
 					"deprecated": {
 						"forRemoval": false,
@@ -53,16 +56,19 @@
 				"forRemoval": false,
 				"since": ""
 			},
-			"name": "Master",
-			"parent": "java.lang.Object"
+			"name": "Master"
 		},
 		"org.frankframework.frankdoc.testtarget.examples.deprecated.TChild": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
 			"deprecated": {
 				"forRemoval": false,
 				"since": ""
 			},
-			"name": "RoleNameTChild",
-			"parent": "java.lang.Object"
+			"name": "RoleNameTChild"
 		}
 	},
 	"enums": {},

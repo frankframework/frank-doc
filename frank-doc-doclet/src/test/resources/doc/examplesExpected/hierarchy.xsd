@@ -45,9 +45,10 @@
     </xs:complexType>
   </xs:element>
   <xs:complexType name="StartType">
-    <xs:group ref="StartCumulativeChildGroup" />
-    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
+    <xs:group ref="StartDeclaredChildGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.hierarchy.Start" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="StartDeclaredChildGroup">
     <xs:sequence>
@@ -86,7 +87,7 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="NumberParameterType">
-    <xs:group ref="AbstractParameterCumulativeChildGroup" />
+    <xs:group ref="AbstractParameterDeclaredChildGroup" />
     <xs:attributeGroup ref="NumberParameterCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.hierarchy.NumberParameter" use="prohibited" />
   </xs:complexType>
@@ -95,22 +96,15 @@
   </xs:attributeGroup>
   <xs:attributeGroup name="NumberParameterCumulativeAttributeGroup">
     <xs:attributeGroup ref="NumberParameterDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="AbstractParameterCumulativeAttributeGroup" />
+    <xs:attributeGroup ref="AbstractParameterDeclaredAttributeGroup" />
   </xs:attributeGroup>
   <xs:attributeGroup name="AbstractParameterDeclaredAttributeGroup">
     <xs:attribute name="attributeC" type="xs:string" />
-  </xs:attributeGroup>
-  <xs:attributeGroup name="AbstractParameterCumulativeAttributeGroup">
-    <xs:attributeGroup ref="AbstractParameterDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
-  </xs:attributeGroup>
-  <xs:complexType name="ObjectType">
-    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:complexType>
+  </xs:attributeGroup>
   <xs:complexType name="ParameterType">
-    <xs:group ref="AbstractParameterCumulativeChildGroup" />
+    <xs:group ref="AbstractParameterDeclaredChildGroup" />
     <xs:attributeGroup ref="ParameterCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.hierarchy.Parameter" use="prohibited" />
   </xs:complexType>
@@ -119,7 +113,7 @@
   </xs:attributeGroup>
   <xs:attributeGroup name="ParameterCumulativeAttributeGroup">
     <xs:attributeGroup ref="ParameterDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="AbstractParameterCumulativeAttributeGroup" />
+    <xs:attributeGroup ref="AbstractParameterDeclaredAttributeGroup" />
   </xs:attributeGroup>
   <xs:group name="PipeElementGroup">
     <xs:choice>
@@ -149,23 +143,14 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="JwtPipeType">
-    <xs:group ref="ObjectDeclaredChildGroup" />
-    <xs:attributeGroup ref="JwtPipeCumulativeAttributeGroup" />
+    <xs:attributeGroup ref="JwtPipeDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.hierarchy.JwtPipe" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="JwtPipeDeclaredAttributeGroup">
     <xs:attribute name="jwtAttribute" type="xs:string" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
-  <xs:attributeGroup name="JwtPipeCumulativeAttributeGroup">
-    <xs:attributeGroup ref="JwtPipeDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
-  </xs:attributeGroup>
-  <xs:group name="StartCumulativeChildGroup">
-    <xs:sequence>
-      <xs:group ref="StartDeclaredChildGroup" />
-      <xs:group ref="ObjectDeclaredChildGroup" />
-    </xs:sequence>
-  </xs:group>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />

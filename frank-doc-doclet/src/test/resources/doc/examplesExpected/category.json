@@ -59,17 +59,29 @@
 			"parent": "org.frankframework.frankdoc.testtarget.category.ChildConfigParent"
 		},
 		"org.frankframework.frankdoc.testtarget.category.ChildConfigChildC": {
-			"name": "ChildConfigChildC",
-			"parent": "java.lang.Object"
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
+			"name": "ChildConfigChildC"
 		},
 		"org.frankframework.frankdoc.testtarget.category.ChildConfigParent": {
-			"name": "ChildConfigParent",
-			"parent": "java.lang.Object"
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
+			"name": "ChildConfigParent"
 		},
 		"org.frankframework.frankdoc.testtarget.category.ParentOfStart": {
 			"abstract": true,
-			"name": "ParentOfStart",
-			"parent": "java.lang.Object"
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
+			"name": "ParentOfStart"
 		},
 		"org.frankframework.frankdoc.testtarget.category.Start": {
 			"children": [

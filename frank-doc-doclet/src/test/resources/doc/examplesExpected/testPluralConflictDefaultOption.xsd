@@ -20,8 +20,9 @@
   </xs:element>
   <xs:complexType name="MasterType">
     <xs:group ref="MasterPluralConfigChildGroup" />
-    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.Master" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="MasterPluralConfigChildGroup">
     <xs:sequence>
@@ -55,8 +56,9 @@
   </xs:group>
   <xs:complexType name="MyElementType">
     <xs:group ref="MyElementPluralConfigChildGroup" />
-    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.plural.config.defaultClassname.MyElement" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="MyElementPluralConfigChildGroup">
     <xs:sequence>
@@ -77,11 +79,6 @@
   <xs:group name="BElementGroupBase_2">
     <xs:choice />
   </xs:group>
-  <xs:complexType name="ObjectType">
-    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:complexType>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />

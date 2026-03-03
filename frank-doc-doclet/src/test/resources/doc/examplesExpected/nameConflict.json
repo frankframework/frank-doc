@@ -27,6 +27,11 @@
 			"name": "Object"
 		},
 		"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Master": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
 			"children": [
 				{
 					"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
@@ -40,8 +45,7 @@
 					"type": "org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.IChild"
 				}
 			],
-			"name": "Master",
-			"parent": "java.lang.Object"
+			"name": "Master"
 		},
 		"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Member": {
 			"attributes": {
@@ -52,14 +56,16 @@
 		},
 		"org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.second.Member": {
 			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				},
 				"myAttribute": {}
 			},
 			"deprecated": {
 				"forRemoval": false,
 				"since": ""
 			},
-			"name": "Member",
-			"parent": "java.lang.Object"
+			"name": "Member"
 		}
 	},
 	"enums": {},

@@ -44,24 +44,31 @@
 		"org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart": {
 			"abstract": true,
 			"attributes": {
-				"abstractParentOfStartAttribute": {}
+				"abstractParentOfStartAttribute": {},
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
 			},
-			"name": "AbstractParentOfStart",
-			"parent": "java.lang.Object"
+			"name": "AbstractParentOfStart"
 		},
 		"org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild": {
 			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				},
 				"firstAttribute": {
 					"mandatory": true
 				},
 				"secondAttribute": {}
 			},
 			"description": "This is the header of the JavaDoc of \\\"DescribedPossibleIChild\\\".\n\nAnd this is remaining documentation of \\\"DescribedPossibleIChild\\\".",
-			"name": "DescribedPossibleIChild",
-			"parent": "java.lang.Object"
+			"name": "DescribedPossibleIChild"
 		},
 		"org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild": {
 			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				},
 				"firstAttribute": {
 					"enum": "org.frankframework.frankdoc.testtarget.examples.simple.MyEnum"
 				},
@@ -70,8 +77,7 @@
 					"type": "int"
 				}
 			},
-			"name": "NotDescribedPossibleIChild",
-			"parent": "java.lang.Object"
+			"name": "NotDescribedPossibleIChild"
 		},
 		"org.frankframework.frankdoc.testtarget.examples.simple.Start": {
 			"attributes": {
@@ -100,9 +106,13 @@
 			"parent": "org.frankframework.frankdoc.testtarget.examples.simple.AbstractParentOfStart"
 		},
 		"org.frankframework.frankdoc.testtarget.examples.simple.TChild": {
+			"attributes": {
+				"active": {
+					"description": "If defined and empty or false, then this element and all its children are ignored"
+				}
+			},
 			"description": "This is the header of the JavaDoc of \\\"TChild\\\", with package name nl.nn.something.\n\nAnd this is remaining documentation of \\\"TChild\\\".",
-			"name": "RoleNameTChild",
-			"parent": "java.lang.Object"
+			"name": "RoleNameTChild"
 		}
 	},
 	"enums": {

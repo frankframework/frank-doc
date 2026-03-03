@@ -39,31 +39,29 @@ public class NavigationTest {
 
 	public static Collection<Object[]> data() {
 		return asList(new Object[][]{
-			{"Parent", IN_XSD, EXCLUDED, List.of(ref(RefKind.DECLARED, "Parent"), ref(RefKind.DECLARED, "Object"))},
+			{"Parent", IN_XSD, EXCLUDED, List.of(ref(RefKind.DECLARED, "Parent"))},
 			// Attribute childAttribute is not selected, so we do not have a real override.
-			{"Child", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "Child"), ref(RefKind.CUMULATIVE, "Parent"))},
+			{"Child", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "Child"), ref(RefKind.DECLARED, "Parent"))},
 			// Attribute parentAttributeFirst is overridden. Keep with Child, omit with Parent
-			{"Child", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "Child"), ref(RefKind.CHILD, "parentAttributeSecond"), ref(RefKind.DECLARED, "Object"))},
+			{"Child", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "Child"), ref(RefKind.CHILD_TOP_LEVEL, "parentAttributeSecond"))},
 			// All attributes of Parent were overridden. Nothing to reference for Parent.
-			{"GrandChild", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild"), ref(RefKind.DECLARED, "Child"), ref(RefKind.DECLARED, "Object"))},
+			{"GrandChild", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild"), ref(RefKind.DECLARED, "Child"))},
 			// The override of parentAttributeSecond counts, in Child parentAttributeFirst is ignored as child
 			{"GrandChild2", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild2"), ref(RefKind.CUMULATIVE, "Child2"))},
-			// All children of Child2 are deprecated, so Child2 is ignored in the ancestor hierarchy
-			{"GrandChild2", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild2"), ref(RefKind.CUMULATIVE, "Child2"))},
 			// All attributes of Parent are overridden by deprecated methods and should be de-inherited
-			{"GrandChild3", IN_XSD, REJECT_DEPRECATED, List.of(ref(RefKind.DECLARED, "Object"))},
+			{"GrandChild3", IN_XSD, REJECT_DEPRECATED, List.of()},
 			// Same as above, but requires the algorithm to work around a technical override
-			{"GrandChild5", IN_XSD, REJECT_DEPRECATED, List.of(ref(RefKind.DECLARED, "Object"))},
+			{"GrandChild5", IN_XSD, REJECT_DEPRECATED, List.of()},
 			// Below Parent are technical overrides in GrandParent6. We test here that we
 			// dont get Child6 which has no children, but Parent where the children are.
 			{"GrandChild6", IN_XSD, REJECT_DEPRECATED, List.of(ref(RefKind.CUMULATIVE, "Child6"))},
 			// Test RefKind.CHILD
-			{"GrandChild7", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild7"), ref(RefKind.CHILD, "childAttributeFirst"), ref(RefKind.CUMULATIVE, "Parent"))},
+			{"GrandChild7", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild7"), ref(RefKind.CHILD, "childAttributeFirst"), ref(RefKind.DECLARED, "Parent"))},
 			// Test fix of issue: Invalid XSDs generated #100.
 			// When an attribute (or config child) is overridden by an attribute that is not selected, then
 			// the cumulative group was erroneously taken. Instead, the algorithm should use the ancestor
 			// of the overridden attribute that is selected.
-			{"GrandChild8", IN_XSD, REJECT_DEPRECATED, asList(ref(RefKind.DECLARED, "GrandChild8"), ref(RefKind.CHILD, "parentAttributeSecond"), ref(RefKind.DECLARED, "Object"))}
+			{"GrandChild8", IN_XSD, REJECT_DEPRECATED, asList(ref(RefKind.DECLARED, "GrandChild8"), ref(RefKind.CHILD_TOP_LEVEL, "parentAttributeSecond"))}
 		});
 	}
 

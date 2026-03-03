@@ -38,7 +38,8 @@
   <xs:attributeGroup name="ChildCumulativeAttributeGroup">
     <xs:attributeGroup ref="ChildDeclaredAttributeGroup" />
     <xs:attribute ref="keyField" />
-    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
   <xs:complexType name="JmsListenerType">
     <xs:group ref="PushingJmsListenerCumulativeChildGroup" />
@@ -46,8 +47,8 @@
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.packageprivate.override.JmsListener" use="prohibited" />
   </xs:complexType>
   <xs:complexType name="PushingJmsListenerType">
-    <xs:group ref="AbstractParentCumulativeChildGroup" />
-    <xs:attributeGroup ref="AbstractParentCumulativeAttributeGroup" />
+    <xs:group ref="AbstractParentDeclaredChildGroup" />
+    <xs:attributeGroup ref="AbstractParentDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.packageprivate.override.PushingJmsListener" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="AbstractParentDeclaredAttributeGroup">
@@ -62,16 +63,9 @@
         <xs:documentation>By default text from Parent. Default: false</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-  </xs:attributeGroup>
-  <xs:attributeGroup name="AbstractParentCumulativeAttributeGroup">
-    <xs:attributeGroup ref="AbstractParentDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
-  </xs:attributeGroup>
-  <xs:complexType name="ObjectType">
-    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:complexType>
+  </xs:attributeGroup>
   <xs:attribute name="keyField" type="xs:string">
     <xs:annotation>
       <xs:documentation>Primary key field of the table, used to identify messages. &lt;a href="https://www.eclipse.org/paho/files/javadoc" target="_blank"&gt;link&lt;/a&gt;.

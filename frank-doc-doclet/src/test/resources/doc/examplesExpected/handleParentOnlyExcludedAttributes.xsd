@@ -19,9 +19,10 @@
     </xs:complexType>
   </xs:element>
   <xs:complexType name="MasterType">
-    <xs:group ref="MasterCumulativeChildGroup" />
-    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
+    <xs:group ref="MasterDeclaredChildGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.parent.without.attributes.Master" use="prohibited" />
+    <xs:attribute ref="active" />
+    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:complexType>
   <xs:group name="MasterDeclaredChildGroup">
     <xs:sequence>
@@ -74,7 +75,7 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="ChildType">
-    <xs:group ref="ParentOnlyExcludedAttributesCumulativeChildGroup" />
+    <xs:group ref="ParentOnlyExcludedAttributesDeclaredChildGroup" />
     <xs:attributeGroup ref="ChildCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.parent.without.attributes.Child" use="prohibited" />
   </xs:complexType>
@@ -83,22 +84,16 @@
   </xs:attributeGroup>
   <xs:attributeGroup name="ChildCumulativeAttributeGroup">
     <xs:attributeGroup ref="ChildDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="ParentOnlyExcludedAttributesCumulativeAttributeGroup" />
+    <xs:attributeGroup ref="ParentOnlyExcludedAttributesDeclaredAttributeGroup" />
   </xs:attributeGroup>
   <xs:complexType name="ParentOnlyExcludedAttributesType">
-    <xs:group ref="ObjectDeclaredChildGroup" />
-    <xs:attributeGroup ref="ParentOnlyExcludedAttributesCumulativeAttributeGroup" />
+    <xs:attributeGroup ref="ParentOnlyExcludedAttributesDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.parent.without.attributes.ParentOnlyExcludedAttributes" use="prohibited" />
   </xs:complexType>
-  <xs:attributeGroup name="ParentOnlyExcludedAttributesDeclaredAttributeGroup" />
-  <xs:attributeGroup name="ParentOnlyExcludedAttributesCumulativeAttributeGroup">
-    <xs:attributeGroup ref="ObjectDeclaredAttributeGroup" />
-  </xs:attributeGroup>
-  <xs:complexType name="ObjectType">
-    <xs:attribute name="className" type="xs:string" fixed="java.lang.Object" use="prohibited" />
+  <xs:attributeGroup name="ParentOnlyExcludedAttributesDeclaredAttributeGroup">
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:complexType>
+  </xs:attributeGroup>
   <xs:complexType name="GrandChildType">
     <xs:group ref="ChildCumulativeChildGroup" />
     <xs:attributeGroup ref="GrandChildCumulativeAttributeGroup" />
@@ -111,12 +106,6 @@
     <xs:attributeGroup ref="GrandChildDeclaredAttributeGroup" />
     <xs:attributeGroup ref="ChildCumulativeAttributeGroup" />
   </xs:attributeGroup>
-  <xs:group name="MasterCumulativeChildGroup">
-    <xs:sequence>
-      <xs:group ref="MasterDeclaredChildGroup" />
-      <xs:group ref="ObjectDeclaredChildGroup" />
-    </xs:sequence>
-  </xs:group>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />
