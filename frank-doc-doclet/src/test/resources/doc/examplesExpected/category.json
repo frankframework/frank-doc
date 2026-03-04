@@ -1,137 +1,137 @@
 {
-	"elementNames": {
-		"ChildConfigChildARoleNameIChild": {
-			"className": "org.frankframework.frankdoc.testtarget.category.ChildConfigChildA",
-			"labels": {
-				"CategoryA": "CategoryAValue_2",
-				"CategoryB": "CategoryBValue_2",
-				"CategoryC": "CategoryCValue_2"
-			}
-		},
-		"ChildConfigChildBRoleNameIChild": {
-			"className": "org.frankframework.frankdoc.testtarget.category.ChildConfigChildB",
-			"labels": {
-				"CategoryA": "CategoryAValue_1",
-				"CategoryB": "CategoryBValue_1",
-				"CategoryC": "CategoryCValue_1"
-			}
-		},
-		"ChildConfigChildCRoleNameIChild": {
-			"className": "org.frankframework.frankdoc.testtarget.category.ChildConfigChildC",
-			"labels": {
-				"CategoryC": "CategoryCValue_1"
-			}
-		},
-		"Module": {
-			"className": "Module",
-			"labels": {
-				"FrankDocGroup": "Other"
-			}
-		},
-		"Start": {
-			"className": "org.frankframework.frankdoc.testtarget.category.Start",
-			"labels": {
-				"CategoryA": "CategoryAValue_1",
-				"CategoryB": "CategoryBValue_1",
-				"CategoryC": "CategoryCValue_3"
-			}
-		}
-	},
-	"elements": {
-		"Module": {
-			"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
-			"name": "Module"
-		},
-		"java.lang.Object": {
-			"attributes": {
-				"active": {
-					"description": "If defined and empty or false, then this element and all its children are ignored"
-				}
-			},
-			"name": "Object"
-		},
-		"org.frankframework.frankdoc.testtarget.category.ChildConfigChildA": {
-			"name": "ChildConfigChildA",
+    "metadata": {
+        "version": "1.2.3-SNAPSHOT"
+    },
+    "types": {
+        "org.frankframework.frankdoc.testtarget.category.IChild": [
+            "org.frankframework.frankdoc.testtarget.category.ChildConfigChildA",
+            "org.frankframework.frankdoc.testtarget.category.ChildConfigChildB",
+            "org.frankframework.frankdoc.testtarget.category.ChildConfigChildC"
+        ],
+        "org.frankframework.frankdoc.testtarget.category.Start": [
+            "org.frankframework.frankdoc.testtarget.category.Start"
+        ],
+        "Module": [
+            "Module"
+        ]
+    },
+    "elements": {
+        "org.frankframework.frankdoc.testtarget.category.ChildConfigChildA": {
+            "name": "ChildConfigChildA",
 			"parent": "org.frankframework.frankdoc.testtarget.category.ChildConfigParent"
-		},
-		"org.frankframework.frankdoc.testtarget.category.ChildConfigChildB": {
-			"name": "ChildConfigChildB",
+        },
+        "org.frankframework.frankdoc.testtarget.category.ChildConfigChildB": {
+            "name": "ChildConfigChildB",
 			"parent": "org.frankframework.frankdoc.testtarget.category.ChildConfigParent"
-		},
-		"org.frankframework.frankdoc.testtarget.category.ChildConfigChildC": {
-			"attributes": {
-				"active": {
-					"description": "If defined and empty or false, then this element and all its children are ignored"
-				}
-			},
-			"name": "ChildConfigChildC"
-		},
-		"org.frankframework.frankdoc.testtarget.category.ChildConfigParent": {
-			"attributes": {
-				"active": {
-					"description": "If defined and empty or false, then this element and all its children are ignored"
-				}
-			},
-			"name": "ChildConfigParent"
-		},
-		"org.frankframework.frankdoc.testtarget.category.ParentOfStart": {
-			"abstract": true,
-			"attributes": {
-				"active": {
-					"description": "If defined and empty or false, then this element and all its children are ignored"
-				}
-			},
-			"name": "ParentOfStart"
-		},
-		"org.frankframework.frankdoc.testtarget.category.Start": {
-			"children": [
-				{
-					"description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
-					"multiple": true,
-					"roleName": "module",
-					"type": "Module"
-				},
-				{
-					"multiple": false,
-					"roleName": "roleNameIChild",
-					"type": "org.frankframework.frankdoc.testtarget.category.IChild"
-				}
-			],
-			"name": "Start",
-			"parent": "org.frankframework.frankdoc.testtarget.category.ParentOfStart"
-		}
-	},
-	"enums": {},
-	"labels": {
-		"CategoryA": [
-			"CategoryAValue_1",
-			"CategoryAValue_2"
-		],
-		"CategoryB": [
-			"CategoryBValue_1",
-			"CategoryBValue_2"
-		],
-		"CategoryC": [
-			"CategoryCValue_1",
-			"CategoryCValue_2",
-			"CategoryCValue_3",
-			"CategoryCValue_4"
-		]
-	},
-	"metadata": {
-		"version": "1.2.3-SNAPSHOT"
-	},
-	"types": {
-		"Module": [
-			"Module"
-		],
-		"org.frankframework.frankdoc.testtarget.category.IChild": [
-			"org.frankframework.frankdoc.testtarget.category.ChildConfigChildA",
-			"org.frankframework.frankdoc.testtarget.category.ChildConfigChildB",
-			"org.frankframework.frankdoc.testtarget.category.ChildConfigChildC"
-		],
-		"org.frankframework.frankdoc.testtarget.category.Start": [
-			"org.frankframework.frankdoc.testtarget.category.Start"
-		]
-	}
+        },
+        "org.frankframework.frankdoc.testtarget.category.ChildConfigChildC": {
+            "name": "ChildConfigChildC",
+            "attributes": {
+                "active": {
+                    "description": "If defined and empty or false, then this element and all its children are ignored"
+                }
+            }
+        },
+        "org.frankframework.frankdoc.testtarget.category.ChildConfigParent": {
+            "name": "ChildConfigParent",
+            "attributes": {
+                "active": {
+                    "description": "If defined and empty or false, then this element and all its children are ignored"
+                }
+            }
+        },
+        "Module": {
+            "name": "Module",
+            "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations."
+        },
+        "java.lang.Object": {
+            "name": "Object",
+            "attributes": {
+                "active": {
+                    "description": "If defined and empty or false, then this element and all its children are ignored"
+                }
+            }
+        },
+        "org.frankframework.frankdoc.testtarget.category.ParentOfStart": {
+            "name": "ParentOfStart",
+            "abstract": true,
+            "attributes": {
+                "active": {
+                    "description": "If defined and empty or false, then this element and all its children are ignored"
+                }
+            }
+        },
+        "org.frankframework.frankdoc.testtarget.category.Start": {
+            "name": "Start",
+			"parent": "org.frankframework.frankdoc.testtarget.category.ParentOfStart",
+            "children": [
+                {
+                    "multiple": true,
+                    "roleName": "module",
+                    "description": "Wrapper element to help split up large configuration files into smaller valid XML files. It may be used as root tag when an XML file contains multiple adapters and/or jobs. The Module element itself does not influence the behavior of Frank configurations.",
+                    "type": "Module"
+                },
+                {
+                    "multiple": false,
+                    "roleName": "roleNameIChild",
+                    "type": "org.frankframework.frankdoc.testtarget.category.IChild"
+                }
+            ]
+        }
+    },
+    "elementNames": {
+        "ChildConfigChildARoleNameIChild": {
+            "className": "org.frankframework.frankdoc.testtarget.category.ChildConfigChildA",
+            "labels": {
+                "CategoryA": "CategoryAValue_2",
+                "CategoryB": "CategoryBValue_2",
+                "CategoryC": "CategoryCValue_2"
+            }
+        },
+        "ChildConfigChildBRoleNameIChild": {
+            "className": "org.frankframework.frankdoc.testtarget.category.ChildConfigChildB",
+            "labels": {
+                "CategoryA": "CategoryAValue_1",
+                "CategoryB": "CategoryBValue_1",
+                "CategoryC": "CategoryCValue_1"
+            }
+        },
+        "ChildConfigChildCRoleNameIChild": {
+            "className": "org.frankframework.frankdoc.testtarget.category.ChildConfigChildC",
+            "labels": {
+                "CategoryC": "CategoryCValue_1"
+            }
+        },
+        "Module": {
+            "className": "Module",
+            "labels": {
+                "FrankDocGroup": "Other"
+            }
+        },
+        "Start": {
+            "className": "org.frankframework.frankdoc.testtarget.category.Start",
+            "labels": {
+                "CategoryA": "CategoryAValue_1",
+                "CategoryB": "CategoryBValue_1",
+                "CategoryC": "CategoryCValue_3"
+            }
+        }
+    },
+    "enums": {},
+    "labels": {
+        "CategoryA": [
+            "CategoryAValue_1",
+            "CategoryAValue_2"
+        ],
+        "CategoryB": [
+            "CategoryBValue_1",
+            "CategoryBValue_2"
+        ],
+        "CategoryC": [
+            "CategoryCValue_1",
+            "CategoryCValue_2",
+            "CategoryCValue_3",
+            "CategoryCValue_4"
+        ]
+    }
 }
