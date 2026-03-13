@@ -11,7 +11,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { AlertComponent, AlertType, ChipComponent } from '@frankframework/angular-components';
-import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
+import { KeyValuePipe, NgClass, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { CollapseDirective } from '../../../components/collapse.directive';
@@ -35,6 +35,7 @@ import {
   InheritedProperties,
   Note,
 } from '@frankframework/doc-library-core';
+import { DetailsElementSyntaxComponent } from './details-element-syntax/details-element-syntax.component';
 
 type EnumValueEntry = {
   valueName: string;
@@ -60,6 +61,7 @@ type RecordEntry<T> = {
     NgClass,
     NameWbrPipe,
     JavadocTransformDirective,
+    DetailsElementSyntaxComponent,
   ],
   templateUrl: './details-element.component.html',
   styleUrl: './details-element.component.scss',
@@ -87,7 +89,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     inheritedRequired: new Map<string, boolean>(),
     inheritedOptional: new Map<string, boolean>(),
   };
-  protected elementSyntax = '';
   protected collapsedInheritedThreshold = 1;
   protected _hasInheritedProperties: HasInheritedProperties = {
     required: false,
@@ -125,7 +126,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       }
       this.allRequiredAttributes = groupAttributesByMandatory(this.element?.attributes ?? {});
       this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
-      this.generateElementSyntax();
 
       if (this.element?.name)
         this.titleService.setTitle(`${environment.applicationName} | ${this.element?.name ?? 'Element details'}`);
@@ -148,24 +148,17 @@ export class DetailsElementComponent implements OnInit, OnChanges {
         null;
   }
 
-  protected copyToClipboard(text: string): void {
-    const element = document.createElement('textarea');
-    element.value = text;
-    element.setAttribute('readonly', '');
-    element.style.position = 'absolute';
-    element.style.left = '-9999px';
-    document.body.append(element);
-    element.select();
-    document.execCommand('copy'); // TODO: soon deprecated but no real solution yet
-    element.remove();
-  }
-
-  protected hasAnyInheritedProperties(): boolean {
-    return this._hasInheritedProperties.required || this._hasInheritedProperties.optional;
-  }
-
   protected getDeprecatedTitle(deprecatedInfo: DeprecationInfo): string {
     return `${deprecatedInfo.description ?? 'This has been deprecated!'}${deprecatedInfo.since ? `\nSince ${deprecatedInfo.since}` : ''}`;
+  }
+
+  protected getAllRequiredAttributes(): Record<string, Attribute> {
+    return {
+      ...this.inheritedProperties.attributesRequired
+        .map((item) => item.properties)
+        .reduce((mergedAttributes, attributes) => ({ ...mergedAttributes, ...attributes }), {}),
+      ...this.attributesRequired,
+    };
   }
 
   protected getWarningType(type: Note['type']): AlertType {
@@ -248,57 +241,5 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     defaultValue: boolean,
   ): boolean {
     return map.get(parentElementName) ?? defaultValue;
-  }
-
-  private getAllRequiredAttributes(): Record<string, Attribute> {
-    return {
-      ...this.inheritedProperties.attributesRequired
-        .map((item) => item.properties)
-        .reduce((mergedAttributes, attributes) => ({ ...mergedAttributes, ...attributes }), {}),
-      ...this.attributesRequired,
-    };
-  }
-
-  private generateElementSyntax(): void {
-    if (!this.element) return;
-    const requiredAttributes = Object.entries(this.getAllRequiredAttributes())
-      .map(
-        ([attributeName, attribute]) =>
-          `${attributeName}="${attribute.default ?? this.getTypeDefaultValue(attribute.type)}"`,
-      )
-      .join(' ');
-    const params = Object.keys(this.element.parameters ?? {})
-      .map((paramName) => `  <param name="${paramName}" .../>`)
-      .join('\n');
-    const hasNestedElements = this.element.children !== undefined && this.element.children.length > 0;
-    this.elementSyntax = this.buildSyntax(this.element.name, requiredAttributes, params, hasNestedElements);
-  }
-
-  private buildSyntax(elementName: string, attributes: string, params: string, hasNestedElements: boolean): string {
-    const elementTag = `${elementName} ${attributes}`.trimEnd();
-    const closing =
-      hasNestedElements || params !== ''
-        ? `>\n  ${this.generateInnerSyntax(params, hasNestedElements)}\n</${elementName}>`
-        : ' />';
-    return `<${elementTag}${closing}`.trim();
-  }
-
-  private generateInnerSyntax(params: string, hasNestedElements: boolean): string {
-    return `${params} ${hasNestedElements ? '\n  ...' : ''}`.trim();
-  }
-
-  private getTypeDefaultValue(type: Attribute['type']): string {
-    switch (type) {
-      case 'int': {
-        return '0';
-      }
-      case 'bool':
-      case 'boolean': {
-        return 'false';
-      }
-      default: {
-        return '';
-      }
-    }
   }
 }
