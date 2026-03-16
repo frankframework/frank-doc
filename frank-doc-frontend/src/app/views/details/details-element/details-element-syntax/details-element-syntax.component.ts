@@ -6,6 +6,7 @@ import {
   Elements,
   groupAttributesByMandatory,
 } from '@frankframework/doc-library-core';
+import { ElementProperty } from '@frankframework/doc-library-core/dist/frankdoc.types';
 
 @Component({
   selector: 'app-details-element-syntax',
@@ -18,6 +19,7 @@ export class DetailsElementSyntaxComponent implements OnChanges {
   public element = input.required<ElementDetails>();
   public elements = input<Elements>({});
   public allRequiredAttributes = input<Record<string, Attribute>>({});
+  public forwards = input<Record<string, ElementProperty>>({});
 
   protected elementSyntax = '';
 
@@ -25,7 +27,8 @@ export class DetailsElementSyntaxComponent implements OnChanges {
     const element = this.element();
     const parameters = Object.keys(element.parameters ?? {});
     const nestedElements = element.children?.filter((child) => child.mandatory) ?? [];
-    this.elementSyntax = this.buildSyntax(element.name, this.allRequiredAttributes(), parameters, nestedElements);
+    const forwards = Object.keys(element.forwards ?? {});
+    this.elementSyntax = this.buildSyntax(element.name, this.allRequiredAttributes(), parameters, nestedElements, forwards);
   }
 
   protected copyToClipboard(text: string): void {
@@ -45,10 +48,11 @@ export class DetailsElementSyntaxComponent implements OnChanges {
     attributes: Record<string, Attribute>,
     parameters: string[],
     nestedElements: Child[],
+    forwards: string[],
   ): string {
     const attributeSyntax = this.generateAttributeSyntax(attributes);
     const elementTag = `${elementName} ${attributeSyntax}`.trimEnd();
-    const innerSyntax = this.generateInnerSyntax(parameters, nestedElements);
+    const innerSyntax = this.generateInnerSyntax(parameters, nestedElements, forwards);
     return innerSyntax === '' ? `<${elementTag} />` : `<${elementTag}>${innerSyntax}\n</${elementName}>`;
   }
 
@@ -61,7 +65,7 @@ export class DetailsElementSyntaxComponent implements OnChanges {
       .join(' ');
   }
 
-  private generateInnerSyntax(parameters: string[], nestedElements: Child[]): string {
+  private generateInnerSyntax(parameters: string[], nestedElements: Child[], forwards: string[]): string {
     const parametersSyntax = parameters.map((name) => `\n  <param name="${name}" .../>`).join('');
     const nestedElementsSyntax = nestedElements
       .map((child) => {
@@ -71,8 +75,11 @@ export class DetailsElementSyntaxComponent implements OnChanges {
         return `\n  <${nestedTag}>\n    ...\n  </${name}>`;
       })
       .join('');
-    // TODO forwards
-    return `${parametersSyntax}${nestedElementsSyntax}`;
+    const forwardsSyntax = forwards
+      .filter((name) => name !== '*')
+      .map((name) => `\n  <forward name="${name}" path="" />`)
+      .join('');
+    return `${parametersSyntax}${nestedElementsSyntax}${forwardsSyntax}`;
   }
 
   private getNestedElementAttributesSyntax(elementName: string): string {
