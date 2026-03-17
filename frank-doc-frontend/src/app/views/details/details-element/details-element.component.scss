@@ -89,41 +89,6 @@ h3 {
   }
 }
 
-.syntax > pre {
-  position: relative;
-  display: block;
-  padding: 26px;
-  border-radius: 8px;
-  border: 1px solid #D8D8D8;
-  font-size: 16px;
-  color: var(--color-text-dark);
-  background: rgba(237, 237, 237, 0.5);
-
-  code {
-    padding: 0;
-    border: none;
-    background: transparent;
-  }
-
-  button {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    padding: 5px;
-    border: none;
-    border-radius: 5px;
-    background: rgba(216, 216, 216, 0.75);
-
-    &:hover {
-      background: rgba(216, 216, 216, 1);
-    }
-
-    &:active {
-      background: rgba(216, 216, 216, 0.5);
-    }
-  }
-}
-
 .options {
   table {
     width: 100%;
