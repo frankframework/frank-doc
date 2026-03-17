@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DetailsElementSyntaxComponent } from './details-element-syntax.component';
 
 describe('DetailsElementSyntaxComponent', () => {
