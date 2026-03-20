@@ -28,22 +28,14 @@ Second line&lt;/p&gt;&lt;br&gt;&lt;b&gt;DANGER&lt;/b&gt;&lt;p&gt;First line&lt;/
     </xs:complexType>
   </xs:element>
   <xs:complexType name="NoteType">
-    <xs:group ref="ParentDeclaredChildGroup" />
-    <xs:attributeGroup ref="NoteCumulativeAttributeGroup" />
+    <xs:attributeGroup ref="NoteDeclaredAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.notes.Note" use="prohibited" />
   </xs:complexType>
   <xs:attributeGroup name="NoteDeclaredAttributeGroup">
     <xs:attribute name="attribute" type="xs:string" />
-  </xs:attributeGroup>
-  <xs:attributeGroup name="NoteCumulativeAttributeGroup">
-    <xs:attributeGroup ref="NoteDeclaredAttributeGroup" />
-    <xs:attributeGroup ref="ParentDeclaredAttributeGroup" />
-  </xs:attributeGroup>
-  <xs:complexType name="ParentType">
-    <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.notes.Parent" use="prohibited" />
     <xs:attribute ref="active" />
     <xs:anyAttribute namespace="##other" processContents="skip" />
-  </xs:complexType>
+  </xs:attributeGroup>
   <xs:simpleType name="frankBoolean">
     <xs:restriction base="xs:string">
       <xs:pattern value="(true|false)|($\{[^\}]+\})" />

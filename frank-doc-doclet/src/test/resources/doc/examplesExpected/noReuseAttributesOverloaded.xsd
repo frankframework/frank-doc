@@ -67,7 +67,6 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="ChildType">
-    <xs:group ref="ParentDeclaredChildGroup" />
     <xs:attributeGroup ref="ChildCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.no.reuse.attributes.overloaded.Child" use="prohibited" />
   </xs:complexType>
@@ -123,7 +122,6 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="Child2Type">
-    <xs:group ref="Parent2DeclaredChildGroup" />
     <xs:attributeGroup ref="Child2CumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.no.reuse.attributes.overloaded.Child2" use="prohibited" />
   </xs:complexType>

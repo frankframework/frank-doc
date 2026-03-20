@@ -57,7 +57,6 @@
     </xs:choice>
   </xs:group>
   <xs:complexType name="MemberType">
-    <xs:group ref="Member2DeclaredChildGroup" />
     <xs:attributeGroup ref="MemberCumulativeAttributeGroup" />
     <xs:attribute name="className" type="xs:string" fixed="org.frankframework.frankdoc.testtarget.examples.simple.name.conflict.first.Member" use="prohibited" />
   </xs:complexType>
