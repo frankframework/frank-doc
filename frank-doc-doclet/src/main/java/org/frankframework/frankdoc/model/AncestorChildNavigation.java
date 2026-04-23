@@ -185,10 +185,18 @@ class AncestorChildNavigation<T extends ElementChild> {
 	}
 
 	private void safeAddCumulative() {
-		if (current.getParent() == null) {
-			handler.handleChildrenOf(current);
+		// Skip ancestors that have no relevant children — they have no declared/cumulative group.
+		FrankElement candidate = current;
+		while (candidate != null && noChildren.test(candidate)) {
+			candidate = candidate.getParent();
+		}
+		if (candidate == null) {
+			return;
+		}
+		if (candidate.getParent() == null) {
+			handler.handleChildrenOf(candidate);
 		} else {
-			handler.handleCumulativeChildrenOf(current);
+			handler.handleCumulativeChildrenOf(candidate);
 		}
 	}
 }

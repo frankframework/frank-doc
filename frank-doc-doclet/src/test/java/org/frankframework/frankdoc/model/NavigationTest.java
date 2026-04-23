@@ -54,7 +54,7 @@ public class NavigationTest {
 			{"GrandChild5", IN_XSD, REJECT_DEPRECATED, List.of()},
 			// Below Parent are technical overrides in GrandParent6. We test here that we
 			// dont get Child6 which has no children, but Parent where the children are.
-			{"GrandChild6", IN_XSD, REJECT_DEPRECATED, List.of(ref(RefKind.CUMULATIVE, "Child6"))},
+			{"GrandChild6", IN_XSD, REJECT_DEPRECATED, List.of(ref(RefKind.DECLARED, "Parent"))},
 			// Test RefKind.CHILD
 			{"GrandChild7", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild7"), ref(RefKind.CHILD, "childAttributeFirst"), ref(RefKind.DECLARED, "Parent"))},
 			// Test fix of issue: Invalid XSDs generated #100.
