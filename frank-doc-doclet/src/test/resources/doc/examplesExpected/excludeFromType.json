@@ -70,5 +70,6 @@
             }
         }
     },
+	"skippableContainers": [],
     "enums": {}
 }

@@ -51,6 +51,7 @@
             }
         }
     },
+	"skippableContainers": [],
     "enums": {},
     "servletAuthenticators": {
         "DummyServletAuthenticator": {

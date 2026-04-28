@@ -114,5 +114,6 @@
             "className": "org.frankframework.frankdoc.testtarget.examples.reintroduce.Parent"
         }
     },
+	"skippableContainers": [],
     "enums": {}
 }

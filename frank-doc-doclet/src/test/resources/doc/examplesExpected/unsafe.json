@@ -62,5 +62,6 @@
             "className": "org.frankframework.frankdoc.testtarget.examples.unsafe.Unsafe"
         }
     },
+	"skippableContainers": [],
     "enums": {}
 }

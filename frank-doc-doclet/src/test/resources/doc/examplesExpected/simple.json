@@ -133,6 +133,7 @@
             }
         }
     },
+	"skippableContainers": [],
     "enums": {
         "org.frankframework.frankdoc.testtarget.examples.simple.MyEnum": {
             "ONE": {},

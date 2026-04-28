@@ -100,6 +100,7 @@ public class FrankDocJsonFactory {
 			result.add("types", getTypes());
 			result.add("elements", getElements());
 			result.add("elementNames", getElementNames());
+			result.add("skippableContainers", getSkippableContainers());
 			result.add("enums", getEnums());
 			getLabels().ifPresent(l -> result.add("labels", l));
 			getProperties().ifPresent(p -> result.add("properties", p));
@@ -444,6 +445,12 @@ public class FrankDocJsonFactory {
 			}
 		}
 
+		return result.build();
+	}
+
+	private JsonArray getSkippableContainers() {
+		final JsonArrayBuilder result = bf.createArrayBuilder();
+		model.getSkippableContainers().forEach(result::add);
 		return result.build();
 	}
 

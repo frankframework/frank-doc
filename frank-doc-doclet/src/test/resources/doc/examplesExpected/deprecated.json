@@ -85,5 +85,6 @@
             "className": "org.frankframework.frankdoc.testtarget.examples.deprecated.TChild"
         }
     },
+	"skippableContainers": [],
     "enums": {}
 }
