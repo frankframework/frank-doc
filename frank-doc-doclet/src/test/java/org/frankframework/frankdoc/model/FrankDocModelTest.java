@@ -151,7 +151,8 @@ public class FrankDocModelTest {
 		assertTrue(actualGrandParent.isAbstract());
 		FrankElement actualObject = actualAllElements.get("java.lang.Object");
 		assertNull(actualObject.getParent());
-		assertSame(actualObject, actualGrandParent.getParent());
+		assertNull(actualGrandParent.getParent());
+
 		assertSame(actualGrandParent, actualParent.getParent());
 		assertEquals(SIMPLE_PARENT, actualParent.getFullName());
 		assertEquals("ListenerParent", actualParent.getSimpleName());

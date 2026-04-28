@@ -70,7 +70,7 @@ public class IntegrationWithLogTest {
 	}
 
 	@Test
-	public void whenParameterOrForwardLacksDescriptionThenLogged() throws Exception {
+	public void whenParameterOrForwardLacksDescriptionThenLogged() {
 		try (TestAppender appender = TestAppender.newBuilder().build()) {
 			String thePackage = "org.frankframework.frankdoc.testtarget.examples.parameters.forwards.warnings.";
 			String startClassName = thePackage + "Master";

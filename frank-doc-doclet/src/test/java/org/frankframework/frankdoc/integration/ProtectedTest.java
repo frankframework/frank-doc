@@ -4,12 +4,12 @@ import org.frankframework.frankdoc.AttributeTypeStrategy;
 import org.frankframework.frankdoc.XsdVersion;
 import org.junit.jupiter.api.Test;
 
-public class ProtectedTest extends BaseIntegrationTest {
+class ProtectedTest extends BaseIntegrationTest {
 
 	private final String OMIT_CONFIG_CHILD_PROTECTED_CLASS_NAME = "org.frankframework.frankdoc.testtarget.examples.omit.config.childProtected.Master";
 
 	@Test
-	public void testStrictXsd() throws Exception {
+	void testStrictXsd() throws Exception {
 		var model = createModel(
 			GENERAL_DIGEST_RULES_FILE,
 			null,
@@ -21,7 +21,7 @@ public class ProtectedTest extends BaseIntegrationTest {
 	}
 
 	@Test
-	public void testJson() throws Exception {
+	void testJson() throws Exception {
 		var model = createModel(
 			GENERAL_DIGEST_RULES_FILE,
 			null,
