@@ -38,6 +38,12 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jspecify.annotations.Nullable;
@@ -76,8 +82,8 @@ public class FrankClass implements FrankType {
 		}
 
 		// Add class attributes and methods
-		for (Element e : element.getEnclosedElements()) {
-			processElement(docTrees, e);
+		for (Element enclosedElement : element.getEnclosedElements()) {
+			processElement(docTrees, enclosedElement, element);
 		}
 
 		if (log.isTraceEnabled() && !frankMethodsByDocletMethod.isEmpty()) {
@@ -89,20 +95,52 @@ public class FrankClass implements FrankType {
 		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(annotationMirrors);
 	}
 
-	protected void processElement(DocTrees docTrees, Element e) {
-		ElementKind kind = e.getKind();
+	protected void processElement(DocTrees docTrees, Element enclosedElement, TypeElement ownerElement) {
+		ElementKind kind = enclosedElement.getKind();
 		if (kind == ElementKind.METHOD) {
-			ExecutableElement executableElement = (ExecutableElement) e;
+			ExecutableElement executableElement = (ExecutableElement) enclosedElement;
 			FrankMethodDoclet frankMethodDoclet = new FrankMethodDoclet(executableElement, this, docTrees.getDocCommentTree(executableElement));
 			if (!frankMethodDoclet.isPublic() && !frankMethodDoclet.isProtected()) // Skip non-public methods (private/package privates). Protected is needed for inherited annotations.
 				return;
 			frankMethodsByDocletMethod.put(executableElement, frankMethodDoclet);
 			methodsBySignature.put(frankMethodDoclet.getSignature(), frankMethodDoclet);
 		} else if (kind == ElementKind.ENUM_CONSTANT) {
-			VariableElement variableElement = (VariableElement) e;
+			VariableElement variableElement = (VariableElement) enclosedElement;
 			enumFields.put(variableElement.getSimpleName().toString(), new FrankEnumConstantDoclet(variableElement, docTrees.getDocCommentTree(variableElement)));
 		} else if (kind == ElementKind.FIELD) {
-			VariableElement variableElement = (VariableElement) e;
+			VariableElement variableElement = (VariableElement) enclosedElement;
+
+			if (variableElement.getSimpleName().toString().equals("SKIPPABLE_CONTAINERS")) {// Skip serialVersionUID, as this is not relevant for documentation and often has a value that is not a compile-time constant.
+				// Diagnose the tree
+				TreePath path = docTrees.getPath(variableElement);
+				TreePath ownerPath = docTrees.getPath(ownerElement);
+				/*if (path != null) {
+					Tree leaf = path.getLeaf();
+					log.debug("Field: {}", variableElement.getSimpleName());
+					log.debug("Leaf kind: {}", leaf.getKind());
+					log.debug("Leaf toString: {}", leaf);
+					if (leaf instanceof VariableTree variableTree) {
+						log.debug("Initializer: {}", variableTree.getInitializer());
+					}*/
+				if (ownerPath != null) {
+					Tree ownerLeaf = ownerPath.getLeaf();
+					log.debug("Owner element: {}", ownerElement.getQualifiedName());
+					log.debug("Owner leaf kind: {}", ownerLeaf.getKind());
+					log.debug("Owner leaf toString: {}", ownerLeaf);
+					if (ownerLeaf instanceof ClassTree classTree) {
+						for (Tree member : classTree.getMembers()) {
+							log.debug("Member: {}", member);
+							if (member instanceof VariableTree variableTree && variableTree.getName().contentEquals(variableElement.getSimpleName())) {
+								log.debug("Initializer: {}", variableTree.getInitializer());
+							}
+						}
+					}
+				} else {
+					log.debug("Path is null for: {}", variableElement.getSimpleName());
+				}
+				log.debug("Done");
+			}
+
 			fields.put(variableElement.getSimpleName().toString(), variableElement.getConstantValue() != null ? variableElement.getConstantValue().toString() : null);
 		}
 	}
@@ -260,7 +298,6 @@ public class FrankClass implements FrankType {
 		declaredMethodList.forEach(dm -> ((FrankMethodDoclet) dm).addToRepository(result));
 		return result;
 	}
-
 
 	public FrankEnumConstant[] getEnumConstants() {
 		return enumFields.values().toArray(FrankEnumConstant[]::new);
