@@ -146,6 +146,6 @@
             "className": "org.frankframework.frankdoc.testtarget.hierarchy.Parameter"
         }
     },
-	"skippableContainers": [],
+	"skippableContainers": ["Root", "Module"],
     "enums": {}
 }

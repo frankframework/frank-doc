@@ -125,6 +125,6 @@
             "className": "org.frankframework.frankdoc.testtarget.element.name.MyFirst"
         }
     },
-	"skippableContainers": [],
+	"skippableContainers": ["Root", "Module"],
     "enums": {}
 }

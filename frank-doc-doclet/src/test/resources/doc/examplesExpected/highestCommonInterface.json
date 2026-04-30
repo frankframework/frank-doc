@@ -81,6 +81,6 @@
             "className": "org.frankframework.frankdoc.testtarget.highest.commonInterface.MyListener"
         }
     },
-	"skippableContainers": [],
+	"skippableContainers": ["Root", "Module"],
     "enums": {}
 }

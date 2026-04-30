@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.json.Json;
@@ -68,14 +69,16 @@ public class FrankDocJsonFactory {
 	private final JsonBuilderFactory bf;
 	final List<FrankElement> elementsOutsideChildren;
 	private final String frankFrameworkVersion;
+	private final Set<String> skippableContainerElements;
 
 	private final List<AdditionalRootElement> additionalRootElements;
 
-	public FrankDocJsonFactory(FrankDocModel model, String frankFrameworkVersion) {
+	public FrankDocJsonFactory(FrankDocModel model, String frankFrameworkVersion, Set<String> skippableContainerElements) {
 		this.model = model;
 		elementsOutsideChildren = model.getElementsOutsideConfigChildren();
 		bf = Json.createBuilderFactory(null);
 		this.frankFrameworkVersion = frankFrameworkVersion;
+		this.skippableContainerElements = skippableContainerElements;
 		this.additionalRootElements = findAdditionalRootElements();
 	}
 
@@ -450,7 +453,7 @@ public class FrankDocJsonFactory {
 
 	private JsonArray getSkippableContainers() {
 		final JsonArrayBuilder result = bf.createArrayBuilder();
-		model.getSkippableContainers().forEach(result::add);
+		skippableContainerElements.forEach(result::add);
 		return result.build();
 	}
 

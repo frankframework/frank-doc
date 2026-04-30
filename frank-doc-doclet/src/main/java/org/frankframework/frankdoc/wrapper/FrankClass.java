@@ -38,12 +38,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreePath;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jspecify.annotations.Nullable;
@@ -83,7 +77,7 @@ public class FrankClass implements FrankType {
 
 		// Add class attributes and methods
 		for (Element enclosedElement : element.getEnclosedElements()) {
-			processElement(docTrees, enclosedElement, element);
+			processElement(docTrees, enclosedElement);
 		}
 
 		if (log.isTraceEnabled() && !frankMethodsByDocletMethod.isEmpty()) {
@@ -95,7 +89,7 @@ public class FrankClass implements FrankType {
 		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(annotationMirrors);
 	}
 
-	protected void processElement(DocTrees docTrees, Element enclosedElement, TypeElement ownerElement) {
+	protected void processElement(DocTrees docTrees, Element enclosedElement) {
 		ElementKind kind = enclosedElement.getKind();
 		if (kind == ElementKind.METHOD) {
 			ExecutableElement executableElement = (ExecutableElement) enclosedElement;
@@ -109,38 +103,6 @@ public class FrankClass implements FrankType {
 			enumFields.put(variableElement.getSimpleName().toString(), new FrankEnumConstantDoclet(variableElement, docTrees.getDocCommentTree(variableElement)));
 		} else if (kind == ElementKind.FIELD) {
 			VariableElement variableElement = (VariableElement) enclosedElement;
-
-			if (variableElement.getSimpleName().toString().equals("SKIPPABLE_CONTAINERS")) {// Skip serialVersionUID, as this is not relevant for documentation and often has a value that is not a compile-time constant.
-				// Diagnose the tree
-				TreePath path = docTrees.getPath(variableElement);
-				TreePath ownerPath = docTrees.getPath(ownerElement);
-				/*if (path != null) {
-					Tree leaf = path.getLeaf();
-					log.debug("Field: {}", variableElement.getSimpleName());
-					log.debug("Leaf kind: {}", leaf.getKind());
-					log.debug("Leaf toString: {}", leaf);
-					if (leaf instanceof VariableTree variableTree) {
-						log.debug("Initializer: {}", variableTree.getInitializer());
-					}*/
-				if (ownerPath != null) {
-					Tree ownerLeaf = ownerPath.getLeaf();
-					log.debug("Owner element: {}", ownerElement.getQualifiedName());
-					log.debug("Owner leaf kind: {}", ownerLeaf.getKind());
-					log.debug("Owner leaf toString: {}", ownerLeaf);
-					if (ownerLeaf instanceof ClassTree classTree) {
-						for (Tree member : classTree.getMembers()) {
-							log.debug("Member: {}", member);
-							if (member instanceof VariableTree variableTree && variableTree.getName().contentEquals(variableElement.getSimpleName())) {
-								log.debug("Initializer: {}", variableTree.getInitializer());
-							}
-						}
-					}
-				} else {
-					log.debug("Path is null for: {}", variableElement.getSimpleName());
-				}
-				log.debug("Done");
-			}
-
 			fields.put(variableElement.getSimpleName().toString(), variableElement.getConstantValue() != null ? variableElement.getConstantValue().toString() : null);
 		}
 	}

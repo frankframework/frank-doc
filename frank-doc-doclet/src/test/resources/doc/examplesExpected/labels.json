@@ -56,7 +56,7 @@
             }
         }
     },
-	"skippableContainers": [],
+	"skippableContainers": ["Root", "Module"],
     "enums": {},
     "labels": {
         "myEnumLabel": [

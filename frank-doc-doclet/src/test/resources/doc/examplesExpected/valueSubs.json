@@ -100,6 +100,6 @@
             "className": "org.frankframework.frankdoc.testtarget.examples.valueSubs.WithValueSubstitutions"
         }
     },
-	"skippableContainers": [],
+	"skippableContainers": ["Root", "Module"],
     "enums": {}
 }

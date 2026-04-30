@@ -95,7 +95,7 @@
             "name": "Start"
         }
     },
-	"skippableContainers": [],
+	"skippableContainers": ["Root", "Module"],
     "enums": {},
     "metadata": {
         "version": "1.2.3-SNAPSHOT"

@@ -101,7 +101,7 @@
             ]
         }
     },
-	"skippableContainers": [],
+	"skippableContainers": ["Root", "Module"],
     "enums": [
         {
             "name": "org.frankframework.frankdoc.testtarget.attribute.enumExclude.MyEnum",

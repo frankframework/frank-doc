@@ -71,7 +71,6 @@ public class FrankDocModel {
 	private static final String UNSAFE_ANNOTATION_CLASSNAME = "org.frankframework.doc.Unsafe";
 	private static final String CREDENTIALS_FACTORY_INTERFACE = "org.frankframework.credentialprovider.ISecretProvider";
 	private static final String AUTHENTICATOR_INTERFACE = "org.frankframework.lifecycle.servlets.IAuthenticator";
-	private static final String SKIPPABLE_CONTAINERS_CLASSNAME = "org.frankframework.configuration.filters.SkipContainersFilter";
 
 	private final FrankClassRepository classRepository;
 
@@ -98,7 +97,6 @@ public class FrankDocModel {
 
 	private @Getter List<CredentialProvider> credentialProviders = new ArrayList<>();
 	private @Getter List<ServletAuthenticator> servletAuthenticators = new ArrayList<>();
-	private @Getter Set<String> skippableContainers = Set.of();
 
 	FrankDocModel(FrankClassRepository classRepository, String rootClassName) {
 		this.classRepository = classRepository;
@@ -131,7 +129,6 @@ public class FrankDocModel {
 			result.parsePropertyGroups(appConstantsPropertiesUrl);
 			result.parseCredentialProviders();
 			result.parseAuthenticators();
-			result.parseSkippableContainers();
 		} catch(Exception e) {
 			log.fatal("Could not populate FrankDocModel", e);
 			return null;
@@ -983,27 +980,6 @@ public class FrankDocModel {
 					Notes.getInstance().valueOf(cls)
 				)
 			).toList();
-	}
-
-	public void parseSkippableContainers() throws FrankDocException, NoSuchFieldException, IllegalAccessException {
-		FrankClass skippableContainersClass = classRepository.findClass(SKIPPABLE_CONTAINERS_CLASSNAME);
-		if (skippableContainersClass == null) {
-			log.error("Could not find class SkipContainersFilter to read skippable containers from");
-			return;
-		}
-
-		Field skippableContainersField =  skippableContainersClass.getClass().getDeclaredField("SKIPPABLE_CONTAINERS");
-		skippableContainersField.setAccessible(true);
-//		Field skippableContainersField =  skippableContainersClass.getField("SKIPPABLE_CONTAINERS");
-		Object rawFieldValue = skippableContainersField.get(null);
-
-		if (rawFieldValue instanceof Set<?> rawSet) {
-			this.skippableContainers = rawSet.stream()
-				.map(String.class::cast)
-				.collect(Collectors.toUnmodifiableSet());
-		} else {
-			log.error("Field SKIPPABLE_CONTAINERS is not a Set<String>");
-		}
 	}
 
 	public List<String> getAllLabels() {

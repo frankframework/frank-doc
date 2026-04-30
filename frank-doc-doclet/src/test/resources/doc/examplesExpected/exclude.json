@@ -91,6 +91,6 @@
             "className": "org.frankframework.frankdoc.testtarget.examples.exclude.Parent"
         }
     },
-	"skippableContainers": [],
+	"skippableContainers": ["Root", "Module"],
     "enums": {}
 }
