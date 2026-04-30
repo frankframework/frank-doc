@@ -53,5 +53,5 @@
         }
     },
     "skippableContainers": ["Root", "Module"],
-	"enums": {}
+    "enums": {}
 }

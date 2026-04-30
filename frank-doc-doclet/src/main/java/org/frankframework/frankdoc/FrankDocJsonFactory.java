@@ -453,7 +453,11 @@ public class FrankDocJsonFactory {
 
 	private JsonArray getSkippableContainers() {
 		final JsonArrayBuilder result = bf.createArrayBuilder();
-		skippableContainerElements.forEach(result::add);
+		Optional.ofNullable(skippableContainerElements)
+			.orElse(Set.of())
+			.stream()
+			.sorted()
+			.forEach(result::add);
 		return result.build();
 	}
 

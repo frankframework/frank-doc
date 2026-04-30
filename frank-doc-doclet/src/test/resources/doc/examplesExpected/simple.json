@@ -133,7 +133,7 @@
             }
         }
     },
-	"skippableContainers": ["Root", "Module"],
+    "skippableContainers": ["Root", "Module"],
     "enums": {
         "org.frankframework.frankdoc.testtarget.examples.simple.MyEnum": {
             "ONE": {},

@@ -20,7 +20,6 @@ import static org.frankframework.frankdoc.model.ElementChild.ALL;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;

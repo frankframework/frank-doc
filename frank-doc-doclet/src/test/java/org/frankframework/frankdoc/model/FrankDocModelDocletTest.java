@@ -8,8 +8,6 @@ import org.frankframework.frankdoc.wrapper.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-
 public class FrankDocModelDocletTest {
 	private static final String SIMPLE = "org.frankframework.frankdoc.testtarget.simple.";
 	private static final String EXPECTED_DESCRIPTION =

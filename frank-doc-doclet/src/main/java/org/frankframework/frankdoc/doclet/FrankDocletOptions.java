@@ -129,8 +129,9 @@ public class FrankDocletOptions {
 		new Option("-skippableContainerElements", true, "Comma-separated list of XML elements that are containers that could be skipped since they have no functional value", STRING) {
 			@Override
 			public boolean process(String option, List<String> arguments) {
-				String[] elements = arguments.getFirst().split(",");
-				skippableContainerElements = Set.copyOf(Arrays.asList(elements));
+				String[] rawValues = arguments.getFirst().split(",");
+				List<String> elements = Arrays.stream(rawValues).map(String::trim).toList();
+				skippableContainerElements = Set.copyOf(elements);
 				return OK;
 			}
 		}
