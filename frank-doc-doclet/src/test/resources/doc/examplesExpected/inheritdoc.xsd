@@ -43,8 +43,6 @@ With a bit of additional text.</xs:documentation>
   <xs:attributeGroup name="ChildCumulativeAttributeGroup">
     <xs:attributeGroup ref="ChildDeclaredAttributeGroup" />
     <xs:attribute ref="nonInheritedAttribute" />
-    <xs:attribute ref="active" />
-    <xs:anyAttribute namespace="##other" processContents="skip" />
   </xs:attributeGroup>
   <xs:complexType name="ParentType">
     <xs:attributeGroup ref="ParentDeclaredAttributeGroup" />

@@ -97,7 +97,7 @@ public class FrankElement implements Comparable<FrankElement> {
 	private @Getter @Setter(AccessLevel.PACKAGE) boolean interfaceBased = false;
 
 	// Represents the Java superclass.
-	private @Getter FrankElement parent;
+	private FrankElement parent;
 
 	// Used when config children are constructed. A config child is only
 	// created when there is a matching rule in digester-rules. These
@@ -392,6 +392,13 @@ public class FrankElement implements Comparable<FrankElement> {
 		}
 	}
 
+	public FrankElement getParent() {
+		if (this.parent != null && this.parent.getFullName().equals("java.lang.Object")) {
+			return null;
+		}
+		return this.parent;
+	}
+
 	public void setParent(FrankElement parent) {
 		this.parent = parent;
 		this.statistics = new FrankElementStatistics(this);
@@ -468,26 +475,6 @@ public class FrankElement implements Comparable<FrankElement> {
 		}
 		Map<? extends AbstractKey, ? extends ElementChild> lookup = allChildren.get(clazz);
 		return lookup.get(elementChild.getKey());
-	}
-
-	public FrankElement getNextAncestorThatHasChildren(Predicate<FrankElement> noChildren) {
-		FrankElement ancestor = parent;
-		while ((ancestor != null) && noChildren.test(ancestor)) {
-			ancestor = ancestor.getParent();
-		}
-		return ancestor;
-	}
-
-	public FrankElement getNextAncestorThatHasOrRejectsConfigChildren(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		return getNextAncestorThatHasChildren(el -> (
-			el.getChildrenOfKind(selector, ConfigChild.class).isEmpty()
-				&& el.getChildrenOfKind(rejector, ConfigChild.class).isEmpty()));
-	}
-
-	public FrankElement getNextAncestorThatHasOrRejectsAttributes(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		return getNextAncestorThatHasChildren(el -> (
-			el.getChildrenOfKind(selector, FrankAttribute.class).isEmpty()
-				&& el.getChildrenOfKind(rejector, FrankAttribute.class).isEmpty()));
 	}
 
 	public void walkCumulativeAttributes(
@@ -582,7 +569,7 @@ public class FrankElement implements Comparable<FrankElement> {
 			String roleName = entry.getKey();
 			resultAsMap.put(roleName, entry.getValue());
 		}
-		if (parent != null) {
+		if (getParent() != null) {
 			List<ConfigChildSet> inheritedConfigChildSets = getParent().getCumulativeConfigChildSets();
 			for (ConfigChildSet inherited : inheritedConfigChildSets) {
 				resultAsMap.putIfAbsent(inherited.getRoleName(), inherited);
@@ -606,9 +593,9 @@ public class FrankElement implements Comparable<FrankElement> {
 	}
 
 	public FrankElement getNextPluralConfigChildrenAncestor(Predicate<ElementChild> selector, Predicate<ElementChild> rejector) {
-		FrankElement ancestor = parent;
+		FrankElement ancestor = getParent();
 		while (ancestor != null) {
-			if (!ancestor.getParent().hasOrInheritsPluralConfigChildren(selector, rejector)) {
+			if (ancestor.getParent() != null && !ancestor.getParent().hasOrInheritsPluralConfigChildren(selector, rejector)) {
 				return ancestor;
 			}
 			if (ancestor.hasFilledConfigChildSets(selector, rejector)) {
@@ -623,10 +610,13 @@ public class FrankElement implements Comparable<FrankElement> {
 		boolean hasPluralConfigChildren = configChildSets.values().stream()
 			.anyMatch(c -> c.getFilteredElementRoles(selector, rejector).size() >= 2);
 		boolean inheritsPluralConfigChildren = false;
-		FrankElement ancestor = getNextAncestorThatHasOrRejectsConfigChildren(selector, rejector);
+
+		FrankElement ancestor = getParent();
+
 		if (ancestor != null) {
 			inheritsPluralConfigChildren = ancestor.hasOrInheritsPluralConfigChildren(selector, rejector);
 		}
+
 		return hasPluralConfigChildren || inheritsPluralConfigChildren;
 	}
 

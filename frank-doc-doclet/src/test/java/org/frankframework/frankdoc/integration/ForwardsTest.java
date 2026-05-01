@@ -2,10 +2,10 @@ package org.frankframework.frankdoc.integration;
 
 import org.junit.jupiter.api.Test;
 
-public class ForwardsTest extends BaseIntegrationTest {
+class ForwardsTest extends BaseIntegrationTest {
 
 	@Test
-	public void testJson() throws Exception {
+	void testJson() throws Exception {
 		var model = createModel(
 			GENERAL_DIGEST_RULES_FILE,
 			null,
