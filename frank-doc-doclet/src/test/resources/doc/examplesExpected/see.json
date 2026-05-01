@@ -67,5 +67,6 @@
             "className": "org.frankframework.frankdoc.testtarget.see.See"
         }
     },
+	"skippableContainers": ["Root", "Module"],
     "enums": {}
 }

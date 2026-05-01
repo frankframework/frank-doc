@@ -130,6 +130,7 @@
             }
         }
     },
+	"skippableContainers": ["Root", "Module"],
     "enums": {},
     "labels": {
         "CategoryA": [

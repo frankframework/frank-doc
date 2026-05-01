@@ -9,14 +9,19 @@ import org.frankframework.frankdoc.model.FrankDocModel;
 import org.frankframework.frankdoc.wrapper.FrankClassRepository;
 import org.frankframework.frankdoc.wrapper.TestUtil;
 
+import org.json.JSONException;
+import org.skyscreamer.jsonassert.JSONAssert;
+
 import java.io.IOException;
 import java.net.URL;
+import java.util.Set;
 
 import static org.frankframework.frankdoc.Constants.FRANK_DOC_GROUP_VALUES_PACKAGE;
 
 public abstract class BaseIntegrationTest {
 
 	private static final String FRAMEWORK_VERSION = "1.2.3-SNAPSHOT";
+	private static final Set<String> SKIPPABLE_CONTAINER_ELEMENTS = Set.of("Module", "Root");
 	public static final String GENERAL_DIGEST_RULES_FILE = "general-test-digester-rules.xml";
 
 	protected FrankDocModel createModel(String digesterRulesFileName, String appConstantsPropertiesFileName, String startClassName, String[] requiredPackages) throws IOException {
@@ -37,14 +42,14 @@ public abstract class BaseIntegrationTest {
 	}
 
 	protected String convertModelToJson(FrankDocModel model) {
-		var factory = new FrankDocJsonFactory(model, FRAMEWORK_VERSION);
+		var factory = new FrankDocJsonFactory(model, FRAMEWORK_VERSION, SKIPPABLE_CONTAINER_ELEMENTS);
 		return factory.getJson().toString();
 	}
 
-	protected void assertJsonEqual(String actual, String fileName) throws IOException {
+	protected void assertJsonEqual(String actual, String fileName) throws IOException, JSONException {
 		System.out.println(Utils.jsonPretty(actual));
 		String expectedJson = TestUtil.getTestFile("/doc/examplesExpected/" + fileName);
-		TestUtil.assertJsonEqual("Comparing JSON: " + fileName, expectedJson, actual);
+		JSONAssert.assertEquals(expectedJson, actual, false);
 	}
 
 	protected String convertModelToXsd(FrankDocModel model, XsdVersion version, AttributeTypeStrategy attributeTypeStrategy) {

@@ -143,5 +143,6 @@
             "className": "org.frankframework.frankdoc.testtarget.examples.making.mandatory.reintroduces.Parent"
         }
     },
+	"skippableContainers": ["Root", "Module"],
     "enums": {}
 }

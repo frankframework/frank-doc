@@ -93,5 +93,6 @@
             "className": "org.frankframework.frankdoc.testtarget.notes.Note"
         }
     },
+	"skippableContainers": ["Root", "Module"],
     "enums": {}
 }

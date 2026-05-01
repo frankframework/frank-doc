@@ -52,6 +52,7 @@ class Doclet {
 	private final File jsonFile;
 	private final File elementSummaryFile;
 	private final String frankFrameworkVersion;
+	private Set<String> skippableContainerElements;
 
 	Doclet(DocTrees docTrees, Set<? extends Element> classes, FrankDocletOptions options) throws FrankDocException {
 		log.info("Output base directory is: [{}]", options.getOutputDirectory());
@@ -72,6 +73,7 @@ class Doclet {
 			elementSummaryFile = new File(outputBaseDir, options.getElementSummaryPath());
 			elementSummaryFile.getParentFile().mkdirs();
 			frankFrameworkVersion = options.getFrankFrameworkVersion();
+			skippableContainerElements = options.getSkippableContainerElements();
 		} catch (SecurityException e) {
 			throw new FrankDocException("SecurityException occurred initializing the output directory", e);
 		}
@@ -116,7 +118,7 @@ class Doclet {
 
 	void writeJson() throws FrankDocException {
 		log.info("Calculating JSON file with documentation of the F!F");
-		FrankDocJsonFactory factory = new FrankDocJsonFactory(model, frankFrameworkVersion);
+		FrankDocJsonFactory factory = new FrankDocJsonFactory(model, frankFrameworkVersion, skippableContainerElements);
 		JsonObject jsonObject = factory.getJson();
 		String jsonText = Utils.jsonPretty(jsonObject.toString());
 		log.info("Done calculating JSON file with documentation of the F!F, writing the text to file {}", jsonFile.getAbsolutePath());

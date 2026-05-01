@@ -105,5 +105,6 @@
             }
         }
     },
+	"skippableContainers": ["Root", "Module"],
     "enums": {}
 }

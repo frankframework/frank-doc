@@ -54,6 +54,7 @@
             }
         }
     },
+	"skippableContainers": ["Root", "Module"],
     "enums": {
         "org.frankframework.frankdoc.testtarget.examples.deprecated.enumValue.Master.MyEnum": {
             "FIRST": {},

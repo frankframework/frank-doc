@@ -19,6 +19,7 @@ package org.frankframework.frankdoc.doclet;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -45,6 +46,7 @@ public class FrankDocletOptions {
 	private URL propertyFileUrl;
 	private String rootClass = "org.frankframework.configuration.Configuration";
 	private String frankFrameworkVersion;
+	private Set<String> skippableContainerElements = Set.of("Module", "Root");
 
 	private final Set<Option> options = Set.of(
 		new Option("-rootClass", true, "rootClass description", STRING) {
@@ -121,6 +123,15 @@ public class FrankDocletOptions {
 			@Override
 			public boolean process(String option, List<String> arguments) {
 				elementSummaryPath = arguments.getFirst();
+				return OK;
+			}
+		},
+		new Option("-skippableContainerElements", true, "Comma-separated list of XML elements that are containers that could be skipped since they have no functional value", STRING) {
+			@Override
+			public boolean process(String option, List<String> arguments) {
+				String[] rawValues = arguments.getFirst().split(",");
+				List<String> elements = Arrays.stream(rawValues).map(String::trim).toList();
+				skippableContainerElements = Set.copyOf(elements);
 				return OK;
 			}
 		}

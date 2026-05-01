@@ -112,5 +112,6 @@
             "className": "org.frankframework.frankdoc.testtarget.entity.reference.Receiver"
         }
     },
+	"skippableContainers": ["Root", "Module"],
     "enums": {}
 }

@@ -76,8 +76,8 @@ public class FrankClass implements FrankType {
 		}
 
 		// Add class attributes and methods
-		for (Element e : element.getEnclosedElements()) {
-			processElement(docTrees, e);
+		for (Element enclosedElement : element.getEnclosedElements()) {
+			processElement(docTrees, enclosedElement);
 		}
 
 		if (log.isTraceEnabled() && !frankMethodsByDocletMethod.isEmpty()) {
@@ -89,20 +89,20 @@ public class FrankClass implements FrankType {
 		frankAnnotationsByName = FrankDocletUtils.getFrankAnnotationsByName(annotationMirrors);
 	}
 
-	protected void processElement(DocTrees docTrees, Element e) {
-		ElementKind kind = e.getKind();
+	protected void processElement(DocTrees docTrees, Element enclosedElement) {
+		ElementKind kind = enclosedElement.getKind();
 		if (kind == ElementKind.METHOD) {
-			ExecutableElement executableElement = (ExecutableElement) e;
+			ExecutableElement executableElement = (ExecutableElement) enclosedElement;
 			FrankMethodDoclet frankMethodDoclet = new FrankMethodDoclet(executableElement, this, docTrees.getDocCommentTree(executableElement));
 			if (!frankMethodDoclet.isPublic() && !frankMethodDoclet.isProtected()) // Skip non-public methods (private/package privates). Protected is needed for inherited annotations.
 				return;
 			frankMethodsByDocletMethod.put(executableElement, frankMethodDoclet);
 			methodsBySignature.put(frankMethodDoclet.getSignature(), frankMethodDoclet);
 		} else if (kind == ElementKind.ENUM_CONSTANT) {
-			VariableElement variableElement = (VariableElement) e;
+			VariableElement variableElement = (VariableElement) enclosedElement;
 			enumFields.put(variableElement.getSimpleName().toString(), new FrankEnumConstantDoclet(variableElement, docTrees.getDocCommentTree(variableElement)));
 		} else if (kind == ElementKind.FIELD) {
-			VariableElement variableElement = (VariableElement) e;
+			VariableElement variableElement = (VariableElement) enclosedElement;
 			fields.put(variableElement.getSimpleName().toString(), variableElement.getConstantValue() != null ? variableElement.getConstantValue().toString() : null);
 		}
 	}
@@ -260,7 +260,6 @@ public class FrankClass implements FrankType {
 		declaredMethodList.forEach(dm -> ((FrankMethodDoclet) dm).addToRepository(result));
 		return result;
 	}
-
 
 	public FrankEnumConstant[] getEnumConstants() {
 		return enumFields.values().toArray(FrankEnumConstant[]::new);
