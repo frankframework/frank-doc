@@ -53,33 +53,36 @@ class GroupCreator<T extends ElementChild> {
 
 	void run() {
 		boolean hasNoRelevantChildren = ! hasRelevantChildren.test(frankElement);
-		FrankElement ancestor = frankElement.getParent();
-		// Find the nearest ancestor that actually has relevant children.
-		// Intermediate ancestors without relevant children have no declared/cumulative groups,
-		// so we must skip them to avoid dangling group references.
-		FrankElement nearestAncestorWithChildren = ancestor;
-		while (nearestAncestorWithChildren != null && !hasRelevantChildren.test(nearestAncestorWithChildren)) {
-			nearestAncestorWithChildren = nearestAncestorWithChildren.getParent();
-		}
-		if (hasNoRelevantChildren) {
-			if (nearestAncestorWithChildren == null) {
+		FrankElement ancestor = nextAncestor(frankElement);
+		if(hasNoRelevantChildren) {
+			if(ancestor == null) {
 				callback.noChildren();
-			} else if (nearestAncestorWithChildren.getParent() == null) {
-				callback.addDeclaredGroupRef(nearestAncestorWithChildren);
-			} else {
-				callback.addCumulativeGroupRef(nearestAncestorWithChildren);
 			}
-		} else {
-			if (nearestAncestorWithChildren == null) {
-				// No ancestor has relevant children; treat this element as top-level.
+			else {
+				FrankElement superAncestor = nextAncestor(ancestor);
+				if(superAncestor == null) {
+					callback.addDeclaredGroupRef(ancestor);
+				}
+				else {
+					callback.addCumulativeGroupRef(ancestor);
+				}
+			}
+		}
+		else {
+			if(ancestor == null) {
 				callback.addTopLevelDeclaredGroup();
 				callback.addDeclaredGroupRef(frankElement);
-			} else {
+			}
+			else {
 				callback.addDeclaredGroup();
 				callback.addCumulativeGroupRef(frankElement);
 				addCumulativeChildGroup();
 			}
 		}
+	}
+
+	private FrankElement nextAncestor(FrankElement e) {
+		return e.getNextAncestorThatHasChildren(hasRelevantChildren.negate());
 	}
 
 	private void addCumulativeChildGroup() {

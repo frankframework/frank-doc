@@ -56,10 +56,9 @@ class AncestorChildNavigation<T extends ElementChild> {
 		enter(start);
 		overridden = new HashMap<>();
 		addDeclaredGroupOrRepeatChildrenInXsd();
-
-		while (current.getParent() != null) {
-			enter(current.getParent());
-			if (getOverriddenChildren().stream().noneMatch(childSelector)) {
+		while(current.getNextAncestorThatHasChildren(noChildren) != null) {
+			enter(current.getNextAncestorThatHasChildren(noChildren));
+			if(getOverriddenChildren().stream().noneMatch(childSelector)) {
 				safeAddCumulative();
 				return;
 			}
@@ -121,7 +120,7 @@ class AncestorChildNavigation<T extends ElementChild> {
 	}
 
 	private void handleSelectedChildren(List<T> children) {
-		if (current.getParent() == null) {
+		if(current.getNextAncestorThatHasChildren(noChildren) == null) {
 			handler.handleSelectedChildrenOfTopLevel(children, current);
 		} else {
 			handler.handleSelectedChildren(children, current);
@@ -185,18 +184,10 @@ class AncestorChildNavigation<T extends ElementChild> {
 	}
 
 	private void safeAddCumulative() {
-		// Skip ancestors that have no relevant children — they have no declared/cumulative group.
-		FrankElement candidate = current;
-		while (candidate != null && noChildren.test(candidate)) {
-			candidate = candidate.getParent();
-		}
-		if (candidate == null) {
-			return;
-		}
-		if (candidate.getParent() == null) {
-			handler.handleChildrenOf(candidate);
+		if(current.getNextAncestorThatHasChildren(noChildren) == null) {
+			handler.handleChildrenOf(current);
 		} else {
-			handler.handleCumulativeChildrenOf(candidate);
+			handler.handleCumulativeChildrenOf(current);
 		}
 	}
 }

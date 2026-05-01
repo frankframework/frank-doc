@@ -18,11 +18,20 @@
     "elements": {
         "org.frankframework.frankdoc.testtarget.category.ChildConfigChildA": {
             "name": "ChildConfigChildA",
-			"parent": "org.frankframework.frankdoc.testtarget.category.ChildConfigParent"
+            "attributes": {
+                "active": {
+                    "description": "If defined and empty or false, then this element and all its children are ignored"
+                }
+
+            }
         },
         "org.frankframework.frankdoc.testtarget.category.ChildConfigChildB": {
             "name": "ChildConfigChildB",
-			"parent": "org.frankframework.frankdoc.testtarget.category.ChildConfigParent"
+            "attributes": {
+                "active": {
+                    "description": "If defined and empty or false, then this element and all its children are ignored"
+                }
+            }
         },
         "org.frankframework.frankdoc.testtarget.category.ChildConfigChildC": {
             "name": "ChildConfigChildC",
@@ -63,7 +72,11 @@
         },
         "org.frankframework.frankdoc.testtarget.category.Start": {
             "name": "Start",
-			"parent": "org.frankframework.frankdoc.testtarget.category.ParentOfStart",
+            "attributes": {
+                "active": {
+                    "description": "If defined and empty or false, then this element and all its children are ignored"
+                }
+            },
             "children": [
                 {
                     "multiple": true,

@@ -48,6 +48,8 @@ public class NavigationTest {
 			{"GrandChild", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild"), ref(RefKind.DECLARED, "Child"))},
 			// The override of parentAttributeSecond counts, in Child parentAttributeFirst is ignored as child
 			{"GrandChild2", ALL_NOT_EXCLUDED, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild2"), ref(RefKind.CUMULATIVE, "Child2"))},
+			// All children of Child2 are deprecated, so Child2 is ignored in the ancestor hierarchy
+			{"GrandChild2", IN_XSD, EXCLUDED, asList(ref(RefKind.DECLARED, "GrandChild2"), ref(RefKind.DECLARED, "Parent"))},
 			// All attributes of Parent are overridden by deprecated methods and should be de-inherited
 			{"GrandChild3", IN_XSD, REJECT_DEPRECATED, List.of()},
 			// Same as above, but requires the algorithm to work around a technical override

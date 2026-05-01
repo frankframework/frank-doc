@@ -397,9 +397,8 @@ public class FrankDocXsdFactory implements AttributeReuseManagerCallback {
 				attributeReuseManager.addAttribute(anyOther, elementBuildingStrategy.getElementTypeBuilder());
 			}
 			log.trace("Creating reusable type definitions (or only groups) for Java ancestors of FrankElement [{}]", frankElement::getFullName);
-			FrankElement parent = frankElement.getParent();
-			recursivelyDefineReusableFrankElementType(parent);
-
+			recursivelyDefineReusableFrankElementType(frankElement.getNextAncestorThatHasOrRejectsConfigChildren(version.getChildSelector(), version.getChildRejector()));
+			recursivelyDefineReusableFrankElementType(frankElement.getNextAncestorThatHasOrRejectsAttributes(version.getChildSelector(), version.getChildRejector()));
 			log.trace("Done with reusable XSD type definitions for ancestors of FrankElement [{}]", frankElement::getFullName);
 		} else {
 			log.trace("Reusable type definition was already included");
