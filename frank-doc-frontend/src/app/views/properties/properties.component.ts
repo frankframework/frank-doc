@@ -1,13 +1,14 @@
-import { Component, computed, inject, Signal } from '@angular/core';
-import { AppService } from '../../app.service';
-import { NameWbrPipe } from '../../components/name-wbr.pipe';
-import { DEFAULT_RETURN_CHARACTER, DEFAULT_UNKNOWN_PROPERTY_GROUP } from '../../app.constants';
-import { CollapseDirective } from '../../components/collapse.directive';
-import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.component';
 import { NgClass } from '@angular/common';
-import { IconHelpComponent } from '../../icons/icon-help/icon-help.component';
+import { Component, computed, inject, OnInit, Signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Elements, FFDocJson, Property } from '@frankframework/doc-library-core';
 import { JavadocTransformDirective, NgFFDoc } from '@frankframework/doc-library-ng';
+import { DEFAULT_RETURN_CHARACTER, DEFAULT_UNKNOWN_PROPERTY_GROUP } from '../../app.constants';
+import { AppService } from '../../app.service';
+import { CollapseDirective } from '../../components/collapse.directive';
+import { NameWbrPipe } from '../../components/name-wbr.pipe';
+import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.component';
+import { IconHelpComponent } from '../../icons/icon-help/icon-help.component';
 
 @Component({
   selector: 'app-properties',
@@ -15,35 +16,59 @@ import { JavadocTransformDirective, NgFFDoc } from '@frankframework/doc-library-
   templateUrl: './properties.component.html',
   styleUrl: './properties.component.scss',
 })
-export class PropertiesComponent {
+export class PropertiesComponent implements OnInit {
   protected readonly properties: Signal<FFDocJson['properties']> = computed(() => this.ffDoc.properties() ?? []);
   protected readonly elements: Signal<Elements> = computed(() => this.ffDoc.elements() ?? {});
   protected expandedFilterGroups: Signal<Record<string, boolean>> = computed(() =>
-    this.properties().reduce<Record<string, boolean>>((acc, propertyGroup, index) => {
-      if (this.getNameOrNull(propertyGroup.name)) return acc;
-      acc[`${DEFAULT_UNKNOWN_PROPERTY_GROUP}-${index}`] = true;
-      return acc;
+    this.properties().reduce<Record<string, boolean>>((expendedGroup, propertyGroup, index) => {
+      if (this.getNameOrNull(propertyGroup.name)) return expendedGroup;
+      expendedGroup[`${DEFAULT_UNKNOWN_PROPERTY_GROUP}-${index}`] = true;
+      return expendedGroup;
     }, {}),
   );
   protected readonly DEFAULT_UNKNOWN_PROPERTY_GROUP = DEFAULT_UNKNOWN_PROPERTY_GROUP;
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
-  protected readonly appService: AppService = inject(AppService);
 
+  private scrollElementId: string | null = null;
+  private readonly appService: AppService = inject(AppService);
+  private readonly router: Router = inject(Router);
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
 
-  getPropertyNamesFromGroup(group: Property): string[] {
-    return group.properties.map((prop) => prop.name);
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe((parameters) => {
+      const property = parameters.get('property');
+      if (property) {
+        this.scrollElementId = `#${this.convertToId(property)}`;
+        this.appService.scrollToElement(this.scrollElementId);
+      }
+    });
+    if (this.scrollElementId) setTimeout(() => this.appService.scrollToElement(this.scrollElementId!), 500);
   }
 
-  getPropertyGroupKey(name: string, index: number): string {
+  protected getPropertyNamesFromGroup(group: Property): string[] {
+    return group.properties.map((property) => property.name);
+  }
+
+  protected getPropertyGroupKey(name: string, index: number): string {
     return this.getNameOrNull(name) ? name : `${DEFAULT_UNKNOWN_PROPERTY_GROUP}-${index}`;
   }
 
-  getNameOrNull(name: string): string | null {
+  protected getNameOrNull(name: string): string | null {
     return name === '' ? null : name;
   }
 
-  convertToId(idString: string): string {
+  protected convertToId(idString: string): string {
     return idString.replaceAll('.', '_').replaceAll(' ', '_');
+  }
+
+  protected scrollToElement(selector: string): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      scroll: 'manual',
+      queryParams: {
+        property: selector,
+      },
+    });
   }
 }

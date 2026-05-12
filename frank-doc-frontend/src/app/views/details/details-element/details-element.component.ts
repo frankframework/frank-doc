@@ -11,7 +11,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { AlertComponent, AlertType, ChipComponent } from '@frankframework/angular-components';
-import { KeyValuePipe, NgClass, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
+import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { CollapseDirective } from '../../../components/collapse.directive';

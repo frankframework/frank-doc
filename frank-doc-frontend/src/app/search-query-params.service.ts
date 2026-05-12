@@ -17,9 +17,9 @@ export class SearchQueryParamsService {
   private filterParams = new Map<string, string>();
 
   constructor() {
-    this.currentRoute.queryParamMap.subscribe((queryParams) => {
-      this.searchParam = queryParams.get('search') ?? '';
-      this.filterParams = this.getAllFilters(queryParams);
+    this.currentRoute.queryParamMap.subscribe((queryParameters) => {
+      this.searchParam = queryParameters.get('search') ?? '';
+      this.filterParams = this.getAllFilters(queryParameters);
     });
   }
 
@@ -30,26 +30,26 @@ export class SearchQueryParamsService {
     };
   }
 
-  setInRoute(params: Partial<SearchFilters>): void {
-    let newParams: Record<string, string> = {};
-    if (params.search && params.search !== '') newParams['search'] = params.search.trim();
-    if (params.query) newParams = { ...newParams, ...this.convertFiltersToParams(params.query) };
+  setInRoute(parameters: Partial<SearchFilters>): void {
+    let newParameters: Record<string, string> = {};
+    if (parameters.search && parameters.search !== '') newParameters['search'] = parameters.search.trim();
+    if (parameters.query) newParameters = { ...newParameters, ...this.convertFiltersToParams(parameters.query) };
 
     this.router.navigate([], {
       relativeTo: this.currentRoute,
       preserveFragment: true,
-      queryParams: newParams,
+      queryParams: newParameters,
       replaceUrl: true,
     });
   }
 
-  private getAllFilters(params: ParamMap): Map<string, string> {
+  private getAllFilters(parameters: ParamMap): Map<string, string> {
     const filterMap = new Map<string, string>();
 
-    for (const key of params.keys) {
+    for (const key of parameters.keys) {
       if (key.startsWith('filter[') && key.endsWith(']')) {
         const filterKey = key.slice(7, -1);
-        const filterValue = params.get(key);
+        const filterValue = parameters.get(key);
         if (filterValue) filterMap.set(filterKey, filterValue);
       }
     }
@@ -57,16 +57,16 @@ export class SearchQueryParamsService {
   }
 
   private convertFiltersToParams(filters: FilterGroups): Record<string, string> {
-    const filterParams: Record<string, string> = {};
+    const filterParameters: Record<string, string> = {};
     for (const key in filters) {
-      if (filters[key].length > 0) filterParams[`filter[${key}]`] = filters[key].join(',');
+      if (filters[key].length > 0) filterParameters[`filter[${key}]`] = filters[key].join(',');
     }
-    return filterParams;
+    return filterParameters;
   }
 
-  private convertParamsToFilters(params: Map<string, string>): FilterGroups {
+  private convertParamsToFilters(parameters: Map<string, string>): FilterGroups {
     const filters: FilterGroups = {};
-    for (const [key, value] of params.entries()) {
+    for (const [key, value] of parameters.entries()) {
       for (const label of value.split(',')) {
         if (!filters[key]) filters[key] = [];
         filters[key].push(label);

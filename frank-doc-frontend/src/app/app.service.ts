@@ -78,20 +78,22 @@ export class AppService {
   scrollToElement(selectors: string): void {
     const element = document.querySelector(selectors);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
     }
   }
 
   private getSelectedFiltersLength(selectedFilters: FilterGroups): number {
     const filterLabels = Object.values(selectedFilters);
     if (filterLabels.length === 0) return 0;
-    return filterLabels.reduce((acc, labels) => acc + labels.length, 0);
+    return filterLabels.reduce((totalLength, labels) => totalLength + labels.length, 0);
   }
 
   private createHSLColorFromString(string: string, lightness: number): HSL {
     let hash = 0;
-    for (let i = 0; i < string.length; i++) {
-      hash += string.codePointAt(i) ?? 0;
+    for (let index = 0; index < string.length; index++) {
+      hash += string.codePointAt(index) ?? 0;
     }
 
     const hue = hash % 360;

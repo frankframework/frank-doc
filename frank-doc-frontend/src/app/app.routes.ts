@@ -18,7 +18,22 @@ export const routes: Routes = [
     title: 'Components',
   },
   {
+    path: 'components/:filterName',
+    component: IndexComponent,
+    title: 'Components',
+  },
+  {
+    path: 'components/:filterName/:labelName',
+    component: IndexComponent,
+    title: 'Components',
+  },
+  {
     path: 'properties',
+    component: PropertiesComponent,
+    title: 'Properties',
+  },
+  {
+    path: 'properties/:property',
     component: PropertiesComponent,
     title: 'Properties',
   },

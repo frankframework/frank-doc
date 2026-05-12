@@ -41,7 +41,7 @@ export class ServletAuthenticatorsComponent {
   private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
 
   constructor() {
-    this.selectedAuthenticatorName = toSignal(this.route.paramMap.pipe(map((params) => params.get('name'))));
+    this.selectedAuthenticatorName = toSignal(this.route.paramMap.pipe(map((parameters) => parameters.get('name'))));
   }
 
   protected handleSelectedAuthenticator(authenticator: string): void {

@@ -16,10 +16,7 @@
       </div>
       <ul #propertyList>
         @for (propertyName of getPropertyNamesFromGroup(propertyGroup); track index; let index = $index) {
-          <li
-            class="nav-item"
-            (click)="appService.scrollToElement('#' + convertToId(propertyGroup.name + '-' + propertyName))"
-          >
+          <li class="nav-item" (click)="scrollToElement(propertyName)">
             {{ propertyName }}
           </li>
         }
@@ -61,7 +58,7 @@
                 <td
                   class="property-name"
                   [ngClass]="{ deprecated: property.flags && property.flags.includes('Deprecated') }"
-                  [id]="convertToId(propertyGroup.name + '-' + property.name)"
+                  [id]="convertToId(property.name)"
                   [innerHTML]="propertyName"
                 ></td>
                 <td class="property-default-value" [innerHTML]="property.defaultValue ?? DEFAULT_RETURN_CHARACTER"></td>

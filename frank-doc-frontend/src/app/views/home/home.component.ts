@@ -64,9 +64,9 @@ export class HomeComponent implements OnInit {
   }
 
   private initializeSearchFilters(): void {
-    const params = this.searchParamsService.getFromRoute();
-    this.searchQuery = params.search;
-    this.initialFilters = params.query;
-    this.updateSelectedFilters(params.query);
+    const parameters = this.searchParamsService.getFromRoute();
+    this.searchQuery = parameters.search;
+    this.initialFilters = parameters.query;
+    this.updateSelectedFilters(parameters.query);
   }
 }

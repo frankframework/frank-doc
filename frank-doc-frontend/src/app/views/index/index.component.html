@@ -11,7 +11,7 @@
       </div>
       <ul #filterList>
         @for (labelEntry of filterEntry.filter | keyvalue; track labelEntry.key) {
-          <li class="nav-item" (click)="appService.scrollToElement('#' + filterEntry.name + '-' + labelEntry.key)">
+          <li class="nav-item" (click)="scrollToElement(filterEntry.name, labelEntry.key)">
             <ff-chip slim [colour]="appService.getLabelColor(filterEntry.name)">{{ labelEntry.key.charAt(0) }}</ff-chip>
             {{ labelEntry.key }} ({{ labelEntry.value.length }})
           </li>
@@ -34,7 +34,7 @@
 
     @for (filterEntry of filters(); track filterEntry.name) {
       <div class="filter-container">
-        <h3 class="sub-title">{{ filterEntry.name }}</h3>
+        <h3 class="sub-title" [id]="filterEntry.name">{{ filterEntry.name }}</h3>
         @for (labelEntries of appService.getLabelEntries(filterEntry.filter); track labelEntries.name) {
           <div class="label-container">
             @let entryName = filterEntry.name + '-' + labelEntries.name;

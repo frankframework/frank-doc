@@ -39,7 +39,7 @@ export class CredentialProvidersComponent {
   private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
 
   constructor() {
-    this.selectedProviderName = toSignal(this.route.paramMap.pipe(map((params) => params.get('name'))));
+    this.selectedProviderName = toSignal(this.route.paramMap.pipe(map((parameters) => parameters.get('name'))));
   }
 
   protected handleSelectedProvider(providerName: string): void {
