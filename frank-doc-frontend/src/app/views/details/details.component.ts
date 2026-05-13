@@ -56,11 +56,11 @@ export class DetailsComponent implements OnInit, OnDestroy {
   private scrollEvent: Subscription | null = null;
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      const indexOrClassName: string | undefined = params['name'];
-      const filterName: string | undefined = params['filter'];
-      const labelName: string | undefined = params['label'];
-      const elementName: string | undefined = params['element'];
+    this.route.params.subscribe((parameters) => {
+      const indexOrClassName: string | undefined = parameters['name'];
+      const filterName: string | undefined = parameters['filter'];
+      const labelName: string | undefined = parameters['label'];
+      const elementName: string | undefined = parameters['element'];
 
       if (indexOrClassName) {
         this.elementIndexOrClassName = indexOrClassName;

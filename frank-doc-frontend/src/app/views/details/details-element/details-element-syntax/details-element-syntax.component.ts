@@ -28,7 +28,13 @@ export class DetailsElementSyntaxComponent implements OnChanges {
     const parameters = Object.keys(element.parameters ?? {});
     const nestedElements = element.children?.filter((child) => child.mandatory) ?? [];
     const forwards = Object.keys(element.forwards ?? {});
-    this.elementSyntax = this.buildSyntax(element.name, this.allRequiredAttributes(), parameters, nestedElements, forwards);
+    this.elementSyntax = this.buildSyntax(
+      element.name,
+      this.allRequiredAttributes(),
+      parameters,
+      nestedElements,
+      forwards,
+    );
   }
 
   protected copyToClipboard(text: string): void {

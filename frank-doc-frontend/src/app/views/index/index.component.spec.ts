@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { IndexComponent } from './index.component';
 import { AppService } from '../../app.service';
@@ -12,7 +13,7 @@ describe('IndexComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [IndexComponent],
-      providers: [AppService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [AppService, provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(IndexComponent);
