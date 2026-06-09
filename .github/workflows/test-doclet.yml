@@ -44,8 +44,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
-          cache-dependency-path: frank-doc/frank-doc-frontend/pnpm-lock.yaml
 
       - name: Build with Maven
         env:
