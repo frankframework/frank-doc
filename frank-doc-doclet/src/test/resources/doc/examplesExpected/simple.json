@@ -104,35 +104,35 @@
             ]
         }
     },
-    "elementNames": {
-        "DescribedPossibleIRoleNameIChild": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
-            "labels": {
-                "FrankDocGroup": "Sender"
-            }
-        },
-        "Module": {
-            "className": "Module",
-            "labels": {
-                "FrankDocGroup": "Other"
-            }
-        },
-        "NotDescribedPossibleIRoleNameIChild": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild",
-            "labels": {
-                "FrankDocGroup": "ErrorMessageFormatter"
-            }
-        },
-        "RoleNameTChild": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.simple.TChild"
-        },
-        "Start": {
-            "className": "org.frankframework.frankdoc.testtarget.examples.simple.Start",
-            "labels": {
-                "FrankDocGroup": "Batch"
-            }
-        }
-    },
+	"elementNames" : {
+		"Module" : {
+			"className" : "Module",
+			"labels" : {
+				"FrankDocGroup" : "Other"
+			}
+		},
+		"NotDescribedPossibleIRoleNameIChild" : {
+			"className" : "org.frankframework.frankdoc.testtarget.examples.simple.NotDescribedPossibleIChild",
+			"labels" : {
+				"Components" : "ErrorMessageFormatters"
+			}
+		},
+		"Start" : {
+			"className" : "org.frankframework.frankdoc.testtarget.examples.simple.Start",
+			"labels" : {
+				"Components" : "Batch"
+			}
+		},
+		"DescribedPossibleIRoleNameIChild" : {
+			"className" : "org.frankframework.frankdoc.testtarget.examples.simple.DescribedPossibleIChild",
+			"labels" : {
+				"Components" : "Senders"
+			}
+		},
+		"RoleNameTChild" : {
+			"className" : "org.frankframework.frankdoc.testtarget.examples.simple.TChild"
+		}
+	},
     "skippableContainers": ["Root", "Module"],
     "enums": {
         "org.frankframework.frankdoc.testtarget.examples.simple.MyEnum": {
@@ -142,21 +142,9 @@
             }
         }
     },
-    "labels": {
-        "FrankDocGroup": [
-            "Pipe",
-            "Sender",
-            "Listener",
-            "Validator",
-            "Wrapper",
-            "TransactionalStorage",
-            "ErrorMessageFormatter",
-            "Batch",
-            "Monitoring",
-            "Job",
-            "Other"
-        ]
-    },
+	"labels" : {
+		"Components" : [ "Pipes", "Senders", "Listeners", "Validators", "Wrappers", "TransactionalStorages", "ErrorMessageFormatters", "Batch", "Monitoring", "Scheduling", "Parameters", "Other" ]
+	},
     "properties": [
         {
             "name": "First group",

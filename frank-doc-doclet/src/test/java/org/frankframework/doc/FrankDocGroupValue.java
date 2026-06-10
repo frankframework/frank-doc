@@ -16,26 +16,28 @@ limitations under the License.
 package org.frankframework.doc;
 
 public enum FrankDocGroupValue {
-	@EnumLabel("Pipe")
+	@EnumLabel("Pipes")
 	PIPE,
-	@EnumLabel("Sender")
+	@EnumLabel("Senders")
 	SENDER,
-	@EnumLabel("Listener")
+	@EnumLabel("Listeners")
 	LISTENER,
-	@EnumLabel("Validator")
+	@EnumLabel("Validators")
 	VALIDATOR,
-	@EnumLabel("Wrapper")
+	@EnumLabel("Wrappers")
 	WRAPPER,
-	@EnumLabel("TransactionalStorage")
+	@EnumLabel("TransactionalStorages")
 	TRANSACTIONAL_STORAGE,
-	@EnumLabel("ErrorMessageFormatter")
+	@EnumLabel("ErrorMessageFormatters")
 	ERROR_MESSAGE_FORMATTER,
 	@EnumLabel("Batch")
 	BATCH,
 	@EnumLabel("Monitoring")
 	MONITORING,
-	@EnumLabel("Job")
+	@EnumLabel("Scheduling")
 	JOB,
+	@EnumLabel("Parameters")
+	PARAMETER,
 	// This label is automatically added to the Module element.
 	@EnumLabel("Other")
 	OTHER,

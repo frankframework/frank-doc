@@ -41,11 +41,11 @@ jobs:
           version: 9
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           cache: 'pnpm'
-          cache-dependency-path: frank-doc/frank-doc-frontend/pnpm-lock.yaml
+          cache-dependency-path: frank-doc/frank-doc-frontend/pnpm-lock.yaml          
 
       - name: Build with Maven
         env:
