@@ -9,3 +9,4 @@ minimumReleaseAgeExclude:
   - '@angular-devkit/schematics@22.0.5'
   - '@angular/cli@22.0.5'
   - '@schematics/angular@22.0.5'
+  - '@angular/build@22.0.5'
