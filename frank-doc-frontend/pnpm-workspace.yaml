@@ -1,6 +1,8 @@
 allowBuilds:
   '@parcel/watcher': false
+  edgedriver: false
   esbuild: false
+  geckodriver: false
   lmdb: false
   msgpackr-extract: false
 minimumReleaseAgeExclude:
