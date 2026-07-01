@@ -36,8 +36,8 @@ importers:
         specifier: ^1.4.3
         version: 1.4.3(@angular/cdk@22.0.2(@angular/common@22.0.4(@angular/core@22.0.4(@angular/compiler@22.0.4)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.4(@angular/compiler@22.0.4)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.0.4(@angular/animations@22.0.4(@angular/core@22.0.4(@angular/compiler@22.0.4)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@22.0.4(@angular/core@22.0.4(@angular/compiler@22.0.4)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.4(@angular/compiler@22.0.4)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2))(@angular/core@22.0.4(@angular/compiler@22.0.4)(rxjs@7.8.2)(zone.js@0.16.2))
       '@frankframework/doc-library-core':
-        specifier: ^1.0.4
-        version: 1.0.4
+        specifier: ^1.0.5
+        version: 1.0.5
       '@frankframework/doc-library-ng':
         specifier: ^1.0.4
         version: 1.0.4(@angular/core@22.0.4(@angular/compiler@22.0.4)(rxjs@7.8.2)(zone.js@0.16.2))
@@ -821,6 +821,9 @@ packages:
 
   '@frankframework/doc-library-core@1.0.4':
     resolution: {integrity: sha512-cimDGiPjccgRKy8v7rowt7agKEabSulDvr63PvjfwiDtQixSlQ43U5MUraXMBs3jljAC1hNFPAljK7z7IvSZog==}
+
+  '@frankframework/doc-library-core@1.0.5':
+    resolution: {integrity: sha512-xVleXc6syHM0F0RZbJlWU1V59y8rMLmZJeBj4Eoih0opaqSoFWQrO9Xp5U7je3YLfJOCdH3u8P/Wi6xKBDgMAg==}
 
   '@frankframework/doc-library-ng@1.0.4':
     resolution: {integrity: sha512-FrjlZFt4+uKyIbTZ0CgDR6L/DA10LlTUBCwu8Xqhj9sj6hsYcvB04y6cs4X93dgRvoAP1jvJyucSzU3Y52q1yw==}
@@ -4938,6 +4941,8 @@ snapshots:
 
   '@frankframework/doc-library-core@1.0.4': {}
 
+  '@frankframework/doc-library-core@1.0.5': {}
+
   '@frankframework/doc-library-ng@1.0.4(@angular/core@22.0.4(@angular/compiler@22.0.4)(rxjs@7.8.2)(zone.js@0.16.2))':
     dependencies:
       '@angular/core': 22.0.4(@angular/compiler@22.0.4)(rxjs@7.8.2)(zone.js@0.16.2)
@@ -5652,7 +5657,7 @@ snapshots:
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 20.19.43
+      '@types/node': 26.0.1
     optional: true
 
   '@typescript-eslint/eslint-plugin@8.62.1(@typescript-eslint/parser@8.62.1(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)':
