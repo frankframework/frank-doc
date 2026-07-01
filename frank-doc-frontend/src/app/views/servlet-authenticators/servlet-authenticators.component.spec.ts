@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 
 import { ServletAuthenticatorsComponent } from './servlet-authenticators.component';
 import { AppService } from '../../app.service';
-import { provideHttpClient, withXhr } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
 
 describe('ServletAuthenticatorsComponent', () => {
   let component: ServletAuthenticatorsComponent;
@@ -13,7 +13,7 @@ describe('ServletAuthenticatorsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ServletAuthenticatorsComponent],
-      providers: [AppService, provideHttpClient(withXhr()), provideHttpClientTesting(), provideRouter([])],
+      providers: [AppService, provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ServletAuthenticatorsComponent);

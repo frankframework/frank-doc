@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { PropertiesComponent } from './properties.component';
 import { AppService } from '../../app.service';
-import { provideHttpClient, withXhr } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('PropertiesComponent', () => {
   let component: PropertiesComponent;
@@ -13,7 +13,7 @@ describe('PropertiesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PropertiesComponent],
-      providers: [AppService, provideRouter([]), provideHttpClient(withXhr()), provideHttpClientTesting()],
+      providers: [AppService, provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PropertiesComponent);
