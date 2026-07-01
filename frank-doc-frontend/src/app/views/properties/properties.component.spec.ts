@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { PropertiesComponent } from './properties.component';
 import { AppService } from '../../app.service';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('PropertiesComponent', () => {
@@ -13,7 +13,7 @@ describe('PropertiesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PropertiesComponent],
-      providers: [AppService, provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+      providers: [AppService, provideRouter([]), provideHttpClient(withXhr()), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PropertiesComponent);

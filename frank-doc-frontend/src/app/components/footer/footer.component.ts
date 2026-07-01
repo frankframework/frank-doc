@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IconFfLogoFullComponent } from '../../icons/icon-ff-logo-full/icon-ff-logo-full.component';
 import { IconNavigateToExternalComponent } from '../../icons/icon-navigate-to-external/icon-navigate-to-external.component';
 import { IconDownloadComponent } from '../../icons/icon-download/icon-download.component';
@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
   selector: 'app-footer',
   imports: [IconFfLogoFullComponent, IconNavigateToExternalComponent, IconDownloadComponent],
   templateUrl: './footer.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './footer.component.scss',
 })
 export class FooterComponent {

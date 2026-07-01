@@ -9,6 +9,7 @@ import {
   Output,
   Signal,
   SimpleChanges,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { AlertComponent, AlertType, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
@@ -64,6 +65,7 @@ type RecordEntry<T> = {
     DetailsElementSyntaxComponent,
   ],
   templateUrl: './details-element.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './details-element.component.scss',
 })
 export class DetailsElementComponent implements OnInit, OnChanges {

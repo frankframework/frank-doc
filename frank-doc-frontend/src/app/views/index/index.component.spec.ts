@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { IndexComponent } from './index.component';
 import { AppService } from '../../app.service';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('IndexComponent', () => {
@@ -13,7 +13,7 @@ describe('IndexComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [IndexComponent],
-      providers: [AppService, provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+      providers: [AppService, provideRouter([]), provideHttpClient(withXhr()), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(IndexComponent);

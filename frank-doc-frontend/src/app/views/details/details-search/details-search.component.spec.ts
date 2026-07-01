@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DetailsSearchComponent } from './details-search.component';
 import { AppService } from '../../../app.service';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('DetailsSearchComponent', () => {
@@ -12,7 +12,7 @@ describe('DetailsSearchComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DetailsSearchComponent],
-      providers: [AppService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [AppService, provideHttpClient(withXhr()), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DetailsSearchComponent);

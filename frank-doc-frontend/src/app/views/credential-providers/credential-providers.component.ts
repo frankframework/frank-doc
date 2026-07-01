@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { DEFAULT_RETURN_CHARACTER } from '../../app.constants';
 import { AppService } from '../../app.service';
 import { NgClass } from '@angular/common';
@@ -13,6 +13,7 @@ import { AlertComponent } from '@frankframework/angular-components';
   selector: 'app-credential-providers',
   imports: [NgClass, JavadocTransformDirective, AlertComponent],
   templateUrl: './credential-providers.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './credential-providers.component.scss',
 })
 export class CredentialProvidersComponent {

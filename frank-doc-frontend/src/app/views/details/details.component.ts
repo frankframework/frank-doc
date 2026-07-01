@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, OnInit, Signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppService } from '../../app.service';
 import { DetailsElementComponent } from './details-element/details-element.component';
@@ -31,6 +31,7 @@ export type HasInheritedProperties = {
   selector: 'app-details',
   imports: [DetailsElementComponent, DetailsSearchComponent, NgClass],
   templateUrl: './details.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './details.component.scss',
 })
 export class DetailsComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, isDevMode, OnInit, Signal } from '@angular/core';
+import { Component, computed, inject, isDevMode, OnInit, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { SearchComponent } from '@frankframework/angular-components';
 import { FormsModule } from '@angular/forms';
 import { HomeComponentListComponent } from './home-component-list/home-component-list.component';
@@ -14,6 +14,7 @@ import { NgFFDoc } from '@frankframework/doc-library-ng';
   selector: 'app-home',
   imports: [SearchComponent, FormsModule, HomeComponentListComponent, HomeFiltersComponent],
   templateUrl: './home.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {

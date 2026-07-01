@@ -11,6 +11,7 @@ import {
   Signal,
   ViewChild,
   WritableSignal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ButtonComponent, CheckboxComponent } from '@frankframework/angular-components';
 import { AppService, FilterGroups } from '../../../app.service';
@@ -28,6 +29,7 @@ type FilterEntry = {
   selector: 'app-home-filters',
   imports: [ButtonComponent, NgClass, CheckboxComponent, InitFilterToggleDirective, KeyValuePipe],
   templateUrl: './home-filters.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home-filters.component.scss',
 })
 export class HomeFiltersComponent implements OnDestroy {

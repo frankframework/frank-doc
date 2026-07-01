@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FeedbackComponent } from './feedback.component';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 
 describe('FeedbackComponent', () => {
   let component: FeedbackComponent;
@@ -10,7 +10,7 @@ describe('FeedbackComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [FeedbackComponent],
-      providers: [provideHttpClient()],
+      providers: [provideHttpClient(withXhr())],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FeedbackComponent);

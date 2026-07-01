@@ -1,4 +1,14 @@
-import { Component, computed, inject, Input, isDevMode, OnChanges, Signal, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  Input,
+  isDevMode,
+  OnChanges,
+  Signal,
+  SimpleChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { SearchComponent } from '@frankframework/angular-components';
 import { FormsModule } from '@angular/forms';
 import Fuse, { FuseResult } from 'fuse.js';
@@ -14,6 +24,7 @@ import { NgFFDoc } from '@frankframework/doc-library-ng';
   selector: 'app-details-search',
   imports: [SearchComponent, FormsModule, NgClass, RouterLink, NameWbrPipe],
   templateUrl: './details-search.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './details-search.component.scss',
 })
 export class DetailsSearchComponent implements OnChanges {

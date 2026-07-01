@@ -15,15 +15,15 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^21.2.17",
+    "@angular/animations": "^22.0.4",
     "@angular/cdk": "^21.2.14",
-    "@angular/common": "^21.2.17",
-    "@angular/compiler": "^21.2.17",
-    "@angular/core": "^21.2.17",
-    "@angular/forms": "^21.2.17",
-    "@angular/platform-browser": "^21.2.17",
-    "@angular/platform-browser-dynamic": "^21.2.17",
-    "@angular/router": "^21.2.17",
+    "@angular/common": "^22.0.4",
+    "@angular/compiler": "^22.0.4",
+    "@angular/core": "^22.0.4",
+    "@angular/forms": "^22.0.4",
+    "@angular/platform-browser": "^22.0.4",
+    "@angular/platform-browser-dynamic": "^22.0.4",
+    "@angular/router": "^22.0.4",
     "@frankframework/angular-components": "^1.4.3",
     "@frankframework/doc-library-core": "^1.0.4",
     "@frankframework/doc-library-ng": "^1.0.4",
@@ -38,7 +38,7 @@
     "@angular-eslint/template-parser": "^21.4.0",
     "@angular/build": "^21.2.17",
     "@angular/cli": "^22.0.5",
-    "@angular/compiler-cli": "^21.2.17",
+    "@angular/compiler-cli": "^22.0.4",
     "@eslint/js": "^9.39.4",
     "@types/jasmine": "~4.3.6",
     "@typescript-eslint/eslint-plugin": "^8.62.1",
@@ -58,7 +58,7 @@
     "karma-jasmine-html-reporter": "~2.0.0",
     "lint-staged": "^13.3.0",
     "prettier": "^3.9.4",
-    "typescript": "~5.9.3"
+    "typescript": "~6.0.3"
   },
   "lint-staged": {
     "./src/app/**/*.{ts, html}": "eslint"

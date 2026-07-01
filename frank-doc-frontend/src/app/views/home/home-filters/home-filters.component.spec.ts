@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomeFiltersComponent } from './home-filters.component';
 import { AppService } from '../../../app.service';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('HomeFiltersComponent', () => {
@@ -12,7 +12,7 @@ describe('HomeFiltersComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HomeFiltersComponent],
-      providers: [AppService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [AppService, provideHttpClient(withXhr()), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeFiltersComponent);

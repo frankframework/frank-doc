@@ -1,4 +1,4 @@
-import { Component, input, OnChanges } from '@angular/core';
+import { Component, input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 import {
   Attribute,
   Child,
@@ -13,6 +13,7 @@ import { ElementProperty } from '@frankframework/doc-library-core/dist/frankdoc.
   imports: [],
   template:
     '<pre><button (click)="copyToClipboard(elementSyntax)">Copy</button><code [innerText]="elementSyntax"></code></pre>',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './details-element-syntax.component.scss',
 })
 export class DetailsElementSyntaxComponent implements OnChanges {
