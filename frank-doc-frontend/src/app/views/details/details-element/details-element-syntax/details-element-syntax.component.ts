@@ -6,7 +6,7 @@ import {
   Elements,
   groupAttributesByMandatory,
 } from '@frankframework/doc-library-core';
-import { ElementProperty } from '@frankframework/doc-library-core/dist/frankdoc.types';
+import { ElementProperty } from '@frankframework/doc-library-core';
 
 @Component({
   selector: 'app-details-element-syntax',
