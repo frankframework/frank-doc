@@ -15,7 +15,7 @@ export class VersionFormatDirective {
   @Input()
   set version(version: string) {
     this.fullVersion = version;
-    this.shortVersion = version.split('-')[0];
+    this.shortVersion = version.split('-', 1)[0];
     this.element.textContent = this.shortVersion;
   }
 
@@ -32,27 +32,29 @@ export class VersionFormatDirective {
   }
 
   transition(newText: string, keepOldTextInTransition = false): void {
-    if (environment.hideSnapshotVersion) {
-      const oldText = this.element.textContent!;
-      const beforeWidth = this.getClientWidth();
-      this.element.textContent = newText;
-      const afterWidth = this.getClientWidth();
-
-      if (keepOldTextInTransition) this.element.textContent = oldText;
-
-      this.elementAnimation = this.element.animate(
-        { width: [`${beforeWidth}px`, `${afterWidth}px`] },
-        { duration: this.animationSpeed, easing: 'ease-in-out' },
-      );
-      this.elementAnimation.finished
-        .catch(() => {
-          // NOOP
-        })
-        .finally(() => {
-          if (keepOldTextInTransition) this.element.textContent = newText;
-          this.elementAnimation = null;
-        });
+    if (!environment.hideSnapshotVersion) {
+      return;
     }
+
+    const oldText = this.element.textContent!;
+    const beforeWidth = this.getClientWidth();
+    this.element.textContent = newText;
+    const afterWidth = this.getClientWidth();
+
+    if (keepOldTextInTransition) this.element.textContent = oldText;
+
+    this.elementAnimation = this.element.animate(
+      { width: [`${beforeWidth}px`, `${afterWidth}px`] },
+      { duration: this.animationSpeed, easing: 'ease-in-out' },
+    );
+    this.elementAnimation.finished
+      .catch(() => {
+        // NOOP
+      })
+      .finally(() => {
+        if (keepOldTextInTransition) this.element.textContent = newText;
+        this.elementAnimation = null;
+      });
   }
 
   private cancelAnimation(): void {

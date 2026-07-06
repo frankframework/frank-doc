@@ -128,6 +128,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
       { name: 'Syntax', anchor: '#syntax', active: false },
     );
     if (element.attributes || this.hasInheritedProperties.required || this.hasInheritedProperties.optional) {
+      // eslint-disable-next-line unicorn/no-return-array-push
       const length = tableOfContents.push({ name: 'Attributes', anchor: '#attributes', active: false, children: [] });
       const index = length - 1;
       if (this.hasAnyRequiredProperties()) {

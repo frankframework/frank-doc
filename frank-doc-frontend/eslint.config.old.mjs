@@ -1,60 +1,35 @@
-// @ts-check
-import eslint from '@eslint/js';
-import { defineConfig } from 'eslint/config';
-import tseslint from 'typescript-eslint';
-import angular from 'angular-eslint';
+import typescriptParser from '@typescript-eslint/parser';
 import prettierPlugin from 'eslint-plugin-prettier';
-import js from '@eslint/js';
-import eslintConfigPrettier from 'eslint-config-prettier';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import angularPlugin from '@angular-eslint/eslint-plugin';
+import angularTemplate from '@angular-eslint/eslint-plugin-template';
+import angularTemplateParser from '@angular-eslint/template-parser';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
+import js from '@eslint/js';
+import eslintConfigPrettier from 'eslint-config-prettier';
 
-export default defineConfig([
-  // Unicorn: https://github.com/sindresorhus/eslint-plugin-unicorn
-  eslintPluginUnicorn.configs.recommended,
+export default [
   {
-    rules: {
-      'unicorn/prevent-abbreviations': 'warn',
-      'unicorn/no-array-reduce': 'off',
-      'unicorn/prefer-ternary': 'warn',
-      'unicorn/no-null': 'off',
-      'unicorn/prefer-dom-node-text-content': 'warn',
-      'unicorn/consistent-function-scoping': [
-        'error',
-        {
-          checkArrowFunctions: false,
-        },
-      ],
-      'unicorn/consistent-class-member-order': 'off', // Handled by @typescript-eslint/member-ordering
-      'unicorn/prefer-object-iterable-methods': 'off',
-      'unicorn/name-replacements': 'warn',
-      'unicorn/prefer-await': 'off', // preferably only if the function works better as async
-      'unicorn/consistent-boolean-name': 'off',
-      'unicorn/no-empty-file': 'off',
-    },
+    ignores: ['.cache/', '.git/', '.github/', 'node_modules/'],
   },
-  eslintPluginPrettierRecommended,
-  // SonarJS: https://github.com/SonarSource/SonarJS/blob/master/packages/jsts/src/rules/README.md
-  // sonarjs.configs.recommended,
-  // {
-  //   rules: {
-  //     'sonarjs/cognitive-complexity': 'error',
-  //     'sonarjs/no-duplicate-string': 'error',
-  //   },
-  // },
   {
     files: ['**/*.ts'],
-    extends: [
-      eslint.configs.recommended,
-      tseslint.configs.recommended,
-      tseslint.configs.stylistic,
-      angular.configs.tsRecommended,
-    ],
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        project: ['./tsconfig.json', './tsconfig.app.json', './tsconfig.spec.json'],
+      },
+    },
     plugins: {
+      '@typescript-eslint': tsPlugin,
+      '@angular-eslint': angularPlugin,
       prettier: prettierPlugin,
     },
-    processor: angular.processInlineTemplates,
     rules: {
+      // TypeScript: https://typescript-eslint.io/rules/
+      ...tsPlugin.configs.recommended.rules,
+      ...tsPlugin.configs.stylistic.rules,
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/triple-slash-reference': 'warn',
       '@typescript-eslint/member-ordering': [
@@ -221,9 +196,9 @@ export default defineConfig([
       ],
 
       // Angular: https://github.com/angular-eslint/angular-eslint/blob/main/packages/eslint-plugin/README.md
+      ...angularPlugin.configs.recommended.rules,
       '@angular-eslint/directive-selector': ['error', { type: 'attribute', prefix: 'app', style: 'camelCase' }],
       '@angular-eslint/component-selector': ['error', { type: 'element', prefix: 'app', style: 'kebab-case' }],
-      '@angular-eslint/prefer-on-push-component-change-detection': 'warn',
 
       // EcmaScript: https://eslint.org/docs/latest/rules/
       ...js.configs.recommended.rules,
@@ -238,11 +213,18 @@ export default defineConfig([
   },
   {
     files: ['**/*.html'],
-    extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
+    languageOptions: {
+      parser: angularTemplateParser,
+    },
     plugins: {
+      '@angular-eslint': angularPlugin,
+      '@angular-eslint/template': angularTemplate,
       prettier: prettierPlugin,
     },
     rules: {
+      // Angular template: https://github.com/angular-eslint/angular-eslint/blob/main/packages/eslint-plugin-template/README.md
+      ...angularTemplate.configs.recommended.rules,
+      ...angularTemplate.configs.accessibility.rules,
       '@angular-eslint/template/prefer-self-closing-tags': 'error',
       '@angular-eslint/template/no-interpolation-in-attributes': ['error'],
       '@angular-eslint/template/click-events-have-key-events': 'off',
@@ -252,6 +234,8 @@ export default defineConfig([
           allowList: ['li'],
         },
       ],
+      '@angular-eslint/contextual-decorator': 'warn',
+      '@angular-eslint/prefer-signals': 'error',
       '@angular-eslint/template/attributes-order': [
         'error',
         {
@@ -272,4 +256,30 @@ export default defineConfig([
       'prettier/prettier': ['error', { parser: 'angular' }],
     },
   },
-]);
+  // Unicorn: https://github.com/sindresorhus/eslint-plugin-unicorn
+  eslintPluginUnicorn.configs.recommended,
+  {
+    rules: {
+      'unicorn/prevent-abbreviations': 'warn',
+      'unicorn/no-array-reduce': 'off',
+      'unicorn/prefer-ternary': 'warn',
+      'unicorn/no-null': 'off',
+      'unicorn/prefer-dom-node-text-content': 'warn',
+      'unicorn/consistent-function-scoping': [
+        'error',
+        {
+          checkArrowFunctions: false,
+        },
+      ],
+    },
+  },
+  eslintPluginPrettierRecommended,
+  // SonarJS: https://github.com/SonarSource/SonarJS/blob/master/packages/jsts/src/rules/README.md
+  // sonarjs.configs.recommended,
+  // {
+  //   rules: {
+  //     'sonarjs/cognitive-complexity': 'error',
+  //     'sonarjs/no-duplicate-string': 'error',
+  //   },
+  // },
+];

@@ -96,7 +96,7 @@ export class HomeFiltersComponent implements OnDestroy {
 
   protected isFilterGroupEmpty(filterGroup: string): boolean {
     const selectedFilters = this.selectedFilterLabels();
-    return !selectedFilters[filterGroup] || selectedFilters[filterGroup].length === 0;
+    return !Object.hasOwn(selectedFilters, filterGroup) || selectedFilters[filterGroup].length === 0;
   }
 
   protected areAllFilterGroupsEmpty(): boolean {

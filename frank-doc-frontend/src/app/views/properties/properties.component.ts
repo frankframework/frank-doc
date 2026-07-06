@@ -60,7 +60,7 @@ export class PropertiesComponent implements OnInit {
   }
 
   protected convertToId(idString: string): string {
-    return idString.replaceAll('.', '_').replaceAll(' ', '_');
+    return idString.replaceAll(/[. ]/g, '_');
   }
 
   protected scrollToElement(selector: string): void {

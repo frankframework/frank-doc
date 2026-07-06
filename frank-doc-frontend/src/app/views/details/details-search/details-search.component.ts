@@ -47,18 +47,20 @@ export class DetailsSearchComponent implements OnChanges {
   private fuseRelated = new Fuse<ElementDetails>([], { ...fuseOptions, shouldSort: false });
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['element']) {
-      if (this.element) {
-        const firstElementNamePart = this.element.name.split(splitOnPascalCaseRegex)[0];
-        this.relatedSearchQuery = firstElementNamePart ?? this.element.name;
-      } else {
-        this.relatedSearchQuery = '';
-      }
-      this.fuse.setCollection(this.elementsList());
-      this.filterExclusiveElements();
-      this.searchQuery = this.appService.previousSearchQuery;
-      this.searchFilteredElements();
+    if (!changes['element']) {
+      return;
     }
+
+    if (this.element) {
+      const firstElementNamePart = this.element.name.split(splitOnPascalCaseRegex)[0];
+      this.relatedSearchQuery = firstElementNamePart ?? this.element.name;
+    } else {
+      this.relatedSearchQuery = '';
+    }
+    this.fuse.setCollection(this.elementsList());
+    this.filterExclusiveElements();
+    this.searchQuery = this.appService.previousSearchQuery;
+    this.searchFilteredElements();
   }
 
   protected search(): void {

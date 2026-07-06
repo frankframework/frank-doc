@@ -24,12 +24,12 @@ export class HomeComponent implements OnInit {
   protected initialFilters: FilterGroups = {};
   protected loading = true;
 
+  private selectedFilters: FilterGroups = {};
   private readonly appService: AppService = inject(AppService);
   private readonly searchParamsService: SearchQueryParamsService = inject(SearchQueryParamsService);
   private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
   private readonly elementsList: Signal<ElementDetails[]> = computed(() => Object.values(this.elements()));
   private readonly fuse: Signal<Fuse<ElementDetails>> = computed(() => new Fuse(this.elementsList(), fuseOptions));
-  private selectedFilters: FilterGroups = {};
 
   ngOnInit(): void {
     this.appService.applicationLoaded$.subscribe(() => {
@@ -57,9 +57,8 @@ export class HomeComponent implements OnInit {
 
   protected updateSelectedFilters(selectedFilters: FilterGroups): void {
     this.selectedFilters = selectedFilters;
-    this.fuse().setCollection(
-      this.appService.filterElementsBySelectedFilters(Object.values(this.elements()), selectedFilters),
-    );
+    const elements = Object.values(this.elements());
+    this.fuse().setCollection(this.appService.filterElementsBySelectedFilters(elements, selectedFilters));
     this.search(this.searchQuery);
     if (isDevMode()) console.log('Selected Filters', selectedFilters);
   }

@@ -109,13 +109,20 @@
             "buildTarget": ":build:testing",
             "runner": "vitest"
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
         }
       }
     }
   },
   "cli": {
     "analytics": false,
-    "packageManager": "pnpm"
+    "packageManager": "pnpm",
+    "schematicCollections": ["angular-eslint"]
   },
   "schematics": {
     "@schematics/angular:component": {
