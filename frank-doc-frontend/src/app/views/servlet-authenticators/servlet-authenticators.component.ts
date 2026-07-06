@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { AppService } from '../../app.service';
 import { DEFAULT_RETURN_CHARACTER } from '../../app.constants';
 import { NameWbrPipe } from '../../components/name-wbr.pipe';
@@ -14,6 +14,7 @@ import { AlertComponent } from '@frankframework/angular-components';
   selector: 'app-servlet-authenticators',
   imports: [NameWbrPipe, NgClass, JavadocTransformDirective, AlertComponent],
   templateUrl: './servlet-authenticators.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './servlet-authenticators.component.scss',
 })
 export class ServletAuthenticatorsComponent {

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 import { FeedbackComponent } from './feedback.component';
-import { provideHttpClient } from '@angular/common/http';
 
 describe('FeedbackComponent', () => {
   let component: FeedbackComponent;

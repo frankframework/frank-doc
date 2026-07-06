@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { IconDocumentAddComponent } from '../../icons/icon-document-add/icon-document-add.component';
 import { AppService } from '../../app.service';
@@ -7,6 +7,7 @@ import { AppService } from '../../app.service';
   selector: 'app-feedback',
   imports: [IconDocumentAddComponent],
   templateUrl: './feedback.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './feedback.component.scss',
 })
 export class FeedbackComponent {

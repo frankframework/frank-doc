@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ButtonComponent } from '@frankframework/angular-components';
 import { FuseResult } from 'fuse.js';
 import { Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { JavadocTransformDirective } from '@frankframework/doc-library-ng';
   selector: 'app-home-component-list',
   imports: [ButtonComponent, TruncatePipe, CardDirective, NgClass, JavadocTransformDirective],
   templateUrl: './home-component-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home-component-list.component.scss',
 })
 export class HomeComponentListComponent {

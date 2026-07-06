@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgFFDoc } from '@frankframework/doc-library-ng';
 import { HeaderComponent } from './components/header/header.component';
@@ -12,6 +12,7 @@ import { environment } from '../environments/environment';
   selector: 'app-root',
   imports: [HeaderComponent, FooterComponent, RouterOutlet, AlertComponent, FeedbackComponent],
   templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {

@@ -9,6 +9,7 @@ import {
   Output,
   Signal,
   SimpleChanges,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { AlertComponent, AlertType, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
@@ -64,6 +65,7 @@ type RecordEntry<T> = {
     DetailsElementSyntaxComponent,
   ],
   templateUrl: './details-element.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './details-element.component.scss',
 })
 export class DetailsElementComponent implements OnInit, OnChanges {
@@ -109,27 +111,29 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['element']) {
-      this.resetInheritedProperties();
-      const classElement = this.getClassElement();
-      if (classElement?.attributes) {
-        const { required, optional } = groupAttributesByMandatory(classElement.attributes);
-        this.attributesRequired = required;
-        this.attributesOptional = optional;
-      }
-      if (classElement?.parent) {
-        this.inheritedProperties = getInheritedProperties(
-          classElement,
-          this.ffDoc.ffDoc()?.elements ?? {},
-          this.ffDoc.ffDoc()?.enums ?? {},
-        );
-      }
-      this.allRequiredAttributes = groupAttributesByMandatory(this.element?.attributes ?? {});
-      this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
-
-      if (this.element?.name)
-        this.titleService.setTitle(`${environment.applicationName} | ${this.element?.name ?? 'Element details'}`);
+    if (!changes['element']) {
+      return;
     }
+
+    this.resetInheritedProperties();
+    const classElement = this.getClassElement();
+    if (classElement?.attributes) {
+      const { required, optional } = groupAttributesByMandatory(classElement.attributes);
+      this.attributesRequired = required;
+      this.attributesOptional = optional;
+    }
+    if (classElement?.parent) {
+      this.inheritedProperties = getInheritedProperties(
+        classElement,
+        this.ffDoc.ffDoc()?.elements ?? {},
+        this.ffDoc.ffDoc()?.enums ?? {},
+      );
+    }
+    this.allRequiredAttributes = groupAttributesByMandatory(this.element?.attributes ?? {});
+    this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
+
+    if (this.element?.name)
+      this.titleService.setTitle(`${environment.applicationName} | ${this.element?.name ?? 'Element details'}`);
   }
 
   protected getInheritedOptionalCollapseOptions(parentElementName: string, defaultValue: boolean): boolean {

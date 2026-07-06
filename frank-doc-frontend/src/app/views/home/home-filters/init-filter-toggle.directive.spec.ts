@@ -1,13 +1,12 @@
 import { InitFilterToggleDirective } from './init-filter-toggle.directive';
-import { Component, DebugElement } from '@angular/core';
+import { Component, DebugElement, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 @Component({
   template: ``,
-  imports: [
-    /*InitFilterToggleDirective*/
-  ],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [/*InitFilterToggleDirective*/],
 })
 class TestComponent {}
 

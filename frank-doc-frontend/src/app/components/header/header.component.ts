@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { IconFfLogoSmallComponent } from '../../icons/icon-reference/icon-ff-logo-small.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { VersionFormatDirective } from './version-format.directive';
@@ -14,6 +14,7 @@ import { environment } from '../../../environments/environment';
     VersionFormatDirective,
   ],
   templateUrl: './header.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {

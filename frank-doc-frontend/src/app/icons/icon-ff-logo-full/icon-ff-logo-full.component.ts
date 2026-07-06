@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { IconBaseComponent } from '@frankframework/angular-components';
 
 @Component({
   selector: 'app-icon-ff-logo-full',
   imports: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './icon-ff-logo-full.component.html',
 })
 export class IconFfLogoFullComponent extends IconBaseComponent {

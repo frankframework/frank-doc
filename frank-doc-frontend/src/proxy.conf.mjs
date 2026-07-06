@@ -1,7 +1,7 @@
 export default [
   {
     context: ['/js', '/xml'],
-    target: 'https://frankdoc.frankframework.org/',
+    target: 'https://reference.frankframework.org/',
     secure: false,
     changeOrigin: true,
   },

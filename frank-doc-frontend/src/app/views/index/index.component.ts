@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, Signal } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AppService } from '../../app.service';
 import { ChipComponent } from '@frankframework/angular-components';
@@ -13,6 +13,7 @@ import { NgFFDoc } from '@frankframework/doc-library-ng';
   selector: 'app-index',
   imports: [RouterLink, ChipComponent, IconCaretComponent, CollapseDirective, NgClass, NameWbrPipe, KeyValuePipe],
   templateUrl: './index.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './index.component.scss',
 })
 export class IndexComponent implements OnInit {

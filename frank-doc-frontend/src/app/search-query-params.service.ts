@@ -47,11 +47,11 @@ export class SearchQueryParamsService {
     const filterMap = new Map<string, string>();
 
     for (const key of parameters.keys) {
-      if (key.startsWith('filter[') && key.endsWith(']')) {
-        const filterKey = key.slice(7, -1);
-        const filterValue = parameters.get(key);
-        if (filterValue) filterMap.set(filterKey, filterValue);
-      }
+      if (!(key.startsWith('filter[') && key.endsWith(']'))) continue;
+
+      const filterKey = key.slice(7, -1);
+      const filterValue = parameters.get(key);
+      if (filterValue) filterMap.set(filterKey, filterValue);
     }
     return filterMap;
   }
@@ -66,9 +66,9 @@ export class SearchQueryParamsService {
 
   private convertParamsToFilters(parameters: Map<string, string>): FilterGroups {
     const filters: FilterGroups = {};
-    for (const [key, value] of parameters.entries()) {
+    for (const [key, value] of parameters) {
       for (const label of value.split(',')) {
-        if (!filters[key]) filters[key] = [];
+        if (!Object.hasOwn(filters, key)) filters[key] = [];
         filters[key].push(label);
       }
     }

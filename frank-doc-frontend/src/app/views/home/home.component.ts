@@ -1,4 +1,4 @@
-import { Component, computed, inject, isDevMode, OnInit, Signal } from '@angular/core';
+import { Component, computed, inject, isDevMode, OnInit, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { SearchComponent } from '@frankframework/angular-components';
 import { FormsModule } from '@angular/forms';
 import { HomeComponentListComponent } from './home-component-list/home-component-list.component';
@@ -14,6 +14,7 @@ import { NgFFDoc } from '@frankframework/doc-library-ng';
   selector: 'app-home',
   imports: [SearchComponent, FormsModule, HomeComponentListComponent, HomeFiltersComponent],
   templateUrl: './home.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
@@ -23,12 +24,12 @@ export class HomeComponent implements OnInit {
   protected initialFilters: FilterGroups = {};
   protected loading = true;
 
+  private selectedFilters: FilterGroups = {};
   private readonly appService: AppService = inject(AppService);
   private readonly searchParamsService: SearchQueryParamsService = inject(SearchQueryParamsService);
   private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
   private readonly elementsList: Signal<ElementDetails[]> = computed(() => Object.values(this.elements()));
   private readonly fuse: Signal<Fuse<ElementDetails>> = computed(() => new Fuse(this.elementsList(), fuseOptions));
-  private selectedFilters: FilterGroups = {};
 
   ngOnInit(): void {
     this.appService.applicationLoaded$.subscribe(() => {
@@ -56,9 +57,8 @@ export class HomeComponent implements OnInit {
 
   protected updateSelectedFilters(selectedFilters: FilterGroups): void {
     this.selectedFilters = selectedFilters;
-    this.fuse().setCollection(
-      this.appService.filterElementsBySelectedFilters(Object.values(this.elements()), selectedFilters),
-    );
+    const elements = Object.values(this.elements());
+    this.fuse().setCollection(this.appService.filterElementsBySelectedFilters(elements, selectedFilters));
     this.search(this.searchQuery);
     if (isDevMode()) console.log('Selected Filters', selectedFilters);
   }

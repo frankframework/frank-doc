@@ -11,6 +11,7 @@ import {
   Signal,
   ViewChild,
   WritableSignal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ButtonComponent, CheckboxComponent } from '@frankframework/angular-components';
 import { AppService, FilterGroups } from '../../../app.service';
@@ -28,6 +29,7 @@ type FilterEntry = {
   selector: 'app-home-filters',
   imports: [ButtonComponent, NgClass, CheckboxComponent, InitFilterToggleDirective, KeyValuePipe],
   templateUrl: './home-filters.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home-filters.component.scss',
 })
 export class HomeFiltersComponent implements OnDestroy {
@@ -94,7 +96,7 @@ export class HomeFiltersComponent implements OnDestroy {
 
   protected isFilterGroupEmpty(filterGroup: string): boolean {
     const selectedFilters = this.selectedFilterLabels();
-    return !selectedFilters[filterGroup] || selectedFilters[filterGroup].length === 0;
+    return !Object.hasOwn(selectedFilters, filterGroup) || selectedFilters[filterGroup].length === 0;
   }
 
   protected areAllFilterGroupsEmpty(): boolean {

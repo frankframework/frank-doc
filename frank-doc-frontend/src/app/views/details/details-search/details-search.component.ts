@@ -1,4 +1,14 @@
-import { Component, computed, inject, Input, isDevMode, OnChanges, Signal, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  Input,
+  isDevMode,
+  OnChanges,
+  Signal,
+  SimpleChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { SearchComponent } from '@frankframework/angular-components';
 import { FormsModule } from '@angular/forms';
 import Fuse, { FuseResult } from 'fuse.js';
@@ -14,6 +24,7 @@ import { NgFFDoc } from '@frankframework/doc-library-ng';
   selector: 'app-details-search',
   imports: [SearchComponent, FormsModule, NgClass, RouterLink, NameWbrPipe],
   templateUrl: './details-search.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './details-search.component.scss',
 })
 export class DetailsSearchComponent implements OnChanges {
@@ -36,18 +47,20 @@ export class DetailsSearchComponent implements OnChanges {
   private fuseRelated = new Fuse<ElementDetails>([], { ...fuseOptions, shouldSort: false });
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['element']) {
-      if (this.element) {
-        const firstElementNamePart = this.element.name.split(splitOnPascalCaseRegex)[0];
-        this.relatedSearchQuery = firstElementNamePart ?? this.element.name;
-      } else {
-        this.relatedSearchQuery = '';
-      }
-      this.fuse.setCollection(this.elementsList());
-      this.filterExclusiveElements();
-      this.searchQuery = this.appService.previousSearchQuery;
-      this.searchFilteredElements();
+    if (!changes['element']) {
+      return;
     }
+
+    if (this.element) {
+      const firstElementNamePart = this.element.name.split(splitOnPascalCaseRegex)[0];
+      this.relatedSearchQuery = firstElementNamePart ?? this.element.name;
+    } else {
+      this.relatedSearchQuery = '';
+    }
+    this.fuse.setCollection(this.elementsList());
+    this.filterExclusiveElements();
+    this.searchQuery = this.appService.previousSearchQuery;
+    this.searchFilteredElements();
   }
 
   protected search(): void {

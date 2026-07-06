@@ -55,7 +55,7 @@ export class AppService {
     return elements.filter((element) => {
       if (!element.labels) return false;
       for (const labelGroup of Object.keys(element.labels)) {
-        if (!selectedFilters[labelGroup]) continue;
+        if (!Object.hasOwn(selectedFilters, labelGroup)) continue;
         const label = element.labels[labelGroup];
         if (selectedFilters[labelGroup].includes(label)) return true;
       }

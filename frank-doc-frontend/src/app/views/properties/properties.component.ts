@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, inject, OnInit, Signal } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Elements, FFDocJson, Property } from '@frankframework/doc-library-core';
 import { JavadocTransformDirective, NgFFDoc } from '@frankframework/doc-library-ng';
@@ -14,6 +14,7 @@ import { IconHelpComponent } from '../../icons/icon-help/icon-help.component';
   selector: 'app-properties',
   imports: [NameWbrPipe, CollapseDirective, IconCaretComponent, NgClass, IconHelpComponent, JavadocTransformDirective],
   templateUrl: './properties.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './properties.component.scss',
 })
 export class PropertiesComponent implements OnInit {
@@ -59,7 +60,7 @@ export class PropertiesComponent implements OnInit {
   }
 
   protected convertToId(idString: string): string {
-    return idString.replaceAll('.', '_').replaceAll(' ', '_');
+    return idString.replaceAll(/[. ]/g, '_');
   }
 
   protected scrollToElement(selector: string): void {
