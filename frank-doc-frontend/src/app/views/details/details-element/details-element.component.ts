@@ -26,6 +26,7 @@ import { NameWbrPipe } from '../../../components/name-wbr.pipe';
 import { JavadocTransformDirective, NgFFDoc } from '@frankframework/doc-library-ng';
 import {
   Attribute,
+  Child,
   DeprecationInfo,
   ElementClass,
   ElementDetails,
@@ -35,6 +36,8 @@ import {
   groupAttributesByMandatory,
   InheritedProperties,
   Note,
+  ResolvedChild,
+  resolveInterfaceChildren,
 } from '@frankframework/doc-library-core';
 import { DetailsElementSyntaxComponent } from './details-element-syntax/details-element-syntax.component';
 
@@ -73,6 +76,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   @Output() hasInheritedProperties = new EventEmitter<HasInheritedProperties>();
 
   protected elements: Signal<Elements> = computed(() => this.ffDoc.elements() ?? {});
+  protected types: Signal<Record<string, string[]>> = computed(() => this.ffDoc.ffDoc()?.types ?? {});
   protected attributesRequired: Record<string, Attribute> = {};
   protected attributesOptional: Record<string, Attribute> = {};
   protected allRequiredAttributes: Record<string, Attribute> = {};
@@ -111,9 +115,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['element']) {
-      return;
-    }
+    if (!changes['element']) return;
 
     this.resetInheritedProperties();
     const classElement = this.getClassElement();
@@ -217,6 +219,10 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   // stupid badly untyped angular templates
   protected castToAttribute(value: unknown): Attribute {
     return value as Attribute;
+  }
+
+  protected getNestedTypeElements(child: Child): ResolvedChild {
+    return resolveInterfaceChildren(child, this.types(), this.elements());
   }
 
   private getClassElement(): ElementClass | null {

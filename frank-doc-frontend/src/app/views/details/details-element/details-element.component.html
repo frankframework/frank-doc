@@ -8,7 +8,7 @@
       <ff-chip class="abstract-label" colour="#1E1E1E">Deprecated</ff-chip>
     }
     @if (element.labels) {
-      @for (label of element.labels | keyvalue; track label.key; let index = $index) {
+      @for (label of element.labels | keyvalue; track label.key) {
         <ff-chip rounded [colour]="appService.getLabelColor(label.key)">{{ label.value }}</ff-chip>
       }
     }
@@ -222,7 +222,10 @@
             </thead>
             <tbody>
               @for (nestedElement of element.children; track nestedElement.roleName) {
-                <tr class="border-top padding-bottom" [ngClass]="{ deprecated: nestedElement.deprecated }">
+                <tr
+                  class="border-top"
+                  [ngClass]="{ deprecated: nestedElement.deprecated, 'padding-bottom': !nestedElement.type }"
+                >
                   <td class="name" [innerHTML]="nestedElement.roleName | nameWbr"></td>
                   <td
                     class="description"
@@ -234,6 +237,22 @@
                   ></td>
                   <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
                 </tr>
+                @if (nestedElement.type) {
+                  <tr class="padding-bottom">
+                    <td colspan="3">
+                      Elements:
+                      @for (
+                        nestedElementType of getNestedTypeElements(nestedElement).implementedBy;
+                        track nestedElementType
+                      ) {
+                        <a [routerLink]="'/' + nestedElementType.className">{{ nestedElementType.name }}</a>
+                        @if (!$first && !$last) {
+                          <span>, </span>
+                        }
+                      }
+                    </td>
+                  </tr>
+                }
               }
             </tbody>
           </table>
