@@ -168,36 +168,54 @@
         </div>
       </div>
     }
-    @if (element.parameters && isRecordGreaterThanZero(element.parameters)) {
+    @if (
+      (element.parameters && isRecordGreaterThanZero(element.parameters)) || element.parametersDescription !== null
+    ) {
       <div class="sub-options parameters" id="parameters">
         <div class="options-title" [appCollapse]="parameters" (collapsedChange)="collapsedOptions.parameters = $event">
           <span>Parameters</span>
-          <app-icon-caret [rotation]="collapsedOptions.parameters ? 'down' : 'up'" />
+          <app-icon-caret [rotation]="collapsedOptions.parameters ? 'down' : 'up'"/>
         </div>
+
         <div #parameters class="options-list">
-          <table>
-            <thead>
-              <tr>
-                <th style="width: 30%">Parameter Name</th>
-                <th style="width: 70%">Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (parameterEntry of getRecordEntries(element.parameters); track parameterEntry.name) {
-                <tr class="border-top padding-bottom">
-                  <td class="name" [innerHTML]="parameterEntry.name | nameWbr"></td>
-                  <td
-                    class="description"
-                    *fdJavadocTransform="
-                      let text of parameterEntry.value.description ?? DEFAULT_RETURN_CHARACTER;
-                      elements: elements()
-                    "
-                    [innerHTML]="text"
-                  ></td>
-                </tr>
-              }
-            </tbody>
-          </table>
+          @if (element.parametersDescription !== null) {
+            <div class="description">
+              <span
+                *fdJavadocTransform="
+                  let text of element.parametersDescription;
+                  elements: elements()"
+                [innerHTML]="text"
+              ></span>
+            </div>
+          }
+
+          @if (element.parameters && isRecordGreaterThanZero(element.parameters)) {
+            <div class="options-list">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 30%">Parameter Name</th>
+                    <th style="width: 70%">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (parameterEntry of getRecordEntries(element.parameters); track parameterEntry.name) {
+                    <tr class="border-top padding-bottom">
+                      <td class="name" [innerHTML]="parameterEntry.name | nameWbr"></td>
+                      <td
+                        class="description"
+                        *fdJavadocTransform="
+                          let text of parameterEntry.value.description ?? DEFAULT_RETURN_CHARACTER;
+                          elements: elements()
+                        "
+                        [innerHTML]="text"
+                      ></td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
         </div>
       </div>
     }
