@@ -169,16 +169,16 @@
       </div>
     }
     @if (
-      (element.parameters && isRecordGreaterThanZero(element.parameters)) || element.parametersDescription !== null
+      (element.parameters && isRecordGreaterThanZero(element.parameters)) || element.parametersDescription
     ) {
       <div class="sub-options parameters" id="parameters">
         <div class="options-title" [appCollapse]="parameters" (collapsedChange)="collapsedOptions.parameters = $event">
           <span>Parameters</span>
-          <app-icon-caret [rotation]="collapsedOptions.parameters ? 'down' : 'up'"/>
+          <app-icon-caret [rotation]="collapsedOptions.parameters ? 'down' : 'up'" />
         </div>
 
-        <div #parameters class="options-list">
-          @if (element.parametersDescription !== null) {
+        <div #parameters>
+          @if (element.parametersDescription) {
             <div class="description">
               <span
                 *fdJavadocTransform="
