@@ -151,7 +151,6 @@ h3 {
     &:hover {
       text-decoration: underline;
     }
-
   }
 
   .attribute-default-value {
@@ -162,6 +161,11 @@ h3 {
 
   .description:first-letter {
     text-transform: capitalize;
+  }
+
+  .description {
+    margin-bottom: 2em;
+    color: var(--color-gray-dark);
   }
 }
 

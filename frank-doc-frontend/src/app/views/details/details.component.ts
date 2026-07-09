@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, OnInit, Signal, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppService } from '../../app.service';
 import { DetailsElementComponent } from './details-element/details-element.component';
@@ -136,7 +136,9 @@ export class DetailsComponent implements OnInit, OnDestroy {
       }
       tableOfContents[index].children!.push({ name: 'Optional', anchor: '#attributes-optional', active: false });
     }
-    if (element.parameters) tableOfContents.push({ name: 'Parameters', anchor: '#parameters', active: false });
+    if (element.parameters || element.parametersDescription) {
+      tableOfContents.push({ name: 'Parameters', anchor: '#parameters', active: false });
+    }
     if (element.children) tableOfContents.push({ name: 'Nested Elements', anchor: '#nested-elements', active: false });
     if ((element.forwards && Object.keys(element.forwards).length > 0) || this.hasInheritedProperties.forwards)
       tableOfContents.push({ name: 'Forwards', anchor: '#forwards', active: false });
