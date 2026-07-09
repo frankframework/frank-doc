@@ -201,17 +201,17 @@
         </div>
       </div>
     }
-    @if (element.children && element.children.length > 0) {
+    @if (nestedElements && nestedElements.length > 0) {
       <div class="sub-options nested-elements" id="nested-elements">
         <div
           class="options-title"
-          [appCollapse]="nestedElements"
+          [appCollapse]="nestedElementsOptions"
           (collapsedChange)="collapsedOptions.children = $event"
         >
           <span>Nested Components</span>
           <app-icon-caret [rotation]="collapsedOptions.children ? 'down' : 'up'" />
         </div>
-        <div #nestedElements class="options-list">
+        <div #nestedElementsOptions class="options-list">
           <table>
             <thead>
               <tr>
@@ -221,7 +221,7 @@
               </tr>
             </thead>
             <tbody>
-              @for (nestedElement of element.children; track nestedElement.roleName) {
+              @for (nestedElement of nestedElements; track nestedElement.roleName) {
                 <tr
                   class="border-top"
                   [ngClass]="{ deprecated: nestedElement.deprecated, 'padding-bottom': !nestedElement.type }"
@@ -238,13 +238,10 @@
                   <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
                 </tr>
                 @if (nestedElement.type) {
-                  <tr class="padding-bottom">
+                  <tr class="nested-elements-implements-list">
                     <td colspan="3">
-                      Elements:
-                      @for (
-                        nestedElementType of getNestedTypeElements(nestedElement).implementedBy;
-                        track nestedElementType
-                      ) {
+                      Options:
+                      @for (nestedElementType of nestedElement.implementedBy; track nestedElementType) {
                         <a [routerLink]="'/' + nestedElementType.className">{{ nestedElementType.name }}</a>
                         @if (!$first && !$last) {
                           <span>, </span>

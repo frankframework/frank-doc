@@ -87,6 +87,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     forwards: {},
     enums: {},
   };
+  protected nestedElements: ResolvedChild[] | null = null;
   protected collapsedOptions = {
     attributes: false,
     parameters: false,
@@ -117,7 +118,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['element']) return;
 
-    this.resetInheritedProperties();
+    this.resetProperties();
     const classElement = this.getClassElement();
     if (classElement?.attributes) {
       const { required, optional } = groupAttributesByMandatory(classElement.attributes);
@@ -130,6 +131,9 @@ export class DetailsElementComponent implements OnInit, OnChanges {
         this.ffDoc.ffDoc()?.elements ?? {},
         this.ffDoc.ffDoc()?.enums ?? {},
       );
+    }
+    if (classElement?.children) {
+      this.nestedElements = classElement.children.map((child) => this.getNestedTypeElements(child));
     }
     this.allRequiredAttributes = groupAttributesByMandatory(this.element?.attributes ?? {});
     this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
@@ -221,7 +225,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     return value as Attribute;
   }
 
-  protected getNestedTypeElements(child: Child): ResolvedChild {
+  private getNestedTypeElements(child: Child): ResolvedChild {
     return resolveInterfaceChildren(child, this.types(), this.elements());
   }
 
@@ -230,7 +234,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     return classElements && this.element ? classElements[this.element?.className] : null;
   }
 
-  private resetInheritedProperties(): void {
+  private resetProperties(): void {
     this.inheritedProperties = {
       parentElements: [],
       attributesRequired: [],
@@ -243,6 +247,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       optional: false,
       forwards: false,
     };
+    this.nestedElements = null;
   }
 
   private getInheritedCollapseOptions(
