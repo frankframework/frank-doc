@@ -12,6 +12,8 @@ describe('DetailsElementForwardsComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(DetailsElementForwardsComponent);
+    fixture.componentRef.setInput('elements', {});
+    fixture.componentRef.setInput('forwards', {});
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

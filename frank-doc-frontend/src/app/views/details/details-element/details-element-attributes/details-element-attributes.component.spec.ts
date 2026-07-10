@@ -12,6 +12,11 @@ describe('DetailsElementAttributesComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(DetailsElementAttributesComponent);
+    fixture.componentRef.setInput('elements', {});
+    fixture.componentRef.setInput('attributesRequired', {});
+    fixture.componentRef.setInput('attributesOptional', {});
+    fixture.componentRef.setInput('inheritedAttributesRequired', []);
+    fixture.componentRef.setInput('inheritedAttributesOptional', []);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
