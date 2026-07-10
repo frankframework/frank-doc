@@ -1,0 +1,153 @@
+<div class="options-sub-title" id="attributes-required">Required</div>
+@if (isRecordGreaterThanZero(attributesRequired()) || inheritedAttributesRequired().length > 0) {
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 30%">Attribute Name & Description</th>
+        <th style="width: 10%">Type</th>
+        <th style="width: 60%">Default</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngTemplateOutlet="attributesTableBodyTemplate; context: { $implicit: attributesRequired }" />
+      @for (
+        inheritedAttributesRequired of inheritedAttributesRequired();
+        track inheritedAttributesRequired.parentElementName
+      ) {
+        <ng-container
+          *ngTemplateOutlet="
+            attributesTableBodyTemplate;
+            context: { $implicit: inheritedAttributesRequired.properties }
+          "
+        />
+      }
+    </tbody>
+  </table>
+} @else {
+  <p class="description">This component has no required attributes</p>
+}
+<div class="options-sub-title" id="attributes-optional">Optional</div>
+@if (isRecordGreaterThanZero(attributesOptional())) {
+  <ng-container *ngTemplateOutlet="attributesOptionalTemplate; context: { $implicit: attributesOptional }" />
+} @else {
+  @if (inheritedAttributesOptional().length > 0) {
+    <p class="description">The following attributes are all inherited</p>
+  } @else {
+    <p class="description">This component has no optional attributes</p>
+  }
+}
+@for (
+  inheritedAttributesOptional of inheritedAttributesOptional();
+  track inheritedAttributesOptional.parentElementName;
+  let index = $index
+) {
+  <div
+    class="parent-element-title"
+    [appCollapse]="attributesOptionalInherited"
+    [collapsed]="index > collapsedInheritedThreshold"
+    [animationSpeed]="600"
+    (collapsedChange)="collapsedOptions.inheritedOptional.set(inheritedAttributesOptional.parentElementName, $event)"
+  >
+    <span>{{ inheritedAttributesOptional.parentElementName }}</span>
+    <app-icon-caret
+      width="16"
+      height="16"
+      [rotation]="
+        getInheritedOptionalCollapseOptions(
+          inheritedAttributesOptional.parentElementName,
+          index > collapsedInheritedThreshold
+        )
+          ? 'down'
+          : 'up'
+      "
+    />
+  </div>
+  <div #attributesOptionalInherited>
+    <ng-container
+      *ngTemplateOutlet="attributesOptionalTemplate; context: { $implicit: inheritedAttributesOptional.properties }"
+    />
+  </div>
+}
+
+<ng-template #attributesTableBodyTemplate let-attributes>
+  @for (attributeEntry of getRecordEntries(attributes); track attributeEntry.name) {
+    @let attribute = castToAttribute(attributeEntry.value);
+    <tr
+      class="border-top"
+      [ngClass]="{
+        'padding-bottom': !attribute.enum && !attribute.description,
+        deprecated: attribute.deprecated,
+        forRemoval: attribute.deprecated && attribute.deprecated.forRemoval,
+      }"
+    >
+      <td
+        class="name"
+        [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''"
+        [innerHTML]="attributeEntry.name | nameWbr"
+      ></td>
+      <td>{{ attribute.enum ? 'options' : getFriendlyType(attribute.type) }}</td>
+      <td
+        class="attribute-default-value"
+        *fdJavadocTransform="let text of attribute.default ?? DEFAULT_RETURN_CHARACTER; elements: elements()"
+        [innerHTML]="text"
+      ></td>
+    </tr>
+    @if (attribute.description) {
+      <tr [ngClass]="{ 'padding-bottom': !attribute.enum }">
+        <td
+          colspan="3"
+          class="description"
+          *fdJavadocTransform="let text of attribute.description; elements: elements()"
+          [innerHTML]="text"
+        ></td>
+      </tr>
+    }
+    @if (attribute.enum) {
+      <tr class="padding-bottom">
+        <td colspan="3">
+          Available Options:
+          @let enumValues = getEnumValues(attribute.enum);
+          @if (enumValuesHaveDescriptions(enumValues ?? [])) {
+            <ul class="enum-options-list">
+              @for (valueEntry of enumValues; track valueEntry.valueName) {
+                @let value = valueEntry.value;
+                <li>
+                  <code [ngClass]="{ deprecated: value.deprecated }">{{ valueEntry.valueName }}</code>
+                  @if (value.description) {
+                    <span
+                      *fdJavadocTransform="let text of value.description; elements: elements()"
+                      [innerHTML]="' ' + text"
+                    ></span>
+                  }
+                </li>
+              }
+            </ul>
+          } @else {
+            @for (valueEntry of enumValues; let index = $index; track valueEntry.valueName) {
+              @let value = valueEntry.value;
+              <code [ngClass]="{ deprecated: value.deprecated }">{{ valueEntry.valueName }}</code>
+              @if (enumValues && index < enumValues.length - 1) {
+                <span>, </span>
+              }
+            }
+          }
+        </td>
+      </tr>
+    }
+  }
+</ng-template>
+
+<ng-template #attributesOptionalTemplate let-attributesOptional>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 30%">Attribute Name & Description</th>
+        <th style="width: 10%">Type</th>
+        <th style="width: 60%">Default</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngTemplateOutlet="attributesTableBodyTemplate; context: { $implicit: attributesOptional }" />
+    </tbody>
+  </table>
+</ng-template>

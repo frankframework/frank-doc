@@ -12,7 +12,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { AlertComponent, AlertType, ChipComponent } from '@frankframework/angular-components';
-import { KeyValuePipe, NgClass, NgTemplateOutlet } from '@angular/common';
+import { KeyValuePipe, NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { CollapseDirective } from '../../../components/collapse.directive';
@@ -27,11 +27,9 @@ import { JavadocTransformDirective, NgFFDoc } from '@frankframework/doc-library-
 import {
   Attribute,
   Child,
-  DeprecationInfo,
   ElementClass,
   ElementDetails,
   Elements,
-  EnumValue,
   getInheritedProperties,
   groupAttributesByMandatory,
   InheritedProperties,
@@ -39,17 +37,8 @@ import {
   ResolvedChild,
   resolveInterfaceChildren,
 } from '@frankframework/doc-library-core';
+import { DetailsElementAttributesComponent } from './details-element-attributes/details-element-attributes.component';
 import { DetailsElementSyntaxComponent } from './details-element-syntax/details-element-syntax.component';
-
-type EnumValueEntry = {
-  valueName: string;
-  value: EnumValue;
-};
-
-type RecordEntry<T> = {
-  name: string;
-  value: T;
-};
 
 @Component({
   selector: 'app-details-element',
@@ -59,13 +48,13 @@ type RecordEntry<T> = {
     RouterLink,
     AlertComponent,
     CollapseDirective,
-    NgTemplateOutlet,
     IconCaretComponent,
     IconArrowRightUpComponent,
     NgClass,
     NameWbrPipe,
     JavadocTransformDirective,
     DetailsElementSyntaxComponent,
+    DetailsElementAttributesComponent,
   ],
   templateUrl: './details-element.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -96,7 +85,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     inheritedRequired: new Map<string, boolean>(),
     inheritedOptional: new Map<string, boolean>(),
   };
-  protected collapsedInheritedThreshold = 1;
   protected _hasInheritedProperties: HasInheritedProperties = {
     required: false,
     optional: false,
@@ -106,7 +94,8 @@ export class DetailsElementComponent implements OnInit, OnChanges {
 
   protected readonly appService: AppService = inject(AppService);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
-
+  protected readonly getRecordEntries = this.appService.getRecordEntries;
+  protected readonly isRecordGreaterThanZero = this.appService.isRecordGreaterThanZero;
   private readonly titleService: Title = inject(Title);
   private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
 
@@ -142,10 +131,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       this.titleService.setTitle(`${environment.applicationName} | ${this.element?.name ?? 'Element details'}`);
   }
 
-  protected getInheritedOptionalCollapseOptions(parentElementName: string, defaultValue: boolean): boolean {
-    return this.getInheritedCollapseOptions(this.collapsedOptions.inheritedOptional, parentElementName, defaultValue);
-  }
-
   protected githubUrlOf(name: string): string {
     return `${environment.githubWikiBaseUrl}/${name}`;
   }
@@ -156,10 +141,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       : // We only have a JavaDoc URL if we have an element with a Java class. The
         // exception we handle here is <Module>.
         null;
-  }
-
-  protected getDeprecatedTitle(deprecatedInfo: DeprecationInfo): string {
-    return `${deprecatedInfo.description ?? 'This has been deprecated!'}${deprecatedInfo.since ? `\nSince ${deprecatedInfo.since}` : ''}`;
   }
 
   protected getAllRequiredAttributes(): Record<string, Attribute> {
@@ -185,46 +166,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     }
   }
 
-  protected getFriendlyType(type: Attribute['type']): string {
-    switch (type) {
-      case 'int': {
-        return 'number';
-      }
-      case 'bool':
-      case 'boolean': {
-        return 'boolean';
-      }
-      default: {
-        return 'text';
-      }
-    }
-  }
-
-  protected getEnumValues(enumName: string): EnumValueEntry[] {
-    const enums = this.ffDoc.enums();
-    return Object.entries(enums[enumName]).map(([enumValueName, enumValue]) => ({
-      valueName: enumValueName,
-      value: enumValue,
-    }));
-  }
-
-  protected getRecordEntries<T>(Record: Record<string, T>): RecordEntry<T>[] {
-    return Object.entries(Record).map(([name, value]) => ({ name, value }));
-  }
-
-  protected enumValuesHaveDescriptions(enumValuesEntries: EnumValueEntry[]): boolean {
-    return enumValuesEntries.some((entry) => !!entry.value.description);
-  }
-
-  protected isRecordGreaterThanZero(record: Record<string, unknown>): boolean {
-    return Object.keys(record).length > 0;
-  }
-
-  // stupid badly untyped angular templates
-  protected castToAttribute(value: unknown): Attribute {
-    return value as Attribute;
-  }
-
   private getNestedTypeElements(child: Child): ResolvedChild {
     return resolveInterfaceChildren(child, this.types(), this.elements());
   }
@@ -248,13 +189,5 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       forwards: false,
     };
     this.nestedElements = null;
-  }
-
-  private getInheritedCollapseOptions(
-    map: Map<string, boolean>,
-    parentElementName: string,
-    defaultValue: boolean,
-  ): boolean {
-    return map.get(parentElementName) ?? defaultValue;
   }
 }
