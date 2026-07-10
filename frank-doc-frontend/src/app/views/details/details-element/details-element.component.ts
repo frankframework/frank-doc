@@ -26,6 +26,7 @@ import { NameWbrPipe } from '../../../components/name-wbr.pipe';
 import { JavadocTransformDirective, NgFFDoc } from '@frankframework/doc-library-ng';
 import {
   Attribute,
+  Child,
   DeprecationInfo,
   ElementClass,
   ElementDetails,
@@ -35,6 +36,8 @@ import {
   groupAttributesByMandatory,
   InheritedProperties,
   Note,
+  ResolvedChild,
+  resolveInterfaceChildren,
 } from '@frankframework/doc-library-core';
 import { DetailsElementSyntaxComponent } from './details-element-syntax/details-element-syntax.component';
 
@@ -73,6 +76,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   @Output() hasInheritedProperties = new EventEmitter<HasInheritedProperties>();
 
   protected elements: Signal<Elements> = computed(() => this.ffDoc.elements() ?? {});
+  protected types: Signal<Record<string, string[]>> = computed(() => this.ffDoc.ffDoc()?.types ?? {});
   protected attributesRequired: Record<string, Attribute> = {};
   protected attributesOptional: Record<string, Attribute> = {};
   protected allRequiredAttributes: Record<string, Attribute> = {};
@@ -83,6 +87,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     forwards: {},
     enums: {},
   };
+  protected nestedElements: ResolvedChild[] | null = null;
   protected collapsedOptions = {
     attributes: false,
     parameters: false,
@@ -111,11 +116,9 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['element']) {
-      return;
-    }
+    if (!changes['element']) return;
 
-    this.resetInheritedProperties();
+    this.resetProperties();
     const classElement = this.getClassElement();
     if (classElement?.attributes) {
       const { required, optional } = groupAttributesByMandatory(classElement.attributes);
@@ -128,6 +131,9 @@ export class DetailsElementComponent implements OnInit, OnChanges {
         this.ffDoc.ffDoc()?.elements ?? {},
         this.ffDoc.ffDoc()?.enums ?? {},
       );
+    }
+    if (classElement?.children) {
+      this.nestedElements = classElement.children.map((child) => this.getNestedTypeElements(child));
     }
     this.allRequiredAttributes = groupAttributesByMandatory(this.element?.attributes ?? {});
     this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
@@ -219,12 +225,16 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     return value as Attribute;
   }
 
+  private getNestedTypeElements(child: Child): ResolvedChild {
+    return resolveInterfaceChildren(child, this.types(), this.elements());
+  }
+
   private getClassElement(): ElementClass | null {
     const classElements = this.ffDoc.ffDoc()?.elements;
     return classElements && this.element ? classElements[this.element?.className] : null;
   }
 
-  private resetInheritedProperties(): void {
+  private resetProperties(): void {
     this.inheritedProperties = {
       parentElements: [],
       attributesRequired: [],
@@ -237,6 +247,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
       optional: false,
       forwards: false,
     };
+    this.nestedElements = null;
   }
 
   private getInheritedCollapseOptions(

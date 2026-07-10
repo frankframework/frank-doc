@@ -8,7 +8,7 @@
       <ff-chip class="abstract-label" colour="#1E1E1E">Deprecated</ff-chip>
     }
     @if (element.labels) {
-      @for (label of element.labels | keyvalue; track label.key; let index = $index) {
+      @for (label of element.labels | keyvalue; track label.key) {
         <ff-chip rounded [colour]="appService.getLabelColor(label.key)">{{ label.value }}</ff-chip>
       }
     }
@@ -219,17 +219,17 @@
         </div>
       </div>
     }
-    @if (element.children && element.children.length > 0) {
+    @if (nestedElements && nestedElements.length > 0) {
       <div class="sub-options nested-elements" id="nested-elements">
         <div
           class="options-title"
-          [appCollapse]="nestedElements"
+          [appCollapse]="nestedElementsOptions"
           (collapsedChange)="collapsedOptions.children = $event"
         >
           <span>Nested Components</span>
           <app-icon-caret [rotation]="collapsedOptions.children ? 'down' : 'up'" />
         </div>
-        <div #nestedElements class="options-list">
+        <div #nestedElementsOptions class="options-list">
           <table>
             <thead>
               <tr>
@@ -239,8 +239,11 @@
               </tr>
             </thead>
             <tbody>
-              @for (nestedElement of element.children; track nestedElement.roleName) {
-                <tr class="border-top padding-bottom" [ngClass]="{ deprecated: nestedElement.deprecated }">
+              @for (nestedElement of nestedElements; track nestedElement.roleName) {
+                <tr
+                  class="border-top"
+                  [ngClass]="{ deprecated: nestedElement.deprecated, 'padding-bottom': !nestedElement.type }"
+                >
                   <td class="name" [innerHTML]="nestedElement.roleName | nameWbr"></td>
                   <td
                     class="description"
@@ -252,6 +255,19 @@
                   ></td>
                   <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
                 </tr>
+                @if (nestedElement.type) {
+                  <tr class="nested-elements-implements-list">
+                    <td colspan="3">
+                      Options:
+                      @for (nestedElementType of nestedElement.implementedBy; track nestedElementType) {
+                        <a [routerLink]="'/' + nestedElementType.className">{{ nestedElementType.name }}</a>
+                        @if (!$first && !$last) {
+                          <span>, </span>
+                        }
+                      }
+                    </td>
+                  </tr>
+                }
               }
             </tbody>
           </table>
