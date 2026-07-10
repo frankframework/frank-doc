@@ -46,7 +46,7 @@
     [appCollapse]="attributesOptionalInherited"
     [collapsed]="index > collapsedInheritedThreshold"
     [animationSpeed]="600"
-    (collapsedChange)="collapsedOptions.inheritedOptional.set(inheritedAttributesOptional.parentElementName, $event)"
+    (collapsedChange)="inheritedCollapseOptions.set(inheritedAttributesOptional.parentElementName, $event)"
   >
     <span>{{ inheritedAttributesOptional.parentElementName }}</span>
     <app-icon-caret

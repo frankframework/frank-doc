@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject, input, Signal } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import {
   Attribute,
   DeprecationInfo,
@@ -23,24 +23,17 @@ type EnumValueEntry = {
   selector: 'app-details-element-attributes',
   imports: [IconCaretComponent, NgTemplateOutlet, JavadocTransformDirective, NameWbrPipe, NgClass, CollapseDirective],
   templateUrl: './details-element-attributes.component.html',
-  styleUrl: '../details-element.component.scss',
+  styleUrl: '../details-element-options.scss',
 })
 export class DetailsElementAttributesComponent {
+  public elements = input.required<Elements>();
   public attributesRequired = input.required<Record<string, Attribute>>();
   public attributesOptional = input.required<Record<string, Attribute>>();
   public inheritedAttributesRequired = input.required<InheritedParentElementProperties<Attribute>[]>();
   public inheritedAttributesOptional = input.required<InheritedParentElementProperties<Attribute>[]>();
 
-  protected elements: Signal<Elements> = computed(() => this.ffDoc.elements() ?? {});
   protected collapsedInheritedThreshold = 1;
-  protected collapsedOptions = {
-    attributes: false,
-    parameters: false,
-    children: false,
-    forwards: false,
-    inheritedRequired: new Map<string, boolean>(),
-    inheritedOptional: new Map<string, boolean>(),
-  };
+  protected inheritedCollapseOptions = new Map<string, boolean>();
   protected readonly appService: AppService = inject(AppService);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
   protected readonly getRecordEntries = this.appService.getRecordEntries;
@@ -48,7 +41,7 @@ export class DetailsElementAttributesComponent {
   private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
 
   protected getInheritedOptionalCollapseOptions(parentElementName: string, defaultValue: boolean): boolean {
-    return this.getInheritedCollapseOptions(this.collapsedOptions.inheritedOptional, parentElementName, defaultValue);
+    return this.getInheritedCollapseOptions(this.inheritedCollapseOptions, parentElementName, defaultValue);
   }
 
   protected getDeprecatedTitle(deprecatedInfo: DeprecationInfo): string {

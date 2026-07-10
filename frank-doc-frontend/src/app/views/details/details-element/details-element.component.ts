@@ -38,6 +38,9 @@ import {
   resolveInterfaceChildren,
 } from '@frankframework/doc-library-core';
 import { DetailsElementAttributesComponent } from './details-element-attributes/details-element-attributes.component';
+import { DetailsElementForwardsComponent } from './details-element-forwards/details-element-forwards.component';
+import { DetailsElementNestedComponent } from './details-element-nested/details-element-nested.component';
+import { DetailsElementParametersComponent } from './details-element-parameters/details-element-parameters.component';
 import { DetailsElementSyntaxComponent } from './details-element-syntax/details-element-syntax.component';
 
 @Component({
@@ -55,6 +58,9 @@ import { DetailsElementSyntaxComponent } from './details-element-syntax/details-
     JavadocTransformDirective,
     DetailsElementSyntaxComponent,
     DetailsElementAttributesComponent,
+    DetailsElementParametersComponent,
+    DetailsElementNestedComponent,
+    DetailsElementForwardsComponent,
   ],
   templateUrl: './details-element.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -82,8 +88,6 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     parameters: false,
     children: false,
     forwards: false,
-    inheritedRequired: new Map<string, boolean>(),
-    inheritedOptional: new Map<string, boolean>(),
   };
   protected _hasInheritedProperties: HasInheritedProperties = {
     required: false,

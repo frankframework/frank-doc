@@ -1,0 +1,38 @@
+<table>
+  <thead>
+    <tr>
+      <th style="width: 30%">Component Name</th>
+      <th style="width: 60%">Description</th>
+      <th style="width: 10%">Cardinality</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (nestedElement of nestedElements(); track nestedElement.roleName) {
+      <tr
+        class="border-top"
+        [ngClass]="{ deprecated: nestedElement.deprecated, 'padding-bottom': !nestedElement.type }"
+      >
+        <td class="name" [innerHTML]="nestedElement.roleName | nameWbr"></td>
+        <td
+          class="description"
+          *fdJavadocTransform="let text of nestedElement.description ?? DEFAULT_RETURN_CHARACTER; elements: elements()"
+          [innerHTML]="text"
+        ></td>
+        <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
+      </tr>
+      @if (nestedElement.type) {
+        <tr class="nested-elements-implements-list">
+          <td colspan="3">
+            Options:
+            @for (nestedElementType of nestedElement.implementedBy; track nestedElementType) {
+              <a [routerLink]="'/' + nestedElementType.className">{{ nestedElementType.name }}</a>
+              @if (!$last) {
+                <span>, </span>
+              }
+            }
+          </td>
+        </tr>
+      }
+    }
+  </tbody>
+</table>
