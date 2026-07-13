@@ -87,135 +87,29 @@
           <app-icon-caret [rotation]="collapsedOptions.attributes ? 'down' : 'up'" />
         </div>
         <div #attributes class="options-list">
-          <div class="options-sub-title" id="attributes-required">Required</div>
-          @if (isRecordGreaterThanZero(attributesRequired) || inheritedProperties.attributesRequired.length > 0) {
-            <table>
-              <thead>
-                <tr>
-                  <th style="width: 30%">Attribute Name & Description</th>
-                  <th style="width: 10%">Type</th>
-                  <th style="width: 60%">Default</th>
-                </tr>
-              </thead>
-              <tbody>
-                <ng-container
-                  *ngTemplateOutlet="attributesTableBodyTemplate; context: { $implicit: attributesRequired }"
-                />
-                @for (
-                  inheritedAttributesRequired of inheritedProperties.attributesRequired;
-                  track inheritedAttributesRequired.parentElementName;
-                  let index = $index
-                ) {
-                  <ng-container
-                    *ngTemplateOutlet="
-                      attributesTableBodyTemplate;
-                      context: { $implicit: inheritedAttributesRequired.properties }
-                    "
-                  />
-                }
-              </tbody>
-            </table>
-          } @else {
-            <p class="description">This component has no required attributes</p>
-          }
-          <div class="options-sub-title" id="attributes-optional">Optional</div>
-          @if (isRecordGreaterThanZero(attributesOptional)) {
-            <ng-container *ngTemplateOutlet="attributesOptionalTemplate; context: { $implicit: attributesOptional }" />
-          } @else {
-            @if (inheritedProperties.attributesOptional.length > 0) {
-              <p class="description">The following attributes are all inherited</p>
-            } @else {
-              <p class="description">This component has no optional attributes</p>
-            }
-          }
-          @for (
-            inheritedAttributesOptional of inheritedProperties.attributesOptional;
-            track inheritedAttributesOptional.parentElementName;
-            let index = $index
-          ) {
-            <div
-              class="parent-element-title"
-              [appCollapse]="attributesOptionalInherited"
-              [collapsed]="index > collapsedInheritedThreshold"
-              [animationSpeed]="600"
-              (collapsedChange)="
-                collapsedOptions.inheritedOptional.set(inheritedAttributesOptional.parentElementName, $event)
-              "
-            >
-              <span>{{ inheritedAttributesOptional.parentElementName }}</span>
-              <app-icon-caret
-                width="16"
-                height="16"
-                [rotation]="
-                  getInheritedOptionalCollapseOptions(
-                    inheritedAttributesOptional.parentElementName,
-                    index > collapsedInheritedThreshold
-                  )
-                    ? 'down'
-                    : 'up'
-                "
-              />
-            </div>
-            <div #attributesOptionalInherited>
-              <ng-container
-                *ngTemplateOutlet="
-                  attributesOptionalTemplate;
-                  context: { $implicit: inheritedAttributesOptional.properties }
-                "
-              />
-            </div>
-          }
+          <app-details-element-attributes
+            [elements]="elements()"
+            [attributesRequired]="attributesRequired"
+            [attributesOptional]="attributesOptional"
+            [inheritedAttributesRequired]="inheritedProperties.attributesRequired"
+            [inheritedAttributesOptional]="inheritedProperties.attributesOptional"
+          />
         </div>
       </div>
     }
-    @if (
-      (element.parameters && isRecordGreaterThanZero(element.parameters)) || element.parametersDescription
-    ) {
+    @if ((element.parameters && isRecordGreaterThanZero(element.parameters)) || element.parametersDescription) {
       <div class="sub-options parameters" id="parameters">
         <div class="options-title" [appCollapse]="parameters" (collapsedChange)="collapsedOptions.parameters = $event">
           <span>Parameters</span>
           <app-icon-caret [rotation]="collapsedOptions.parameters ? 'down' : 'up'" />
         </div>
 
-        <div #parameters>
-          @if (element.parametersDescription) {
-            <div class="description">
-              <span
-                *fdJavadocTransform="
-                  let text of element.parametersDescription;
-                  elements: elements()"
-                [innerHTML]="text"
-              ></span>
-            </div>
-          }
-
-          @if (element.parameters && isRecordGreaterThanZero(element.parameters)) {
-            <div class="options-list">
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width: 30%">Parameter Name</th>
-                    <th style="width: 70%">Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (parameterEntry of getRecordEntries(element.parameters); track parameterEntry.name) {
-                    <tr class="border-top padding-bottom">
-                      <td class="name" [innerHTML]="parameterEntry.name | nameWbr"></td>
-                      <td
-                        class="description"
-                        *fdJavadocTransform="
-                          let text of parameterEntry.value.description ?? DEFAULT_RETURN_CHARACTER;
-                          elements: elements()
-                        "
-                        [innerHTML]="text"
-                      ></td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-          }
+        <div #parameters class="options-list">
+          <app-details-element-parameters
+            [elements]="elements()"
+            [parameters]="element.parameters"
+            [parametersDescription]="element.parametersDescription"
+          />
         </div>
       </div>
     }
@@ -230,47 +124,7 @@
           <app-icon-caret [rotation]="collapsedOptions.children ? 'down' : 'up'" />
         </div>
         <div #nestedElementsOptions class="options-list">
-          <table>
-            <thead>
-              <tr>
-                <th style="width: 30%">Component Name</th>
-                <th style="width: 60%">Description</th>
-                <th style="width: 10%">Cardinality</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (nestedElement of nestedElements; track nestedElement.roleName) {
-                <tr
-                  class="border-top"
-                  [ngClass]="{ deprecated: nestedElement.deprecated, 'padding-bottom': !nestedElement.type }"
-                >
-                  <td class="name" [innerHTML]="nestedElement.roleName | nameWbr"></td>
-                  <td
-                    class="description"
-                    *fdJavadocTransform="
-                      let text of nestedElement.description ?? DEFAULT_RETURN_CHARACTER;
-                      elements: elements()
-                    "
-                    [innerHTML]="text"
-                  ></td>
-                  <td>{{ nestedElement.mandatory ? '1' : '0' }} .. {{ nestedElement.multiple ? 'n' : '1' }}</td>
-                </tr>
-                @if (nestedElement.type) {
-                  <tr class="nested-elements-implements-list">
-                    <td colspan="3">
-                      Options:
-                      @for (nestedElementType of nestedElement.implementedBy; track nestedElementType) {
-                        <a [routerLink]="'/' + nestedElementType.className">{{ nestedElementType.name }}</a>
-                        @if (!$first && !$last) {
-                          <span>, </span>
-                        }
-                      }
-                    </td>
-                  </tr>
-                }
-              }
-            </tbody>
-          </table>
+          <app-details-element-nested [elements]="elements()" [nestedElements]="nestedElements" />
         </div>
       </div>
     }
@@ -282,29 +136,7 @@
           <app-icon-caret [rotation]="collapsedOptions.forwards ? 'down' : 'up'" />
         </div>
         <div #forwards class="options-list">
-          <table>
-            <thead>
-              <tr>
-                <th style="width: 30%">Forward Name</th>
-                <th style="width: 70%">Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (forwardEntry of getRecordEntries(element.forwards!); track forwardEntry.name) {
-                <tr class="border-top padding-bottom">
-                  <td class="name" [innerHTML]="forwardEntry.name | nameWbr"></td>
-                  <td
-                    class="description"
-                    *fdJavadocTransform="
-                      let text of forwardEntry.value.description ?? DEFAULT_RETURN_CHARACTER;
-                      elements: elements()
-                    "
-                    [innerHTML]="text"
-                  ></td>
-                </tr>
-              }
-            </tbody>
-          </table>
+          <app-details-element-forwards [elements]="elements()" [forwards]="element.forwards" />
         </div>
       </div>
     }
@@ -323,86 +155,3 @@
     </p>
   </div>
 }
-
-<ng-template #attributesTableBodyTemplate let-attributes>
-  @for (attributeEntry of getRecordEntries(attributes); track attributeEntry.name) {
-    @let attribute = castToAttribute(attributeEntry.value);
-    <tr
-      class="border-top"
-      [ngClass]="{
-        'padding-bottom': !attribute.enum && !attribute.description,
-        deprecated: attribute.deprecated,
-        forRemoval: attribute.deprecated && attribute.deprecated.forRemoval,
-      }"
-    >
-      <td
-        class="name"
-        [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''"
-        [innerHTML]="attributeEntry.name | nameWbr"
-      ></td>
-      <td>{{ attribute.enum ? 'options' : getFriendlyType(attribute.type) }}</td>
-      <td
-        class="attribute-default-value"
-        *fdJavadocTransform="let text of attribute.default ?? DEFAULT_RETURN_CHARACTER; elements: elements()"
-        [innerHTML]="text"
-      ></td>
-    </tr>
-    @if (attribute.description) {
-      <tr [ngClass]="{ 'padding-bottom': !attribute.enum }">
-        <td
-          colspan="3"
-          class="description"
-          *fdJavadocTransform="let text of attribute.description; elements: elements()"
-          [innerHTML]="text"
-        ></td>
-      </tr>
-    }
-    @if (attribute.enum) {
-      <tr class="padding-bottom">
-        <td colspan="3">
-          Available Options:
-          @let enumValues = getEnumValues(attribute.enum);
-          @if (enumValuesHaveDescriptions(enumValues ?? [])) {
-            <ul class="enum-options-list">
-              @for (valueEntry of enumValues; track valueEntry.valueName) {
-                @let value = valueEntry.value;
-                <li>
-                  <code [ngClass]="{ deprecated: value.deprecated }">{{ valueEntry.valueName }}</code>
-                  @if (value.description) {
-                    <span
-                      *fdJavadocTransform="let text of value.description; elements: elements()"
-                      [innerHTML]="' ' + text"
-                    ></span>
-                  }
-                </li>
-              }
-            </ul>
-          } @else {
-            @for (valueEntry of enumValues; let index = $index; track valueEntry.valueName) {
-              @let value = valueEntry.value;
-              <code [ngClass]="{ deprecated: value.deprecated }">{{ valueEntry.valueName }}</code>
-              @if (enumValues && index < enumValues.length - 1) {
-                <span>, </span>
-              }
-            }
-          }
-        </td>
-      </tr>
-    }
-  }
-</ng-template>
-
-<ng-template #attributesOptionalTemplate let-attributesOptional>
-  <table>
-    <thead>
-      <tr>
-        <th style="width: 30%">Attribute Name & Description</th>
-        <th style="width: 10%">Type</th>
-        <th style="width: 60%">Default</th>
-      </tr>
-    </thead>
-    <tbody>
-      <ng-container *ngTemplateOutlet="attributesTableBodyTemplate; context: { $implicit: attributesOptional }" />
-    </tbody>
-  </table>
-</ng-template>

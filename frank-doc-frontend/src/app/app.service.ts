@@ -7,6 +7,11 @@ import { HttpClient } from '@angular/common/http';
 
 export type FilterGroups = Record<string, string[]>;
 
+export type RecordEntry<T> = {
+  name: string;
+  value: T;
+};
+
 type HSL = {
   hue: number;
   saturation: number;
@@ -36,21 +41,21 @@ export class AppService {
     this.applicationLoaded$ = this.applicationLoadedSubject.asObservable();
   }
 
-  getFFDoc(): NgFFDoc {
+  public getFFDoc(): NgFFDoc {
     return this.ffDoc;
   }
 
-  getLabelEntries(filterLabels: FilterLabels): { name: string; labels: string[] }[] {
+  public getLabelEntries(filterLabels: FilterLabels): { name: string; labels: string[] }[] {
     return Object.entries(filterLabels).map(([name, labels]) => ({ name, labels }));
   }
 
-  triggerApplicationLoaded(): void {
+  public triggerApplicationLoaded(): void {
     this.hasLoaded = true;
     this.applicationLoadedSubject.next();
     this.applicationLoadedSubject.complete();
   }
 
-  filterElementsBySelectedFilters(elements: ElementDetails[], selectedFilters: FilterGroups): ElementDetails[] {
+  public filterElementsBySelectedFilters(elements: ElementDetails[], selectedFilters: FilterGroups): ElementDetails[] {
     if (this.getSelectedFiltersLength(selectedFilters) === 0) return elements;
     return elements.filter((element) => {
       if (!element.labels) return false;
@@ -63,7 +68,7 @@ export class AppService {
     });
   }
 
-  getFirstLabelGroup(filters?: Record<string, string>): [string, string] {
+  public getFirstLabelGroup(filters?: Record<string, string>): [string, string] {
     const defaultLabelGroup: [string, string] = [DEFAULT_RETURN_CHARACTER, DEFAULT_RETURN_CHARACTER];
     if (!filters) return defaultLabelGroup;
     const labelGroups = Object.entries(filters);
@@ -71,17 +76,25 @@ export class AppService {
     return labelGroups[0];
   }
 
-  getLabelColor(name: string): string {
+  public getLabelColor(name: string): string {
     return this.HSLToHex(this.createHSLColorFromString(name, 78));
   }
 
-  scrollToElement(selectors: string): void {
+  public scrollToElement(selectors: string): void {
     const element = document.querySelector(selectors);
     if (element) {
       setTimeout(() => {
         element.scrollIntoView({ behavior: 'smooth' });
       }, 50);
     }
+  }
+
+  public getRecordEntries<T>(Record: Record<string, T>): RecordEntry<T>[] {
+    return Object.entries(Record).map(([name, value]) => ({ name, value }));
+  }
+
+  public isRecordGreaterThanZero(record: Record<string, unknown>): boolean {
+    return Object.keys(record).length > 0;
   }
 
   private getSelectedFiltersLength(selectedFilters: FilterGroups): number {

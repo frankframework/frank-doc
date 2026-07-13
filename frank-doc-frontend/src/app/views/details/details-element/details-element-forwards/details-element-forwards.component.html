@@ -1,0 +1,23 @@
+<table>
+  <thead>
+    <tr>
+      <th style="width: 30%">Forward Name</th>
+      <th style="width: 70%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (forwardEntry of getRecordEntries(forwards()); track forwardEntry.name) {
+      <tr class="border-top padding-bottom">
+        <td class="name" [innerHTML]="forwardEntry.name | nameWbr"></td>
+        <td
+          class="description"
+          *fdJavadocTransform="
+            let text of forwardEntry.value.description ?? DEFAULT_RETURN_CHARACTER;
+            elements: elements()
+          "
+          [innerHTML]="text"
+        ></td>
+      </tr>
+    }
+  </tbody>
+</table>

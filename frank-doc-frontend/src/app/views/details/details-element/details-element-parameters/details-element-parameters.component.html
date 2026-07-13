@@ -1,0 +1,33 @@
+@let parametersDescriptionText = parametersDescription();
+@if (parametersDescriptionText) {
+  <div class="description">
+    <span *fdJavadocTransform="let text of parametersDescriptionText; elements: elements()" [innerHTML]="text"></span>
+  </div>
+}
+
+@let parametersList = parameters();
+@if (parametersList && isRecordGreaterThanZero(parametersList)) {
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 30%">Parameter Name</th>
+        <th style="width: 70%">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (parameterEntry of getRecordEntries(parametersList); track parameterEntry.name) {
+        <tr class="border-top padding-bottom">
+          <td class="name" [innerHTML]="parameterEntry.name | nameWbr"></td>
+          <td
+            class="description"
+            *fdJavadocTransform="
+              let text of parameterEntry.value.description ?? DEFAULT_RETURN_CHARACTER;
+              elements: elements()
+            "
+            [innerHTML]="text"
+          ></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
