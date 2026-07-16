@@ -28,7 +28,7 @@
 }
 <div class="options-sub-title" id="attributes-optional">Optional</div>
 @if (isRecordGreaterThanZero(attributesOptional())) {
-  <ng-container *ngTemplateOutlet="attributesOptionalTemplate; context: { $implicit: attributesOptional }" />
+  <ng-container *ngTemplateOutlet="attributesOptionalTemplate; context: { $implicit: attributesOptional() }" />
 } @else {
   @if (inheritedAttributesOptional().length > 0) {
     <p class="description">The following attributes are all inherited</p>
