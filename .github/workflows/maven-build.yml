@@ -47,7 +47,7 @@ jobs:
       env:
         CI_SERVICE: GITHUB
         TZ: Europe/Amsterdam
-      run: mvn -Pcodecoverage -Dmaven.javadoc.skip=true install
+      run: mvn -B -Pcodecoverage -Dmaven.javadoc.skip=true install
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
