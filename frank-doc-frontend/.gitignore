@@ -23,10 +23,7 @@ yarn-error.log
 
 # Visual Studio Code
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+
 .history/*
 
 # Miscellaneous
@@ -49,3 +46,5 @@ target/
 # Frank!Doc
 /src/js/frankdoc.json
 /src/sitemap.xml
+
+.husky/
