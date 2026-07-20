@@ -6,10 +6,11 @@ import { JavadocTransformDirective } from '@frankframework/doc-library-ng';
 import { DEFAULT_RETURN_CHARACTER } from '../../../../app.constants';
 import { AppService } from '../../../../app.service';
 import { NameWbrPipe } from '../../../../components/name-wbr.pipe';
+import { IconHelpComponent } from '../../../../icons/icon-help/icon-help.component';
 
 @Component({
   selector: 'app-details-element-nested',
-  imports: [JavadocTransformDirective, NameWbrPipe, NgClass, RouterLink],
+  imports: [JavadocTransformDirective, NameWbrPipe, NgClass, RouterLink, IconHelpComponent],
   templateUrl: './details-element-nested.component.html',
   styleUrl: '../details-element-options.scss',
 })

@@ -12,7 +12,14 @@
         class="border-top"
         [ngClass]="{ deprecated: nestedElement.deprecated, 'padding-bottom': !nestedElement.type }"
       >
-        <td class="name" [innerHTML]="nestedElement.roleName | nameWbr"></td>
+        <td class="name">
+          @if (nestedElement.deprecated) {
+            <app-icon-help class="icon" height="18" width="18" colour="grey" />
+            <span class="deprecated-text" [innerHTML]="nestedElement.roleName | nameWbr"></span>
+          } @else {
+            <span class="name-text" [innerHTML]="nestedElement.roleName | nameWbr"></span>
+          }
+        </td>
         <td
           class="description"
           *fdJavadocTransform="let text of nestedElement.description ?? DEFAULT_RETURN_CHARACTER; elements: elements()"
