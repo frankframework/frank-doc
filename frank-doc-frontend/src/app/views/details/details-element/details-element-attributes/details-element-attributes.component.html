@@ -80,11 +80,17 @@
         forRemoval: attribute.deprecated && attribute.deprecated.forRemoval,
       }"
     >
-      <td
-        class="name"
-        [title]="attribute.deprecated ? getDeprecatedTitle(attribute.deprecated) : ''"
-        [innerHTML]="attributeEntry.name | nameWbr"
-      ></td>
+      <td class="name">
+        @if (attribute.deprecated) {
+          <app-icon-help class="icon" height="18" width="18" colour="grey" />
+          <span class="deprecated-text" [innerHTML]="attributeEntry.name | nameWbr"></span>
+          <span class="deprecated-description">
+            {{ getDeprecatedTitle(attribute.deprecated) }}
+          </span>
+        } @else {
+          <span class="name-text" [innerHTML]="attributeEntry.name | nameWbr"></span>
+        }
+      </td>
       <td>{{ attribute.enum ? 'options' : getFriendlyType(attribute.type) }}</td>
       <td
         class="attribute-default-value"

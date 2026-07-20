@@ -17,9 +17,36 @@ table {
 
   tr.deprecated > td:first-child {
     text-decoration: line-through;
+    position: relative;
 
     &.forRemoval {
+      color: var(--color-alert-error);
       text-decoration-color: var(--color-alert-error);
+    }
+
+    .icon {
+      vertical-align: top;
+    }
+
+    .icon,
+    .deprecated-text {
+      padding-right: 8px;
+      &:hover + .deprecated-description,
+      &:hover + .deprecated-text + .deprecated-description {
+        display: block;
+      }
+    }
+
+    .deprecated-description {
+      position: absolute;
+      top: 3em;
+      width: max-content;
+      max-width: 600px;
+      padding: 0.5em;
+      border-radius: 0.25em;
+      display: none;
+      background: var(--color-text-dark);
+      color: white;
     }
   }
 
