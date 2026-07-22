@@ -79,6 +79,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     parentElements: [],
     attributesRequired: [],
     attributesOptional: [],
+    parameters: {},
     forwards: {},
     enums: {},
   };
@@ -89,16 +90,10 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     children: false,
     forwards: false,
   };
-  protected _hasInheritedProperties: HasInheritedProperties = {
-    required: false,
-    optional: false,
-    forwards: false,
-  };
   protected loading = true;
 
   protected readonly appService: AppService = inject(AppService);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;
-  protected readonly getRecordEntries = this.appService.getRecordEntries;
   protected readonly isRecordGreaterThanZero = this.appService.isRecordGreaterThanZero;
   private readonly titleService: Title = inject(Title);
   private readonly ffDoc: NgFFDoc = this.appService.getFFDoc();
@@ -124,12 +119,12 @@ export class DetailsElementComponent implements OnInit, OnChanges {
         this.ffDoc.ffDoc()?.elements ?? {},
         this.ffDoc.ffDoc()?.enums ?? {},
       );
+      this.updateHasInheritedProperties();
     }
     if (classElement?.children) {
       this.nestedElements = classElement.children.map((child) => this.getNestedTypeElements(child));
     }
     this.allRequiredAttributes = groupAttributesByMandatory(this.element?.attributes ?? {});
-    this.hasInheritedProperties.emit({ ...this._hasInheritedProperties });
 
     if (this.element?.name)
       this.titleService.setTitle(`${environment.applicationName} | ${this.element?.name ?? 'Element details'}`);
@@ -142,7 +137,7 @@ export class DetailsElementComponent implements OnInit, OnChanges {
   protected javaDocUrlOf(fullName: string): string | null {
     return fullName.includes('.')
       ? `${environment.javadocBaseUrl}/${fullName.replaceAll('.', '/')}.html`
-      : // We only have a JavaDoc URL if we have an element with a Java class. The
+      : // We only have a Javadoc URL if we have an element with a Java class. The
         // exception we handle here is <Module>.
         null;
   }
@@ -179,19 +174,28 @@ export class DetailsElementComponent implements OnInit, OnChanges {
     return classElements && this.element ? classElements[this.element?.className] : null;
   }
 
+  private updateHasInheritedProperties(): void {
+    this.hasInheritedProperties.emit({
+      required: this.inheritedProperties.attributesRequired.length > 0,
+      optional: this.inheritedProperties.attributesOptional.length > 0,
+      parameters: this.isRecordGreaterThanZero(this.inheritedProperties.parameters),
+      forwards: this.isRecordGreaterThanZero(this.inheritedProperties.forwards),
+    });
+  }
+
   private resetProperties(): void {
+    this.attributesRequired = {};
+    this.attributesOptional = {};
+    this.allRequiredAttributes = {};
+    this.nestedElements = null;
     this.inheritedProperties = {
       parentElements: [],
       attributesRequired: [],
       attributesOptional: [],
+      parameters: {},
       forwards: {},
       enums: {},
     };
-    this._hasInheritedProperties = {
-      required: false,
-      optional: false,
-      forwards: false,
-    };
-    this.nestedElements = null;
+    this.updateHasInheritedProperties();
   }
 }

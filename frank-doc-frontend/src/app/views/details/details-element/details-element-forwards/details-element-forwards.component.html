@@ -6,7 +6,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (forwardEntry of getRecordEntries(forwards()); track forwardEntry.name) {
+    @for (forwardEntry of getRecordEntries(allForwards()); track forwardEntry.name) {
       <tr class="border-top padding-bottom">
         <td class="name" [innerHTML]="forwardEntry.name | nameWbr"></td>
         <td

@@ -97,7 +97,11 @@
         </div>
       </div>
     }
-    @if ((element.parameters && isRecordGreaterThanZero(element.parameters)) || element.parametersDescription) {
+    @if (
+      element.parametersDescription ||
+      (element.parameters && isRecordGreaterThanZero(element.parameters)) ||
+      isRecordGreaterThanZero(inheritedProperties.parameters)
+    ) {
       <div class="sub-options parameters" id="parameters">
         <div class="options-title" [appCollapse]="parameters" (collapsedChange)="collapsedOptions.parameters = $event">
           <span>Parameters</span>
@@ -107,8 +111,9 @@
         <div #parameters class="options-list">
           <app-details-element-parameters
             [elements]="elements()"
-            [parameters]="element.parameters"
+            [parameters]="element.parameters ?? {}"
             [parametersDescription]="element.parametersDescription"
+            [inheritedParameters]="inheritedProperties.parameters"
           />
         </div>
       </div>
@@ -129,14 +134,21 @@
       </div>
     }
     <!-- Temp solution, see issue https://github.com/frankframework/frank-doc/issues/348 -->
-    @if (element.forwards && isRecordGreaterThanZero(element.forwards)) {
+    @if (
+      (element.forwards && isRecordGreaterThanZero(element.forwards)) ||
+      isRecordGreaterThanZero(inheritedProperties.forwards)
+    ) {
       <div class="sub-options forwards" id="forwards">
         <div class="options-title" [appCollapse]="forwards" (collapsedChange)="collapsedOptions.forwards = $event">
           <span>Forwards</span>
           <app-icon-caret [rotation]="collapsedOptions.forwards ? 'down' : 'up'" />
         </div>
         <div #forwards class="options-list">
-          <app-details-element-forwards [elements]="elements()" [forwards]="element.forwards" />
+          <app-details-element-forwards
+            [elements]="elements()"
+            [forwards]="element.forwards ?? {}"
+            [inheritedForwards]="inheritedProperties.forwards"
+          />
         </div>
       </div>
     }
