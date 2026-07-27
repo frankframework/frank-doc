@@ -24,6 +24,7 @@ type TOCEntry = {
 export type HasInheritedProperties = {
   required: boolean;
   optional: boolean;
+  parameters: boolean;
   forwards: boolean;
 };
 
@@ -44,6 +45,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   protected hasInheritedProperties: HasInheritedProperties = {
     required: false,
     optional: false,
+    parameters: false,
     forwards: false,
   };
   protected tableOfContents: TOCEntry[] = [];
@@ -55,6 +57,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   private elementFilterProperties: ElementFilterProperties | null = null;
   private elementIndexOrClassName: string | null = null;
   private scrollEvent: Subscription | null = null;
+  private readonly isRecordGreaterThanZero = this.appService.isRecordGreaterThanZero;
 
   ngOnInit(): void {
     this.route.params.subscribe((parameters) => {
@@ -136,11 +139,11 @@ export class DetailsComponent implements OnInit, OnDestroy {
       }
       tableOfContents[index].children!.push({ name: 'Optional', anchor: '#attributes-optional', active: false });
     }
-    if (element.parameters || element.parametersDescription) {
+    if (element.parameters || element.parametersDescription || this.hasInheritedProperties.parameters) {
       tableOfContents.push({ name: 'Parameters', anchor: '#parameters', active: false });
     }
     if (element.children) tableOfContents.push({ name: 'Nested Elements', anchor: '#nested-elements', active: false });
-    if ((element.forwards && Object.keys(element.forwards).length > 0) || this.hasInheritedProperties.forwards)
+    if ((element.forwards && this.isRecordGreaterThanZero(element.forwards)) || this.hasInheritedProperties.forwards)
       tableOfContents.push({ name: 'Forwards', anchor: '#forwards', active: false });
 
     this.tableOfContents = tableOfContents;

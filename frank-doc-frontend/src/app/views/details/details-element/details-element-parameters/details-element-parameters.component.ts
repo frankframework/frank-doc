@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { ElementProperty, Elements } from '@frankframework/doc-library-core';
 import { JavadocTransformDirective } from '@frankframework/doc-library-ng';
 import { DEFAULT_RETURN_CHARACTER } from '../../../../app.constants';
@@ -15,6 +15,11 @@ export class DetailsElementParametersComponent {
   public elements = input.required<Elements>();
   public parameters = input<Record<string, ElementProperty>>();
   public parametersDescription = input<string>();
+  public inheritedParameters = input<Record<string, ElementProperty>>({});
+  protected allParameters = computed<Record<string, ElementProperty>>(() => ({
+    ...this.inheritedParameters(),
+    ...this.parameters(),
+  }));
 
   protected readonly appService: AppService = inject(AppService);
   protected readonly DEFAULT_RETURN_CHARACTER = DEFAULT_RETURN_CHARACTER;

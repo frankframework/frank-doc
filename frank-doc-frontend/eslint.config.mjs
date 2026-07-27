@@ -27,7 +27,14 @@ export default defineConfig([
       ],
       'unicorn/consistent-class-member-order': 'off', // Handled by @typescript-eslint/member-ordering
       'unicorn/prefer-object-iterable-methods': 'off',
-      'unicorn/name-replacements': 'warn',
+      'unicorn/name-replacements': [
+        'warn',
+        {
+          replacements: {
+            doc: false
+          },
+        },
+      ],
       'unicorn/prefer-await': 'off', // preferably only if the function works better as async
       'unicorn/consistent-boolean-name': 'off',
       'unicorn/no-empty-file': 'off',

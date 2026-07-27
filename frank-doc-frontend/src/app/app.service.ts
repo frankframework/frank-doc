@@ -28,7 +28,7 @@ export class AppService {
   public readonly darkmode: WritableSignal<boolean> = signal(false);
   public readonly ffDocVersion: Signal<string> = computed(() => {
     const ffDoc = this.ffDoc.ffDoc();
-    if (!this.hasLoaded && ffDoc) this.triggerApplicationLoaded();
+    if (ffDoc && !this.hasLoaded) this.triggerApplicationLoaded();
     return ffDoc?.metadata.version ?? 'unknown';
   });
 
