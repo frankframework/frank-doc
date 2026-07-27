@@ -97,7 +97,7 @@ public class FrankDocJsonFactory {
 		try {
 			JsonObjectBuilder result = bf.createObjectBuilder();
 			// If the Frank!Framework version is null, the error is logged elsewhere.
-			if(frankFrameworkVersion != null) {
+			if (frankFrameworkVersion != null) {
 				result.add("metadata", getMetadata());
 			}
 			result.add("types", getTypes());
@@ -110,7 +110,7 @@ public class FrankDocJsonFactory {
 			getCredentialProviders().ifPresent(p -> result.add("credentialProviders", p));
 			getServletAuthenticators().ifPresent(s -> result.add("servletAuthenticators", s));
 			return result.build();
-		} catch(JsonException e) {
+		} catch (JsonException e) {
 			log.error("Error producing JSON", e);
 			return null;
 		}
@@ -194,7 +194,7 @@ public class FrankDocJsonFactory {
 
 	private String getElementNameForJson(FrankElement f) {
 		boolean useXmlElementName = (!f.isInterfaceBased()) && f.hasOnePossibleXmlElementName();
-		if(useXmlElementName) {
+		if (useXmlElementName) {
 			return f.getTheSingleXmlElementName();
 		} else {
 			return f.getSimpleName();
@@ -233,9 +233,10 @@ public class FrankDocJsonFactory {
 		}
 
 		addDescription(result, frankElement.getDescription());
-		addIfNotNull(result, "parent", getParentOrNull(frankElement));
+		String parent = getParentOrNull(frankElement);
+		addIfNotNull(result, "parent", parent);
 
-		JsonObject attributes = getAttributes(frankElement, getParentOrNull(frankElement) == null);
+		JsonObject attributes = getAttributes(frankElement, parent == null);
 		if (!attributes.isEmpty()) {
 			result.add("attributes", attributes);
 		}
@@ -257,7 +258,7 @@ public class FrankDocJsonFactory {
 			frankElement.getSpecificParameters().forEach(parameter -> builder.add(parameter.getName(), getParsedJavaDocTag(parameter)));
 			result.add("parameters", builder.build());
 		}
-		if(!frankElement.getForwards().isEmpty()) {
+		if (!frankElement.getForwards().isEmpty()) {
 			final JsonObjectBuilder builder = bf.createObjectBuilder();
 			frankElement.getForwards().forEach(forward -> builder.add(forward.name(), getJsonForForward(forward)));
 			result.add("forwards", builder.build());
@@ -281,7 +282,7 @@ public class FrankDocJsonFactory {
 		return result.build();
 	}
 
-	private JsonObject getElementName(String elementName,String fullName, Map<String, List<String>> labelGroups) {
+	private JsonObject getElementName(String elementName, String fullName, Map<String, List<String>> labelGroups) {
 		final var result = bf.createObjectBuilder();
 		result.add("className", fullName);
 
@@ -312,7 +313,7 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getParsedJavaDocTag(ParsedJavaDocTag parsedJavaDocTag) {
 		JsonObjectBuilder b = bf.createObjectBuilder();
-		if(parsedJavaDocTag.getDescription() != null) {
+		if (parsedJavaDocTag.getDescription() != null) {
 			b.add(DESCRIPTION, parsedJavaDocTag.getDescription());
 		}
 		return b.build();
@@ -320,17 +321,19 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getJsonForForward(Forward forward) {
 		final var builder = bf.createObjectBuilder();
-		if(forward.description() != null) {
+		if (forward.description() != null) {
 			builder.add(DESCRIPTION, forward.description());
 		}
 		return builder.build();
 	}
 
 	private static String getParentOrNull(FrankElement frankElement) {
-		if(frankElement != null) {
+		if (frankElement != null) {
 			FrankElement parent = frankElement.getNextAncestorThatHasChildren(
-					elem -> elem.getAttributes(ElementChild.JSON_RELEVANT).isEmpty() && elem.getConfigChildren(ElementChild.JSON_RELEVANT).isEmpty());
-			if(parent != null) {
+				elem -> elem.getAttributes(ElementChild.JSON_RELEVANT).isEmpty()
+					&& elem.getConfigChildren(ElementChild.JSON_RELEVANT).isEmpty()
+					&& elem.getForwards().isEmpty());
+			if (parent != null) {
 				return parent.getFullName();
 			}
 		}
@@ -339,7 +342,7 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getAttributes(FrankElement frankElement, boolean addAttributeActive) throws JsonException {
 		JsonObjectBuilder result = bf.createObjectBuilder();
-		for (FrankAttribute attribute: frankElement.getAttributes(ElementChild.IN_COMPATIBILITY_XSD)) {
+		for (FrankAttribute attribute : frankElement.getAttributes(ElementChild.IN_COMPATIBILITY_XSD)) {
 			result.add(attribute.getName(), getAttribute(attribute));
 		}
 		if (addAttributeActive) {
@@ -382,23 +385,23 @@ public class FrankDocJsonFactory {
 	}
 
 	private void addIfNotNull(JsonObjectBuilder builder, String field, String value) {
-		if(value != null) {
+		if (value != null) {
 			builder.add(field, value);
 		}
 	}
 
 	private void addDescription(JsonObjectBuilder builder, String value) {
-		if(! StringUtils.isBlank(value)) {
+		if (!StringUtils.isBlank(value)) {
 			builder.add(DESCRIPTION, value.replace("\"", "\\\""));
 		}
 	}
 
 	private JsonArray getConfigChildren(FrankElement frankElement) throws JsonException {
 		JsonArrayBuilder result = bf.createArrayBuilder();
-		if(frankElement.getFullName().equals(model.getRootClassName())) {
+		if (frankElement.getFullName().equals(model.getRootClassName())) {
 			result.add(getConfigChildReferencedEntityRoot());
 		}
-		for(ConfigChild child: frankElement.getConfigChildren(ElementChild.IN_COMPATIBILITY_XSD)) {
+		for (ConfigChild child : frankElement.getConfigChildren(ElementChild.IN_COMPATIBILITY_XSD)) {
 			result.add(getConfigChild(child));
 		}
 		return result.build();
@@ -415,19 +418,19 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getConfigChild(ConfigChild child) throws JsonException {
 		JsonObjectBuilder result = bf.createObjectBuilder();
-		if(child.isDeprecated()) {
+		if (child.isDeprecated()) {
 			result.add(DEPRECATED, child.isDeprecated());
 		}
-		if(child.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
+		if (child.getMandatoryStatus() != MandatoryStatus.OPTIONAL) {
 			result.add("mandatory", true);
 		}
-		if(child.isReintroduced()) {
+		if (child.isReintroduced()) {
 			result.add("reintroduced", true);
 		}
 		result.add("multiple", child.isAllowMultiple());
 		result.add("roleName", child.getRoleName());
 		addIfNotNull(result, DESCRIPTION, child.getDescription());
-		if(child instanceof ObjectConfigChild objectConfigChild) {
+		if (child instanceof ObjectConfigChild objectConfigChild) {
 			result.add("type", (objectConfigChild).getElementType().getFullName());
 		}
 		return result.build();
@@ -463,7 +466,7 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getEnums() {
 		final JsonObjectBuilder result = bf.createObjectBuilder();
-		for(AttributeEnum attributeEnum: model.getAllAttributeEnumInstances()) {
+		for (AttributeEnum attributeEnum : model.getAllAttributeEnumInstances()) {
 			result.add(attributeEnum.getFullName(), getAttributeEnumValues(attributeEnum));
 		}
 		return result.build();
@@ -471,12 +474,12 @@ public class FrankDocJsonFactory {
 
 	private JsonObject getAttributeEnumValues(AttributeEnum en) {
 		JsonObjectBuilder result = bf.createObjectBuilder();
-		for(EnumValue enumValue: en.getValues()) {
+		for (EnumValue enumValue : en.getValues()) {
 			JsonObjectBuilder valueBuilder = bf.createObjectBuilder();
-			if(enumValue.getDescription() != null) {
+			if (enumValue.getDescription() != null) {
 				valueBuilder.add("description", enumValue.getDescription());
 			}
-			if(enumValue.isDeprecated()) {
+			if (enumValue.isDeprecated()) {
 				valueBuilder.add(DEPRECATED, true);
 			}
 			result.add(enumValue.getLabel(), valueBuilder.build());
@@ -488,11 +491,11 @@ public class FrankDocJsonFactory {
 	// makes no different in production because the F!F sources
 	// do have labels. This way, we can omit labels from unit tests.
 	private Optional<JsonObject> getLabels() {
-		if(model.getAllLabels().isEmpty()) {
+		if (model.getAllLabels().isEmpty()) {
 			return Optional.empty();
 		}
 		final JsonObjectBuilder result = bf.createObjectBuilder();
-		for(String label : model.getAllLabels()) {
+		for (String label : model.getAllLabels()) {
 			JsonArrayBuilder labelValuesObject = bf.createArrayBuilder();
 			model.getAllValuesOfLabel(label).forEach(labelValuesObject::add);
 			result.add(label, labelValuesObject.build());
