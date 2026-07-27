@@ -1,19 +1,19 @@
-import { Component, computed, inject, OnInit, Signal, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { AppService } from '../../app.service';
-import { ChipComponent } from '@frankframework/angular-components';
-import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.component';
-import { CollapseDirective } from '../../components/collapse.directive';
+import { Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { KeyValuePipe, NgClass } from '@angular/common';
-import { NameWbrPipe } from '../../components/name-wbr.pipe';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FilterLabels } from '@frankframework/doc-library-core';
 import { NgFFDoc } from '@frankframework/doc-library-ng';
+import { ChipComponent } from '@frankframework/angular-components';
+
+import { AppService } from '../../app.service';
+import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.component';
+import { CollapseDirective } from '../../components/collapse.directive';
+import { NameWbrPipe } from '../../components/name-wbr.pipe';
 
 @Component({
   selector: 'app-index',
   imports: [RouterLink, ChipComponent, IconCaretComponent, CollapseDirective, NgClass, NameWbrPipe, KeyValuePipe],
   templateUrl: './index.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './index.component.scss',
 })
 export class IndexComponent implements OnInit {

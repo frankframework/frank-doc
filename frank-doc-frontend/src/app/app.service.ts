@@ -46,7 +46,9 @@ export class AppService {
   }
 
   public getLabelEntries(filterLabels: FilterLabels): { name: string; labels: string[] }[] {
-    return Object.entries(filterLabels).map(([name, labels]) => ({ name, labels }));
+    return Object.entries(filterLabels)
+      .map(([name, labels]) => ({ name, labels }))
+      .toSorted((a, b) => a.name.localeCompare(b.name));
   }
 
   public triggerApplicationLoaded(): void {
