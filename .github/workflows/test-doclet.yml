@@ -52,7 +52,7 @@ jobs:
           CI_SERVICE: GITHUB
           TZ: Europe/Amsterdam
           JAVA_OPTS: "-Xms1G -XX:+UseParallelGC"
-        run: mvn -Pcodecoverage -Dmaven.javadoc.skip=true install -DskipTests
+        run: mvn -B -Pcodecoverage -Dmaven.javadoc.skip=true install -DskipTests
         working-directory: frank-doc/frank-doc-doclet/
 
       - name: Set Frank!Doc version environment variable
@@ -70,7 +70,7 @@ jobs:
         env:
           CI_SERVICE: GITHUB
           TZ: Europe/Amsterdam
-        run: ./mvnw -PattachFrankDoc -DskipTests -Dfrankdoc.version=$FRANKDOC_VERSION process-sources
+        run: ./mvnw -B -PattachFrankDoc -DskipTests -Dfrankdoc.version=$FRANKDOC_VERSION process-sources
         working-directory: frankframework
 
       - name: Check FrankConfig.xsd
