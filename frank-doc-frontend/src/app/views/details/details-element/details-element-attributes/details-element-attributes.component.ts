@@ -53,8 +53,8 @@ export class DetailsElementAttributesComponent {
     return this.getInheritedCollapseOptions(this.inheritedCollapseOptions, parentElementName, defaultValue);
   }
 
-  protected getDeprecatedTitle(deprecatedInfo: DeprecationInfo): string {
-    return `${deprecatedInfo.description ?? 'This has been deprecated!'}${deprecatedInfo.since ? `\nSince ${deprecatedInfo.since}` : ''}`;
+  protected getDeprecatedDescription(deprecatedInfo: DeprecationInfo): string {
+    return `${deprecatedInfo.description ?? 'This has been deprecated'}${deprecatedInfo.since ? `\nSince ${deprecatedInfo.since}` : ''}`;
   }
 
   protected getFriendlyType(type: Attribute['type']): string {

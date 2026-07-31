@@ -75,22 +75,12 @@
     <tr
       class="border-top"
       [ngClass]="{
-        'padding-bottom': !attribute.enum && !attribute.description,
+        'padding-bottom': !attribute.enum && !attribute.description && !attribute.deprecated,
         deprecated: attribute.deprecated,
         forRemoval: attribute.deprecated && attribute.deprecated.forRemoval,
       }"
     >
-      <td class="name">
-        @if (attribute.deprecated) {
-          <app-icon-help class="icon" height="18" width="18" colour="grey" />
-          <span class="deprecated-text" [innerHTML]="attributeEntry.name | nameWbr"></span>
-          <span class="deprecated-description">
-            {{ getDeprecatedTitle(attribute.deprecated) }}
-          </span>
-        } @else {
-          <span class="name-text" [innerHTML]="attributeEntry.name | nameWbr"></span>
-        }
-      </td>
+      <td class="name" [innerHTML]="attributeEntry.name | nameWbr"></td>
       <td>{{ attribute.enum ? 'options' : getFriendlyType(attribute.type) }}</td>
       <td
         class="attribute-default-value"
@@ -98,14 +88,16 @@
         [innerHTML]="text"
       ></td>
     </tr>
-    @if (attribute.description) {
+    @if (attribute.description || attribute.deprecated) {
       <tr [ngClass]="{ 'padding-bottom': !attribute.enum }">
-        <td
-          colspan="3"
-          class="description"
-          *fdJavadocTransform="let text of attribute.description; elements: elements()"
-          [innerHTML]="text"
-        ></td>
+        <td colspan="3" class="description">
+          @if (attribute.deprecated) {
+            <div class="deprecated-text">{{ getDeprecatedDescription(attribute.deprecated) }}</div>
+          }
+          @if (attribute.description) {
+            <div *fdJavadocTransform="let text of attribute.description; elements: elements()" [innerHTML]="text"></div>
+          }
+        </td>
       </tr>
     }
     @if (attribute.enum) {
