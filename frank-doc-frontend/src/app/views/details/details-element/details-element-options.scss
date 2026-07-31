@@ -17,8 +17,10 @@ table {
 
   tr.deprecated > td:first-child {
     text-decoration: line-through;
+    position: relative;
 
     &.forRemoval {
+      color: var(--color-alert-error);
       text-decoration-color: var(--color-alert-error);
     }
   }
@@ -89,6 +91,11 @@ table {
 .description {
   margin-bottom: 2em;
   color: var(--color-gray-dark);
+
+  .deprecated-text {
+    font-style: italic;
+    white-space: pre-line;
+  }
 }
 
 .options-sub-title {

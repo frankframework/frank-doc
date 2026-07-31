@@ -13,6 +13,7 @@ import { CollapseDirective } from '../../../../components/collapse.directive';
 import { NameWbrPipe } from '../../../../components/name-wbr.pipe';
 import { IconCaretComponent } from '../../../../icons/icon-caret-down/icon-caret.component';
 import { DEFAULT_RETURN_CHARACTER } from '../../../../app.constants';
+import { IconHelpComponent } from '../../../../icons/icon-help/icon-help.component';
 
 type EnumValueEntry = {
   valueName: string;
@@ -21,7 +22,15 @@ type EnumValueEntry = {
 
 @Component({
   selector: 'app-details-element-attributes',
-  imports: [IconCaretComponent, NgTemplateOutlet, JavadocTransformDirective, NameWbrPipe, NgClass, CollapseDirective],
+  imports: [
+    IconCaretComponent,
+    NgTemplateOutlet,
+    JavadocTransformDirective,
+    NameWbrPipe,
+    NgClass,
+    CollapseDirective,
+    IconHelpComponent,
+  ],
   templateUrl: './details-element-attributes.component.html',
   styleUrl: '../details-element-options.scss',
 })
@@ -44,8 +53,8 @@ export class DetailsElementAttributesComponent {
     return this.getInheritedCollapseOptions(this.inheritedCollapseOptions, parentElementName, defaultValue);
   }
 
-  protected getDeprecatedTitle(deprecatedInfo: DeprecationInfo): string {
-    return `${deprecatedInfo.description ?? 'This has been deprecated!'}${deprecatedInfo.since ? `\nSince ${deprecatedInfo.since}` : ''}`;
+  protected getDeprecatedDescription(deprecatedInfo: DeprecationInfo): string {
+    return `${deprecatedInfo.description ?? 'This has been deprecated'}${deprecatedInfo.since ? `\nSince ${deprecatedInfo.since}` : ''}`;
   }
 
   protected getFriendlyType(type: Attribute['type']): string {
