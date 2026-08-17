@@ -13,7 +13,6 @@ import { CollapseDirective } from '../../../../components/collapse.directive';
 import { NameWbrPipe } from '../../../../components/name-wbr.pipe';
 import { IconCaretComponent } from '../../../../icons/icon-caret-down/icon-caret.component';
 import { DEFAULT_RETURN_CHARACTER } from '../../../../app.constants';
-import { IconHelpComponent } from '../../../../icons/icon-help/icon-help.component';
 
 type EnumValueEntry = {
   valueName: string;
@@ -22,15 +21,7 @@ type EnumValueEntry = {
 
 @Component({
   selector: 'app-details-element-attributes',
-  imports: [
-    IconCaretComponent,
-    NgTemplateOutlet,
-    JavadocTransformDirective,
-    NameWbrPipe,
-    NgClass,
-    CollapseDirective,
-    IconHelpComponent,
-  ],
+  imports: [IconCaretComponent, NgTemplateOutlet, JavadocTransformDirective, NameWbrPipe, NgClass, CollapseDirective],
   templateUrl: './details-element-attributes.component.html',
   styleUrl: '../details-element-options.scss',
 })
@@ -54,7 +45,10 @@ export class DetailsElementAttributesComponent {
   }
 
   protected getDeprecatedDescription(deprecatedInfo: DeprecationInfo): string {
-    return `${deprecatedInfo.description ?? 'This has been deprecated'}${deprecatedInfo.since ? `\nSince ${deprecatedInfo.since}` : ''}`;
+    let description = deprecatedInfo.since ? `Has been deprecated since v${deprecatedInfo.since}` : 'Is deprecated';
+    if (deprecatedInfo.forRemoval) description += ' and has been marked for removal';
+    if (deprecatedInfo.description) description += `\n${deprecatedInfo.description}`;
+    return description;
   }
 
   protected getFriendlyType(type: Attribute['type']): string {
