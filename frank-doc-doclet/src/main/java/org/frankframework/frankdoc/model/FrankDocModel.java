@@ -207,7 +207,7 @@ public class FrankDocModel {
 	}
 
 	public boolean shouldGetIncludeElement(String classSimpleName) {
-		return classRepository.isIncludeTypePresent() && AdditionalRootElement.VALUE_BY_TYPE.containsKey(classSimpleName);
+		return classRepository.isIncludeTypePresent() && AdditionalRootElement.VALUE_BY_TYPE.containsKey(classSimpleName) && AdditionalRootElement.VALUE_BY_TYPE.get(classSimpleName).isAddIncludeToTypeGroup();
 	}
 
 	public AdditionalRootElement getAdditionalRootElement(String classSimpleName) {
