@@ -33,6 +33,7 @@ import lombok.extern.log4j.Log4j2;
 import org.frankframework.frankdoc.AttributeTypeStrategy;
 import org.frankframework.frankdoc.FrankDocElementSummaryFactory;
 import org.frankframework.frankdoc.FrankDocJsonFactory;
+import org.frankframework.frankdoc.FrankDocSitemapFactory;
 import org.frankframework.frankdoc.FrankDocXsdFactory;
 import org.frankframework.frankdoc.Utils;
 import org.frankframework.frankdoc.XsdVersion;
@@ -51,6 +52,7 @@ class Doclet {
 	private final File xsdCompatibilityFile;
 	private final File jsonFile;
 	private final File elementSummaryFile;
+	private final File sitemapFile;
 	private final String frankFrameworkVersion;
 	private Set<String> skippableContainerElements;
 
@@ -72,6 +74,8 @@ class Doclet {
 			jsonFile.getParentFile().mkdirs();
 			elementSummaryFile = new File(outputBaseDir, options.getElementSummaryPath());
 			elementSummaryFile.getParentFile().mkdirs();
+			sitemapFile = new File(outputBaseDir, options.getSitemapPath());
+			sitemapFile.getParentFile().mkdirs();
 			frankFrameworkVersion = options.getFrankFrameworkVersion();
 			skippableContainerElements = options.getSkippableContainerElements();
 		} catch (SecurityException e) {
@@ -83,10 +87,12 @@ class Doclet {
 		if (frankFrameworkVersion == null) {
 			log.error("No Frank!Framework version set; please configure it in your pom.xml as argument -frankFrameworkVersion");
 		}
+		JsonObject json = prepareJson();
 		writeStrictXsd();
 		writeCompatibilityXsd();
-		writeJson();
+		writeJson(json);
 		writeElementSummary();
+		writeSitemap(json);
 	}
 
 	void writeStrictXsd() throws FrankDocException {
@@ -116,12 +122,17 @@ class Doclet {
 		log.info("Writing output file done");
 	}
 
-	void writeJson() throws FrankDocException {
+	JsonObject prepareJson() {
 		log.info("Calculating JSON file with documentation of the F!F");
 		FrankDocJsonFactory factory = new FrankDocJsonFactory(model, frankFrameworkVersion, skippableContainerElements);
-		JsonObject jsonObject = factory.getJson();
-		String jsonText = Utils.jsonPretty(jsonObject.toString());
-		log.info("Done calculating JSON file with documentation of the F!F, writing the text to file {}", jsonFile.getAbsolutePath());
+		JsonObject json = factory.getJson();
+		log.info("Done calculating JSON file with documentation of the F!F");
+		return json;
+	}
+
+	void writeJson(JsonObject json) throws FrankDocException {
+		log.info("writing the json to file {}", jsonFile.getAbsolutePath());
+		String jsonText = Utils.jsonPretty(json.toString());
 		writeStringToFile(jsonText, jsonFile);
 		log.info("Writing output file done");
 	}
@@ -132,6 +143,14 @@ class Doclet {
 		String text = elementSummaryFactory.getText();
 		log.info("Done calculating element summary");
 		writeStringToFile(text, elementSummaryFile);
+		log.info("Writing output file done");
+	}
+
+	void writeSitemap(JsonObject json) throws FrankDocException {
+		log.info("writing the sitemap.xml to file {}", sitemapFile.getAbsolutePath());
+		FrankDocSitemapFactory factory = new FrankDocSitemapFactory(json);
+		String sitemapXml = factory.getXml();
+		writeStringToFile(sitemapXml, sitemapFile);
 		log.info("Writing output file done");
 	}
 }
