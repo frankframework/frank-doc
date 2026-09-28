@@ -22,12 +22,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import jakarta.json.JsonObject;
 
 public class FrankDocSitemapFactory {
 	private static final String DEFAULT_BASE_URL = "https://frankdoc.frankframework.org";
-	private static final String PRIORITY = "1.0";
+	private static final String HIGHER_PRIORITY = "0.8";
 	private static final String CHANGE_FREQUENCY = "weekly";
 	private static final List<String> STATIC_ROUTES = List.of(
 		"/",
@@ -51,12 +52,11 @@ public class FrankDocSitemapFactory {
 	}
 
 	public String getXml() {
-		Set<String> urls = new LinkedHashSet<>();
-		STATIC_ROUTES.stream().map(this::withBase).forEach(urls::add);
+		Set<String> urls = new LinkedHashSet<>(STATIC_ROUTES);
 		addJsonUrls(urls);
 		String body = urls.stream()
-			.map(this::buildSitemapUrl)
-			.collect(java.util.stream.Collectors.joining("\n  "));
+			.map(url -> buildSitemapUrl(url, STATIC_ROUTES.contains(url)))
+			.collect(Collectors.joining("\n  "));
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 			+ "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n"
 			+ "  " + body + "\n"
@@ -70,7 +70,7 @@ public class FrankDocSitemapFactory {
 		if (elements != null) {
 			for (String elementName : new TreeSet<>(elements.keySet())) {
 				if (elementName.contains(".")) {
-					urls.add(withBase("/#/" + encodePathValue(elementName)));
+					urls.add("/#/" + encodePathValue(elementName));
 				}
 			}
 		}
@@ -78,14 +78,14 @@ public class FrankDocSitemapFactory {
 		JsonObject credentialProviders = json.getJsonObject("credentialProviders");
 		if (credentialProviders != null) {
 			for (String name : new TreeSet<>(credentialProviders.keySet())) {
-				urls.add(withBase("/#/credential-providers/" + encodePathValue(name)));
+				urls.add("/#/credential-providers/" + encodePathValue(name));
 			}
 		}
 
 		JsonObject servletAuthenticators = json.getJsonObject("servletAuthenticators");
 		if (servletAuthenticators != null) {
 			for (String name : new TreeSet<>(servletAuthenticators.keySet())) {
-				urls.add(withBase("/#/servlet-authenticators/" + encodePathValue(name)));
+				urls.add("/#/servlet-authenticators/" + encodePathValue(name));
 			}
 		}
 	}
@@ -95,16 +95,16 @@ public class FrankDocSitemapFactory {
 			.replace("+", "%20");
 	}
 
-	private String buildSitemapUrl(String loc) {
-		return "<url>\n"
-			+ "  <loc>" + escapeXml(loc) + "</loc>\n"
-			+ "  <changefreq>" + CHANGE_FREQUENCY + "</changefreq>\n"
-			+ "  <priority>" + PRIORITY + "</priority>\n"
-			+ "</url>";
+	private String buildSitemapUrl(String loc, boolean higherPriority) {
+		return "<url>"
+			+ "\n    <loc>" + withBase(loc) + "</loc>"
+			+ "\n    <changefreq>" + CHANGE_FREQUENCY + "</changefreq>"
+			+ (higherPriority ? "\n    <priority>" + HIGHER_PRIORITY + "</priority>" : "")
+			+ "\n  </url>";
 	}
 
 	private String withBase(String route) {
-		return baseUrl + route;
+		return baseUrl + escapeXml(route);
 	}
 
 	private String escapeXml(String value) {
