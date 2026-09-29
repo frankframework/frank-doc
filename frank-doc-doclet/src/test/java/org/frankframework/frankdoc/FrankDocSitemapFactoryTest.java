@@ -44,7 +44,7 @@ class FrankDocSitemapFactoryTest {
 		String xml = factory.getXml();
 
 		validateSitemapStructure(xml);
-		validateUrlCount(xml, 6); // Only static routes
+		validateUrlCount(xml, 6); // static routes
 	}
 
 	@Test
@@ -62,7 +62,6 @@ class FrankDocSitemapFactoryTest {
 		String xml = factory.getXml();
 
 		validateSitemapStructure(xml);
-		// 6 static routes + 2 element routes
 		validateUrlCount(xml, 8);
 		assertTrue(xml.contains("org.frankframework.pipes.SomePipe"));
 		assertTrue(xml.contains("org.frankframework.senders.HttpSender"));
@@ -82,7 +81,6 @@ class FrankDocSitemapFactoryTest {
 		String xml = factory.getXml();
 
 		validateSitemapStructure(xml);
-		// 6 static routes + 1 credential provider route
 		validateUrlCount(xml, 7);
 		assertTrue(xml.contains("credential-providers"));
 		assertTrue(xml.contains("BasicAuthCredentialProvider"));
@@ -102,7 +100,6 @@ class FrankDocSitemapFactoryTest {
 		String xml = factory.getXml();
 
 		validateSitemapStructure(xml);
-		// 6 static routes + 1 servlet authenticator route
 		validateUrlCount(xml, 7);
 		assertTrue(xml.contains("servlet-authenticators"));
 		assertTrue(xml.contains("MyAuthenticator"));
@@ -112,8 +109,6 @@ class FrankDocSitemapFactoryTest {
 	void testStaticRoutesPriority() {
 		FrankDocSitemapFactory factory = new FrankDocSitemapFactory(null);
 		String xml = factory.getXml();
-
-		// Static routes should have priority
 		assertTrue(xml.contains("<priority>0.8</priority>"));
 	}
 
@@ -132,10 +127,10 @@ class FrankDocSitemapFactoryTest {
 		String xml = factory.getXml();
 
 		validateSitemapStructure(xml);
-		// Should have URL-encoded space as %20
+		// Should have URL-encoded space
 		assertTrue(xml.contains("%20"));
-		// Should have XML-escaped ampersand
-		assertTrue(xml.contains("&amp;"));
+		// Should have URL-encoded ampersand
+		assertTrue(xml.contains("%26"));
 	}
 
 	@Test
@@ -161,8 +156,6 @@ class FrankDocSitemapFactoryTest {
 	void testChangeFrequency() {
 		FrankDocSitemapFactory factory = new FrankDocSitemapFactory(null);
 		String xml = factory.getXml();
-
-		// All URLs should have changefreq
 		assertTrue(xml.contains("<changefreq>weekly</changefreq>"));
 	}
 
@@ -172,7 +165,6 @@ class FrankDocSitemapFactoryTest {
 		assertTrue(xml.contains("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">"));
 		assertTrue(xml.contains("</urlset>"));
 
-		// Parse and validate XML well-formedness
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(new InputSource(new StringReader(xml)));
@@ -191,7 +183,6 @@ class FrankDocSitemapFactoryTest {
 
 		assertEquals(expectedCount, urlNodes.getLength());
 
-		// Verify each URL has required elements
 		for (int i = 0; i < urlNodes.getLength(); i++) {
 			NodeList locNodes = (NodeList) xPath.evaluate("loc", urlNodes.item(i), XPathConstants.NODESET);
 			assertEquals(1, locNodes.getLength(), "Each URL must have exactly one loc element");
