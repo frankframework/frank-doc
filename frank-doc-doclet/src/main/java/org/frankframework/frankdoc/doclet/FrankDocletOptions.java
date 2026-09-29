@@ -42,6 +42,7 @@ public class FrankDocletOptions {
 	private String xsdCompatibilityPath = "xml/xsd/FrankConfig-compatibility.xsd";
 	private String jsonOutputFilePath = "js/frankdoc.json";
 	private String elementSummaryPath = "txt/elementSummary.txt";
+	private String sitemapPath = "sitemap.xml";
 	private URL digesterRulesUrl;
 	private URL propertyFileUrl;
 	private String rootClass = "org.frankframework.configuration.Configuration";
@@ -123,6 +124,13 @@ public class FrankDocletOptions {
 			@Override
 			public boolean process(String option, List<String> arguments) {
 				elementSummaryPath = arguments.getFirst();
+				return OK;
+			}
+		},
+		new Option("-sitemapPath", true, "File path to write sitemap file output to", STRING) {
+			@Override
+			public boolean process(String option, List<String> arguments) {
+				sitemapPath = arguments.getFirst();
 				return OK;
 			}
 		},
