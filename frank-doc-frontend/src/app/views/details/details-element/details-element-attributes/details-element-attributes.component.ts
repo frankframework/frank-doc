@@ -11,7 +11,7 @@ import { JavadocTransformDirective, NgFFDoc } from '@frankframework/doc-library-
 import { AppService } from '../../../../app.service';
 import { CollapseDirective } from '../../../../components/collapse.directive';
 import { NameWbrPipe } from '../../../../components/name-wbr.pipe';
-import { IconCaretComponent } from '../../../../icons/icon-caret-down/icon-caret.component';
+import { IconCaretComponent } from '../../../../components/icon-caret/icon-caret.component';
 import { DEFAULT_RETURN_CHARACTER } from '../../../../app.constants';
 
 type EnumValueEntry = {

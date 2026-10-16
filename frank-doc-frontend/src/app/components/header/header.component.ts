@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { IconFfLogoSmallComponent } from '../../icons/icon-reference/icon-ff-logo-small.component';
+import { IconFfLogoSmallComponent } from '../icon-reference/icon-ff-logo-small.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { VersionFormatDirective } from './version-format.directive';
 import { environment } from '../../../environments/environment';

@@ -3,16 +3,16 @@ import { Component, computed, inject, OnInit, Signal, ChangeDetectionStrategy } 
 import { ActivatedRoute, Router } from '@angular/router';
 import { Elements, FFDocJson, Property } from '@frankframework/doc-library-core';
 import { JavadocTransformDirective, NgFFDoc } from '@frankframework/doc-library-ng';
+import { SolarHelp } from '@solar-icons/angular';
 import { DEFAULT_RETURN_CHARACTER, DEFAULT_UNKNOWN_PROPERTY_GROUP } from '../../app.constants';
 import { AppService } from '../../app.service';
 import { CollapseDirective } from '../../components/collapse.directive';
 import { NameWbrPipe } from '../../components/name-wbr.pipe';
-import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.component';
-import { IconHelpComponent } from '../../icons/icon-help/icon-help.component';
+import { IconCaretComponent } from '../../components/icon-caret/icon-caret.component';
 
 @Component({
   selector: 'app-properties',
-  imports: [NameWbrPipe, CollapseDirective, IconCaretComponent, NgClass, IconHelpComponent, JavadocTransformDirective],
+  imports: [NameWbrPipe, CollapseDirective, IconCaretComponent, NgClass, JavadocTransformDirective, SolarHelp],
   templateUrl: './properties.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './properties.component.scss',

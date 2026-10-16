@@ -1,11 +1,11 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
-import { IconDocumentAddComponent } from '../../icons/icon-document-add/icon-document-add.component';
+import { SolarDocumentAdd } from '@solar-icons/angular';
 import { AppService } from '../../app.service';
 
 @Component({
   selector: 'app-feedback',
-  imports: [IconDocumentAddComponent],
+  imports: [SolarDocumentAdd],
   templateUrl: './feedback.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './feedback.component.scss',

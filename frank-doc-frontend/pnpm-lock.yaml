@@ -33,14 +33,17 @@ importers:
         specifier: ^22.2.2
         version: 22.2.2(@angular/common@22.2.2(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.2(@angular/animations@22.2.2(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.2.2(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3)))(rxjs@7.8.2)
       '@frankframework/angular-components':
-        specifier: ^1.5.0
-        version: 1.5.0(@angular/cdk@22.2.2(a2e0e17c73c6aceb9301ae9aaf890120))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))
+        specifier: ^1.6.0
+        version: 1.6.0(@angular/cdk@22.2.2(a2e0e17c73c6aceb9301ae9aaf890120))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(@solar-icons/angular@2.3.2(@angular/common@22.2.2(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3)))
       '@frankframework/doc-library-core':
         specifier: ^1.0.7
         version: 1.0.7
       '@frankframework/doc-library-ng':
         specifier: ^1.0.7
         version: 1.0.7(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))
+      '@solar-icons/angular':
+        specifier: ^2.3.2
+        version: 2.3.2(@angular/common@22.2.2(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))
       fuse.js:
         specifier: ^7.5.0
         version: 7.5.0
@@ -589,11 +592,12 @@ packages:
     resolution: {integrity: sha512-IkO+/KEUvwbVpiURZg+P7zF74z5Jxe0UgJxVni+RtoHQ6IZieXaO02kmadomap/q+l6bc/jdPGGqTjhuZnuz1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@frankframework/angular-components@1.5.0':
-    resolution: {integrity: sha512-WP0xLOKK3NR8bM1VIvGc7I9GmmKPcjFDEHHm9HzYau3xQ+abD6raguIA7bIeQRI0U0JMtJs8gi/Lw8KiXW0Kog==}
+  '@frankframework/angular-components@1.6.0':
+    resolution: {integrity: sha512-bQZnmidZo3dDxczCqRmyhnJYk+89JH/ACCRcT+P8OoLTykUEfrKRBbv6BAGxA0nVyfcs15AeAsXXC7mm/tQtQQ==}
     peerDependencies:
       '@angular/cdk': ^22.1.1 || ^23.0.0
       '@angular/core': ^22.1.1 || ^23.0.0
+      '@solar-icons/angular': ^2.3.2
 
   '@frankframework/doc-library-core@1.0.7':
     resolution: {integrity: sha512-XGy5ZSwe4DizYf8D7HTr7IQsVTUaZJFMFLisx7oW9UCRHPFwu3zmTmlsIQh52GqNzqvnQLCa0V7tUY0jAj+ABQ==}
@@ -1572,6 +1576,13 @@ packages:
     resolution: {integrity: sha512-JxpXKpxdmQcRsJbriWJOhB7HeVTzz9CEsPNw6fQ0LOuPFnvtyUIXLxyFbKv/LfoFUz8wFADCtNU5sjowME5Mvg==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
 
+  '@solar-icons/angular@2.3.2':
+    resolution: {integrity: sha512-oYsUOnAN1SIN/V4cdpif3kHlks0TytJAGNnPTzAwft3ETm59iW/OLxmeCmxMDuXm3acvL6JRAZPUf9svLeNwng==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@angular/common': 17.x - 22.x
+      '@angular/core': 17.x - 22.x
+
   '@sonarsource/analyzer-commons-configurations@2.31.0-5284':
     resolution: {integrity: sha512-ruk3blMs9BE9RNSp9LPpWZAIjxJmq4Cp00E3cELIHz7Kym3WxdWGRlKOMYLRQ5tJg/de7jN5AtEElY3bGIfTcw==}
 
@@ -1608,9 +1619,6 @@ packages:
   '@types/node@20.19.43':
     resolution: {integrity: sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==}
 
-  '@types/node@26.1.1':
-    resolution: {integrity: sha512-nxAkRSVkN1Y0JC1W8ky/fTfkGsMmcrRsbx+3XoZE+rMOX71kLYTV7fLXpqud1GpbpP5TuffXFqfX7fH2GgZREw==}
-
   '@types/node@26.6.5':
     resolution: {integrity: sha512-uMzsv9stDdofIZBx4UGh4Z9ZgXnGC9seRDscilBcTHAeOFk67MZg/k9bWVfO+bk4qZmG+l52hRnLwUiH2LnJTg==}
 
@@ -1622,9 +1630,6 @@ packages:
 
   '@types/which@2.0.2':
     resolution: {integrity: sha512-113D3mDkZDjo+EeUEHCFy0qniNc1ZpecGiAU7WSo7YDoSzolZIQKpYFHrPpjkB2nuyahcKfrmLXeQlh7gqJYdw==}
-
-  '@types/ws@8.18.1':
-    resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
 
   '@types/ws@8.18.2':
     resolution: {integrity: sha512-67MQl+fpWKVTT1NYdnmo3U4sc/xPo/zQBncVnI74qmQa0z/b+1g6iYqNmGCPbxO+zz2aklb08a0oHfegiVd0/w==}
@@ -3515,10 +3520,6 @@ packages:
     resolution: {integrity: sha512-LJhUYUvItdQ0LkJTmPeaEObWXAqFyfmP85x0tch/ez9cahmhlBBLbIqDFnvBnUJGagb0JbIQrkBs1wJ+yRYpEw==}
     engines: {node: '>= 10.0.0', npm: '>= 3.0.0'}
 
-  source-map-js@1.2.1:
-    resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
-    engines: {node: '>=0.10.0'}
-
   source-map-js@1.2.2:
     resolution: {integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==}
     engines: {node: '>=0.10.0'}
@@ -3705,9 +3706,6 @@ packages:
 
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
-
-  undici-types@8.3.0:
-    resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
 
   undici-types@8.9.0:
     resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
@@ -3912,18 +3910,6 @@ packages:
 
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
-
-  ws@8.21.1:
-    resolution: {integrity: sha512-+0NTnW77fFN/DjQi6k/Sq/Yvk4Sgajw7urW8V+asjXnRgDs9gyGkdb7EzgfhA4goXsRIZKE28fzIXBHEzhuiWw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
 
   ws@8.22.0:
     resolution: {integrity: sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==}
@@ -4474,10 +4460,11 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@frankframework/angular-components@1.5.0(@angular/cdk@22.2.2(a2e0e17c73c6aceb9301ae9aaf890120))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))':
+  '@frankframework/angular-components@1.6.0(@angular/cdk@22.2.2(a2e0e17c73c6aceb9301ae9aaf890120))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(@solar-icons/angular@2.3.2(@angular/common@22.2.2(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3)))':
     dependencies:
       '@angular/cdk': 22.2.2(a2e0e17c73c6aceb9301ae9aaf890120)
       '@angular/core': 22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3)
+      '@solar-icons/angular': 2.3.2(@angular/common@22.2.2(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))
       tslib: 2.8.1
 
   '@frankframework/doc-library-core@1.0.7': {}
@@ -5125,6 +5112,11 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
+  '@solar-icons/angular@2.3.2(@angular/common@22.2.2(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))':
+    dependencies:
+      '@angular/common': 22.2.2(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)
+      '@angular/core': 22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3)
+
   '@sonarsource/analyzer-commons-configurations@2.31.0-5284': {}
 
   '@standard-schema/spec@1.1.0': {}
@@ -5154,10 +5146,6 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@26.1.1':
-    dependencies:
-      undici-types: 8.3.0
-
   '@types/node@26.6.5':
     dependencies:
       undici-types: 8.9.0
@@ -5168,17 +5156,13 @@ snapshots:
 
   '@types/which@2.0.2': {}
 
-  '@types/ws@8.18.1':
-    dependencies:
-      '@types/node': 26.1.1
-
   '@types/ws@8.18.2':
     dependencies:
       '@types/node': 26.6.5
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 26.1.1
+      '@types/node': 26.6.5
     optional: true
 
   '@typescript-eslint/eslint-plugin@8.71.1(@typescript-eslint/parser@8.71.1(eslint@10.12.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.12.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3)':
@@ -7146,7 +7130,7 @@ snapshots:
     dependencies:
       chokidar: 5.0.0
       immutable: 5.1.9
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
     optionalDependencies:
       '@parcel/watcher': 2.6.0
 
@@ -7206,8 +7190,6 @@ snapshots:
     dependencies:
       ip-address: 10.2.0
       smart-buffer: 4.2.0
-
-  source-map-js@1.2.1: {}
 
   source-map-js@1.2.2: {}
 
@@ -7402,8 +7384,6 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  undici-types@8.3.0: {}
-
   undici-types@8.9.0: {}
 
   undici@6.27.0: {}
@@ -7495,7 +7475,7 @@ snapshots:
   webdriver@9.29.1(supports-color@8.1.1):
     dependencies:
       '@types/node': 20.19.43
-      '@types/ws': 8.18.1
+      '@types/ws': 8.18.2
       '@wdio/config': 9.29.1(supports-color@8.1.1)
       '@wdio/logger': 9.29.1
       '@wdio/protocols': 9.29.1
@@ -7504,7 +7484,7 @@ snapshots:
       deepmerge-ts: 7.1.5
       https-proxy-agent: 7.0.6(supports-color@8.1.1)
       undici: 6.27.0
-      ws: 8.21.1
+      ws: 8.22.0
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
@@ -7595,8 +7575,6 @@ snapshots:
       strip-ansi: 7.2.0
 
   wrappy@1.0.2: {}
-
-  ws@8.21.1: {}
 
   ws@8.22.0: {}
 
