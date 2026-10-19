@@ -32,7 +32,7 @@ type FilterEntry = {
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home-filters.component.scss',
 })
-export class HomeFiltersComponent implements OnDestroy {
+export class HomeFiltersComponent {
   @ViewChild('menu') menuElementRef!: ElementRef<HTMLDivElement>;
   @Output() selectedFilters: EventEmitter<FilterGroups> = new EventEmitter<FilterGroups>();
 
@@ -52,19 +52,13 @@ export class HomeFiltersComponent implements OnDestroy {
     this.selectedFilterLabels.set(initialFilters);
   }
 
-  ngOnDestroy(): void {
-    document.removeEventListener('click', this.onOutsideClick);
-  }
-
   protected toggleDropdown(): void {
     const menuElement = this.menuElementRef.nativeElement;
     if (this.open) {
       menuElement.classList.add('open');
-      setTimeout(() => document.addEventListener('click', this.onOutsideClick));
       return;
     }
     menuElement.classList.remove('open');
-    document.removeEventListener('click', this.onOutsideClick);
     this.selectedFilter = null;
     this.selectedFilterLocked = false;
   }
@@ -73,7 +67,7 @@ export class HomeFiltersComponent implements OnDestroy {
     if (clicked && this.selectedFilter?.name === filter.name) {
       this.selectedFilterLocked = !this.selectedFilterLocked;
     }
-    if (!this.selectedFilterLocked || clicked) {
+    if (clicked || !this.selectedFilterLocked) {
       this.selectedFilter = filter;
     }
   }
@@ -120,16 +114,7 @@ export class HomeFiltersComponent implements OnDestroy {
     this.updateSelectedFilters(selectedFilterLabels);
   }
 
-  protected onOutsideClick(event: MouseEvent): void {
-    const clickedElement = event.target as HTMLElement;
-    if (!clickedElement.closest('.menu.open')) {
-      this.open = false;
-      this.toggleDropdown();
-    }
-  }
-
   private updateSelectedFilters(selectedFilters: FilterGroups): void {
-    // using spread to have directive input's update, maybe input signals will improve this so no spreading is needed
     this.selectedFilterLabels.set({ ...selectedFilters });
     this.selectedFilters.emit(this.selectedFilterLabels());
   }
