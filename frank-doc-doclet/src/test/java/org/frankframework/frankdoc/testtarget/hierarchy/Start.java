@@ -6,10 +6,7 @@ public class Start {
 
 	}
 
-	public void addPipe(IPipe pipe) {
-
-	}
-
 	public void addInclude(Include include) {}
 
+	public void setPipeLine(PipeLine pipeLine) {}
 }
