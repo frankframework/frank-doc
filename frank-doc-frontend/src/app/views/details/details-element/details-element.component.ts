@@ -14,10 +14,10 @@ import {
 import { AlertComponent, AlertType, ChipComponent } from '@frankframework/angular-components';
 import { KeyValuePipe, NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { SolarArrowRightUp } from '@solar-icons/angular';
 import { environment } from '../../../../environments/environment';
 import { CollapseDirective } from '../../../components/collapse.directive';
-import { IconCaretComponent } from '../../../icons/icon-caret-down/icon-caret.component';
-import { IconArrowRightUpComponent } from '../../../icons/icon-arrow-right-up/icon-arrow-right-up.component';
+import { IconCaretComponent } from '../../../components/icon-caret/icon-caret.component';
 import { AppService } from '../../../app.service';
 import { DEFAULT_RETURN_CHARACTER } from '../../../app.constants';
 import { HasInheritedProperties } from '../details.component';
@@ -52,7 +52,6 @@ import { DetailsElementSyntaxComponent } from './details-element-syntax/details-
     AlertComponent,
     CollapseDirective,
     IconCaretComponent,
-    IconArrowRightUpComponent,
     NgClass,
     NameWbrPipe,
     JavadocTransformDirective,
@@ -61,6 +60,7 @@ import { DetailsElementSyntaxComponent } from './details-element-syntax/details-
     DetailsElementParametersComponent,
     DetailsElementNestedComponent,
     DetailsElementForwardsComponent,
+    SolarArrowRightUp,
   ],
   templateUrl: './details-element.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

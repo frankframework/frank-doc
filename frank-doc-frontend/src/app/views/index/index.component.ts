@@ -6,7 +6,7 @@ import { NgFFDoc } from '@frankframework/doc-library-ng';
 import { ChipComponent } from '@frankframework/angular-components';
 
 import { AppService } from '../../app.service';
-import { IconCaretComponent } from '../../icons/icon-caret-down/icon-caret.component';
+import { IconCaretComponent } from '../../components/icon-caret/icon-caret.component';
 import { CollapseDirective } from '../../components/collapse.directive';
 import { NameWbrPipe } from '../../components/name-wbr.pipe';
 

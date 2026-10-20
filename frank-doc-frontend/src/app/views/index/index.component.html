@@ -7,7 +7,7 @@
         (collapsedChange)="collapsedFilters[filterEntry.name] = $event"
       >
         <span>{{ filterEntry.name }} ({{ filterEntry.filterCount }})</span>
-        <app-icon-caret [width]="18" [height]="18" [rotation]="collapsedFilters[filterEntry.name] ? 'down' : 'up'" />
+        <app-icon-caret [size]="18" [rotation]="collapsedFilters[filterEntry.name] ? 'down' : 'up'" />
       </div>
       <ul #filterList>
         @for (labelEntry of filterEntry.filter | keyvalue; track labelEntry.key) {
